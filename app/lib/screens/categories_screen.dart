@@ -12,6 +12,7 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   late Future<List<Category>> _future = widget.api.getCategories();
+  String _search = '';
 
   Future<void> _reload() async {
     setState(() { _future = widget.api.getCategories(); });
@@ -38,8 +39,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
     );
     if (ok == true) {
-      await widget.api.createCategory(nameCtrl.text.trim(), description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim());
-      await _reload();
+      final name = nameCtrl.text.trim();
+      if (name.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tên danh mục không được để trống')));
+        return;
+      }
+      try {
+        await widget.api.createCategory(name, description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim());
+        await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thêm danh mục thành công')));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+      }
     }
   }
 
@@ -49,7 +60,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Sửa danh mục ${c.id}'),
+        title: Text('Thay đổi thông tin danh mục'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -64,62 +75,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
     );
     if (ok == true) {
-      await widget.api.updateCategory(Category(id: c.id, name: nameCtrl.text.trim(), description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(), items: c.items));
-      await _reload();
-    }
-  }
-
-  Future<void> _addItemDialog(int categoryId) async {
-    final nameCtrl = TextEditingController();
-    final priceCtrl = TextEditingController();
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Thêm dịch vụ'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Tên dịch vụ')),
-            TextField(controller: priceCtrl, decoration: const InputDecoration(labelText: 'Giá'), keyboardType: TextInputType.number),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Huỷ')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Lưu')),
-        ],
-      ),
-    );
-    if (ok == true) {
-      final price = double.tryParse(priceCtrl.text.trim()) ?? 0;
-      await widget.api.createCategoryItem(categoryId, nameCtrl.text.trim(), price);
-      await _reload();
-    }
-  }
-
-  Future<void> _editItemDialog(CategoryItem i) async {
-    final nameCtrl = TextEditingController(text: i.name);
-    final priceCtrl = TextEditingController(text: i.price.toStringAsFixed(0));
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Sửa dịch vụ ${i.id}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Tên dịch vụ')),
-            TextField(controller: priceCtrl, decoration: const InputDecoration(labelText: 'Giá'), keyboardType: TextInputType.number),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Huỷ')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Lưu')),
-        ],
-      ),
-    );
-    if (ok == true) {
-      final price = double.tryParse(priceCtrl.text.trim()) ?? i.price;
-      await widget.api.updateCategoryItem(CategoryItem(id: i.id, categoryId: i.categoryId, name: nameCtrl.text.trim(), price: price));
-      await _reload();
+      final name = nameCtrl.text.trim();
+      if (name.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tên danh mục không được để trống')));
+        return;
+      }
+      try {
+        await widget.api.updateCategory(Category(id: c.id, name: name, description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(), items: c.items));
+        await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thay đổi thông tin danh mục thành công')));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+      }
     }
   }
 
@@ -138,6 +105,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Tìm kiếm danh mục...',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (v) => setState(() => _search = v.trim()),
+                    ),
+                  ),
+                  const Spacer(),
                   FilledButton.icon(onPressed: _addCategoryDialog, icon: const Icon(Icons.add), label: const Text('Thêm danh mục')),
                 ],
               ),
@@ -145,44 +122,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _reload,
-                child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, i) {
-                    final c = data[i];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child: ExpansionTile(
-                        title: Text(c.name),
-                        subtitle: Text(c.description ?? ''),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _editCategoryDialog(c)),
-                            IconButton(icon: const Icon(Icons.delete), onPressed: () async { await widget.api.deleteCategory(c.id); await _reload(); }),
-                          ],
-                        ),
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: FilledButton.icon(onPressed: () => _addItemDialog(c.id), icon: const Icon(Icons.add), label: const Text('Thêm dịch vụ')),
+                child: Builder(
+                  builder: (context) {
+                    final filtered = data.where((c) => c.name.toLowerCase().contains(_search.toLowerCase()) || (c.description ?? '').toLowerCase().contains(_search.toLowerCase())).toList();
+                    if (filtered.isEmpty) {
+                      return RefreshIndicator(
+                        onRefresh: _reload,
+                        child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Không tìm thấy danh mục'))]),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (context, i) {
+                        final c = filtered[i];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: ListTile(
+                            title: Text(c.name),
+                            subtitle: Text(c.description ?? ''),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(icon: const Icon(Icons.edit), onPressed: () => _editCategoryDialog(c)),
+                                IconButton(icon: const Icon(Icons.delete), onPressed: () async { await widget.api.deleteCategory(c.id); await _reload(); }),
+                              ],
                             ),
                           ),
-                          for (final i in c.items)
-                            ListTile(
-                              title: Text(i.name),
-                              subtitle: Text('${i.price.toStringAsFixed(0)} đ'),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(icon: const Icon(Icons.edit), onPressed: () => _editItemDialog(i)),
-                                  IconButton(icon: const Icon(Icons.delete), onPressed: () async { await widget.api.deleteCategoryItem(i.categoryId, i.id); await _reload(); }),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -193,4 +160,4 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       },
     );
   }
-} 
+}

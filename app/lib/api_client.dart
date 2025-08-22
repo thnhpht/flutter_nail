@@ -29,7 +29,7 @@ class ApiClient {
   }
 
   Future<void> updateCustomer(Customer c) async {
-    final r = await http.put(_u('/customers/${c.phoneNumber}'),
+    final r = await http.put(_u('/customers/${c.phone}'),
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(c.toJson()));
     _check(r, expect204: true);
   }
@@ -50,7 +50,7 @@ class ApiClient {
   Future<void> createEmployee(String name, {String? phone}) async {
     final r = await http.post(_u('/employees'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'id': 0, 'fullName': name, 'phoneNumber': phone}));
+        body: jsonEncode({'name': name, 'phone': phone}));
     _check(r, expect201: true);
   }
 
@@ -60,7 +60,7 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
-  Future<void> deleteEmployee(int id) async {
+  Future<void> deleteEmployee(String id) async {
     final r = await http.delete(_u('/employees/$id'));
     _check(r, expect204: true);
   }
@@ -76,7 +76,7 @@ class ApiClient {
   Future<void> createCategory(String name, {String? description}) async {
     final r = await http.post(_u('/categories'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'id': 0, 'name': name, 'description': description, 'items': []}));
+        body: jsonEncode({'name': name, 'description': description, 'items': []}));
     _check(r, expect201: true);
   }
 
@@ -86,27 +86,34 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
-  Future<void> deleteCategory(int id) async {
+  Future<void> deleteCategory(String id) async {
     final r = await http.delete(_u('/categories/$id'));
     _check(r, expect204: true);
   }
 
-  // Category Items
-  Future<void> createCategoryItem(int categoryId, String name, double price) async {
-    final r = await http.post(_u('/categories/$categoryId/items'),
+  // Category Items (Services)
+  Future<List<Service>> getServices() async {
+    final r = await http.get(_u('/services'));
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list.map((e) => Service.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<void> createService(String categoryId, String name, double price) async {
+    final r = await http.post(_u('/services'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'id': 0, 'categoryId': categoryId, 'name': name, 'price': price}));
+        body: jsonEncode({'categoryId': categoryId, 'name': name, 'price': price}));
     _check(r, expect201: true);
   }
 
-  Future<void> updateCategoryItem(CategoryItem i) async {
-    final r = await http.put(_u('/categories/${i.categoryId}/items/${i.id}'),
+  Future<void> updateService(Service i) async {
+    final r = await http.put(_u('/services/${i.id}'),
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(i.toJson()));
     _check(r, expect204: true);
   }
 
-  Future<void> deleteCategoryItem(int categoryId, int itemId) async {
-    final r = await http.delete(_u('/categories/$categoryId/items/$itemId'));
+  Future<void> deleteService(String categoryId, String serviceId) async {
+    final r = await http.delete(_u('/services/$serviceId'));
     _check(r, expect204: true);
   }
 
@@ -116,4 +123,4 @@ class ApiClient {
       throw Exception('HTTP ${r.statusCode}: ${r.body}');
     }
   }
-} 
+}

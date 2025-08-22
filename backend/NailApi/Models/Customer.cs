@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace NailApi.Models
 {
+    [Table("Customer")]
     public class Customer
     {
-        public string PhoneNumber { get; set; } = string.Empty; // PK
-        public string FullName { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty; // PK
+        public string Name { get; set; } = string.Empty;
     }
 }

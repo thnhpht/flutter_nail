@@ -16,8 +16,8 @@ namespace NailApi.Controllers
         public async Task<ActionResult<IEnumerable<Employee>>> GetAll() =>
             await _db.Employees.AsNoTracking().ToListAsync();
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Employee>> GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Employee>> GetById(string id)
         {
             var entity = await _db.Employees.FindAsync(id);
             return entity == null ? NotFound() : entity;
@@ -26,13 +26,15 @@ namespace NailApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> Create(Employee input)
         {
+            if (string.IsNullOrWhiteSpace(input.Id))
+                input.Id = Guid.NewGuid().ToString();
             _db.Employees.Add(input);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, Employee input)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Employee input)
         {
             if (id != input.Id) return BadRequest();
             var exists = await _db.Employees.AnyAsync(e => e.Id == id);
@@ -42,8 +44,8 @@ namespace NailApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
             var entity = await _db.Employees.FindAsync(id);
             if (entity == null) return NotFound();

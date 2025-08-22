@@ -8,9 +8,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("Default") ?? "Data Source=nail.db";
+var connectionString = builder.Configuration.GetConnectionString("Default") ?? "Server=115.78.95.245;Database=Nail;User Id=sa;Password=qwerQWER1234!@#$;TrustServerCertificate=True;";
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddCors(options =>
 {

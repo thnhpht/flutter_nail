@@ -21,8 +21,8 @@ namespace NailApi.Controllers
                 .ToListAsync();
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Category>> GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Category>> GetById(string id)
         {
             var entity = await _db.Categories.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
             return entity == null ? NotFound() : entity;
@@ -31,15 +31,17 @@ namespace NailApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> Create(Category input)
         {
+            if (string.IsNullOrWhiteSpace(input.Id))
+                input.Id = Guid.NewGuid().ToString();
             _db.Categories.Add(input);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, Category input)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Category input)
         {
-            if (id != input.Id) return BadRequest();
+            if (!id.Equals(input.Id)) return BadRequest();
             var exists = await _db.Categories.AnyAsync(c => c.Id == id);
             if (!exists) return NotFound();
             _db.Entry(input).State = EntityState.Modified;
@@ -47,8 +49,8 @@ namespace NailApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
             var entity = await _db.Categories.FindAsync(id);
             if (entity == null) return NotFound();
@@ -58,39 +60,41 @@ namespace NailApi.Controllers
         }
 
         // Items endpoints
-        [HttpPost("{categoryId:int}/items")]
-        public async Task<ActionResult<CategoryItem>> CreateItem(int categoryId, CategoryItem input)
+        [HttpPost("{categoryId}/items")]
+        public async Task<ActionResult<Service>> CreateItem(string categoryId, Service input)
         {
-            if (categoryId != input.CategoryId) return BadRequest();
-            _db.CategoryItems.Add(input);
+            if (!categoryId.Equals(input.CategoryId)) return BadRequest();
+            if (string.IsNullOrWhiteSpace(input.Id))
+                input.Id = Guid.NewGuid().ToString();
+            _db.Services.Add(input);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetItemById), new { categoryId, itemId = input.Id }, input);
         }
 
-        [HttpGet("{categoryId:int}/items/{itemId:int}")]
-        public async Task<ActionResult<CategoryItem>> GetItemById(int categoryId, int itemId)
+        [HttpGet("{categoryId}/items/{itemId}")]
+        public async Task<ActionResult<Service>> GetItemById(string categoryId, string itemId)
         {
-            var item = await _db.CategoryItems.FirstOrDefaultAsync(i => i.Id == itemId && i.CategoryId == categoryId);
-            return item == null ? NotFound() : item;
+            var entity = await _db.Services.FirstOrDefaultAsync(s => s.CategoryId.Equals(categoryId) && s.Id == itemId);
+            return entity == null ? NotFound() : entity;
         }
 
-        [HttpPut("{categoryId:int}/items/{itemId:int}")]
-        public async Task<IActionResult> UpdateItem(int categoryId, int itemId, CategoryItem input)
+        [HttpPut("{categoryId}/items/{itemId}")]
+        public async Task<IActionResult> UpdateItem(string categoryId, string itemId, Service input)
         {
-            if (itemId != input.Id || categoryId != input.CategoryId) return BadRequest();
-            var exists = await _db.CategoryItems.AnyAsync(i => i.Id == itemId && i.CategoryId == categoryId);
+            if (!itemId.Equals(input.Id) || !categoryId.Equals(input.CategoryId)) return BadRequest();
+            var exists = await _db.Services.AnyAsync(s => s.Id == itemId && s.CategoryId.Equals(categoryId));
             if (!exists) return NotFound();
             _db.Entry(input).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             return NoContent();
         }
 
-        [HttpDelete("{categoryId:int}/items/{itemId:int}")]
-        public async Task<IActionResult> DeleteItem(int categoryId, int itemId)
+        [HttpDelete("{categoryId}/items/{itemId}")]
+        public async Task<IActionResult> DeleteItem(string categoryId, string itemId)
         {
-            var entity = await _db.CategoryItems.FirstOrDefaultAsync(i => i.Id == itemId && i.CategoryId == categoryId);
+            var entity = await _db.Services.FirstOrDefaultAsync(s => s.CategoryId.Equals(categoryId) && s.Id == itemId);
             if (entity == null) return NotFound();
-            _db.CategoryItems.Remove(entity);
+            _db.Services.Remove(entity);
             await _db.SaveChangesAsync();
             return NoContent();
         }

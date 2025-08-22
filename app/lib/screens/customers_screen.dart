@@ -12,6 +12,7 @@ class CustomersScreen extends StatefulWidget {
 
 class _CustomersScreenState extends State<CustomersScreen> {
   late Future<List<Customer>> _future;
+  String _search = '';
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'SĐT')),
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Họ tên')),
+            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Tên')),
           ],
         ),
         actions: [
@@ -50,25 +51,32 @@ class _CustomersScreenState extends State<CustomersScreen> {
       ),
     );
     if (ok == true) {
+      final phone = phoneCtrl.text.trim();
+      final name = nameCtrl.text.trim();
+      if (name.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tên khách hàng không được để trống')));
+        return;
+      }
       try {
-        await widget.api.createCustomer(Customer(phoneNumber: phoneCtrl.text.trim(), fullName: nameCtrl.text.trim()));
+        await widget.api.createCustomer(Customer(name: name, phone: phone));
         await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thêm khách hàng thành công')));
       } catch (e) {
-        _showError(e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
       }
     }
   }
 
   Future<void> _showEditDialog(Customer c) async {
-    final nameCtrl = TextEditingController(text: c.fullName);
+    final nameCtrl = TextEditingController(text: c.name);
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Sửa ${c.phoneNumber}'),
+        title: Text('Thay đổi thông tin khách hàng'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('SĐT: ${c.phoneNumber}'),
+            Text('SĐT: ${c.phone}'),
             TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Họ tên')),
           ],
         ),
@@ -80,20 +88,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
     );
     if (ok == true) {
       try {
-        await widget.api.updateCustomer(Customer(phoneNumber: c.phoneNumber, fullName: nameCtrl.text.trim()));
+        await widget.api.updateCustomer(Customer(phone: c.phone, name: nameCtrl.text.trim()));
         await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sửa khách hàng thành công')));
       } catch (e) {
-        _showError(e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
       }
     }
   }
 
   Future<void> _delete(Customer c) async {
     try {
-      await widget.api.deleteCustomer(c.phoneNumber);
+      await widget.api.deleteCustomer(c.phone);
       await _reload();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xóa khách hàng thành công')));
     } catch (e) {
-      _showError(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
     }
   }
 
@@ -105,6 +115,16 @@ class _CustomersScreenState extends State<CustomersScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Tìm kiếm khách hàng...',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (v) => setState(() => _search = v.trim()),
+                ),
+              ),
+              const Spacer(),
               FilledButton.icon(onPressed: _showAddDialog, icon: const Icon(Icons.add), label: const Text('Thêm khách hàng')),
             ],
           ),
@@ -120,27 +140,31 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 return Center(child: Text('Lỗi tải danh sách: ${snapshot.error}'));
               }
               final data = snapshot.data ?? [];
-              if (data.isEmpty) {
+              final filtered = data.where((c) => c.name.toLowerCase().contains(_search.toLowerCase()) || c.phone.toLowerCase().contains(_search.toLowerCase())).toList();
+              if (filtered.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: _reload,
-                  child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Chưa có khách hàng'))]),
+                  child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Không tìm thấy khách hàng'))]),
                 );
               }
               return RefreshIndicator(
                 onRefresh: _reload,
                 child: ListView.builder(
-                  itemCount: data.length,
+                  itemCount: filtered.length,
                   itemBuilder: (context, i) {
-                    final c = data[i];
-                    return ListTile(
-                      title: Text(c.fullName.isEmpty ? c.phoneNumber : c.fullName),
-                      subtitle: Text(c.phoneNumber),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(icon: const Icon(Icons.edit), onPressed: () => _showEditDialog(c)),
-                          IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(c)),
-                        ],
+                    final c = filtered[i];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      child: ListTile(
+                        title: Text(c.name.isEmpty ? c.phone : c.name),
+                        subtitle: Text(c.phone),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showEditDialog(c)),
+                            IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(c)),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -152,4 +176,4 @@ class _CustomersScreenState extends State<CustomersScreen> {
       ],
     );
   }
-} 
+}
