@@ -10,14 +10,14 @@ namespace NailApi.Data
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Category> Categories => Set<Category>();
-        public DbSet<CategoryItem> CategoryItems => Set<CategoryItem>();
+        public DbSet<Service> Services => Set<Service>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>().HasKey(c => c.PhoneNumber);
+            modelBuilder.Entity<Customer>().HasKey(c => c.Phone);
 
             modelBuilder.Entity<Customer>()
-                .Property(c => c.PhoneNumber)
+                .Property(c => c.Phone)
                 .IsRequired();
 
             modelBuilder.Entity<Employee>()
@@ -28,14 +28,14 @@ namespace NailApi.Data
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<CategoryItem>()
-                .Property(ci => ci.Id)
+            modelBuilder.Entity<Service>()
+                .Property(s => s.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<CategoryItem>()
-                .HasOne(ci => ci.Category)
+            modelBuilder.Entity<Service>()
+                .HasOne(s => s.Category)
                 .WithMany(c => c.Items)
-                .HasForeignKey(ci => ci.CategoryId)
+                .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

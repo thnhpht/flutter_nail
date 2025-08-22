@@ -12,6 +12,7 @@ class EmployeesScreen extends StatefulWidget {
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
   late Future<List<Employee>> _future = widget.api.getEmployees();
+  String _search = '';
 
   Future<void> _reload() async {
     setState(() { _future = widget.api.getEmployees(); });
@@ -38,22 +39,32 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       ),
     );
     if (ok == true) {
-      await widget.api.createEmployee(nameCtrl.text.trim(), phone: phoneCtrl.text.trim().isEmpty ? null : phoneCtrl.text.trim());
-      await _reload();
+      final name = nameCtrl.text.trim();
+      final phone = phoneCtrl.text.trim();
+      if (name.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tên nhân viên không được để trống')));
+        return;
+      }
+      try {
+        await widget.api.createEmployee(name, phone: phone);
+        await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Thêm nhân viên thành công')));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+      }
     }
   }
 
   Future<void> _showEditDialog(Employee e) async {
-    final nameCtrl = TextEditingController(text: e.fullName);
-    final phoneCtrl = TextEditingController(text: e.phoneNumber ?? '');
+    final nameCtrl = TextEditingController(text: e.name);
+    final phoneCtrl = TextEditingController(text: e.phone ?? '');
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Sửa ${e.id}'),
+        title: Text('Thay đổi thông tin nhân viên'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('ID: ${e.id}'),
             TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Họ tên')),
             TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: 'SĐT')),
           ],
@@ -65,8 +76,13 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       ),
     );
     if (ok == true) {
-      await widget.api.updateEmployee(Employee(id: e.id, fullName: nameCtrl.text.trim(), phoneNumber: phoneCtrl.text.trim().isEmpty ? null : phoneCtrl.text.trim()));
-      await _reload();
+      try {
+        await widget.api.updateEmployee(Employee(id: e.id, name: nameCtrl.text.trim(), phone: phoneCtrl.text.trim().isEmpty ? null : phoneCtrl.text.trim()));
+        await _reload();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sửa nhân viên thành công')));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+      }
     }
   }
 
@@ -78,6 +94,16 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Tìm kiếm nhân viên...',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (v) => setState(() => _search = v.trim()),
+                ),
+              ),
+              const Spacer(),
               FilledButton.icon(onPressed: _showAddDialog, icon: const Icon(Icons.add), label: const Text('Thêm nhân viên')),
             ],
           ),
@@ -90,27 +116,31 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               final data = snapshot.data ?? [];
-              if (data.isEmpty) {
+              final filtered = data.where((e) => e.name.toLowerCase().contains(_search.toLowerCase()) || (e.phone ?? '').toLowerCase().contains(_search.toLowerCase())).toList();
+              if (filtered.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: _reload,
-                  child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Chưa có nhân viên'))]),
+                  child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Không tìm thấy nhân viên'))]),
                 );
               }
               return RefreshIndicator(
                 onRefresh: _reload,
                 child: ListView.builder(
-                  itemCount: data.length,
+                  itemCount: filtered.length,
                   itemBuilder: (context, i) {
-                    final e = data[i];
-                    return ListTile(
-                      title: Text(e.fullName),
-                      subtitle: Text(e.phoneNumber ?? ''),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(icon: const Icon(Icons.edit), onPressed: () => _showEditDialog(e)),
-                          IconButton(icon: const Icon(Icons.delete), onPressed: () async { await widget.api.deleteEmployee(e.id); await _reload(); }),
-                        ],
+                    final e = filtered[i];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      child: ListTile(
+                        title: Text(e.name),
+                        subtitle: Text(e.phone ?? ''),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showEditDialog(e)),
+                            IconButton(icon: const Icon(Icons.delete), onPressed: () async { await widget.api.deleteEmployee(e.id); await _reload(); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Xóa nhân viên thành công'))); }),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -122,4 +152,4 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       ],
     );
   }
-} 
+}

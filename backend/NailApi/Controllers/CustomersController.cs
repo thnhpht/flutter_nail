@@ -29,19 +29,19 @@ namespace NailApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> Create(Customer input)
         {
-            if (string.IsNullOrWhiteSpace(input.PhoneNumber))
-                return BadRequest("PhoneNumber is required");
+            if (string.IsNullOrWhiteSpace(input.Phone))
+                return BadRequest("Phone is required");
 
             _db.Customers.Add(input);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetByPhone), new { phone = input.PhoneNumber }, input);
+            return CreatedAtAction(nameof(GetByPhone), new { phone = input.Phone }, input);
         }
 
         [HttpPut("{phone}")]
         public async Task<IActionResult> Update(string phone, Customer input)
         {
-            if (phone != input.PhoneNumber) return BadRequest("Phone mismatch");
-            var exists = await _db.Customers.AnyAsync(c => c.PhoneNumber == phone);
+            if (phone != input.Phone) return BadRequest("Phone mismatch");
+            var exists = await _db.Customers.AnyAsync(c => c.Phone == phone);
             if (!exists) return NotFound();
             _db.Entry(input).State = EntityState.Modified;
             await _db.SaveChangesAsync();
