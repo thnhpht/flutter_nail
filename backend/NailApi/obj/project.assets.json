@@ -4542,19 +4542,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/thnhpht/.nuget/packages/": {}
+    "C:\\Users\\Data\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj",
+      "projectUniqueName": "C:\\flutter_app\\flutter_nail\\backend\\NailApi\\NailApi.csproj",
       "projectName": "NailApi",
-      "projectPath": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj",
-      "packagesPath": "/Users/thnhpht/.nuget/packages/",
-      "outputPath": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/obj/",
+      "projectPath": "C:\\flutter_app\\flutter_nail\\backend\\NailApi\\NailApi.csproj",
+      "packagesPath": "C:\\Users\\Data\\.nuget\\packages\\",
+      "outputPath": "C:\\flutter_app\\flutter_nail\\backend\\NailApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/thnhpht/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Data\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4577,8 +4577,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.300"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -4614,20 +4613,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.19, 8.0.19]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
-            "version": "[8.0.19, 8.0.19]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.19, 8.0.19]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4636,7 +4621,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.413/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -40,14 +40,16 @@ class Service {
   final String categoryId;
   final String name;
   final double price;
+  final String? image;
 
-  Service({required this.id, required this.categoryId, required this.name, required this.price});
+  Service({required this.id, required this.categoryId, required this.name, required this.price, this.image});
 
   factory Service.fromJson(Map<String, dynamic> json) => Service(
     id: json['id'] as String,
     categoryId: json['categoryId'] as String,
     name: json['name'] as String,
     price: (json['price'] as num).toDouble(),
+    image: json['image'] as String?,
   );
 
   Map<String, dynamic> toJson() => {
@@ -55,6 +57,7 @@ class Service {
     'categoryId': categoryId,
     'name': name,
     'price': price,
+    'image': image,
   };
 }
 
@@ -63,8 +66,9 @@ class Category {
   final String name;
   final String? description;
   final List<Service> items;
+  final String? image;
 
-  Category({required this.id, required this.name, this.description, this.items = const []});
+  Category({required this.id, required this.name, this.description, this.items = const [], this.image});
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
     id: json['id'] as String,
@@ -73,6 +77,7 @@ class Category {
     items: (json['items'] as List<dynamic>? ?? [])
         .map((e) => Service.fromJson(e as Map<String, dynamic>))
         .toList(),
+    image: json['image'] as String?,
   );
 
   Map<String, dynamic> toJson() => {
@@ -80,5 +85,6 @@ class Category {
     'name': name,
     'description': description,
     'items': items.map((e) => e.toJson()).toList(),
+    'image': image,
   };
 }

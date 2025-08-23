@@ -73,10 +73,10 @@ class ApiClient {
     return list.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> createCategory(String name, {String? description}) async {
+  Future<void> createCategory(String name, {String? description, String? image}) async {
     final r = await http.post(_u('/categories'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'name': name, 'description': description, 'items': []}));
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'name': name, 'description': description, 'items': [], 'image': image}));
     _check(r, expect201: true);
   }
 
@@ -99,10 +99,10 @@ class ApiClient {
     return list.map((e) => Service.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> createService(String categoryId, String name, double price) async {
+  Future<void> createService(String categoryId, String name, double price, {String? image}) async {
     final r = await http.post(_u('/services'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'categoryId': categoryId, 'name': name, 'price': price}));
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'categoryId': categoryId, 'name': name, 'price': price, 'image': image}));
     _check(r, expect201: true);
   }
 

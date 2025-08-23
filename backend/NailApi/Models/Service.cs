@@ -11,6 +11,7 @@ namespace NailApi.Models
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int DurationMin { get; set; }
+        public string? Image { get; set; } // URL or path to image
         [JsonIgnore]
         public Category? Category { get; set; }
     }
