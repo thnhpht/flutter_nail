@@ -73,10 +73,10 @@ class ApiClient {
     return list.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> createCategory(String name, {String? description, String? image}) async {
+  Future<void> createCategory(String name, {String? image}) async {
     final r = await http.post(_u('/categories'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'name': name, 'description': description, 'items': [], 'image': image}));
+      body: jsonEncode({'name': name, 'items': [], 'image': image}));
     _check(r, expect201: true);
   }
 
@@ -115,6 +115,46 @@ class ApiClient {
   Future<void> deleteService(String categoryId, String serviceId) async {
     final r = await http.delete(_u('/services/$serviceId'));
     _check(r, expect204: true);
+  }
+
+  // Orders
+  Future<List<Order>> getOrders() async {
+    final r = await http.get(_u('/orders'));
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list.map((e) => Order.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<Order> createOrder(Order order) async {
+    // Convert lists to JSON strings for backend
+    final orderData = order.toJson();
+    orderData['categoryIds'] = jsonEncode(order.categoryIds);
+    orderData['serviceIds'] = jsonEncode(order.serviceIds);
+    orderData['serviceNames'] = jsonEncode(order.serviceNames);
+    
+    final r = await http.post(_u('/orders'),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(orderData));
+    _check(r, expect201: true);
+    
+    return Order.fromJson(jsonDecode(r.body));
+  }
+
+  // Helper methods for finding customers and employees by phone
+  Future<Customer?> findCustomerByPhone(String phone) async {
+    try {
+      return await getCustomer(phone);
+    } catch (e) {
+      return null; // Customer not found
+    }
+  }
+
+  Future<Employee?> findEmployeeByPhone(String phone) async {
+    try {
+      final employees = await getEmployees();
+      return employees.firstWhere((e) => e.phone == phone);
+    } catch (e) {
+      return null; // Employee not found
+    }
   }
 
   void _check(http.Response r, {bool expect201 = false, bool expect204 = false}) {

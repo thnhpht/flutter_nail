@@ -17,7 +17,7 @@ namespace NailApi.Controllers
             await _db.Employees.AsNoTracking().ToListAsync();
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetById(string id)
+        public async Task<ActionResult<Employee>> GetById(Guid id)
         {
             var entity = await _db.Employees.FindAsync(id);
             return entity == null ? NotFound() : entity;
@@ -26,15 +26,15 @@ namespace NailApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> Create(Employee input)
         {
-            if (string.IsNullOrWhiteSpace(input.Id))
-                input.Id = Guid.NewGuid().ToString();
+            if (input.Id == Guid.Empty)
+                input.Id = Guid.NewGuid();
             _db.Employees.Add(input);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, Employee input)
+        public async Task<IActionResult> Update(Guid id, Employee input)
         {
             if (id != input.Id) return BadRequest();
             var exists = await _db.Employees.AnyAsync(e => e.Id == id);
@@ -45,7 +45,7 @@ namespace NailApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var entity = await _db.Employees.FindAsync(id);
             if (entity == null) return NotFound();
