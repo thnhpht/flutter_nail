@@ -5,7 +5,7 @@ namespace NailApi.Models
     [Table("Employee")]
     public class Employee
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;
         public string? Phone { get; set; }
     }

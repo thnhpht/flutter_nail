@@ -11,6 +11,7 @@ namespace NailApi.Data
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Service> Services => Set<Service>();
+        public DbSet<Order> Orders => Set<Order>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,21 +23,25 @@ namespace NailApi.Data
 
             modelBuilder.Entity<Employee>()
                 .Property(e => e.Id)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder.Entity<Service>()
                 .Property(s => s.Id)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder.Entity<Service>()
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Items)
                 .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Id)
+                .HasDefaultValueSql("NEWID()");
         }
     }
 }

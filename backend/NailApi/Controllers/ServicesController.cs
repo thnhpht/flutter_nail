@@ -21,22 +21,22 @@ namespace NailApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Service>> Create(Service input)
         {
-            if (string.IsNullOrWhiteSpace(input.Id))
-                input.Id = Guid.NewGuid().ToString();
+            if (input.Id == Guid.Empty)
+                input.Id = Guid.NewGuid();
             _db.Services.Add(input);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Service>> GetById(string id)
+        public async Task<ActionResult<Service>> GetById(Guid id)
         {
             var entity = await _db.Services.FindAsync(id);
             return entity == null ? NotFound() : entity;
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, Service input)
+        public async Task<IActionResult> Update(Guid id, Service input)
         {
             if (id != input.Id) return BadRequest();
             _db.Entry(input).State = EntityState.Modified;
@@ -45,7 +45,7 @@ namespace NailApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var entity = await _db.Services.FindAsync(id);
             if (entity == null) return NotFound();
