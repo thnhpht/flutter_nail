@@ -6,8 +6,9 @@ import 'screens/employees_screen.dart';
 import 'screens/categories_screen.dart';
 import 'screens/services_screen.dart';
 import 'screens/bills_screen.dart';
+import 'screens/reports_screen.dart';
 
-enum _HomeView { welcome, customers, employees, categories, services, orders, bills }
+enum _HomeView { welcome, customers, employees, categories, services, orders, bills, reports }
 
 void main() {
 const baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:5088/api');
@@ -178,8 +179,10 @@ Widget build(BuildContext context) {
                         return ServicesScreen(api: api);
                       case _HomeView.orders:
                         return OrderScreen(api: api, onOrderCreated: _refreshBills);
-                                              case _HomeView.bills:
+                      case _HomeView.bills:
                           return BillsScreen(api: api);
+                      case _HomeView.reports:
+                          return ReportsScreen(api: api);
                       case _HomeView.welcome:
                       default:
                         return _buildWelcomeScreen();
@@ -294,7 +297,12 @@ Widget _buildWelcomeScreen() {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Container(), // Empty space for balance
+              child: _buildFeatureCard(
+                icon: Icons.analytics,
+                title: 'Báo cáo',
+                subtitle: 'Báo cáo doanh thu',
+                onTap: () => setState(() => _view = _HomeView.reports),
+              ),
             ),
           ],
         ) 

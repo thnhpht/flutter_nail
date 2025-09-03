@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7PyepQxppB0=",
+  "dgSpecHash": "Bl9D+8RkWuo=",
   "success": true,
-  "projectFilePath": "C:\\flutter_app\\flutter_nail\\backend\\NailApi\\NailApi.csproj",
+  "projectFilePath": "C:\\flutter_app\\backend\\NailApi\\NailApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Data\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Data\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

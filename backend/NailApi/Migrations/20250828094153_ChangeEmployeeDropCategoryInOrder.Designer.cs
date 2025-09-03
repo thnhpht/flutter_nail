@@ -12,8 +12,8 @@ using NailApi.Data;
 namespace NailApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250827081153_Empty")]
-    partial class Empty
+    [Migration("20250828094153_ChangeEmployeeDropCategoryInOrder")]
+    partial class ChangeEmployeeDropCategoryInOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,14 +84,6 @@ namespace NailApi.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("CategoryIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -103,10 +95,14 @@ namespace NailApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<double>("DiscountPercent")
+                        .HasColumnType("float");
 
-                    b.Property<string>("EmployeeName")
+                    b.Property<string>("EmployeeIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeNames")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

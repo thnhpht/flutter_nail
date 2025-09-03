@@ -48,21 +48,6 @@ namespace NailApi.Controllers
                 order.Id = Guid.NewGuid();
             }
 
-            // Convert category IDs list to JSON string for storage
-            if (order.CategoryIds != null && order.CategoryIds != "[]")
-            {
-                try
-                {
-                    JsonSerializer.Deserialize<string[]>(order.CategoryIds);
-                }
-                catch
-                {
-                    // If it's not valid JSON, assume it's a comma-separated string
-                    var categoryIds = order.CategoryIds.Split(',').Select(s => s.Trim()).ToArray();
-                    order.CategoryIds = JsonSerializer.Serialize(categoryIds);
-                }
-            }
-
             // Convert service lists to JSON strings for storage
             if (order.ServiceIds != null && order.ServiceIds != "[]")
             {

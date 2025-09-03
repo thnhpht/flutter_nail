@@ -42,25 +42,6 @@ Tính năng hóa đơn thanh toán cho phép tạo và quản lý hóa đơn t�
 
 ### File cấu hình: `lib/config/salon_config.dart`
 
-```dart
-class SalonConfig {
-  static const String salonName = 'AeRI Nailroom';
-  static const String salonAddress = '123 Đường ABC, Quận 1, TP.HCM';
-  static const String salonPhone = '0123 456 789';
-  static const String salonEmail = 'info@aerinailroom.com';
-  static const String salonWebsite = 'www.aerinailroom.com';
-
-  // Cấu hình hóa đơn
-  static const String billTitle = 'HÓA ĐƠN THANH TOÁN';
-  static const String billFooter = 'Cảm ơn quý khách đã sử dụng dịch vụ!';
-  static const String billFooter2 = 'Hẹn gặp lại quý khách!';
-
-  // Tiền tệ
-  static const String currency = 'VNĐ';
-  static const String currencySymbol = '₫';
-}
-```
-
 ### Tùy chỉnh thông tin salon
 
 1. Mở file `lib/config/salon_config.dart`

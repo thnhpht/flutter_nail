@@ -92,46 +92,57 @@ class Order {
   final String id;
   final String customerPhone;
   final String customerName;
-  final String employeeId;
-  final String employeeName;
-  final List<String> categoryIds;
-  final String categoryName;
+  final List<String> employeeIds;
+  final List<String> employeeNames;
   final List<String> serviceIds;
   final List<String> serviceNames;
   final double totalPrice;
+  final double discountPercent;
   final DateTime createdAt;
 
   Order({
     required this.id,
     required this.customerPhone,
     required this.customerName,
-    required this.employeeId,
-    required this.employeeName,
-    required this.categoryIds,
-    required this.categoryName,
+    required this.employeeIds,
+    required this.employeeNames,
     required this.serviceIds,
     required this.serviceNames,
     required this.totalPrice,
+    this.discountPercent = 0.0,
     required this.createdAt,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
-    List<String> categoryIds = [];
+    List<String> employeeIds = [];
+    List<String> employeeNames = [];
     List<String> serviceIds = [];
     List<String> serviceNames = [];
     
-    // Handle categoryIds - could be JSON string or array
-    if (json['categoryIds'] is String) {
+    // Handle employeeIds - could be JSON string or array
+    if (json['employeeIds'] is String) {
       try {
-        final decoded = jsonDecode(json['categoryIds'] as String);
-        categoryIds = (decoded as List<dynamic>).cast<String>();
+        final decoded = jsonDecode(json['employeeIds'] as String);
+        employeeIds = (decoded as List<dynamic>).cast<String>();
       } catch (e) {
-        categoryIds = [];
+        employeeIds = [];
       }
-    } else if (json['categoryIds'] is List) {
-      categoryIds = (json['categoryIds'] as List<dynamic>).cast<String>();
+    } else if (json['employeeIds'] is List) {
+      employeeIds = (json['employeeIds'] as List<dynamic>).cast<String>();
     }
-    
+
+    // Handle employeeNames - could be JSON string or array
+    if (json['employeeNames'] is String) {
+      try {
+        final decoded = jsonDecode(json['employeeNames'] as String);
+        employeeNames = (decoded as List<dynamic>).cast<String>();
+      } catch (e) {
+        employeeNames = [];
+      }
+    } else if (json['employeeNames'] is List) {
+      employeeNames = (json['employeeNames'] as List<dynamic>).cast<String>();
+    }
+
     // Handle serviceIds - could be JSON string or array
     if (json['serviceIds'] is String) {
       try {
@@ -160,13 +171,12 @@ class Order {
       id: json['id'] as String,
       customerPhone: json['customerPhone'] as String,
       customerName: json['customerName'] as String,
-      employeeId: json['employeeId'] as String,
-      employeeName: json['employeeName'] as String,
-      categoryIds: categoryIds,
-      categoryName: json['categoryName'] as String,
+      employeeIds: employeeIds,
+      employeeNames: employeeNames,
       serviceIds: serviceIds,
       serviceNames: serviceNames,
       totalPrice: (json['totalPrice'] as num).toDouble(),
+      discountPercent: (json['discountPercent'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
@@ -175,13 +185,12 @@ class Order {
     'id': id,
     'customerPhone': customerPhone,
     'customerName': customerName,
-    'employeeId': employeeId,
-    'employeeName': employeeName,
-    'categoryIds': categoryIds,
-    'categoryName': categoryName,
+    'employeeIds': employeeIds,
+    'employeeNames': employeeNames,
     'serviceIds': serviceIds,
     'serviceNames': serviceNames,
     'totalPrice': totalPrice,
+    'discountPercent': discountPercent,
     'createdAt': createdAt.toIso8601String(),
   };
 }

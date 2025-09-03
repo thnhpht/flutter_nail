@@ -23,6 +23,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _customerNameController = TextEditingController();
   final _employeePhoneController = TextEditingController();
   final _employeeNameController = TextEditingController();
+  final _discountController = TextEditingController();
   
   List<Category> _categories = [];
   List<Service> _selectedServices = [];
@@ -30,6 +31,8 @@ class _OrderScreenState extends State<OrderScreen> {
   List<Employee> _employees = [];
   List<Employee> _selectedEmployees = [];
   double _totalPrice = 0.0;
+  double _discountPercent = 0.0;
+  double _finalTotalPrice = 0.0;
   bool _isLoading = false;
   bool _showCategoryDropdown = false;
   bool _showServiceDropdown = false;
@@ -90,6 +93,7 @@ class _OrderScreenState extends State<OrderScreen> {
     _customerNameController.dispose();
     _employeePhoneController.dispose();
     _employeeNameController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
@@ -268,6 +272,23 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _calculateTotal() {
     _totalPrice = _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+    _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100);
+  }
+
+  void _onDiscountChanged(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        _discountPercent = 0.0;
+      } else {
+        final discount = double.tryParse(value) ?? 0.0;
+        _discountPercent = discount.clamp(0.0, 100.0);
+        _discountController.text = _discountPercent.toStringAsFixed(0);
+        _discountController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _discountController.text.length),
+        );
+      }
+      _calculateTotal();
+    });
   }
 
   Future<void> _createOrder() async {
@@ -300,30 +321,27 @@ class _OrderScreenState extends State<OrderScreen> {
       // Create orders for each selected employee
       List<Order> createdOrders = [];
       if (_selectedCategories.isNotEmpty && _selectedServices.isNotEmpty) {
-        for (final employee in _selectedEmployees) {
-          final order = Order(
-            id: '00000000-0000-0000-0000-000000000000', // Guid.Empty - will be replaced by server
-            customerPhone: customerPhone,
-            customerName: customerName,
-            employeeId: employee.id,
-            employeeName: employee.name,
-            categoryIds: _selectedCategories.map((c) => c.id).toList(),
-            categoryName: _selectedCategories.map((c) => c.name).join(', '), // Combine all category names
-            serviceIds: _selectedServices.map((s) => s.id).toList(),
-            serviceNames: _selectedServices.map((s) => s.name).toList(),
-            totalPrice: _totalPrice,
-            createdAt: DateTime.now(),
-          );
+        final order = Order(
+          id: '00000000-0000-0000-0000-000000000000', // Guid.Empty - will be replaced by server
+          customerPhone: customerPhone,
+          customerName: customerName,
+          employeeIds: _selectedEmployees.map((e) => e.id).toList(),
+          employeeNames: _selectedEmployees.map((e) => e.name).toList(),
+          serviceIds: _selectedServices.map((s) => s.id).toList(),
+          serviceNames: _selectedServices.map((s) => s.name).toList(),
+          totalPrice: _finalTotalPrice,
+          discountPercent: _discountPercent,
+          createdAt: DateTime.now(),
+        );
 
-          // Validate order data
-          if (order.serviceIds.isEmpty || order.serviceNames.isEmpty) {
-            throw Exception('Dữ liệu dịch vụ không hợp lệ');
-          }
-
-          // Create order and get the response with real ID
-          final createdOrder = await widget.api.createOrder(order);
-          createdOrders.add(createdOrder);
+        // Validate order data
+        if (order.serviceIds.isEmpty || order.serviceNames.isEmpty) {
+          throw Exception('Dữ liệu dịch vụ không hợp lệ');
         }
+
+        // Create order and get the response with real ID
+        final createdOrder = await widget.api.createOrder(order);
+        createdOrders.add(createdOrder);   
       }
       
       showFlushbar('Đã tạo đơn thành công!', type: MessageType.success);
@@ -375,11 +393,14 @@ class _OrderScreenState extends State<OrderScreen> {
     _customerNameController.clear();
     _employeePhoneController.clear();
     _employeeNameController.clear();
+    _discountController.clear();
     setState(() {
       _selectedCategories.clear();
       _selectedServices.clear();
       _selectedEmployees.clear();
       _totalPrice = 0.0;
+      _discountPercent = 0.0;
+      _finalTotalPrice = 0.0;
       _showCategoryDropdown = false;
       _showServiceDropdown = false;
       _showEmployeeDropdown = false;
@@ -573,7 +594,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               return _buildChip(
                                 label: category.name,
                                 onDeleted: () => _removeSelectedCategory(category),
-                                color: const Color(0xFF667eea),
+                                color: const Color(0xFF7386dd),
                               );
                             }).toList(),
                           ),
@@ -710,6 +731,81 @@ class _OrderScreenState extends State<OrderScreen> {
                   
                   const SizedBox(height: 16),
 
+                  // Discount Section
+                  _buildSectionCard(
+                    title: 'Giảm giá',
+                    icon: Icons.discount,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _discountController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: '0',
+                                  suffixText: '%',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[50],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onChanged: _onDiscountChanged,
+                                validator: (value) {
+                                  if (value != null && value.isNotEmpty) {
+                                    final discount = double.tryParse(value);
+                                    if (discount == null || discount < 0 || discount > 100) {
+                                      return 'Giảm giá phải từ 0-100%';
+                                    }
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                  begin: Alignment.bottomLeft,
+                                  end: Alignment.topRight,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                'Tiết kiệm: ${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 16),
+
                   // Total Price
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -721,24 +817,74 @@ class _OrderScreenState extends State<OrderScreen> {
                       ),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        const Text(
-                          'Tổng tiền:',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Thành tiền:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              '${_formatPrice(_totalPrice)} VNĐ',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${_formatPrice(_totalPrice)} VNĐ',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        if (_discountPercent > 0) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Giảm giá (${_discountPercent.toStringAsFixed(0)}%):',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
+                        ],
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tổng thanh toán:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              '${_formatPrice(_finalTotalPrice)} VNĐ',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

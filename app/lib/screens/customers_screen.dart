@@ -594,19 +594,23 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   subtitle: 'Quản lý thông tin khách hàng',
                   fullWidth: true,
                 ),
-                                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: AppTheme.controlHeight,
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: AppTheme.inputDecoration(
-                        label: 'Tìm kiếm khách hàng...',
-                        prefixIcon: Icons.search,
-                      ),
-                      onChanged: (v) => setState(() => _search = v.trim()),
+
+                const SizedBox(height: 24),
+
+                SizedBox(
+                  height: AppTheme.controlHeight,
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: AppTheme.inputDecoration(
+                      label: 'Tìm kiếm khách hàng...',
+                      prefixIcon: Icons.search,
                     ),
+                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
+                ),
+
                 const SizedBox(height: 12),
+
                 SizedBox(
                   height: MediaQuery.of(context).size.height - 300, // Đảm bảo có chiều cao cố định
                   child: FutureBuilder<List<Customer>>(

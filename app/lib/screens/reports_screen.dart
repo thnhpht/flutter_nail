@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../api_client.dart';
 import '../models.dart';
-import '../ui/bill_helper.dart';
 import '../ui/design_system.dart';
-import '../config/salon_config.dart';
-import 'dart:convert'; // Added for jsonDecode
-import 'package:intl/intl.dart';
 
-class BillsScreen extends StatefulWidget {
-  const BillsScreen({super.key, required this.api});
+class ReportsScreen extends StatefulWidget {
+  const ReportsScreen({super.key, required this.api});
 
   final ApiClient api;
 
   @override
-  State<BillsScreen> createState() => _BillsScreenState();
+  State<ReportsScreen> createState() => _ReportsScreenState();
 }
 
-class _BillsScreenState extends State<BillsScreen> {
+class _ReportsScreenState extends State<ReportsScreen> {
   List<Order> _orders = [];
-  List<Service> _allServices = [];
+  List<Employee> _employees = [];
   bool _isLoading = true;
-  String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
+  Employee? _selectedEmployee;
+  String _searchQuery = '';
+
+  // Thống kê
+  double _totalRevenue = 0.0;
+  int _totalOrders = 0;
 
   @override
   void initState() {
@@ -37,7 +39,7 @@ class _BillsScreenState extends State<BillsScreen> {
   Future<void> refreshData() async {
     await _loadData();
   }
-
+  
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -45,19 +47,15 @@ class _BillsScreenState extends State<BillsScreen> {
 
     try {
       final orders = await widget.api.getOrders();
-      final categories = await widget.api.getCategories();
-      
-      // Flatten all services from categories
-      final allServices = <Service>[];
-      for (final category in categories) {
-        allServices.addAll(category.items);
-      }
+      final employees = await widget.api.getEmployees();
 
       setState(() {
         _orders = orders;
-        _allServices = allServices;
+        _employees = employees;
         _isLoading = false;
       });
+
+      _updateFilters();
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -66,7 +64,17 @@ class _BillsScreenState extends State<BillsScreen> {
     }
   }
 
-  List<Order> get _filteredOrders {
+  void _calculateStatistics() {
+    final filteredOrders = _getFilteredOrders();
+    
+    // Tính tổng doanh thu
+    _totalRevenue = filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice);
+    
+    // Tính số lượng hóa đơn
+    _totalOrders = filteredOrders.length;
+  }
+
+  List<Order> _getFilteredOrders() {
     List<Order> filtered = _orders;
     
     // Áp dụng tìm kiếm
@@ -90,101 +98,24 @@ class _BillsScreenState extends State<BillsScreen> {
       }).toList();
     }
     
+    // Áp dụng lọc theo nhân viên
+    if (_selectedEmployee != null) {
+      filtered = filtered.where((order) {
+        return order.employeeIds.contains(_selectedEmployee!.id);
+      }).toList();
+    }
+    
     // Sắp xếp theo thời gian mới nhất
     filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     
     return filtered;
   }
 
-  List<Service> _getServicesForOrder(Order order) {
-    if (order.serviceIds.isEmpty) {
-      return [];
-    }
-    
-    // Try to parse as JSON first if it's a string
-    if (order.serviceIds is String) {
-      try {
-        final serviceIdsString = order.serviceIds as String;
-        if (serviceIdsString.startsWith('[') && serviceIdsString.endsWith(']')) {
-          final decoded = jsonDecode(serviceIdsString) as List<dynamic>;
-          final serviceIdList = decoded.cast<String>();
-          
-          final services = _allServices.where((service) => serviceIdList.contains(service.id)).toList();
-          return services;
-        }
-      } catch (e) {
-        // Ignore parsing errors and fall back to direct matching
-      }
-    }
-    
-    // Fallback: try direct string matching
-    final services = _allServices.where((service) => order.serviceIds.contains(service.id)).toList();
-    return services;
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  void _showBill(Order order) {
-    final services = _getServicesForOrder(order);
-    if (services.isEmpty) {
-      _showErrorSnackBar('Không tìm thấy thông tin dịch vụ cho đơn hàng này');
-      return;
-    }
-
-    BillHelper.showBillDialog(
-      context: context,
-      order: order,
-      services: services,
-      salonName: SalonConfig.salonName,
-      salonAddress: SalonConfig.salonAddress,
-      salonPhone: SalonConfig.salonPhone,
-    );
-  }
-
-  String _formatPrice(double price) {
-    return price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-  }
-
-  String _formatTime(DateTime date) {
-    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _formatBillId(String orderId) {
-    // Kiểm tra nếu ID là GUID mặc định hoặc rỗng
-    if (orderId.isEmpty || 
-        orderId == "00000000-0000-0000-0000-000000000000" ||
-        orderId == "00000000000000000000000000000000") {
-      return "TẠM THỜI";
-    }
-    
-    // Nếu ID có độ dài hợp lệ, lấy 8 ký tự đầu
-    if (orderId.length >= 8) {
-      return orderId.substring(0, 8).toUpperCase();
-    }
-    
-    // Trường hợp khác, trả về ID gốc
-    return orderId.toUpperCase();
-  }
-
   Future<void> _selectDateRange() async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: DateTime.now(),
       initialDateRange: _selectedDateRange ?? DateTimeRange(
         start: DateTime.now(),
         end: DateTime.now(),
@@ -192,13 +123,9 @@ class _BillsScreenState extends State<BillsScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: AppTheme.primaryStart,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: AppTheme.textPrimary,
             ),
-            dialogBackgroundColor: Colors.white,
           ),
           child: child!,
         );
@@ -209,6 +136,24 @@ class _BillsScreenState extends State<BillsScreen> {
       setState(() {
         _selectedDateRange = picked;
       });
+      _updateFilters();
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _updateFilters() {
+    if (mounted) {
+      _calculateStatistics();
+      setState(() {});
     }
   }
 
@@ -268,7 +213,7 @@ class _BillsScreenState extends State<BillsScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Chọn khoảng thời gian để xem hóa đơn',
+                            'Chọn khoảng thời gian để xem báo cáo',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -419,6 +364,7 @@ class _BillsScreenState extends State<BillsScreen> {
     setState(() {
       _selectedDateRange = null;
     });
+    _updateFilters();
   }
 
   void _setPresetDateRange(String preset) {
@@ -464,6 +410,7 @@ class _BillsScreenState extends State<BillsScreen> {
       setState(() {
         _selectedDateRange = newRange;
       });
+      _updateFilters();
       // Close the dialog if it's open
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
@@ -483,26 +430,6 @@ class _BillsScreenState extends State<BillsScreen> {
     }
     
     return '$startDate - $endDate';
-  }
-
-  String _getEmptyStateTitle() {
-    if (_selectedDateRange != null) {
-      return 'Không có hóa đơn trong khoảng thời gian này';
-    }
-    if (_searchQuery.isNotEmpty) {
-      return 'Không tìm thấy hóa đơn';
-    }
-    return 'Chưa có hóa đơn nào';
-  }
-
-  String _getEmptyStateMessage() {
-    if (_selectedDateRange != null) {
-      return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
-    }
-    if (_searchQuery.isNotEmpty) {
-      return 'Thử tìm kiếm với từ khóa khác';
-    }
-    return 'Tạo đơn hàng đầu tiên để xem hóa đơn ở đây';
   }
 
   Widget _buildPresetButtonsGrid() {
@@ -585,6 +512,8 @@ class _BillsScreenState extends State<BillsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final filteredOrders = _getFilteredOrders();
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -640,11 +569,11 @@ class _BillsScreenState extends State<BillsScreen> {
                 children: [
                   AppWidgets.gradientHeader(
                     icon: Icons.receipt,
-                    title: 'Hóa đơn',
-                    subtitle: 'Quản lý hóa đơn',
+                    title: 'Báo Cáo Doanh Thu',
+                    subtitle: 'Thống kê và báo cáo doanh thu',
                     fullWidth: true,
                   ),
-
+                    
                   const SizedBox(height: AppTheme.spacingXL),
 
                   // Search Bar
@@ -655,9 +584,10 @@ class _BillsScreenState extends State<BillsScreen> {
                         setState(() {
                           _searchQuery = value;
                         });
+                        _updateFilters();
                       },
                       decoration: InputDecoration(
-                        hintText: 'Tìm kiếm hóa đơn...',
+                        hintText: 'Tìm kiếm...',
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -667,6 +597,7 @@ class _BillsScreenState extends State<BillsScreen> {
                                   setState(() {
                                     _searchQuery = '';
                                   });
+                                  _updateFilters();
                                 },
                               )
                             : null,
@@ -680,7 +611,40 @@ class _BillsScreenState extends State<BillsScreen> {
                       ),
                     ),
                   ),
-                  
+
+                  const SizedBox(height: AppTheme.spacingL),
+
+                  // Employee Filter
+                  Container(
+                    decoration: AppTheme.cardDecoration(),
+                    child: DropdownButtonFormField<Employee>(
+                      decoration: AppTheme.inputDecoration(
+                        label: 'Chọn nhân viên',
+                        prefixIcon: Icons.person,
+                      ).copyWith(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      value: _selectedEmployee,
+                      items: [
+                        const DropdownMenuItem<Employee>(
+                          value: null,
+                          child: Text('Tất cả nhân viên'),
+                        ),
+                        ..._employees.map((employee) => DropdownMenuItem<Employee>(
+                          value: employee,
+                          child: Text(employee.name),
+                        )),
+                      ],
+                      onChanged: (Employee? value) {
+                        setState(() {
+                          _selectedEmployee = value;
+                        });
+                        _updateFilters();
+                      },
+                    ),
+                  ),
+                                      
                   // Date Range Info Display (only show when date range is selected)
                   if (_selectedDateRange != null) ...[
                     const SizedBox(height: AppTheme.spacingL),
@@ -739,47 +703,25 @@ class _BillsScreenState extends State<BillsScreen> {
                       ),
                     ),
                   ],
-
+                  
                   const SizedBox(height: AppTheme.spacingL),
 
-                  // Stats
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildStatCard(
-                            title: _selectedDateRange != null ? 'Hóa đơn đã lọc' : 'Tổng hóa đơn',
-                            value: _filteredOrders.length.toString(),
-                            icon: Icons.receipt,
-                            color: AppTheme.primaryStart,
-                          ),
-                        ),
-                        const SizedBox(width: AppTheme.spacingS),
-                        Expanded(
-                          child: _buildStatCard(
-                            title: _selectedDateRange != null ? 'Doanh thu đã lọc' : 'Tổng doanh thu',
-                            value: '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
-                            icon: Icons.attach_money,
-                            color: AppTheme.primaryEnd,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Thống kê tổng quan
+                  _buildSummaryCards(),
 
-                  const SizedBox(height: AppTheme.spacingM),
-
-                  // Orders List
+                  const SizedBox(height: AppTheme.spacingL),
+                  
+                  // Danh sách hóa đơn
                   if (_isLoading)
                     const Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryStart),
                       ),
                     )
-                  else if (_filteredOrders.isEmpty)
+                  else if (filteredOrders.isEmpty)
                     _buildEmptyState()
                   else
-                    ..._filteredOrders.asMap().entries.map((entry) {
+                    ...filteredOrders.asMap().entries.map((entry) {
                       final index = entry.key;
                       final order = entry.value;
                       return AppWidgets.animatedItem(
@@ -798,7 +740,35 @@ class _BillsScreenState extends State<BillsScreen> {
     );
   }
 
-  Widget _buildStatCard({
+
+
+  Widget _buildSummaryCards() {
+    return Container(
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildSummaryCard(
+              title: 'Hóa đơn',
+              value: _totalOrders.toString(),
+              icon: Icons.receipt,
+              color: Colors.blue,
+            ),
+          ),
+          const SizedBox(width: AppTheme.spacingM),
+          Expanded(
+            child: _buildSummaryCard(
+              title: 'Doanh Thu',
+              value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_totalRevenue),
+              icon: Icons.attach_money,
+              color: Colors.green,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard({
     required String title,
     required String value,
     required IconData icon,
@@ -813,10 +783,10 @@ class _BillsScreenState extends State<BillsScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(AppTheme.spacingS),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 20),
               ),
@@ -824,10 +794,9 @@ class _BillsScreenState extends State<BillsScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ),
@@ -847,6 +816,8 @@ class _BillsScreenState extends State<BillsScreen> {
     );
   }
 
+
+
   Widget _buildOrderCard(Order order) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
@@ -855,7 +826,9 @@ class _BillsScreenState extends State<BillsScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-          onTap: () => _showBill(order),
+          onTap: () {
+            // Có thể thêm action khi tap vào order card
+          },
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.spacingM),
             child: Column(
@@ -899,7 +872,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         ),
                       ),
                       child: Text(
-                        '#${_formatBillId(order.id)}',
+                        '#${_formatOrderId(order.id)}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -1001,7 +974,7 @@ class _BillsScreenState extends State<BillsScreen> {
                               ),
                             ),
                             Text(
-                              '-${_formatPrice(order.totalPrice / (1 - order.discountPercent / 100) * order.discountPercent / 100)} ${SalonConfig.currency}',
+                              '-${_formatPrice(order.totalPrice / (1 - order.discountPercent / 100) * order.discountPercent / 100)} ₫',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -1024,7 +997,7 @@ class _BillsScreenState extends State<BillsScreen> {
                             ),
                           ),
                           Text(
-                            '${_formatPrice(order.totalPrice)} ${SalonConfig.currency}',
+                            '${_formatPrice(order.totalPrice)} ₫',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1040,62 +1013,6 @@ class _BillsScreenState extends State<BillsScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildServicesDisplay(Order order) {
-    // First try to get services from the loaded services list
-    final services = _getServicesForOrder(order);
-    
-    if (services.isNotEmpty) {
-      final displayServices = services.take(2).map((s) => s.name).join(', ');
-      if (services.length > 2) {
-        return Text(
-          '${displayServices}...',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[700],
-          ),
-        );
-      }
-      return Text(
-        displayServices,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.grey[700],
-        ),
-      );
-    }
-
-    // Fallback to serviceNames from order if no services found in loaded list
-    if (order.serviceNames.isNotEmpty) {
-      final displayServices = order.serviceNames.take(2).join(', ');
-      if (order.serviceNames.length > 2) {
-        return Text(
-          '${displayServices}...',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[700],
-          ),
-        );
-      }
-      return Text(
-        displayServices,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.grey[700],
-        ),
-      );
-    }
-
-    // If no service names available, show a placeholder
-    return Text(
-      'Không có dịch vụ',
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.grey[600],
-        fontStyle: FontStyle.italic,
       ),
     );
   }
@@ -1139,4 +1056,88 @@ class _BillsScreenState extends State<BillsScreen> {
       ),
     );
   }
-}
+
+  String _getEmptyStateTitle() {
+    if (_selectedDateRange != null) {
+      return 'Không có hóa đơn trong khoảng thời gian này';
+    }
+    if (_searchQuery.isNotEmpty) {
+      return 'Không tìm thấy hóa đơn';
+    }
+    return 'Chưa có hóa đơn nào';
+  }
+
+  String _getEmptyStateMessage() {
+    if (_selectedDateRange != null) {
+      return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
+    }
+    if (_searchQuery.isNotEmpty) {
+      return 'Thử tìm kiếm với từ khóa khác';
+    }
+    return 'Tạo hóa đơn đầu tiên để xem báo cáo ở đây';
+  }
+
+  String _formatPrice(double price) {
+    return price.toStringAsFixed(0).replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match match) => '${match[1]}.',
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  String _formatTime(DateTime date) {
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  String _formatOrderId(String orderId) {
+    // Kiểm tra nếu ID là GUID mặc định hoặc rỗng
+    if (orderId.isEmpty || 
+        orderId == "00000000-0000-0000-0000-000000000000" ||
+        orderId == "00000000000000000000000000000000") {
+      return "TẠM THỜI";
+    }
+    
+    // Nếu ID có độ dài hợp lệ, lấy 8 ký tự đầu
+    if (orderId.length >= 8) {
+      return orderId.substring(0, 8).toUpperCase();
+    }
+    
+    // Trường hợp khác, trả về ID gốc
+    return orderId.toUpperCase();
+  }
+
+  Widget _buildServicesDisplay(Order order) {
+    if (order.serviceNames.isNotEmpty) {
+      final displayServices = order.serviceNames.take(2).join(', ');
+      if (order.serviceNames.length > 2) {
+        return Text(
+          '${displayServices}...',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[700],
+          ),
+        );
+      }
+      return Text(
+        displayServices,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.grey[700],
+        ),
+      );
+    }
+
+    // If no service names available, show a placeholder
+    return Text(
+      'Không có dịch vụ',
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.grey[600],
+        fontStyle: FontStyle.italic,
+      ),
+    );
+  }
+} 

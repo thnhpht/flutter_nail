@@ -1,6 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:another_flushbar/flushbar.dart';
 import '../api_client.dart';
 import '../models.dart';
@@ -22,6 +23,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
   String _search = '';
   final _formKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
+  
+  // Filter state
+  List<Category> _selectedCategories = [];
+  bool _showCategoryFilter = false;
+  bool _isFilterExpanded = false;
 
   @override
   void initState() {
@@ -84,6 +90,420 @@ class _ServicesScreenState extends State<ServicesScreen> {
     setState(() {
       _future = widget.api.getServices();
     });
+  }
+
+  // Filter methods
+  void _toggleCategoryFilter() {
+    setState(() {
+      _showCategoryFilter = !_showCategoryFilter;
+    });
+  }
+
+  void _toggleFilterExpansion() {
+    setState(() {
+      _isFilterExpanded = !_isFilterExpanded;
+    });
+  }
+
+  void _onCategoryToggled(Category category) {
+    HapticFeedback.lightImpact();
+    setState(() {
+      if (_selectedCategories.contains(category)) {
+        _selectedCategories.remove(category);
+      } else {
+        _selectedCategories.add(category);
+      }
+    });
+  }
+
+  void _clearAllFilters() {
+    setState(() {
+      _selectedCategories.clear();
+      _search = '';
+    });
+  }
+
+  List<Service> _filterServices(List<Service> services) {
+    List<Service> filtered = services;
+    
+    // Filter by search
+    if (_search.isNotEmpty) {
+      filtered = filtered.where((s) =>
+        s.name.toLowerCase().contains(_search.toLowerCase())
+      ).toList();
+    }
+    
+    // Filter by selected categories
+    if (_selectedCategories.isNotEmpty) {
+      filtered = filtered.where((s) =>
+        _selectedCategories.any((cat) => cat.id == s.categoryId)
+      ).toList();
+    }
+    
+    return filtered;
+  }
+
+  Widget _buildCategoryFilter() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Filter Header
+          InkWell(
+            onTap: _toggleCategoryFilter,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.purple.shade50, Colors.blue.shade50],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(
+                  top: const Radius.circular(16),
+                  bottom: Radius.circular(_showCategoryFilter ? 0 : 16),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.filter_list,
+                          color: Colors.purple.shade700,
+                          size: 20,
+                        ),
+                      ),
+                      if (_selectedCategories.isNotEmpty)
+                        Positioned(
+                          right: -2,
+                          top: -2,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade500,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
+                            child: Text(
+                              '${_selectedCategories.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Bộ lọc danh mục',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _selectedCategories.isEmpty
+                              ? 'Chọn danh mục để lọc dịch vụ'
+                              : '${_selectedCategories.length} danh mục đã chọn',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: _showCategoryFilter ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+                    // Filter Content
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Selected Categories Chips
+                  if (_selectedCategories.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.green.shade600, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Danh mục đã chọn:',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: _clearAllFilters,
+                          child: Text(
+                            'Xóa tất cả',
+                            style: TextStyle(
+                              color: Colors.red.shade600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _selectedCategories.map((category) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.purple.shade100, Colors.blue.shade100],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.purple.shade200),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.category,
+                                size: 14,
+                                color: Colors.purple.shade700,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                category.name,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.purple.shade700,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              GestureDetector(
+                                onTap: () => _onCategoryToggled(category),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 14,
+                                  color: Colors.purple.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Category List
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: _isFilterExpanded ? 300 : 200,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Column(
+                      children: [
+                        // Expandable Header
+                        if (_categories.length > 6) ...[
+                          InkWell(
+                            onTap: _toggleFilterExpansion,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.category,
+                                    size: 16,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Tất cả danh mục (${_categories.length})',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Icon(
+                                    _isFilterExpanded ? Icons.expand_less : Icons.expand_more,
+                                    size: 16,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+
+                        // Category Items
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _isFilterExpanded ? _categories.length : (_categories.length > 6 ? 6 : _categories.length),
+                            itemBuilder: (context, index) {
+                              final category = _categories[index];
+                              final isSelected = _selectedCategories.contains(category);
+                              
+                              return InkWell(
+                                onTap: () => _onCategoryToggled(category),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Colors.purple.shade50 : Colors.transparent,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.grey.shade200,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: isSelected ? Colors.purple.shade100 : Colors.grey.shade200,
+                                          borderRadius: BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: isSelected ? Colors.purple.shade300 : Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        child: isSelected
+                                            ? Icon(
+                                                Icons.check,
+                                                size: 14,
+                                                color: Colors.purple.shade700,
+                                              )
+                                            : null,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          category.name,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                            color: isSelected ? Colors.purple.shade700 : Colors.grey.shade800,
+                                          ),
+                                        ),
+                                      ),
+                                      if (isSelected)
+                                        Icon(
+                                          Icons.check_circle,
+                                          size: 16,
+                                          color: Colors.purple.shade600,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Filter Actions
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _clearAllFilters,
+                          icon: const Icon(Icons.clear, size: 16),
+                          label: const Text('Xóa bộ lọc'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.grey.shade600,
+                            side: BorderSide(color: Colors.grey.shade300),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _toggleCategoryFilter,
+                          icon: const Icon(Icons.check, size: 16),
+                          label: const Text('Áp dụng'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple.shade600,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            crossFadeState: _showCategoryFilter ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _showAddDialog() async {
@@ -783,8 +1203,83 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     ),
                   ),
                 const SizedBox(height: 12),
+                _buildCategoryFilter(),
+                
+                // Results counter
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: Colors.blue.shade700,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: FutureBuilder<List<Service>>(
+                          future: _future,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState != ConnectionState.done) {
+                              return const Text(
+                                'Đang tải...',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            }
+                            final data = snapshot.data ?? [];
+                            final filtered = _filterServices(data);
+                            final total = data.length;
+                            final shown = filtered.length;
+                            
+                            String message;
+                            if (_selectedCategories.isEmpty && _search.isEmpty) {
+                              message = 'Hiển thị tất cả $total dịch vụ';
+                            } else if (_selectedCategories.isNotEmpty && _search.isNotEmpty) {
+                              message = 'Tìm thấy $shown/$total dịch vụ (lọc theo danh mục và tìm kiếm)';
+                            } else if (_selectedCategories.isNotEmpty) {
+                              message = 'Tìm thấy $shown/$total dịch vụ (lọc theo ${_selectedCategories.length} danh mục)';
+                            } else {
+                              message = 'Tìm thấy $shown/$total dịch vụ (tìm kiếm: "$_search")';
+                            }
+                            
+                            return Text(
+                              message,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blue.shade700,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      if (_selectedCategories.isNotEmpty || _search.isNotEmpty)
+                        TextButton(
+                          onPressed: _clearAllFilters,
+                          child: Text(
+                            'Xóa bộ lọc',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 300, // Đảm bảo có chiều cao cố định
+                  height: MediaQuery.of(context).size.height - 500, // Điều chỉnh chiều cao để phù hợp với bộ lọc và counter
                   child: FutureBuilder<List<Service>>(
                     future: _future,
                     builder: (context, snapshot) {
@@ -795,9 +1290,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         showFlushbar('Lỗi tải danh sách dịch vụ', type: MessageType.error);
                       }
                       final data = snapshot.data ?? [];
-                      final filtered = data.where((s) =>
-                        s.name.toLowerCase().contains(_search.toLowerCase())
-                      ).toList();
+                      final filtered = _filterServices(data);
 
                       if (filtered.isEmpty) {
                         return RefreshIndicator(

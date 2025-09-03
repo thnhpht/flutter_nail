@@ -128,7 +128,8 @@ class ApiClient {
   Future<Order> createOrder(Order order) async {
     // Convert lists to JSON strings for backend
     final orderData = order.toJson();
-    orderData['categoryIds'] = jsonEncode(order.categoryIds);
+    orderData['employeeIds'] = jsonEncode(order.employeeIds);
+    orderData['employeeNames'] = jsonEncode(order.employeeNames);
     orderData['serviceIds'] = jsonEncode(order.serviceIds);
     orderData['serviceNames'] = jsonEncode(order.serviceNames);
     

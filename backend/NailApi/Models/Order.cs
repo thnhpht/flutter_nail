@@ -8,13 +8,12 @@ namespace NailApi.Models
         public Guid Id { get; set; } = Guid.NewGuid();
         public string CustomerPhone { get; set; } = string.Empty;
         public string CustomerName { get; set; } = string.Empty;
-        public Guid EmployeeId { get; set; }
-        public string EmployeeName { get; set; } = string.Empty;
-        public string CategoryIds { get; set; } = string.Empty; // JSON array of category IDs
-        public string CategoryName { get; set; } = string.Empty;
-        public string ServiceIds { get; set; } = string.Empty; // JSON array of service IDs
-        public string ServiceNames { get; set; } = string.Empty; // JSON array of service names
+        public string EmployeeIds { get; set; } = string.Empty;
+        public string EmployeeNames { get; set; } = string.Empty;
+        public string ServiceIds { get; set; } = string.Empty;
+        public string ServiceNames { get; set; } = string.Empty;
         public double TotalPrice { get; set; }
+        public double DiscountPercent { get; set; } = 0.0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
