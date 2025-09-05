@@ -85,8 +85,8 @@ class _NailAppState extends State<NailApp> {
                orderDate.day == today.day;
       }).toList();
       
-      // Since Customer doesn't have createdAt, we'll use total customers count
-      // or you can modify the Customer model to include createdAt
+      // Since Customer model doesn't have createdAt, we'll use total customers count
+      // or you can modify the Customer model to include createdAt if needed
       final totalCustomers = customers.length;
       
       final totalRevenue = todayOrders.fold<double>(0.0, (sum, order) => sum + order.totalPrice);
