@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NailApi.Models
 {
-    [Table("Category")]
+    [Table("Categories")]
     public class Category
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = string.Empty;
         public string? Image { get; set; } // URL or path to image
-        public ICollection<Service> Items { get; set; } = new List<Service>();
+        public ICollection<Service> Services { get; set; } = new List<Service>();
     }
 }

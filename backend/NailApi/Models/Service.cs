@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace NailApi.Models
 {
-    [Table("Service")]
+    [Table("Services")]
     public class Service
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid CategoryId { get; set; } // Remove nullable since DB doesn't allow NULL
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string CategoryId { get; set; } = string.Empty; // Remove nullable since DB doesn't allow NULL
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? Image { get; set; } // URL or path to image

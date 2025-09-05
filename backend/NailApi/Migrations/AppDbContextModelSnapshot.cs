@@ -38,7 +38,7 @@ namespace NailApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("NailApi.Models.Customer", b =>
@@ -52,7 +52,7 @@ namespace NailApi.Migrations
 
                     b.HasKey("Phone");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("NailApi.Models.Employee", b =>
@@ -71,7 +71,7 @@ namespace NailApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employee", (string)null);
                 });
 
             modelBuilder.Entity("NailApi.Models.Order", b =>
@@ -116,7 +116,7 @@ namespace NailApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("NailApi.Models.Service", b =>
@@ -143,7 +143,32 @@ namespace NailApi.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Service");
+                    b.ToTable("Service", (string)null);
+                });
+
+            modelBuilder.Entity("NailApi.Models.User", b =>
+                {
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordLogin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserLogin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("NailApi.Models.Service", b =>

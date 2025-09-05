@@ -1,5 +1,100 @@
 import 'dart:convert';
 
+class User {
+  final String email;
+  final String password;
+  final String userLogin;
+  final String passwordLogin;
+
+  User({
+    required this.email,
+    required this.password,
+    required this.userLogin,
+    required this.passwordLogin,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    email: json['email'] as String,
+    password: json['password'] as String,
+    userLogin: json['userLogin'] as String,
+    passwordLogin: json['passwordLogin'] as String,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'password': password,
+    'userLogin': userLogin,
+    'passwordLogin': passwordLogin,
+  };
+}
+
+class LoginRequest {
+  final String email;
+  final String password;
+  final String userLogin;
+  final String passwordLogin;
+
+  LoginRequest({
+    required this.email,
+    required this.password,
+    required this.userLogin,
+    required this.passwordLogin,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'password': password,
+    'userLogin': userLogin,
+    'passwordLogin': passwordLogin,
+  };
+}
+
+class CheckEmailRequest {
+  final String email;
+
+  CheckEmailRequest({required this.email});
+
+  Map<String, dynamic> toJson() => {
+    'email': email,
+  };
+}
+
+class CheckEmailResponse {
+  final bool exists;
+  final String message;
+
+  CheckEmailResponse({
+    required this.exists,
+    required this.message,
+  });
+
+  factory CheckEmailResponse.fromJson(Map<String, dynamic> json) => CheckEmailResponse(
+    exists: json['exists'] as bool,
+    message: json['message'] as String,
+  );
+}
+
+class LoginResponse {
+  final bool success;
+  final String message;
+  final String databaseName;
+  final String token;
+
+  LoginResponse({
+    required this.success,
+    required this.message,
+    required this.databaseName,
+    required this.token,
+  });
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+    success: json['success'] as bool,
+    message: json['message'] as String,
+    databaseName: json['databaseName'] as String,
+    token: json['token'] as String,
+  );
+}
+
 class Customer {
   final String phone;
   final String name;

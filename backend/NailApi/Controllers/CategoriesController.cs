@@ -2,101 +2,211 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NailApi.Data;
 using NailApi.Models;
+using NailApi.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace NailApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        public CategoriesController(AppDbContext db) { _db = db; }
+        private readonly IDatabaseService _databaseService;
+
+        public CategoriesController(IDatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetAll()
         {
-            return await _db.Categories
-                .Include(c => c.Items)
-                .AsNoTracking()
-                .ToListAsync();
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                return await dbContext.Categories.AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetById(Guid id)
+        public async Task<ActionResult<Category>> GetById(string id)
         {
-            var entity = await _db.Categories.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id);
-            return entity == null ? NotFound() : entity;
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var entity = await dbContext.Categories.FindAsync(id);
+                if (entity == null) return NotFound();
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> Create(Category input)
         {
-            if (input.Id == Guid.Empty)
-                input.Id = Guid.NewGuid();
-            _db.Categories.Add(input);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
+            if (string.IsNullOrWhiteSpace(input.Name))
+                return BadRequest("Name is required");
+
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                dbContext.Categories.Add(input);
+                await dbContext.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, Category input)
+        public async Task<IActionResult> Update(string id, Category input)
         {
-            if (id != input.Id) return BadRequest();
-            var exists = await _db.Categories.AnyAsync(c => c.Id == id);
-            if (!exists) return NotFound();
-            _db.Entry(input).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return NoContent();
+            if (id != input.Id) return BadRequest("Id mismatch");
+            
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var exists = await dbContext.Categories.FindAsync(id);
+                if (exists == null) return NotFound();
+                dbContext.Entry(exists).CurrentValues.SetValues(input);
+                await dbContext.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var entity = await _db.Categories.FindAsync(id);
-            if (entity == null) return NotFound();
-            _db.Categories.Remove(entity);
-            await _db.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var entity = await dbContext.Categories.FindAsync(id);
+                if (entity == null) return NotFound();
+                
+                // Kiểm tra xem có services nào đang sử dụng category này không
+                var hasServices = await dbContext.Services.AnyAsync(s => s.CategoryId == id);
+                if (hasServices)
+                {
+                    return BadRequest("Không thể xóa category đang có services");
+                }
+                
+                dbContext.Categories.Remove(entity);
+                await dbContext.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        // Items endpoints
-        [HttpPost("{categoryId}/items")]
-        public async Task<ActionResult<Service>> CreateItem(Guid categoryId, Service input)
+        [HttpGet("{id}/services")]
+        public async Task<ActionResult<IEnumerable<Service>>> GetServicesByCategory(string id)
         {
-            if (categoryId != input.CategoryId) return BadRequest();
-            if (input.Id == Guid.Empty)
-                input.Id = Guid.NewGuid();
-            _db.Services.Add(input);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetItemById), new { categoryId, itemId = input.Id }, input);
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var services = await dbContext.Services.Where(s => s.CategoryId == id).ToListAsync();
+                return services;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        [HttpGet("{categoryId}/items/{itemId}")]
-        public async Task<ActionResult<Service>> GetItemById(Guid categoryId, Guid itemId)
+        [HttpPost("{id}/services")]
+        public async Task<ActionResult<Service>> AddServiceToCategory(string id, Service input)
         {
-            var entity = await _db.Services.FirstOrDefaultAsync(s => s.CategoryId == categoryId && s.Id == itemId);
-            return entity == null ? NotFound() : entity;
+            if (id != input.CategoryId) return BadRequest("CategoryId mismatch");
+            
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                dbContext.Services.Add(input);
+                await dbContext.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetServicesByCategory), new { id }, input);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        [HttpPut("{categoryId}/items/{itemId}")]
-        public async Task<IActionResult> UpdateItem(Guid categoryId, Guid itemId, Service input)
+        [HttpDelete("{categoryId}/services/{serviceId}")]
+        public async Task<IActionResult> RemoveServiceFromCategory(string categoryId, string serviceId, [FromQuery] string email, [FromQuery] string userLogin, [FromQuery] string passwordLogin)
         {
-            if (itemId != input.Id || categoryId != input.CategoryId) return BadRequest();
-            var exists = await _db.Services.AnyAsync(s => s.Id == itemId && s.CategoryId == categoryId);
-            if (!exists) return NotFound();
-            _db.Entry(input).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return NoContent();
-        }
-
-        [HttpDelete("{categoryId}/items/{itemId}")]
-        public async Task<IActionResult> DeleteItem(Guid categoryId, Guid itemId)
-        {
-            var entity = await _db.Services.FirstOrDefaultAsync(s => s.CategoryId == categoryId && s.Id == itemId);
-            if (entity == null) return NotFound();
-            _db.Services.Remove(entity);
-            await _db.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, passwordLogin);
+                var service = await dbContext.Services.FindAsync(serviceId);
+                if (service == null || service.CategoryId != categoryId) return NotFound();
+                
+                dbContext.Services.Remove(service);
+                await dbContext.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
     }
 }

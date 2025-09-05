@@ -706,6 +706,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ),
                                 ),
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'Vui lòng nhập giá';
@@ -1011,6 +1014,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ),
                                 ),
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'Vui lòng nhập giá';
@@ -1288,6 +1294,36 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       }
                       if (snapshot.hasError) {
                         showFlushbar('Lỗi tải danh sách dịch vụ', type: MessageType.error);
+                        return RefreshIndicator(
+                          onRefresh: _reload,
+                          child: ListView(
+                            children: [
+                              const SizedBox(height: 200),
+                              Center(
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      'Không thể tải danh sách dịch vụ',
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
+                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    ElevatedButton(
+                                      onPressed: _reload,
+                                      child: const Text('Thử lại'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       }
                       final data = snapshot.data ?? [];
                       final filtered = _filterServices(data);

@@ -621,6 +621,36 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       }
                       if (snapshot.hasError) {
                         showFlushbar('Lỗi tải danh sách khách hàng', type: MessageType.error);
+                        return RefreshIndicator(
+                          onRefresh: _reload,
+                          child: ListView(
+                            children: [
+                              const SizedBox(height: 200),
+                              Center(
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      'Không thể tải danh sách khách hàng',
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
+                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    ElevatedButton(
+                                      onPressed: _reload,
+                                      child: const Text('Thử lại'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       }
                       final data = snapshot.data ?? [];
                       final filtered = data.where((c) =>

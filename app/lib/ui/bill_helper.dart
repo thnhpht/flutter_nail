@@ -553,14 +553,17 @@ class BillHelper {
   }
 
   static String _formatBillId(String orderId) {
-    // Kiểm tra nếu ID là GUID mặc định hoặc rỗng
-    if (orderId.isEmpty || 
-        orderId == "00000000-0000-0000-0000-000000000000" ||
-        orderId == "00000000000000000000000000000000") {
+    // Kiểm tra nếu ID rỗng
+    if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
     
-    // Nếu ID có độ dài hợp lệ, lấy 8 ký tự đầu
+    // Nếu ID có format GUID, lấy 8 ký tự đầu
+    if (orderId.contains('-') && orderId.length >= 8) {
+      return orderId.substring(0, 8).toUpperCase();
+    }
+    
+    // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }

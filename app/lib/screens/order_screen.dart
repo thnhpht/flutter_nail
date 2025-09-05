@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:uuid/uuid.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
@@ -26,6 +27,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _discountController = TextEditingController();
   
   List<Category> _categories = [];
+  List<Service> _services = [];
   List<Service> _selectedServices = [];
   List<Category> _selectedCategories = [];
   List<Employee> _employees = [];
@@ -42,6 +44,7 @@ class _OrderScreenState extends State<OrderScreen> {
   void initState() {
     super.initState();
     _loadCategories();
+    _loadServices();
     _loadEmployees();
     
     // Add listeners for auto-search
@@ -105,6 +108,17 @@ class _OrderScreenState extends State<OrderScreen> {
       });
     } catch (e) {
       showFlushbar('Lỗi tải danh mục: $e', type: MessageType.error);
+    }
+  }
+
+  Future<void> _loadServices() async {
+    try {
+      final services = await widget.api.getServices();
+      setState(() {
+        _services = services;
+      });
+    } catch (e) {
+      showFlushbar('Lỗi tải dịch vụ: $e', type: MessageType.error);
     }
   }
 
@@ -291,6 +305,12 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
+  String _generateOrderId() {
+    // Generate a real UUID using the uuid package
+    const uuid = Uuid();
+    return uuid.v4();
+  }
+
   Future<void> _createOrder() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedServices.isEmpty) {
@@ -322,7 +342,7 @@ class _OrderScreenState extends State<OrderScreen> {
       List<Order> createdOrders = [];
       if (_selectedCategories.isNotEmpty && _selectedServices.isNotEmpty) {
         final order = Order(
-          id: '00000000-0000-0000-0000-000000000000', // Guid.Empty - will be replaced by server
+          id: _generateOrderId(), // Generate unique ID locally
           customerPhone: customerPhone,
           customerName: customerName,
           employeeIds: _selectedEmployees.map((e) => e.id).toList(),
@@ -683,7 +703,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     ? _categories
                                     : _selectedCategories;
                                 final category = visibleCategories[categoryIndex];
-                                final categoryServices = category.items;
+                                final categoryServices = _services.where((service) => service.categoryId == category.id).toList();
                                 
                                 if (categoryServices.isEmpty) return const SizedBox.shrink();
                                 

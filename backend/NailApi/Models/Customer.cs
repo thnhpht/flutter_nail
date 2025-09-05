@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NailApi.Models
 {
-    [Table("Customer")]
+    [Table("Customers")]
     public class Customer
     {
         public string Phone { get; set; } = string.Empty; // PK

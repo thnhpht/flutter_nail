@@ -46,16 +46,11 @@ class _BillsScreenState extends State<BillsScreen> {
     try {
       final orders = await widget.api.getOrders();
       final categories = await widget.api.getCategories();
+      final services = await widget.api.getServices();
       
-      // Flatten all services from categories
-      final allServices = <Service>[];
-      for (final category in categories) {
-        allServices.addAll(category.items);
-      }
-
       setState(() {
         _orders = orders;
-        _allServices = allServices;
+        _allServices = services;
         _isLoading = false;
       });
     } catch (e) {
@@ -164,14 +159,17 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   String _formatBillId(String orderId) {
-    // Kiểm tra nếu ID là GUID mặc định hoặc rỗng
-    if (orderId.isEmpty || 
-        orderId == "00000000-0000-0000-0000-000000000000" ||
-        orderId == "00000000000000000000000000000000") {
+    // Kiểm tra nếu ID rỗng
+    if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
     
-    // Nếu ID có độ dài hợp lệ, lấy 8 ký tự đầu
+    // Nếu ID có format GUID, lấy 8 ký tự đầu
+    if (orderId.contains('-') && orderId.length >= 8) {
+      return orderId.substring(0, 8).toUpperCase();
+    }
+    
+    // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
@@ -751,7 +749,7 @@ class _BillsScreenState extends State<BillsScreen> {
                             title: _selectedDateRange != null ? 'Hóa đơn đã lọc' : 'Tổng hóa đơn',
                             value: _filteredOrders.length.toString(),
                             icon: Icons.receipt,
-                            color: AppTheme.primaryStart,
+                            color: Colors.blue,
                           ),
                         ),
                         const SizedBox(width: AppTheme.spacingS),
@@ -760,7 +758,7 @@ class _BillsScreenState extends State<BillsScreen> {
                             title: _selectedDateRange != null ? 'Doanh thu đã lọc' : 'Tổng doanh thu',
                             value: '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
                             icon: Icons.attach_money,
-                            color: AppTheme.primaryEnd,
+                            color: Colors.green,
                           ),
                         ),
                       ],

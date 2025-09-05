@@ -7,41 +7,21 @@ namespace NailApi.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Customer> Customers => Set<Customer>();
-        public DbSet<Employee> Employees => Set<Employee>();
-        public DbSet<Category> Categories => Set<Category>();
-        public DbSet<Service> Services => Set<Service>();
-        public DbSet<Order> Orders => Set<Order>();
+        // Chỉ giữ bảng Users trong database NailAdmin
+        public DbSet<User> Users => Set<User>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>().HasKey(c => c.Phone);
-
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.Phone)
-                .IsRequired();
-
-            modelBuilder.Entity<Employee>()
-                .Property(e => e.Id)
-                .HasDefaultValueSql("NEWID()");
-
-            modelBuilder.Entity<Category>()
-                .Property(c => c.Id)
-                .HasDefaultValueSql("NEWID()");
-
-            modelBuilder.Entity<Service>()
-                .Property(s => s.Id)
-                .HasDefaultValueSql("NEWID()");
-
-            modelBuilder.Entity<Service>()
-                .HasOne(s => s.Category)
-                .WithMany(c => c.Items)
-                .HasForeignKey(s => s.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Order>()
-                .Property(o => o.Id)
-                .HasDefaultValueSql("NEWID()");
+            // Cấu hình bảng User
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Email);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.Password).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.UserLogin).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.PasswordLogin).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+            });
         }
     }
 }

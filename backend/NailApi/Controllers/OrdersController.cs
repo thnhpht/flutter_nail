@@ -2,138 +2,199 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NailApi.Data;
 using NailApi.Models;
-using System.Text.Json;
+using NailApi.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace NailApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IDatabaseService _databaseService;
 
-        public OrdersController(AppDbContext context)
+        public OrdersController(IDatabaseService databaseService)
         {
-            _context = context;
+            _databaseService = databaseService;
         }
 
-        // GET: api/orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Order>>> GetAll()
         {
-            return await _context.Orders.ToListAsync();
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                return await dbContext.Orders.AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        // GET: api/orders/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
+        public async Task<ActionResult<Order>> GetById(string id)
         {
-            var order = await _context.Orders.FindAsync(id);
-
-            if (order == null)
+            try
             {
-                return NotFound();
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var entity = await dbContext.Orders.FindAsync(id);
+                if (entity == null) return NotFound();
+                return entity;
             }
-
-            return order;
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        // POST: api/orders
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(Order order)
+        public async Task<ActionResult<Order>> Create(Order input)
         {
-            // Generate new ID if empty
-            if (order.Id == Guid.Empty)
-            {
-                order.Id = Guid.NewGuid();
-            }
-
-            // Convert service lists to JSON strings for storage
-            if (order.ServiceIds != null && order.ServiceIds != "[]")
-            {
-                // If ServiceIds is already a JSON string, keep it
-                // Otherwise, assume it's a list and convert to JSON
-                try
-                {
-                    JsonSerializer.Deserialize<string[]>(order.ServiceIds);
-                }
-                catch
-                {
-                    // If it's not valid JSON, assume it's a comma-separated string
-                    var serviceIds = order.ServiceIds.Split(',').Select(s => s.Trim()).ToArray();
-                    order.ServiceIds = JsonSerializer.Serialize(serviceIds);
-                }
-            }
-
-            if (order.ServiceNames != null && order.ServiceNames != "[]")
-            {
-                try
-                {
-                    JsonSerializer.Deserialize<string[]>(order.ServiceNames);
-                }
-                catch
-                {
-                    var serviceNames = order.ServiceNames.Split(',').Select(s => s.Trim()).ToArray();
-                    order.ServiceNames = JsonSerializer.Serialize(serviceNames);
-                }
-            }
-
-            order.CreatedAt = DateTime.Now;
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
-        }
-
-        // PUT: api/orders/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(Guid id, Order order)
-        {
-            if (id != order.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(order).State = EntityState.Modified;
+            if (string.IsNullOrWhiteSpace(input.CustomerPhone))
+                return BadRequest("CustomerPhone is required");
 
             try
             {
-                await _context.SaveChangesAsync();
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                dbContext.Orders.Add(input);
+                await dbContext.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!OrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/orders/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Order input)
+        {
+            if (id != input.Id) return BadRequest("Id mismatch");
+            
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var exists = await dbContext.Orders.FindAsync(id);
+                if (exists == null) return NotFound();
+                dbContext.Entry(exists).CurrentValues.SetValues(input);
+                await dbContext.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            try
             {
-                return NotFound();
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var entity = await dbContext.Orders.FindAsync(id);
+                if (entity == null) return NotFound();
+                dbContext.Orders.Remove(entity);
+                await dbContext.SaveChangesAsync();
+                return NoContent();
             }
-
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
 
-        private bool OrderExists(Guid id)
+        [HttpGet("customer/{customerPhone}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetByCustomer(string customerPhone)
         {
-            return _context.Orders.Any(e => e.Id == id);
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var orders = await dbContext.Orders.Where(o => o.CustomerPhone == customerPhone).ToListAsync();
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
+        [HttpGet("date-range")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetByDateRange([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, [FromQuery] string email, [FromQuery] string userLogin, [FromQuery] string passwordLogin)
+        {
+            try
+            {
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, passwordLogin);
+                var orders = await dbContext.Orders
+                    .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate)
+                    .ToListAsync();
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
+        [HttpGet("total-revenue")]
+        public async Task<ActionResult<object>> GetTotalRevenue([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, [FromQuery] string email, [FromQuery] string userLogin, [FromQuery] string passwordLogin)
+        {
+            try
+            {
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, passwordLogin);
+                var totalRevenue = await dbContext.Orders
+                    .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate)
+                    .SumAsync(o => o.TotalPrice);
+                
+                var totalOrders = await dbContext.Orders
+                    .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate)
+                    .CountAsync();
+
+                return new { totalRevenue, totalOrders, startDate, endDate };
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
         }
     }
 }
