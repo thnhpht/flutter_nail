@@ -7,19 +7,36 @@ class ApiClient {
   ApiClient({required this.baseUrl});
   final String baseUrl; // e.g. http://localhost:5088/api
   
+  // HTTP client với timeout configuration
+  final http.Client _client = http.Client();
+  
+  // Timeout duration cho các requests
+  static const Duration _timeout = Duration(seconds: 10);
+  
   // Auth methods
   Future<CheckEmailResponse> checkEmail(String email) async {
-    final r = await http.post(_u('/auth/check-email'),
+    final r = await _client.post(_u('/auth/check-email'),
         headers: {'Content-Type': 'application/json'}, 
-        body: jsonEncode(CheckEmailRequest(email: email).toJson()));
+        body: jsonEncode(CheckEmailRequest(email: email).toJson()))
+        .timeout(_timeout);
     _check(r);
     return CheckEmailResponse.fromJson(jsonDecode(r.body));
   }
 
   Future<LoginResponse> login(LoginRequest request) async {
-    final r = await http.post(_u('/auth/login'),
+    final r = await _client.post(_u('/auth/login'),
         headers: {'Content-Type': 'application/json'}, 
-        body: jsonEncode(request.toJson()));
+        body: jsonEncode(request.toJson()))
+        .timeout(_timeout);
+    _check(r);
+    return LoginResponse.fromJson(jsonDecode(r.body));
+  }
+
+  Future<LoginResponse> employeeLogin(EmployeeLoginRequest request) async {
+    final r = await _client.post(_u('/auth/employee-login'),
+        headers: {'Content-Type': 'application/json'}, 
+        body: jsonEncode(request.toJson()))
+        .timeout(_timeout);
     _check(r);
     return LoginResponse.fromJson(jsonDecode(r.body));
   }
@@ -32,6 +49,9 @@ class ApiClient {
     await prefs.remove('user_login');
     await prefs.remove('password_login');
     await prefs.remove('jwt_token');
+    await prefs.remove('user_role');
+    await prefs.remove('employee_id');
+    await prefs.remove('shop_email');
   }
 
   Future<bool> isLoggedIn() async {
@@ -125,7 +145,7 @@ class ApiClient {
     return list.map((e) => Employee.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> createEmployee(String name, {String? phone}) async {
+  Future<void> createEmployee(String name, {String? phone, String? password}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
     
@@ -134,7 +154,7 @@ class ApiClient {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode({'name': name, 'phone': phone}));
+        body: jsonEncode({'name': name, 'phone': phone, 'password': password ?? ''}));
     _check(r, expect201: true);
   }
 
@@ -336,5 +356,10 @@ class ApiClient {
     if (!ok) {
       throw Exception('HTTP ${r.statusCode}: ${r.body}');
     }
+  }
+  
+  // Dispose client khi không cần thiết
+  void dispose() {
+    _client.close();
   }
 }

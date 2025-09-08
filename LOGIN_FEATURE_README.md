@@ -23,8 +23,8 @@ Tính năng này cho phép người dùng đăng nhập vào hệ thống với 
 ### 3. **Tên Database đầy đủ email**
 
 - ✅ Thay vì `salon@example.com` → database `salon`
-- ✅ Bây giờ `salon@example.com` → database `salon_example_com`
-- ✅ Thay thế `@` và `.` bằng `_` để tạo tên database hợp lệ
+- ✅ Bây giờ `salon@example.com` → database `salon@example.com` (giữ nguyên email gốc)
+- ✅ Sử dụng email gốc làm tên database không thay thế gì
 
 ### 4. **Tạo User có quyền đăng nhập Database**
 
@@ -337,7 +337,7 @@ flutter run
 ### Backend
 
 - ✅ **JWT Authentication**: Thay thế GUID bằng JWT token
-- ✅ **Tên database đầy đủ**: Sử dụng đầy đủ email thay vì phần trước @
+- ✅ **Tên database đầy đủ**: Sử dụng email gốc hoàn toàn không thay thế gì
 - ✅ **Tự động tạo user**: Với quyền `db_owner` trong database mới
 - ✅ **Tất cả controllers**: Sử dụng JWT authentication
 - ✅ **Models**: Cập nhật ID từ Guid sang string

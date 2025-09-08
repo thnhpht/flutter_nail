@@ -79,12 +79,16 @@ class LoginResponse {
   final String message;
   final String databaseName;
   final String token;
+  final String? userRole; // 'shop_owner' or 'employee'
+  final String? employeeId; // For employee login
 
   LoginResponse({
     required this.success,
     required this.message,
     required this.databaseName,
     required this.token,
+    this.userRole,
+    this.employeeId,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
@@ -92,7 +96,27 @@ class LoginResponse {
     message: json['message'] as String,
     databaseName: json['databaseName'] as String,
     token: json['token'] as String,
+    userRole: json['userRole'] as String?,
+    employeeId: json['employeeId'] as String?,
   );
+}
+
+class EmployeeLoginRequest {
+  final String shopEmail;
+  final String employeePhone;
+  final String employeePassword;
+
+  EmployeeLoginRequest({
+    required this.shopEmail,
+    required this.employeePhone,
+    required this.employeePassword,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'shopEmail': shopEmail,
+    'employeePhone': employeePhone,
+    'employeePassword': employeePassword,
+  };
 }
 
 class Customer {
@@ -116,19 +140,22 @@ class Employee {
   final String id;
   final String name;
   final String? phone;
+  final String? password;
 
-  Employee({required this.id, required this.name, this.phone});
+  Employee({required this.id, required this.name, this.phone, this.password});
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
     id: json['id'] as String,
     name: json['name'] as String,
     phone: json['phone'] as String?,
+    password: json['password'] as String?,
   );
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'phone': phone,
+    'password': password,
   };
 }
 
@@ -193,6 +220,7 @@ class Order {
   final List<String> serviceNames;
   final double totalPrice;
   final double discountPercent;
+  final double tip;
   final DateTime createdAt;
 
   Order({
@@ -205,6 +233,7 @@ class Order {
     required this.serviceNames,
     required this.totalPrice,
     this.discountPercent = 0.0,
+    this.tip = 0.0,
     required this.createdAt,
   });
 
@@ -272,6 +301,7 @@ class Order {
       serviceNames: serviceNames,
       totalPrice: (json['totalPrice'] as num).toDouble(),
       discountPercent: (json['discountPercent'] as num?)?.toDouble() ?? 0.0,
+      tip: (json['tip'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
@@ -286,6 +316,7 @@ class Order {
     'serviceNames': serviceNames,
     'totalPrice': totalPrice,
     'discountPercent': discountPercent,
+    'tip': tip,
     'createdAt': createdAt.toIso8601String(),
   };
 }

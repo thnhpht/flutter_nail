@@ -31,9 +31,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-var connectionString = builder.Configuration.GetConnectionString("Default") ?? "Server=115.78.95.245;Database=NailAdmin;User Id=sa;Password=qwerQWER1234!@#$;TrustServerCertificate=True;";
+var connectionString = builder.Configuration.GetConnectionString("Default") ?? "Server=115.78.95.245;Database=NailAdmin;User Id=sa;Password=qwerQWER1234!@#$;TrustServerCertificate=True;Connection Timeout=30;Command Timeout=60;Pooling=true;Max Pool Size=100;Min Pool Size=5;";
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null);
+        sqlOptions.CommandTimeout(60);
+    }));
 
 builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -43,7 +50,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .SetIsOriginAllowed(origin => true);
     });
 });
 
@@ -54,6 +64,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Add request logging middleware
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation($"Request: {context.Request.Method} {context.Request.Path} from {context.Connection.RemoteIpAddress}");
+    await next();
+});
 
 app.UseCors("AllowAll");
 

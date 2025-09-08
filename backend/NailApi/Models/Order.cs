@@ -14,6 +14,7 @@ namespace NailApi.Models
         public string ServiceNames { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
         public decimal DiscountPercent { get; set; } = 0.0M;
+        public decimal Tip { get; set; } = 0.0M;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

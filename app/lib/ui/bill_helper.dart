@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../models.dart';
 import '../config/salon_config.dart';
 import 'design_system.dart';
+import 'pdf_bill_generator.dart';
 
 class BillHelper {
+  static List<Service>? _currentServices;
+
   static Future<void> showBillDialog({
     required BuildContext context,
     required Order order,
@@ -12,6 +15,9 @@ class BillHelper {
     String? salonAddress,
     String? salonPhone,
   }) async {
+    // Lưu trữ services hiện tại
+    _currentServices = services;
+    
     final name = salonName ?? SalonConfig.salonName;
     final address = salonAddress ?? SalonConfig.salonAddress;
     final phone = salonPhone ?? SalonConfig.salonPhone;
@@ -94,28 +100,10 @@ class BillHelper {
                     children: [
                       Expanded(
                         child: _buildActionButton(
-                          onPressed: () => _shareBill(context, order),
-                          label: 'Chia sẻ',
-                          icon: Icons.share,
-                          color: AppTheme.primaryStart,
-                        ),
-                      ),
-                      const SizedBox(width: AppTheme.spacingS),
-                      Expanded(
-                        child: _buildActionButton(
                           onPressed: () => _printBill(context, order),
                           label: 'In',
                           icon: Icons.print,
                           color: AppTheme.primaryEnd,
-                        ),
-                      ),
-                      const SizedBox(width: AppTheme.spacingS),
-                      Expanded(
-                        child: _buildActionButton(
-                          onPressed: () => _saveBill(context, order),
-                          label: 'Lưu',
-                          icon: Icons.save,
-                          color: Colors.green[600]!,
                         ),
                       ),
                     ],
@@ -375,6 +363,32 @@ class BillHelper {
                 ),
               ],
               
+              // Tip (if any)
+              if (order.tip > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Tiền bo:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '+${_formatPrice(order.tip)}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              
               const SizedBox(height: 8),
               
               // Final Total
@@ -572,30 +586,28 @@ class BillHelper {
     return orderId.toUpperCase();
   }
 
-  static void _shareBill(BuildContext context, Order order) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Tính năng chia sẻ đang được phát triển'),
-        backgroundColor: Colors.orange,
-      ),
-    );
-  }
 
   static void _printBill(BuildContext context, Order order) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Tính năng in đang được phát triển'),
-        backgroundColor: Colors.orange,
-      ),
+    // Lấy services từ biến static
+    if (_currentServices == null || _currentServices!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Không tìm thấy thông tin dịch vụ cho đơn hàng này'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Gọi PdfBillGenerator để tạo PDF và chia sẻ
+    PdfBillGenerator.generateAndShareBill(
+      context: context,
+      order: order,
+      services: _currentServices!,
+      salonName: SalonConfig.salonName,
+      salonAddress: SalonConfig.salonAddress,
+      salonPhone: SalonConfig.salonPhone,
     );
   }
 
-  static void _saveBill(BuildContext context, Order order) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Hóa đơn đã được lưu'),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
 }

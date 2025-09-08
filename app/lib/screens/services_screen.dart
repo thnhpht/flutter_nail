@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
@@ -28,6 +30,48 @@ class _ServicesScreenState extends State<ServicesScreen> {
   List<Category> _selectedCategories = [];
   bool _showCategoryFilter = false;
   bool _isFilterExpanded = false;
+
+  // Helper method to save image permanently
+  Future<String?> _saveImagePermanently(XFile imageFile) async {
+    try {
+      // Get app documents directory
+      final Directory appDocDir = await getApplicationDocumentsDirectory();
+      final String imagesDir = path.join(appDocDir.path, 'service_images');
+      
+      // Create images directory if it doesn't exist
+      final Directory imagesDirectory = Directory(imagesDir);
+      if (!await imagesDirectory.exists()) {
+        await imagesDirectory.create(recursive: true);
+      }
+      
+      // Generate unique filename
+      final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(imageFile.path)}';
+      final String newPath = path.join(imagesDir, fileName);
+      
+      // Copy file to permanent location
+      await imageFile.saveTo(newPath);
+      
+      // Return relative path for storage
+      return 'service_images/$fileName';
+    } catch (e) {
+      print('Error saving image: $e');
+      return null;
+    }
+  }
+
+  // Helper method to get image provider for dialog
+  ImageProvider? _getImageProvider(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) return null;
+    
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return NetworkImage(imageUrl);
+    } else if (imageUrl.startsWith('/')) {
+      return FileImage(File(imageUrl));
+    } else {
+      // For relative paths, we'll handle this in the widget itself
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -605,7 +649,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.grey[50],
-                            backgroundImage: imageUrl != null && imageUrl!.isNotEmpty ? FileImage(File(imageUrl!)) : null,
+                            backgroundImage: _getImageProvider(imageUrl),
                             child: imageUrl == null || imageUrl!.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -805,7 +849,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
       final price = double.tryParse(priceCtrl.text.trim()) ?? 0;
 
       try {
-        await widget.api.createService(selectedCatId!, name, price, image: imageUrl);
+        String? savedImagePath;
+        if (pickedImage != null) {
+          savedImagePath = await _saveImagePermanently(pickedImage!);
+          if (savedImagePath == null) {
+            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+            return;
+          }
+        }
+        
+        await widget.api.createService(selectedCatId!, name, price, image: savedImagePath);
         await _reload();
         showFlushbar('Thêm dịch vụ thành công', type: MessageType.success);
       } catch (e) {
@@ -913,7 +966,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.grey[50],
-                            backgroundImage: imageUrl != null && imageUrl!.isNotEmpty ? NetworkImage(imageUrl!) : null,
+                            backgroundImage: _getImageProvider(imageUrl),
                             child: imageUrl == null || imageUrl!.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1113,12 +1166,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
       final price = double.tryParse(priceCtrl.text.trim()) ?? s.price;
 
       try {
+        String? finalImagePath = imageUrl;
+        if (pickedImage != null) {
+          finalImagePath = await _saveImagePermanently(pickedImage!);
+          if (finalImagePath == null) {
+            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+            return;
+          }
+        }
+        
         await widget.api.updateService(Service(
           id: s.id,
           categoryId: selectedCatId!,
           name: name,
           price: price,
-          image: imageUrl,
+          image: finalImagePath,
         ));
         await _reload();
         showFlushbar('Thay đổi thông tin dịch vụ thành công', type: MessageType.success);
@@ -1135,6 +1197,34 @@ class _ServicesScreenState extends State<ServicesScreen> {
       showFlushbar('Xóa dịch vụ thành công', type: MessageType.success);
     } catch (e) {
       showFlushbar('Lỗi khi xóa dịch vụ', type: MessageType.error);
+    }
+  }
+
+  Widget _buildImageWidget(String imageUrl) {
+    // Check if it's a local file path or network URL
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return Image.network(imageUrl, fit: BoxFit.cover);
+    } else {
+      // Local file path - handle both absolute and relative paths
+      if (imageUrl.startsWith('/')) {
+        // Absolute path
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        // Relative path - use FutureBuilder to handle async operation
+        return FutureBuilder<Directory>(
+          future: getApplicationDocumentsDirectory(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final String fullPath = path.join(snapshot.data!.path, imageUrl);
+              return Image.file(File(fullPath), fit: BoxFit.cover);
+            }
+            return Container(
+              color: Colors.grey[300],
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          },
+        );
+      }
     }
   }
 
@@ -1366,7 +1456,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                         child: ClipRRect(
                                           borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                                           child: s.image != null && s.image!.isNotEmpty
-                                              ? Image.network(s.image!, fit: BoxFit.cover)
+                                              ? _buildImageWidget(s.image!)
                                               : Container(
                                                   color: Colors.purple.shade100,
                                                   child: Center(

@@ -14,10 +14,12 @@ namespace NailApi.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IDatabaseService _databaseService;
+        private readonly IPasswordService _passwordService;
 
-        public EmployeesController(IDatabaseService databaseService)
+        public EmployeesController(IDatabaseService databaseService, IPasswordService passwordService)
         {
             _databaseService = databaseService;
+            _passwordService = passwordService;
         }
 
         [HttpGet]
@@ -32,7 +34,15 @@ namespace NailApi.Controllers
                     return Unauthorized("Thông tin xác thực không hợp lệ");
                 
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
-                return await dbContext.Employees.AsNoTracking().ToListAsync();
+                var employees = await dbContext.Employees.AsNoTracking().ToListAsync();
+                
+                // Don't return passwords
+                foreach (var employee in employees)
+                {
+                    employee.Password = "";
+                }
+                
+                return employees;
             }
             catch (Exception ex)
             {
@@ -54,6 +64,9 @@ namespace NailApi.Controllers
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var entity = await dbContext.Employees.FindAsync(id);
                 if (entity == null) return NotFound();
+                
+                // Don't return password
+                entity.Password = "";
                 return entity;
             }
             catch (Exception ex)
@@ -68,6 +81,9 @@ namespace NailApi.Controllers
             if (string.IsNullOrWhiteSpace(input.Name))
                 return BadRequest("Name is required");
 
+            if (string.IsNullOrWhiteSpace(input.Password))
+                return BadRequest("Password is required");
+
             try
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -77,8 +93,15 @@ namespace NailApi.Controllers
                     return Unauthorized("Thông tin xác thực không hợp lệ");
                 
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                
+                // Hash the password before saving
+                input.Password = _passwordService.HashPassword(input.Password);
+                
                 dbContext.Employees.Add(input);
                 await dbContext.SaveChangesAsync();
+                
+                // Don't return the hashed password
+                input.Password = "";
                 return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
             }
             catch (Exception ex)
@@ -103,7 +126,17 @@ namespace NailApi.Controllers
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var exists = await dbContext.Employees.FindAsync(id);
                 if (exists == null) return NotFound();
-                dbContext.Entry(exists).CurrentValues.SetValues(input);
+                
+                // Update basic fields
+                exists.Name = input.Name;
+                exists.Phone = input.Phone;
+                
+                // Only update password if provided and not empty
+                if (!string.IsNullOrWhiteSpace(input.Password))
+                {
+                    exists.Password = _passwordService.HashPassword(input.Password);
+                }
+                
                 await dbContext.SaveChangesAsync();
                 return NoContent();
             }

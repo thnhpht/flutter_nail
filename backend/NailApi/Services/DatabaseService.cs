@@ -48,8 +48,8 @@ namespace NailApi.Services
                 throw new Exception("Không thể xác định mật khẩu database. Vui lòng đăng nhập lại.");
             }
 
-            // Sử dụng cùng logic tạo database name như trong AuthController
-            var databaseName = email.Replace("@", "_").Replace(".", "_");
+            // Sử dụng email gốc làm tên database
+            var databaseName = email;
             var connectionString = $"Server=115.78.95.245;Database={databaseName};User Id={userLogin};Password={passwordLogin};TrustServerCertificate=True;";
             
             return new DynamicDbContext(connectionString);

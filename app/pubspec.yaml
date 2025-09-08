@@ -16,6 +16,12 @@ dependencies:
   intl: ^0.19.0
   shared_preferences: ^2.2.2
   uuid: ^4.5.1
+  pdf: ^3.10.7
+  path_provider: ^2.1.2
+  path: ^1.9.0
+  share_plus: ^7.2.2
+  url_launcher: ^6.2.2
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +34,7 @@ flutter:
 
   assets:
     - assets/icon/
+    - assets/fonts/
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -85,8 +85,8 @@ namespace NailApi.Controllers
                     await _context.SaveChangesAsync();
                     Console.WriteLine("New user created successfully");
 
-                    // Tạo database động cho user mới - sử dụng đầy đủ email
-                    var databaseName = request.Email.Replace("@", "_").Replace(".", "_");
+                    // Tạo database động cho user mới - sử dụng email gốc
+                    var databaseName = request.Email;
                     Console.WriteLine($"Creating dynamic database: {databaseName}");
                     var success = await CreateDynamicDatabase(databaseName, request.UserLogin, request.PasswordLogin);
                     
@@ -110,7 +110,8 @@ namespace NailApi.Controllers
                         Success = true,
                         Message = "Tạo tài khoản và database thành công",
                         DatabaseName = databaseName,
-                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin)
+                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin),
+                        UserRole = "shop_owner"
                     });
                 }
                 else
@@ -162,8 +163,9 @@ namespace NailApi.Controllers
                     {
                         Success = true,
                         Message = "Đăng nhập thành công",
-                        DatabaseName = request.Email.Replace("@", "_").Replace(".", "_"), // Sử dụng đầy đủ email
-                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin)
+                        DatabaseName = request.Email, // Sử dụng email gốc
+                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin),
+                        UserRole = "shop_owner"
                     });
                 }
             }
@@ -177,6 +179,106 @@ namespace NailApi.Controllers
                 {
                     Success = false,
                     Message = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau hoặc liên hệ admin."
+                });
+            }
+        }
+
+        [HttpPost("employee-login")]
+        public async Task<ActionResult<LoginResponse>> EmployeeLogin([FromBody] EmployeeLoginRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Employee login attempt for shop email: {request.ShopEmail}");
+                
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                
+                if (shopOwner == null)
+                {
+                    Console.WriteLine("Shop owner not found");
+                    return BadRequest(new LoginResponse 
+                    { 
+                        Success = false, 
+                        Message = "Email chủ shop không tồn tại trong hệ thống." 
+                    });
+                }
+
+                // Tạo database name từ email chủ shop - sử dụng email gốc
+                var databaseName = request.ShopEmail;
+                Console.WriteLine($"Connecting to shop database: {databaseName}");
+
+                // Kết nối đến database của chủ shop để tìm nhân viên
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+                
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+                    Console.WriteLine("Connected to shop database successfully");
+
+                    // Tìm nhân viên theo số điện thoại
+                    var findEmployeeCommand = new SqlCommand("SELECT Id, Name, Phone, Password FROM Employees WHERE Phone = @phone", connection);
+                    findEmployeeCommand.Parameters.AddWithValue("@phone", request.EmployeePhone);
+                    
+                    using (var reader = await findEmployeeCommand.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            var employeeId = reader["Id"].ToString();
+                            var employeeName = reader["Name"].ToString();
+                            var employeePhone = reader["Phone"].ToString();
+                            var employeePassword = reader["Password"].ToString();
+                            
+                            Console.WriteLine($"Employee found: {employeeName} ({employeePhone})");
+                            
+                            // Kiểm tra mật khẩu nhân viên
+                            if (_passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
+                            {
+                                Console.WriteLine("Employee password verified successfully");
+                                
+                                // Tạo token cho nhân viên
+                                var token = _jwtService.GenerateToken(request.ShopEmail, shopOwner.UserLogin);
+                                
+                                return Ok(new LoginResponse
+                                {
+                                    Success = true,
+                                    Message = $"Đăng nhập thành công! Chào mừng {employeeName}",
+                                    DatabaseName = databaseName,
+                                    Token = token,
+                                    UserRole = "employee",
+                                    EmployeeId = employeeId
+                                });
+                            }
+                            else
+                            {
+                                Console.WriteLine("Employee password verification failed");
+                                return BadRequest(new LoginResponse 
+                                { 
+                                    Success = false, 
+                                    Message = "Mật khẩu nhân viên không chính xác." 
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Employee not found in shop database");
+                            return BadRequest(new LoginResponse 
+                            { 
+                                Success = false, 
+                                Message = "Không tìm thấy nhân viên với số điện thoại này trong hệ thống của chủ shop." 
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Employee login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                
+                return StatusCode(500, new LoginResponse
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
                 });
             }
         }
@@ -337,6 +439,7 @@ namespace NailApi.Controllers
                             [Id] nvarchar(450) NOT NULL,
                             [Name] nvarchar(max) NOT NULL,
                             [Phone] nvarchar(max) NULL,
+                            [Password] nvarchar(max) NOT NULL,
                             CONSTRAINT [PK_Employees] PRIMARY KEY ([Id])
                         );",
                         
@@ -367,6 +470,7 @@ namespace NailApi.Controllers
                             [ServiceNames] nvarchar(max) NOT NULL,
                             [TotalPrice] decimal(18,2) NOT NULL,
                             [DiscountPercent] decimal(18,2) NOT NULL,
+                            [Tip] decimal(18,2) NOT NULL DEFAULT 0.0,
                             [CreatedAt] datetime2 NOT NULL,
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
                         );"

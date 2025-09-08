@@ -26,12 +26,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _userLoginController = TextEditingController();
   final _passwordLoginController = TextEditingController();
+  final _shopEmailController = TextEditingController();
+  final _employeePhoneController = TextEditingController();
+  final _employeePasswordController = TextEditingController();
   
   bool _isLoading = false;
   bool _emailChecked = false;
   bool _emailExists = false;
   String _databaseName = '';
-  String _currentStep = 'email'; // 'email', 'password', 'create_account'
+  String _currentStep = 'role_selection'; // 'role_selection', 'email', 'password', 'create_account', 'employee_login'
+  String _selectedRole = 'shop_owner'; // 'shop_owner' or 'employee'
 
   @override
   void initState() {
@@ -43,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text;
     if (email.contains('@')) {
       setState(() {
-        _databaseName = email.replaceAll('@', '_').replaceAll('.', '_');
+        _databaseName = email;
       });
     }
   }
@@ -90,6 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     _userLoginController.dispose();
     _passwordLoginController.dispose();
+    _shopEmailController.dispose();
+    _employeePhoneController.dispose();
+    _employeePasswordController.dispose();
     super.dispose();
   }
 
@@ -166,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('user_email', _emailController.text.trim());
         await prefs.setString('user_login', _userLoginController.text.trim());
         await prefs.setString('password_login', _passwordLoginController.text);
+        await prefs.setString('user_role', response.userRole ?? 'shop_owner');
 
         // Hiển thị thông báo thành công
         if (mounted) {
@@ -193,15 +201,86 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _selectRole(String role) {
+    setState(() {
+      _selectedRole = role;
+      if (role == 'shop_owner') {
+        _currentStep = 'email';
+      } else {
+        _currentStep = 'employee_login';
+      }
+    });
+  }
+
   void _goBack() {
     setState(() {
-      _currentStep = 'email';
+      if (_currentStep == 'email' || _currentStep == 'password' || _currentStep == 'create_account') {
+        _currentStep = 'role_selection';
+      } else if (_currentStep == 'employee_login') {
+        _currentStep = 'role_selection';
+      } else {
+        _currentStep = 'email';
+      }
       _emailChecked = false;
       _emailExists = false;
       _passwordController.clear();
       _userLoginController.clear();
       _passwordLoginController.clear();
+      _shopEmailController.clear();
+      _employeePhoneController.clear();
+      _employeePasswordController.clear();
     });
+  }
+
+  Future<void> _handleEmployeeLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final request = EmployeeLoginRequest(
+        shopEmail: _shopEmailController.text.trim(),
+        employeePhone: _employeePhoneController.text.trim(),
+        employeePassword: _employeePasswordController.text,
+      );
+
+      final response = await widget.api.employeeLogin(request);
+      
+      if (response.success) {
+        // Lưu thông tin đăng nhập
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', response.token);
+        await prefs.setString('database_name', response.databaseName);
+        await prefs.setString('user_role', response.userRole ?? 'employee');
+        await prefs.setString('employee_id', response.employeeId ?? '');
+        await prefs.setString('shop_email', _shopEmailController.text.trim());
+
+        // Hiển thị thông báo thành công
+        if (mounted) {
+          showFlushbar(response.message, type: MessageType.success);
+        }
+
+        // Chuyển đến màn hình chính
+        widget.onLoginSuccess();
+      } else {
+        if (mounted) {
+          showFlushbar(response.message, type: MessageType.error);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        String errorMessage = _getUserFriendlyErrorMessage(e.toString());
+        showFlushbar(errorMessage, type: MessageType.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   String _getUserFriendlyErrorMessage(String error) {
@@ -235,6 +314,172 @@ class _LoginScreenState extends State<LoginScreen> {
     return 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
   }
 
+  VoidCallback? _getActionButtonHandler() {
+    switch (_currentStep) {
+      case 'role_selection':
+        return null; // No action button for role selection
+      case 'email':
+        return _checkEmail;
+      case 'password':
+      case 'create_account':
+        return _handleLogin;
+      case 'employee_login':
+        return _handleEmployeeLogin;
+      default:
+        return null;
+    }
+  }
+
+  String _getActionButtonText() {
+    switch (_currentStep) {
+      case 'role_selection':
+        return 'Tiếp tục';
+      case 'email':
+        return 'Kết nối';
+      case 'password':
+        return 'Đăng nhập';
+      case 'create_account':
+        return 'Đăng ký';
+      case 'employee_login':
+        return 'Đăng nhập';
+      default:
+        return 'Tiếp tục';
+    }
+  }
+
+  Widget _buildRoleSelection() {
+    return Column(
+      children: [
+        // Shop Owner Option
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _selectRole('shop_owner'),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'shop_owner' 
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedRole == 'shop_owner' 
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.business,
+                      color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Chủ shop',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Quản lý toàn bộ hệ thống',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_selectedRole == 'shop_owner')
+                      const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Employee Option
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _selectRole('employee'),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'employee' 
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedRole == 'employee' 
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nhân viên',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Truy cập dịch vụ, tạo đơn và hóa đơn',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_selectedRole == 'employee')
+                      const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,7 +503,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Logo
                   Image.asset(
-                    'icon/logo.png',
+                    'assets/icon/logo.png',
                     width: 120,
                     height: 120,
                     fit: BoxFit.contain,
@@ -267,8 +512,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Title
                   Text(
+                    _currentStep == 'role_selection' ? 'Chọn loại tài khoản' :
                     _currentStep == 'email' ? 'Kết nối' : 
-                    _currentStep == 'password' ? 'Đăng nhập' : 'Đăng ký',
+                    _currentStep == 'password' ? 'Đăng nhập' : 
+                    _currentStep == 'create_account' ? 'Đăng ký' : 'Đăng nhập nhân viên',
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -278,8 +525,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 8),
                   
                   Text(
+                    _currentStep == 'role_selection' ? 'Chọn loại tài khoản để tiếp tục' :
                     _currentStep == 'email' ? 'Nhập email để kiểm tra tài khoản' :
-                    _currentStep == 'password' ? 'Nhập mật khẩu để đăng nhập' : 'Tạo tài khoản mới',
+                    _currentStep == 'password' ? 'Nhập mật khẩu để đăng nhập' : 
+                    _currentStep == 'create_account' ? 'Tạo tài khoản mới' : 'Nhập thông tin đăng nhập nhân viên',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -289,7 +538,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 32),
 
                   // Back button if not on first step
-                  if (_currentStep != 'email')
+                  if (_currentStep != 'role_selection')
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextButton.icon(
@@ -314,45 +563,143 @@ class _LoginScreenState extends State<LoginScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          // Email field (always visible)
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(color: Colors.white),
-                            enabled: _currentStep == 'email',
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle: const TextStyle(color: Colors.white70),
-                              prefixIcon: const Icon(Icons.email, color: Colors.white70),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.white30),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.white30),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.white),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Vui lòng nhập email của bạn';
-                              }
-                              if (!value.contains('@')) {
-                                return 'Email không hợp lệ (ví dụ: example@email.com)';
-                              }
-                              if (!value.contains('.')) {
-                                return 'Email không hợp lệ (thiếu domain)';
-                              }
-                              return null;
-                            },
-                          ),
+                          // Role selection
+                          if (_currentStep == 'role_selection') ...[
+                            _buildRoleSelection(),
+                          ],
 
-                          // Password field (visible after email check)
-                          if (_currentStep != 'email')
+                          // Employee login form
+                          if (_currentStep == 'employee_login') ...[
+                            TextFormField(
+                              controller: _shopEmailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Email chủ shop',
+                                labelStyle: const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.business, color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập email chủ shop';
+                                }
+                                if (!value.contains('@')) {
+                                  return 'Email không hợp lệ';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _employeePhoneController,
+                              keyboardType: TextInputType.phone,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Số điện thoại nhân viên',
+                                labelStyle: const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.phone, color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập số điện thoại';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _employeePasswordController,
+                              obscureText: true,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Mật khẩu nhân viên',
+                                labelStyle: const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.lock, color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập mật khẩu';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+
+                          // Shop owner email field
+                          if (_currentStep == 'email')
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                labelStyle: const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.email, color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập email của bạn';
+                                }
+                                if (!value.contains('@')) {
+                                  return 'Email không hợp lệ (ví dụ: example@email.com)';
+                                }
+                                if (!value.contains('.')) {
+                                  return 'Email không hợp lệ (thiếu domain)';
+                                }
+                                return null;
+                              },
+                            ),
+
+                          // Password field (visible after email check for shop owner)
+                          if (_currentStep == 'password' || _currentStep == 'create_account')
                             Column(
                               children: [
                                 const SizedBox(height: 16),
@@ -402,8 +749,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
 
-                          // Database login fields (visible for all steps except email)
-                          if (_currentStep != 'email')
+                          // Database login fields (visible for shop owner login steps)
+                          if (_currentStep == 'password' || _currentStep == 'create_account')
                             Column(
                               children: [
                                 const SizedBox(height: 16),
@@ -483,39 +830,39 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 24),
 
-                          // Action button
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: _isLoading ? null : (_currentStep == 'email' ? _checkEmail : _handleLogin),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF667eea),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                          // Action button (not shown for role selection)
+                          if (_currentStep != 'role_selection')
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: _isLoading ? null : _getActionButtonHandler(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: const Color(0xFF667eea),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 2,
                                 ),
-                                elevation: 2,
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                        ),
+                                      )
+                                    : Text(
+                                        _getActionButtonText(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                               ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
-                                      ),
-                                    )
-                                  : Text(
-                                      _currentStep == 'email' ? 'Kết nối' : 
-                                      _currentStep == 'password' ? 'Đăng nhập' : 'Đăng ký',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
                             ),
-                          ),
                         ],
                       ),
                     ),

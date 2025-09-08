@@ -66,6 +66,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
     final phoneCtrl = TextEditingController();
+    final passwordCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
@@ -203,6 +204,41 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           },
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[200]!),
+                        ),
+                        child: TextFormField(
+                          controller: passwordCtrl,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Mật khẩu',
+                            prefixIcon: Icon(Icons.lock, color: AppTheme.primaryStart),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(16),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập mật khẩu';
+                            }
+                            if (value.length < 6) {
+                              return 'Mật khẩu phải có ít nhất 6 ký tự';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -293,7 +329,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         // If not found, continue
       }
       try {
-        await widget.api.createEmployee(name, phone: phone);
+        await widget.api.createEmployee(name, phone: phone, password: passwordCtrl.text.trim());
         await _reload();
         showFlushbar('Thêm nhân viên thành công', type: MessageType.success);
       } catch (e) {
@@ -305,6 +341,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   Future<void> _showEditDialog(Employee e) async {
     final nameCtrl = TextEditingController(text: e.name);
     final phoneCtrl = TextEditingController(text: e.phone ?? '');
+    final passwordCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
@@ -442,6 +479,38 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           },
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[200]!),
+                        ),
+                        child: TextFormField(
+                          controller: passwordCtrl,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Mật khẩu mới (để trống nếu không đổi)',
+                            prefixIcon: Icon(Icons.lock, color: AppTheme.primaryStart),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(16),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value != null && value.isNotEmpty && value.length < 6) {
+                              return 'Mật khẩu phải có ít nhất 6 ký tự';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -533,10 +602,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       }
       
       try {
+        final password = passwordCtrl.text.trim();
         await widget.api.updateEmployee(Employee(
           id: e.id,
           name: name,
           phone: phone.isEmpty ? null : phone,
+          password: password.isEmpty ? null : password,
         ));
         await _reload();
         showFlushbar('Thay đổi thông tin nhân viên thành công', type: MessageType.success);

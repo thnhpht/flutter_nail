@@ -25,6 +25,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _employeePhoneController = TextEditingController();
   final _employeeNameController = TextEditingController();
   final _discountController = TextEditingController();
+  final _tipController = TextEditingController();
   
   List<Category> _categories = [];
   List<Service> _services = [];
@@ -34,6 +35,7 @@ class _OrderScreenState extends State<OrderScreen> {
   List<Employee> _selectedEmployees = [];
   double _totalPrice = 0.0;
   double _discountPercent = 0.0;
+  double _tip = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
   bool _showCategoryDropdown = false;
@@ -50,6 +52,7 @@ class _OrderScreenState extends State<OrderScreen> {
     // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
+    _tipController.addListener(_onTipChanged);
   }
 
   void showFlushbar(String message, {MessageType type = MessageType.info}) {
@@ -92,11 +95,13 @@ class _OrderScreenState extends State<OrderScreen> {
   void dispose() {
     _customerPhoneController.removeListener(_onCustomerPhoneChanged);
     _employeePhoneController.removeListener(_onEmployeePhoneChanged);
+    _tipController.removeListener(_onTipChanged);
     _customerPhoneController.dispose();
     _customerNameController.dispose();
     _employeePhoneController.dispose();
     _employeeNameController.dispose();
     _discountController.dispose();
+    _tipController.dispose();
     super.dispose();
   }
 
@@ -286,7 +291,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _calculateTotal() {
     _totalPrice = _selectedServices.fold(0.0, (sum, service) => sum + service.price);
-    _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100);
+    _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100) + _tip;
   }
 
   void _onDiscountChanged(String value) {
@@ -300,6 +305,19 @@ class _OrderScreenState extends State<OrderScreen> {
         _discountController.selection = TextSelection.fromPosition(
           TextPosition(offset: _discountController.text.length),
         );
+      }
+      _calculateTotal();
+    });
+  }
+
+  void _onTipChanged() {
+    final value = _tipController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _tip = 0.0;
+      } else {
+        final tip = double.tryParse(value) ?? 0.0;
+        _tip = tip.clamp(0.0, double.infinity);
       }
       _calculateTotal();
     });
@@ -351,6 +369,7 @@ class _OrderScreenState extends State<OrderScreen> {
           serviceNames: _selectedServices.map((s) => s.name).toList(),
           totalPrice: _finalTotalPrice,
           discountPercent: _discountPercent,
+          tip: _tip,
           createdAt: DateTime.now(),
         );
 
@@ -414,18 +433,21 @@ class _OrderScreenState extends State<OrderScreen> {
     _employeePhoneController.clear();
     _employeeNameController.clear();
     _discountController.clear();
+    _tipController.clear();
     setState(() {
       _selectedCategories.clear();
       _selectedServices.clear();
       _selectedEmployees.clear();
       _totalPrice = 0.0;
       _discountPercent = 0.0;
+      _tip = 0.0;
       _finalTotalPrice = 0.0;
       _showCategoryDropdown = false;
       _showServiceDropdown = false;
       _showEmployeeDropdown = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -820,6 +842,83 @@ class _OrderScreenState extends State<OrderScreen> {
                             ),
                           ],
                         ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        // Tip input
+                        Row(
+                          children: [
+                            const Text(
+                              'Tiền bo:',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              flex: 1,
+                              child: TextFormField(
+                                controller: _tipController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'VNĐ',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[50],
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onChanged: (value) => _onTipChanged(),
+                                validator: (value) {
+                                  if (value != null && value.isNotEmpty) {
+                                    final tip = double.tryParse(value);
+                                    if (tip == null || tip < 0) {
+                                      return 'Tiền bo phải lớn hơn 0';
+                                    }
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            if (_tip > 0) ...[
+                              const SizedBox(width: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                    begin: Alignment.bottomLeft,
+                                    end: Alignment.topRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Text(
+                                  'Tip: ${_formatPrice(_tip)} VNĐ',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -875,6 +974,30 @@ class _OrderScreenState extends State<OrderScreen> {
                               ),
                               Text(
                                 '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (_tip > 0) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Tiền bo:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '+${_formatPrice(_tip)} VNĐ',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
