@@ -206,44 +206,31 @@ class _NailAppState extends State<NailApp> {
       api: api,
       onLoginSuccess: _onLoginSuccess,
     ),
+    // Add responsive builder to handle orientation changes
+    builder: (context, child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.linear(
+            MediaQuery.of(context).textScaler.scale(1.0).clamp(0.8, 1.2),
+          ),
+        ),
+        child: child!,
+      );
+    },
   );
 }
 
 Widget _buildMainScreen() {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      // Use NavigationRail for wider screens (tablet/desktop)
-      if (constraints.maxWidth > 800) {
-        return Scaffold(
-          body: Row(
-            children: [
-              AppNavigationRail(
-                selectedIndex: _getSelectedIndex(),
-                onItemSelected: _onNavigationItemSelected,
-                onLogout: _handleLogout,
-                userRole: _userRole,
-              ),
-              const VerticalDivider(thickness: 1, width: 1),
-              Expanded(
-                child: _buildMainContent(),
-              ),
-            ],
-          ),
-        );
-      }
-      
-      // Use NavigationDrawer for mobile screens
-      return Scaffold(
-        key: _scaffoldKey,
-        drawer: AppNavigationDrawer(
-          selectedIndex: _getSelectedIndex(),
-          onItemSelected: _onNavigationItemSelected,
-          onLogout: _handleLogout,
-          userRole: _userRole,
-        ),
-        body: _buildMainContent(),
-      );
-    },
+  // Use NavigationDrawer for all devices
+  return Scaffold(
+    key: _scaffoldKey,
+    drawer: AppNavigationDrawer(
+      selectedIndex: _getSelectedIndex(),
+      onItemSelected: _onNavigationItemSelected,
+      onLogout: _handleLogout,
+      userRole: _userRole,
+    ),
+    body: _buildMainContent(),
   );
 }
 
@@ -262,41 +249,48 @@ Widget _buildMainContent() {
     child: SafeArea(
       child: Column(
         children: [
-          // Modern App Bar
+          // Responsive App Bar
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: AppTheme.getResponsivePadding(
+              context,
+              mobile: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              tablet: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              desktop: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Menu Button (mobile only) - moved to left
-                if (MediaQuery.of(context).size.width <= 800)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1,
-                      ),
+                // Menu Button (all devices)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1,
                     ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          child: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        child: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 20,
                         ),
                       ),
                     ),
                   ),
+                ),
                 
-                // Logo/Title - Clickable to go home (moved to right)
+                // Spacer to push salon name to the right
+                const Spacer(),
+                
+                // Logo/Title - Moved to the right
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -309,8 +303,8 @@ Widget _buildMainContent() {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       child: _isLoadingSalonInfo && !_hasLoadedSalonInfo
-                          ? const SizedBox(
-                              width: 200,
+                          ? SizedBox(
+                              width: AppTheme.isMobile(context) ? 150 : 200,
                               height: 20,
                               child: Center(
                                 child: SizedBox(
@@ -327,10 +321,16 @@ Widget _buildMainContent() {
                               _salonInfo?.salonName.isNotEmpty == true 
                                   ? _salonInfo!.salonName 
                                   : 'Salon',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 28,
+                                fontSize: AppTheme.getResponsiveFontSize(
+                                  context,
+                                  mobile: 24,
+                                  tablet: 28,
+                                  desktop: 32,
+                                ),
                                 letterSpacing: 0.5,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                     ),
@@ -340,7 +340,7 @@ Widget _buildMainContent() {
             ),
           ),
           
-          // Main Content
+          // Main Content with responsive padding
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -389,21 +389,21 @@ int _getSelectedIndex() {
       case _HomeView.welcome:
         return -1; // No selection for welcome screen
       case _HomeView.customers:
-        return 1;
+        return 1; // Second item in shop owner nav drawer
       case _HomeView.employees:
-        return 2;
+        return 2; // Third item in shop owner nav drawer
       case _HomeView.categories:
-        return 3;
+        return 3; // Fourth item in shop owner nav drawer
       case _HomeView.services:
-        return 4;
+        return 4; // Fifth item in shop owner nav drawer
       case _HomeView.orders:
-        return 5;
+        return 5; // Sixth item in shop owner nav drawer
       case _HomeView.bills:
-        return 6;
+        return 6; // Seventh item in shop owner nav drawer
       case _HomeView.reports:
-        return 7;
+        return 7; // Eighth item in shop owner nav drawer
       case _HomeView.salonInfo:
-        return 8;
+        return 8; // Ninth item in shop owner nav drawer
     }
   }
 }
@@ -411,7 +411,7 @@ int _getSelectedIndex() {
 void _onNavigationItemSelected(int index) {
   setState(() {
     if (_userRole == 'employee') {
-      // Employee navigation mapping - using correct indices from navigation drawer
+      // Employee navigation mapping
       switch (index) {
         case 0: // Services (first item in employee nav)
           _view = _HomeView.services;
@@ -463,11 +463,9 @@ void _onNavigationItemSelected(int index) {
     }
   });
   
-  // Close drawer on mobile after selection
-  if (MediaQuery.of(context).size.width <= 800) {
-    if (Navigator.canPop(context)) {
-      Navigator.of(context).pop();
-    }
+  // Close drawer after selection
+  if (Navigator.canPop(context)) {
+    Navigator.of(context).pop();
   }
 }
 
@@ -541,71 +539,88 @@ Widget _getCurrentScreen() {
 }
 
 Widget _buildWelcomeScreen() {
-  return Container(
-    padding: const EdgeInsets.all(24),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Welcome Icon with enhanced styling
-        _isLoadingSalonInfo && !_hasLoadedSalonInfo
-            ? const SizedBox(
-                width: 150,
-                height: 150,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                ),
-              )
-            : _salonInfo?.logo.isNotEmpty == true
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      _salonInfo!.logo,
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildFallbackLogo();
-                      },
+  return SingleChildScrollView(
+    child: Container(
+      padding: AppTheme.getResponsivePadding(
+        context,
+        mobile: const EdgeInsets.all(16),
+        tablet: const EdgeInsets.all(24),
+        desktop: const EdgeInsets.all(20),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Welcome Icon with responsive sizing
+          _isLoadingSalonInfo && !_hasLoadedSalonInfo
+              ? SizedBox(
+                  width: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                  height: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-                  )
-                : _buildFallbackLogo(),
-        const SizedBox(height: 24),
-        
-        // Welcome Text with enhanced styling
-        Text(
-          'Chào mừng đến với\n${_salonInfo?.salonName.isNotEmpty == true ? _salonInfo!.salonName : 'Salon'}',
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: 0.8,
-            shadows: [
-              Shadow(
-                offset: Offset(0, 2),
-                blurRadius: 4,
-                color: Colors.black26,
+                  ),
+                )
+              : _salonInfo?.logo.isNotEmpty == true
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        _salonInfo!.logo,
+                        width: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                        height: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildFallbackLogo();
+                        },
+                      ),
+                    )
+                  : _buildFallbackLogo(),
+          SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 16, tablet: 24, desktop: 24)),
+          
+          // Welcome Text with responsive styling
+          Text(
+            'Chào mừng đến với\n${_salonInfo?.salonName.isNotEmpty == true ? _salonInfo!.salonName : 'Salon'}',
+            style: TextStyle(
+              fontSize: AppTheme.getResponsiveFontSize(
+                context,
+                mobile: 22,
+                tablet: 28,
+                desktop: 32,
               ),
-            ],
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: 0.8,
+              shadows: const [
+                Shadow(
+                  offset: Offset(0, 2),
+                  blurRadius: 4,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'Hệ thống quản lý salon nail chuyên nghiệp',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-            letterSpacing: 0.4,
+          SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 12, tablet: 16, desktop: 20)),
+          Text(
+            'Hệ thống quản lý salon nail chuyên nghiệp',
+            style: TextStyle(
+              fontSize: AppTheme.getResponsiveFontSize(
+                context,
+                mobile: 14,
+                tablet: 16,
+                desktop: 18,
+              ),
+              color: Colors.white70,
+              letterSpacing: 0.4,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 40),
-        
-        // Quick Stats Cards
-        _buildQuickStats(),
-      ],
+          SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 24, tablet: 32, desktop: 32)),
+          
+          // Quick Stats Cards
+          _buildQuickStats(),
+        ],
+      ),
     ),
   );
 }
@@ -621,7 +636,12 @@ Widget _buildQuickStats() {
           opacity: value,
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.06), // Responsive padding
+            padding: AppTheme.getResponsivePadding(
+              context,
+              mobile: const EdgeInsets.all(16),
+              tablet: const EdgeInsets.all(20),
+              desktop: const EdgeInsets.all(24),
+            ),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(24),
@@ -635,54 +655,70 @@ Widget _buildQuickStats() {
                 Text(
                   'Tổng quan hôm nay',
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.05, // Responsive font size
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 18,
+                      tablet: 20,
+                      desktop: 22,
+                    ),
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Responsive spacing
-                // Hàng trên: Khách hàng và Hóa đơn
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        icon: Icons.people,
-                        title: 'Khách hàng',
-                        value: _isLoadingStats ? '...' : '${_todayStats['totalCustomers'] ?? 0}',
-                        color: AppTheme.primaryEnd,
-                        delay: 0,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.04), // Responsive spacing
-                    Expanded(
-                      child: _buildStatCard(
-                        icon: Icons.receipt,
-                        title: 'Hóa đơn',
-                        value: _isLoadingStats ? '...' : '${_todayStats['totalBills'] ?? 0}',
-                        color: AppTheme.primaryStart,
-                        delay: 100,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Responsive spacing
-                // Hàng dưới: Doanh thu full width
-                SizedBox(
-                  width: double.infinity,
-                  child: _buildStatCard(
-                    icon: Icons.attach_money,
-                    title: 'Doanh thu',
-                    value: _isLoadingStats ? '...' : _formatCurrencyVN(_todayStats['totalRevenue'] ?? 0.0),
-                    color: Colors.green,
-                    delay: 200,
-                  ),
-                ),
+                SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 16, tablet: 20, desktop: 24)),
+                
+                // Responsive layout for stats cards
+                _buildStatsLayout(),
               ],
             ),
           ),
         ),
       );
     },
+  );
+}
+
+Widget _buildStatsLayout() {
+  // Use same layout for mobile, tablet and desktop: top row (customers + bills), bottom row (revenue full width)
+  return Column(
+    children: [
+      // Top row: Customers and Bills
+      Row(
+        children: [
+          Expanded(
+            child: _buildStatCard(
+              icon: Icons.people,
+              title: 'Khách hàng',
+              value: _isLoadingStats ? '...' : '${_todayStats['totalCustomers'] ?? 0}',
+              color: AppTheme.primaryEnd,
+              delay: 0,
+            ),
+          ),
+          SizedBox(width: AppTheme.getResponsiveSpacing(context, mobile: 12, tablet: 16, desktop: 20)),
+          Expanded(
+            child: _buildStatCard(
+              icon: Icons.receipt,
+              title: 'Hóa đơn',
+              value: _isLoadingStats ? '...' : '${_todayStats['totalBills'] ?? 0}',
+              color: AppTheme.primaryStart,
+              delay: 100,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 12, tablet: 16, desktop: 20)),
+      // Bottom row: Revenue full width
+      SizedBox(
+        width: double.infinity,
+        child: _buildStatCard(
+          icon: Icons.attach_money,
+          title: 'Doanh thu',
+          value: _isLoadingStats ? '...' : _formatCurrencyVN(_todayStats['totalRevenue'] ?? 0.0),
+          color: Colors.green,
+          delay: 200,
+        ),
+      ),
+    ],
   );
 }
 
@@ -702,7 +738,12 @@ Widget _buildStatCard({
         child: Opacity(
           opacity: animValue,
           child: Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04), // Responsive padding
+            padding: AppTheme.getResponsivePadding(
+              context,
+              mobile: const EdgeInsets.all(12),
+              tablet: const EdgeInsets.all(16),
+              desktop: const EdgeInsets.all(20),
+            ),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
@@ -716,23 +757,41 @@ Widget _buildStatCard({
                 Icon(
                   icon,
                   color: color,
-                  size: MediaQuery.of(context).size.width * 0.06, // Responsive icon size
+                  size: AppTheme.getResponsiveFontSize(
+                    context,
+                    mobile: 24,
+                    tablet: 28,
+                    desktop: 32,
+                  ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01), // Responsive spacing
+                SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 8, tablet: 10, desktop: 12)),
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.045, // Responsive font size
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 16,
+                      tablet: 18,
+                      desktop: 20,
+                    ),
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
+                SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 4, tablet: 6, desktop: 8)),
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.03, // Responsive font size
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 12,
+                      tablet: 14,
+                      desktop: 16,
+                    ),
                     color: Colors.white70,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -744,9 +803,12 @@ Widget _buildStatCard({
 }
 
 Widget _buildFallbackLogo() {
+  final size = AppTheme.isMobile(context) ? 120.0 : AppTheme.isTablet(context) ? 150.0 : 160.0;
+  final iconSize = AppTheme.isMobile(context) ? 60.0 : AppTheme.isTablet(context) ? 80.0 : 90.0;
+  
   return Container(
-    width: 150,
-    height: 150,
+    width: size,
+    height: size,
     decoration: BoxDecoration(
       color: Colors.white.withOpacity(0.1),
       borderRadius: BorderRadius.circular(20),
@@ -755,9 +817,9 @@ Widget _buildFallbackLogo() {
         width: 2,
       ),
     ),
-    child: const Icon(
+    child: Icon(
       Icons.business,
-      size: 80,
+      size: iconSize,
       color: Colors.white,
     ),
   );

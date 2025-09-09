@@ -77,6 +77,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -139,12 +143,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 ),
               ),
               // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
@@ -211,6 +216,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     ],
                   ),
                 ),
+              ),
               ),
               // Actions
               Container(
@@ -316,6 +322,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -378,12 +388,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 ),
               ),
               // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _editFormKey,
-                  child: Column(
-                    children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _editFormKey,
+                    child: Column(
+                      children: [
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -440,6 +451,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     ],
                   ),
                 ),
+              ),
               ),
               // Actions
               Container(

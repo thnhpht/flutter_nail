@@ -73,6 +73,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -135,12 +139,13 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 ),
               ),
               // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
@@ -242,6 +247,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     ],
                   ),
                 ),
+              ),
               ),
               // Actions
               Container(
@@ -348,6 +354,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -410,12 +420,13 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 ),
               ),
               // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _editFormKey,
-                  child: Column(
-                    children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _editFormKey,
+                    child: Column(
+                      children: [
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
@@ -514,6 +525,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     ],
                   ),
                 ),
+              ),
               ),
               // Actions
               Container(

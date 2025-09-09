@@ -6,7 +6,7 @@ class ApiConfig {
   static const String androidEmulator = 'http://10.0.2.2:5088/api';
   static const String iosSimulator = 'http://192.168.1.154:5088/api';
   static const String androidDevice = 'http://192.168.1.154:5088/api';
-  static const String iosDevice = 'http://172.20.10.9:5088/api';
+  static const String iosDevice = 'http://172.20.10.2:5088/api';
   static const String web = 'http://localhost:5088/api';
   static const String desktop = 'http://localhost:5088/api';
   static const String fallback = 'http://192.168.1.154:5088/api';

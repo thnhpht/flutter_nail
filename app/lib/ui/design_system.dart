@@ -21,6 +21,97 @@ class AppTheme {
 
   static const double controlHeight = 56;
 
+  // Responsive breakpoints
+  static const double mobileBreakpoint = 600;
+  static const double tabletBreakpoint = 900;
+  static const double desktopBreakpoint = 1200;
+  static const double largeDesktopBreakpoint = 1600;
+
+  // Responsive spacing
+  static double getResponsiveSpacing(BuildContext context, {
+    double mobile = spacingM,
+    double? tablet,
+    double? desktop,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= desktopBreakpoint) {
+      return desktop ?? tablet ?? mobile * 1.5;
+    } else if (width >= tabletBreakpoint) {
+      return tablet ?? mobile * 1.25;
+    }
+    return mobile;
+  }
+
+  // Responsive font size
+  static double getResponsiveFontSize(BuildContext context, {
+    required double mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= desktopBreakpoint) {
+      return desktop ?? tablet ?? mobile * 1.2;
+    } else if (width >= tabletBreakpoint) {
+      return tablet ?? mobile * 1.1;
+    }
+    return mobile;
+  }
+
+  // Responsive padding
+  static EdgeInsets getResponsivePadding(BuildContext context, {
+    EdgeInsets? mobile,
+    EdgeInsets? tablet,
+    EdgeInsets? desktop,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= desktopBreakpoint) {
+      return desktop ?? tablet ?? mobile ?? const EdgeInsets.all(spacingL);
+    } else if (width >= tabletBreakpoint) {
+      return tablet ?? mobile ?? const EdgeInsets.all(spacingM);
+    }
+    return mobile ?? const EdgeInsets.all(spacingM);
+  }
+
+  // Check screen size categories
+  static bool isMobile(BuildContext context) => MediaQuery.of(context).size.width < mobileBreakpoint;
+  static bool isTablet(BuildContext context) => MediaQuery.of(context).size.width >= mobileBreakpoint && MediaQuery.of(context).size.width < tabletBreakpoint;
+  static bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= tabletBreakpoint;
+  static bool isLargeDesktop(BuildContext context) => MediaQuery.of(context).size.width >= largeDesktopBreakpoint;
+
+  // Check orientation
+  static bool isPortrait(BuildContext context) => MediaQuery.of(context).orientation == Orientation.portrait;
+  static bool isLandscape(BuildContext context) => MediaQuery.of(context).orientation == Orientation.landscape;
+
+  // Get responsive column count for grid layouts
+  static int getResponsiveColumns(BuildContext context, {
+    int mobile = 1,
+    int? tablet,
+    int? desktop,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= desktopBreakpoint) {
+      return desktop ?? tablet ?? mobile * 2;
+    } else if (width >= tabletBreakpoint) {
+      return tablet ?? mobile + 1;
+    }
+    return mobile;
+  }
+
+  // Get responsive max width for content
+  static double getResponsiveMaxWidth(BuildContext context, {
+    double? mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= desktopBreakpoint) {
+      return desktop ?? 1200;
+    } else if (width >= tabletBreakpoint) {
+      return tablet ?? 800;
+    }
+    return mobile ?? width;
+  }
+
   static const Gradient primaryGradient = LinearGradient(
     colors: [primaryStart, primaryEnd],
     begin: Alignment.topLeft,
@@ -282,6 +373,53 @@ class AppWidgets {
             offset: Offset(0, (1 - value) * offsetY),
             child: child,
           ),
+        );
+      },
+    );
+  }
+
+  // Responsive wrapper widget
+  static Widget responsiveWrapper({
+    required Widget child,
+    double? maxWidth,
+    EdgeInsets? padding,
+  }) {
+    return Builder(
+      builder: (context) {
+        return Center(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: maxWidth ?? AppTheme.getResponsiveMaxWidth(context),
+            ),
+            padding: padding ?? AppTheme.getResponsivePadding(context),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  // Responsive grid widget
+  static Widget responsiveGrid({
+    required List<Widget> children,
+    int? crossAxisCount,
+    double? childAspectRatio,
+    double? crossAxisSpacing,
+    double? mainAxisSpacing,
+  }) {
+    return Builder(
+      builder: (context) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount ?? AppTheme.getResponsiveColumns(context),
+            childAspectRatio: childAspectRatio ?? 1.0,
+            crossAxisSpacing: crossAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
+            mainAxisSpacing: mainAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
+          ),
+          itemCount: children.length,
+          itemBuilder: (context, index) => children[index],
         );
       },
     );

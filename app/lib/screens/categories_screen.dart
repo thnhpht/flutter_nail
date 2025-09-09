@@ -120,6 +120,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -182,10 +186,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
                 ),
                 // Content
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
                       GestureDetector(
                         onTap: () async {
                           final picker = ImagePicker();
@@ -266,6 +271,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       ),
                     ],
                   ),
+                ),
                 ),
                 // Actions
                 Container(
@@ -381,6 +387,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -443,10 +453,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
                 ),
                 // Content
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
                       GestureDetector(
                         onTap: () async {
                           final picker = ImagePicker();
@@ -527,6 +538,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       ),
                     ],
                   ),
+                ),
                 ),
                 // Actions
                 Container(

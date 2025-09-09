@@ -629,7 +629,7 @@ class PdfBillGenerator {
                 ),
               ),
               pw.Text(
-                _formatPrice(order.totalPrice / (1 - order.discountPercent / 100)),
+                _formatPrice(_getOriginalTotal(order)),
                 style: _getVietnameseTextStyle(
                   fontSize: 16,
                   fontWeight: pw.FontWeight.normal,
@@ -652,7 +652,7 @@ class PdfBillGenerator {
                   ),
                 ),
                 pw.Text(
-                  '-${_formatPrice(order.totalPrice / (1 - order.discountPercent / 100) * order.discountPercent / 100)}',
+                  '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)}',
                   style: _getVietnameseTextStyle(
                     fontSize: 16,
                     fontWeight: pw.FontWeight.normal,
@@ -1091,5 +1091,12 @@ class PdfBillGenerator {
     
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
+  }
+
+  static double _getOriginalTotal(Order order) {
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
+    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
+    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
+    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
 }

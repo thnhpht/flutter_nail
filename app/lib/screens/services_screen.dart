@@ -564,6 +564,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.85,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -626,50 +630,51 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                 ),
                 // Content
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          final picker = ImagePicker();
-                          final img = await picker.pickImage(source: ImageSource.gallery);
-                          if (img != null) {
-                            setState(() {
-                              pickedImage = img;
-                              imageUrl = img.path;
-                            });
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[300]!, width: 2),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.grey[50],
-                            backgroundImage: _getImageProvider(imageUrl),
-                            child: imageUrl == null || imageUrl!.isEmpty
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Thêm ảnh',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppTheme.primaryStart,
-                                          fontWeight: FontWeight.w500,
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            final picker = ImagePicker();
+                            final img = await picker.pickImage(source: ImageSource.gallery);
+                            if (img != null) {
+                              setState(() {
+                                pickedImage = img;
+                                imageUrl = img.path;
+                              });
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey[300]!, width: 2),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.grey[50],
+                              backgroundImage: _getImageProvider(imageUrl),
+                              child: imageUrl == null || imageUrl!.isEmpty
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Thêm ảnh',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppTheme.primaryStart,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                : null,
+                                      ],
+                                    )
+                                  : null,
+                            ),
                           ),
                         ),
-                      ),
                       const SizedBox(height: 20),
                       Container(
                         decoration: BoxDecoration(
@@ -769,6 +774,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                     ],
                   ),
+                ),
                 ),
                 // Actions
                 Container(
@@ -881,6 +887,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.85,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -943,50 +953,51 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                 ),
                 // Content
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          final picker = ImagePicker();
-                          final img = await picker.pickImage(source: ImageSource.gallery);
-                          if (img != null) {
-                            setState(() {
-                              pickedImage = img;
-                              imageUrl = img.path;
-                            });
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[300]!, width: 2),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.grey[50],
-                            backgroundImage: _getImageProvider(imageUrl),
-                            child: imageUrl == null || imageUrl!.isEmpty
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Thay đổi ảnh',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppTheme.primaryStart,
-                                          fontWeight: FontWeight.w500,
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            final picker = ImagePicker();
+                            final img = await picker.pickImage(source: ImageSource.gallery);
+                            if (img != null) {
+                              setState(() {
+                                pickedImage = img;
+                                imageUrl = img.path;
+                              });
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey[300]!, width: 2),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.grey[50],
+                              backgroundImage: _getImageProvider(imageUrl),
+                              child: imageUrl == null || imageUrl!.isEmpty
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Thay đổi ảnh',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppTheme.primaryStart,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                : null,
+                                      ],
+                                    )
+                                  : null,
+                            ),
                           ),
                         ),
-                      ),
                       const SizedBox(height: 20),
                       Container(
                         decoration: BoxDecoration(
@@ -1086,6 +1097,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                     ],
                   ),
+                ),
                 ),
                 // Actions
                 Container(

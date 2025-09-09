@@ -24,18 +24,28 @@ class AppNavigationDrawer extends StatelessWidget {
           // Navigation items
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
+              padding: AppTheme.getResponsivePadding(
+                context,
+                mobile: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
+                tablet: const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
+                desktop: const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
+              ),
               children: _buildNavigationItems(),
             ),
           ),
           
           // Logout button
           Container(
-            padding: const EdgeInsets.all(AppTheme.spacingL),
+            padding: AppTheme.getResponsivePadding(
+              context,
+              mobile: const EdgeInsets.all(AppTheme.spacingM),
+              tablet: const EdgeInsets.all(AppTheme.spacingL),
+              desktop: const EdgeInsets.all(AppTheme.spacingXL),
+            ),
             child: Column(
               children: [
                 const Divider(),
-                const SizedBox(height: AppTheme.spacingS),
+                SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
                 _buildLogoutButton(),
               ],
             ),
@@ -143,22 +153,31 @@ class AppNavigationDrawer extends StatelessWidget {
   }
 
   Widget _buildSectionHeader(String title) {
-    return Container(
-      margin: const EdgeInsets.only(
-        left: AppTheme.spacingL,
-        right: AppTheme.spacingL,
-        top: AppTheme.spacingXL,
-        bottom: AppTheme.spacingM,
-      ),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: Colors.grey[700],
-          letterSpacing: 0.8,
-        ),
-      ),
+    return Builder(
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.only(
+            left: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            right: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            top: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingL, tablet: AppTheme.spacingXL),
+            bottom: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: AppTheme.getResponsiveFontSize(
+                context,
+                mobile: 12,
+                tablet: 14,
+                desktop: 16,
+              ),
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[700],
+              letterSpacing: 0.8,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -168,101 +187,129 @@ class AppNavigationDrawer extends StatelessWidget {
     required int index,
     required bool isSelected,
   }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.symmetric(
-        horizontal: AppTheme.spacingM,
-        vertical: 2,
-      ),
-      decoration: BoxDecoration(
-        color: isSelected ? AppTheme.primaryStart.withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(100),
-          onTap: () => onItemSelected(index),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppTheme.spacingM,
-              vertical: AppTheme.spacingS,
-            ),
-            child: Row(
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    icon,
-                    key: ValueKey('$icon-$isSelected'),
-                    color: isSelected ? AppTheme.primaryStart : Colors.grey[600],
-                    size: 20,
-                  ),
+    return Builder(
+      builder: (context) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: EdgeInsets.symmetric(
+            horizontal: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+            vertical: 2,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.primaryStart.withOpacity(0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(100),
+              onTap: () => onItemSelected(index),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+                  vertical: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
                 ),
-                const SizedBox(width: AppTheme.spacingM),
-                Expanded(
-                  child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 200),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? AppTheme.primaryStart : Colors.grey[800],
-                      letterSpacing: 0.2,
+                child: Row(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(
+                        icon,
+                        key: ValueKey('$icon-$isSelected'),
+                        color: isSelected ? AppTheme.primaryStart : Colors.grey[600],
+                        size: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 18,
+                          tablet: 20,
+                          desktop: 22,
+                        ),
+                      ),
                     ),
-                    child: Text(title),
-                  ),
+                    SizedBox(width: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
+                    Expanded(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: TextStyle(
+                          fontSize: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 14,
+                            tablet: 16,
+                            desktop: 18,
+                          ),
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected ? AppTheme.primaryStart : Colors.grey[800],
+                          letterSpacing: 0.2,
+                        ),
+                        child: Text(title),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildLogoutButton() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: Colors.red.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(100),
-          onTap: onLogout,
-          child: ListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Icon(
-                Icons.logout,
-                color: Colors.red,
-                size: 20,
-              ),
-            ),
-            title: const Text(
-              'Đăng xuất',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.red,
-              ),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
+    return Builder(
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(
+              color: Colors.red.withOpacity(0.3),
+              width: 1,
             ),
           ),
-        ),
-      ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(100),
+              onTap: onLogout,
+              child: ListTile(
+                leading: Container(
+                  padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context, mobile: 6, tablet: 8, desktop: 10)),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Icon(
+                    Icons.logout,
+                    color: Colors.red,
+                    size: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 18,
+                      tablet: 20,
+                      desktop: 22,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Đăng xuất',
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 14,
+                      tablet: 16,
+                      desktop: 18,
+                    ),
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -292,29 +339,45 @@ class AppNavigationRail extends StatelessWidget {
       destinations: _buildRailDestinations(),
       leading: Column(
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: AppTheme.getResponsiveSpacing(context, tablet: 16, desktop: 20)),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            margin: EdgeInsets.symmetric(
+              horizontal: AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
+              vertical: 4,
+            ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: onLogout,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  padding: EdgeInsets.symmetric(
+                    vertical: AppTheme.getResponsiveSpacing(context, tablet: 10, desktop: 12),
+                    horizontal: AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.logout,
                         color: Colors.red[400],
-                        size: 24,
+                        size: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 18,
+                          tablet: 20,
+                          desktop: 24,
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 2, tablet: 2, desktop: 4)),
                       Text(
                         'Đăng xuất',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 8,
+                            tablet: 9,
+                            desktop: 10,
+                          ),
                           color: Colors.red[400],
                           fontWeight: FontWeight.w500,
                         ),
@@ -333,20 +396,25 @@ class AppNavigationRail extends StatelessWidget {
           children: [
             Image.asset(
               'assets/icon/logo.png',
-              width: 40,
-              height: 40,
+              width: AppTheme.getResponsiveFontSize(context, mobile: 32, tablet: 36, desktop: 40),
+              height: AppTheme.getResponsiveFontSize(context, mobile: 32, tablet: 36, desktop: 40),
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 4, tablet: 6, desktop: 8)),
+            Text(
               'AeRI',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: AppTheme.getResponsiveFontSize(
+                  context,
+                  mobile: 8,
+                  tablet: 10,
+                  desktop: 12,
+                ),
                 fontWeight: FontWeight.bold,
                 color: AppTheme.primaryStart,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 12, tablet: 16, desktop: 20)),
           ],
         ),
       ),
@@ -378,13 +446,21 @@ class AppNavigationRail extends StatelessWidget {
 
   NavigationRailDestination _buildRailDestination(IconData icon, String label) {
     return NavigationRailDestination(
-      icon: Icon(icon, color: Colors.grey[600]),
-      selectedIcon: Icon(icon, color: AppTheme.primaryStart),
+      icon: Icon(
+        icon, 
+        color: Colors.grey[600],
+        size: 20,
+      ),
+      selectedIcon: Icon(
+        icon, 
+        color: AppTheme.primaryStart,
+        size: 20,
+      ),
       label: Text(
         label,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[700],
+        style: const TextStyle(
+          fontSize: 10,
+          color: Colors.grey,
         ),
       ),
     );
