@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_client.dart';
 import 'config/api_config.dart';
+import 'models.dart';
 import 'screens/login_screen.dart';
 import 'screens/order_screen.dart';
 import 'screens/customers_screen.dart';
@@ -12,10 +12,11 @@ import 'screens/categories_screen.dart';
 import 'screens/services_screen.dart';
 import 'screens/bills_screen.dart';
 import 'screens/reports_screen.dart';
+import 'screens/salon_info_screen.dart';
 import 'ui/navigation_drawer.dart';
 import 'ui/design_system.dart';
 
-enum _HomeView { welcome, customers, employees, categories, services, orders, bills, reports }
+enum _HomeView { welcome, customers, employees, categories, services, orders, bills, reports, salonInfo }
 
 void main() {
 // Sử dụng ApiConfig để tự động detect platform và chọn URL phù hợp
@@ -48,6 +49,11 @@ class _NailAppState extends State<NailApp> {
   };
   bool _isLoadingStats = true;
   
+  // Salon information
+  Information? _salonInfo;
+  bool _isLoadingSalonInfo = true;
+  bool _hasLoadedSalonInfo = false;
+  
   @override
   void initState() {
     super.initState();
@@ -65,6 +71,7 @@ class _NailAppState extends State<NailApp> {
         _userRole = userRole;
       });
       _loadTodayStats();
+      _loadSalonInfo(); // Load salon info when checking login status
     } else {
       setState(() {
         _isLoggedIn = isLoggedIn;
@@ -86,6 +93,27 @@ class _NailAppState extends State<NailApp> {
     } catch (e) {
       // Fallback to local calculation if API fails
       await _calculateLocalStats();
+    }
+  }
+
+  Future<void> _loadSalonInfo() async {
+    try {
+      setState(() {
+        _isLoadingSalonInfo = true;
+      });
+      final salonInfo = await api.getInformation();
+      setState(() {
+        _salonInfo = salonInfo;
+        _isLoadingSalonInfo = false;
+        _hasLoadedSalonInfo = true;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingSalonInfo = false;
+        _hasLoadedSalonInfo = true;
+      });
+      // Salon info loading failed, but don't show error to user
+      // The app will use fallback values
     }
   }
 
@@ -135,6 +163,7 @@ class _NailAppState extends State<NailApp> {
       _view = _HomeView.welcome; // Luôn luôn trả về màn hình chính sau khi đăng nhập
     });
     _loadTodayStats();
+    _loadSalonInfo();
   }
 
   void _refreshBills() {
@@ -152,6 +181,11 @@ class _NailAppState extends State<NailApp> {
         // This will trigger a rebuild of the bills screen
       });
     });
+  }
+
+  void _refreshSalonInfo() {
+    // Refresh salon info when updated from salon info screen
+    _loadSalonInfo();
   }
 
   @override
@@ -274,12 +308,31 @@ Widget _buildMainContent() {
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: Image.asset(
-                        'assets/icon/brand.png',
-                        width: 200,
-                        height: 20,
-                        fit: BoxFit.contain,
-                      ),
+                      child: _isLoadingSalonInfo && !_hasLoadedSalonInfo
+                          ? const SizedBox(
+                              width: 200,
+                              height: 20,
+                              child: Center(
+                                child: SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Text(
+                              _salonInfo?.salonName.isNotEmpty == true 
+                                  ? _salonInfo!.salonName 
+                                  : 'Salon',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -349,6 +402,8 @@ int _getSelectedIndex() {
         return 6;
       case _HomeView.reports:
         return 7;
+      case _HomeView.salonInfo:
+        return 8;
     }
   }
 }
@@ -397,6 +452,9 @@ void _onNavigationItemSelected(int index) {
           break;
         case 7:
           _view = _HomeView.reports;
+          break;
+        case 8:
+          _view = _HomeView.salonInfo;
           break;
         default:
           _view = _HomeView.welcome;
@@ -473,6 +531,8 @@ Widget _getCurrentScreen() {
         return BillsScreen(api: api);
       case _HomeView.reports:
         return ReportsScreen(api: api);
+      case _HomeView.salonInfo:
+        return SalonInfoScreen(api: api, onSalonInfoUpdated: _refreshSalonInfo);
       case _HomeView.welcome:
       default:
         return _buildWelcomeScreen();
@@ -487,18 +547,36 @@ Widget _buildWelcomeScreen() {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Welcome Icon with enhanced styling
-        Image.asset(
-          'assets/icon/logo.png',
-          width: 150,
-          height: 150,
-          fit: BoxFit.contain,
-        ),
+        _isLoadingSalonInfo && !_hasLoadedSalonInfo
+            ? const SizedBox(
+                width: 150,
+                height: 150,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              )
+            : _salonInfo?.logo.isNotEmpty == true
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      _salonInfo!.logo,
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildFallbackLogo();
+                      },
+                    ),
+                  )
+                : _buildFallbackLogo(),
         const SizedBox(height: 24),
         
         // Welcome Text with enhanced styling
-        const Text(
-          'Chào mừng đến với\nAeRI Nailroom',
-          style: TextStyle(
+        Text(
+          'Chào mừng đến với\n${_salonInfo?.salonName.isNotEmpty == true ? _salonInfo!.salonName : 'Salon'}',
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -665,6 +743,25 @@ Widget _buildStatCard({
   );
 }
 
+Widget _buildFallbackLogo() {
+  return Container(
+    width: 150,
+    height: 150,
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.3),
+        width: 2,
+      ),
+    ),
+    child: const Icon(
+      Icons.business,
+      size: 80,
+      color: Colors.white,
+    ),
+  );
+}
 
 }
 

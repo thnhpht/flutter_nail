@@ -48,6 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (email.contains('@')) {
       setState(() {
         _databaseName = email;
+        // Tự động điền email vào trường tên đăng nhập database
+        _userLoginController.text = email;
       });
     }
   }
@@ -229,6 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _shopEmailController.clear();
       _employeePhoneController.clear();
       _employeePasswordController.clear();
+      _databaseName = '';
     });
   }
 

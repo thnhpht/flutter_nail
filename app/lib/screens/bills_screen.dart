@@ -178,6 +178,13 @@ class _BillsScreenState extends State<BillsScreen> {
     return orderId.toUpperCase();
   }
 
+  double _getOriginalTotal(Order order) {
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
+    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
+    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
+    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
+  }
+
   Future<void> _selectDateRange() async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
@@ -999,7 +1006,7 @@ class _BillsScreenState extends State<BillsScreen> {
                               ),
                             ),
                             Text(
-                              '-${_formatPrice(order.totalPrice / (1 - order.discountPercent / 100) * order.discountPercent / 100)} ${SalonConfig.currency}',
+                              '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)} ${SalonConfig.currency}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,

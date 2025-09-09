@@ -351,6 +351,55 @@ class ApiClient {
     return jsonDecode(r.body) as Map<String, dynamic>;
   }
 
+  // Information (Salon Info)
+  Future<Information> getInformation() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
+    final r = await http.get(_u('/information'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    return Information.fromJson(jsonDecode(r.body));
+  }
+
+  Future<void> updateInformation(Information information) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
+    final r = await http.put(_u('/information'),
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json'
+        }, 
+        body: jsonEncode(information.toJson()));
+    _check(r, expect204: true);
+  }
+
+  Future<String> uploadLogo(List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
+    var request = http.MultipartRequest('POST', _u('/information/upload-logo'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+    
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+    
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+    
+    final responseData = jsonDecode(response.body);
+    return responseData['logoUrl'] as String;
+  }
+
   void _check(http.Response r, {bool expect201 = false, bool expect204 = false}) {
     final ok = expect201 ? r.statusCode == 201 : expect204 ? r.statusCode == 204 : (r.statusCode >= 200 && r.statusCode < 300);
     if (!ok) {

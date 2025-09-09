@@ -974,7 +974,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               ),
                             ),
                             Text(
-                              '-${_formatPrice(order.totalPrice / (1 - order.discountPercent / 100) * order.discountPercent / 100)} ₫',
+                              '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)} ₫',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -1110,6 +1110,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
     
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
+  }
+
+  double _getOriginalTotal(Order order) {
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
+    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
+    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
+    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
 
   Widget _buildServicesDisplay(Order order) {

@@ -33,6 +33,7 @@ namespace NailApi.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Service> Services => Set<Service>();
         public DbSet<Order> Orders => Set<Order>();
+        public DbSet<Information> Information => Set<Information>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +64,22 @@ namespace NailApi.Data
             modelBuilder.Entity<Order>()
                 .Property(o => o.Id)
                 .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Information>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.SalonName).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Address).HasMaxLength(500);
+                entity.Property(e => e.Phone).HasMaxLength(20);
+                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.Website).HasMaxLength(200);
+                entity.Property(e => e.Facebook).HasMaxLength(200);
+                entity.Property(e => e.Instagram).HasMaxLength(200);
+                entity.Property(e => e.Zalo).HasMaxLength(200);
+                entity.Property(e => e.Logo).HasMaxLength(500);
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETDATE()");
+            });
         }
     }
 }

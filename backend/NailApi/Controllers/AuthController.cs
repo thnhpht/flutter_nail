@@ -473,6 +473,22 @@ namespace NailApi.Controllers
                             [Tip] decimal(18,2) NOT NULL DEFAULT 0.0,
                             [CreatedAt] datetime2 NOT NULL,
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
+                        );",
+                        
+                        @"CREATE TABLE [Information] (
+                            [Id] int IDENTITY(1,1) NOT NULL,
+                            [SalonName] nvarchar(200) NULL,
+                            [Address] nvarchar(500) NULL,
+                            [Phone] nvarchar(20) NULL,
+                            [Email] nvarchar(100) NULL,
+                            [Website] nvarchar(200) NULL,
+                            [Facebook] nvarchar(200) NULL,
+                            [Instagram] nvarchar(200) NULL,
+                            [Zalo] nvarchar(200) NULL,
+                            [Logo] nvarchar(max) NULL,
+                            [CreatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
+                            [UpdatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
+                            CONSTRAINT [PK_Information] PRIMARY KEY ([Id])
                         );"
                     };
 
@@ -499,6 +515,23 @@ namespace NailApi.Controllers
                     if (successCount == totalTables)
                     {
                         Console.WriteLine("All tables created successfully");
+                        
+                        // Thêm dữ liệu mặc định cho bảng Information
+                        try
+                        {
+                            var insertInformationCommand = new SqlCommand(@"
+                                INSERT INTO [Information] ([SalonName], [Address], [Phone], [Email], [Website], [Facebook], [Instagram], [Zalo], [Logo], [CreatedAt], [UpdatedAt])
+                                VALUES ('AeRI Nailroom', '10 Nguyễn Văn Tráng, Phường Bến Thành, Quận 1, TP.HCM', '078 587 3000', 'aeri.nailroom@gmail.com', 'https://www.facebook.com/AeRiNailroom/', 'https://www.facebook.com/AeRiNailroom/', 'https://www.instagram.com/aeri.nailroom/', 'zalo.me/aerinailroom', '', GETDATE(), GETDATE())", connection);
+                            
+                            await insertInformationCommand.ExecuteNonQueryAsync();
+                            Console.WriteLine("Default information data inserted successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to insert default information data: {ex.Message}");
+                            // Không return false vì bảng đã được tạo thành công
+                        }
+                        
                         return true;
                     }
                     else

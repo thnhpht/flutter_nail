@@ -79,6 +79,15 @@ class AppNavigationDrawer extends StatelessWidget {
     } else {
       // Shop owner navigation - full features
       return [
+        // Thông tin section
+        _buildSectionHeader('Thông tin'),
+        _buildNavItem(
+          icon: Icons.business,
+          title: 'Thông tin Salon',
+          index: 8,
+          isSelected: selectedIndex == 8,
+        ),
+
         // Quản lý section
         _buildSectionHeader('Quản lý'),
         _buildNavItem(
@@ -362,6 +371,7 @@ class AppNavigationRail extends StatelessWidget {
         _buildRailDestination(Icons.add_shopping_cart, 'Tạo đơn'),
         _buildRailDestination(Icons.receipt, 'Hóa đơn'),
         _buildRailDestination(Icons.analytics, 'Báo cáo'),
+        _buildRailDestination(Icons.business, 'Thông tin Salon'),
       ];
     }
   }

@@ -320,3 +320,93 @@ class Order {
     'createdAt': createdAt.toIso8601String(),
   };
 }
+
+class Information {
+  final int id;
+  final String salonName;
+  final String address;
+  final String phone;
+  final String email;
+  final String website;
+  final String facebook;
+  final String instagram;
+  final String zalo;
+  final String logo;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Information({
+    required this.id,
+    required this.salonName,
+    required this.address,
+    required this.phone,
+    required this.email,
+    required this.website,
+    required this.facebook,
+    required this.instagram,
+    required this.zalo,
+    required this.logo,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Information.fromJson(Map<String, dynamic> json) => Information(
+    id: json['id'] as int,
+    salonName: json['salonName'] as String? ?? '',
+    address: json['address'] as String? ?? '',
+    phone: json['phone'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    website: json['website'] as String? ?? '',
+    facebook: json['facebook'] as String? ?? '',
+    instagram: json['instagram'] as String? ?? '',
+    zalo: json['zalo'] as String? ?? '',
+    logo: json['logo'] as String? ?? '',
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    updatedAt: DateTime.parse(json['updatedAt'] as String),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'salonName': salonName,
+    'address': address,
+    'phone': phone,
+    'email': email,
+    'website': website,
+    'facebook': facebook,
+    'instagram': instagram,
+    'zalo': zalo,
+    'logo': logo,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
+
+  Information copyWith({
+    int? id,
+    String? salonName,
+    String? address,
+    String? phone,
+    String? email,
+    String? website,
+    String? facebook,
+    String? instagram,
+    String? zalo,
+    String? logo,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Information(
+      id: id ?? this.id,
+      salonName: salonName ?? this.salonName,
+      address: address ?? this.address,
+      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      website: website ?? this.website,
+      facebook: facebook ?? this.facebook,
+      instagram: instagram ?? this.instagram,
+      zalo: zalo ?? this.zalo,
+      logo: logo ?? this.logo,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+}
