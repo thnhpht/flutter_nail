@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:io';
 import 'api_client.dart';
 import 'config/api_config.dart';
 import 'models.dart';
@@ -551,30 +553,20 @@ Widget _buildWelcomeScreen() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Welcome Icon with responsive sizing
-          _isLoadingSalonInfo && !_hasLoadedSalonInfo
-              ? SizedBox(
-                  width: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
-                  height: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                )
-              : _salonInfo?.logo.isNotEmpty == true
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        _salonInfo!.logo,
-                        width: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
-                        height: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildFallbackLogo();
-                        },
+            _isLoadingSalonInfo && !_hasLoadedSalonInfo
+                ? SizedBox(
+                    width: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                    height: AppTheme.isMobile(context) ? 120 : AppTheme.isTablet(context) ? 150 : 160,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
-                    )
-                  : _buildFallbackLogo(),
+                    ),
+                  )
+                : (_salonInfo?.logo.isNotEmpty == true
+                    ? _buildSalonLogo(_salonInfo!.logo)
+                    : _buildFallbackLogo()),
+
           SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 16, tablet: 24, desktop: 24)),
           
           // Welcome Text with responsive styling
@@ -624,7 +616,54 @@ Widget _buildWelcomeScreen() {
     ),
   );
 }
-
+          
+// Hiển thị logo salon, hỗ trợ network/file/base64
+Widget _buildSalonLogo(String logoUrl) {
+  final size = AppTheme.isMobile(context) ? 120.0 : AppTheme.isTablet(context) ? 150.0 : 160.0;
+  try {
+    if (logoUrl.startsWith('data:image/')) {
+      // base64
+      final base64String = logoUrl.split(',')[1];
+      final bytes = base64Decode(base64String);
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.memory(
+          bytes,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+        ),
+      );
+    } else if (logoUrl.startsWith('http://') || logoUrl.startsWith('https://')) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.network(
+          logoUrl,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => _buildFallbackLogo(),
+        ),
+      );
+    } else if (logoUrl.startsWith('/')) {
+      // local file
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.file(
+          File(logoUrl),
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => _buildFallbackLogo(),
+        ),
+      );
+    } else {
+      return _buildFallbackLogo();
+    }
+  } catch (e) {
+    return _buildFallbackLogo();
+  }
+}
 Widget _buildQuickStats() {
   return TweenAnimationBuilder<double>(
     tween: Tween(begin: 0.0, end: 1.0),

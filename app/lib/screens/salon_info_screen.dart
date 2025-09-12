@@ -336,47 +336,45 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Logo Salon',
+            'Logo salon',
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: AppTheme.spacingL),
           Center(
-            child: GestureDetector(
+            child: InkWell(
               onTap: _pickImage,
               child: Container(
-                width: 150,
-                height: 150,
+                width: 160,
+                height: 160,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                  borderRadius: BorderRadius.circular(80),
                   border: Border.all(
                     color: Colors.grey[300]!,
                     width: 2,
-                    style: BorderStyle.solid,
                   ),
                 ),
                 child: _selectedImageBytes != null
                     ? ClipRRect(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                        borderRadius: BorderRadius.circular(78),
                         child: Image.memory(
                           _selectedImageBytes!,
                           fit: BoxFit.cover,
                         ),
                       )
-                    : _logoUrl.isNotEmpty
+                    : (_logoUrl.isNotEmpty)
                         ? ClipRRect(
-                            borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-                            child: Image.network(
-                              _logoUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return _buildPlaceholderLogo();
-                              },
-                            ),
+                            borderRadius: BorderRadius.circular(78),
+                            child: _logoUrl.startsWith('http')
+                                ? Image.network(
+                                    _logoUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => _buildPlaceholderLogo(),
+                                  )
+                                : _buildImageWidget(_logoUrl),
                           )
                         : _buildPlaceholderLogo(),
               ),
@@ -386,11 +384,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           Center(
             child: TextButton.icon(
               onPressed: _pickImage,
-              icon: const Icon(Icons.camera_alt, color: AppTheme.primaryStart),
-              label: const Text(
-                'Chọn Logo',
-                style: TextStyle(color: AppTheme.primaryStart),
-              ),
+              icon: const Icon(Icons.add_photo_alternate),
+              label: const Text('Thay đổi logo'),
             ),
           ),
         ],
@@ -419,13 +414,78 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: AppTheme.textPrimary,
+  Widget _buildImageWidget(String imageUrl) {
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return Image.network(imageUrl, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[300],
+          child: Center(
+            child: Icon(Icons.image, color: Colors.grey[600], size: 32),
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[300],
+        child: Center(
+          child: Icon(Icons.broken_image, color: Colors.grey[600], size: 32),
+        ),
+      );
+    }
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      validator: validator,
+      inputFormatters: inputFormatters,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: AppTheme.primaryStart),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          borderSide: const BorderSide(color: AppTheme.primaryStart, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppTheme.spacingM,
+          vertical: AppTheme.spacingM,
+        ),
       ),
     );
   }
@@ -466,7 +526,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
             keyboardType: TextInputType.phone,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(11), // Max 11 digits for Vietnamese phone numbers
+              LengthLimitingTextInputFormatter(11),
             ],
           ),
           const SizedBox(height: AppTheme.spacingL),
@@ -529,50 +589,13 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType? keyboardType,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      validator: validator,
-      inputFormatters: inputFormatters,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: AppTheme.primaryStart),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: AppTheme.primaryStart, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
-        ),
-        filled: true,
-        fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppTheme.spacingM,
-          vertical: AppTheme.spacingM,
-        ),
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: AppTheme.textPrimary,
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
+import 'dart:convert';
 
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key, required this.api});
@@ -88,6 +89,92 @@ class _ServicesScreenState extends State<ServicesScreen> {
       messageColor: Colors.white,
       icon: icon,
     ).show(context);
+  }
+  // Thêm method _pickImage cải tiến
+  Future<void> _pickImage(Function(XFile?, Uint8List?) onImageSelected) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 90,
+      );
+
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        onImageSelected(image, bytes);
+      }
+    } catch (e) {
+      if (mounted) {
+        showFlushbar('Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.', type: MessageType.error);
+      }
+    }
+  }
+
+  // Thêm method tạo placeholder image
+  Widget _buildServiceImagePlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.add_a_photo,
+          size: 32,
+          color: AppTheme.primaryStart,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Thêm ảnh',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppTheme.primaryStart,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Cải tiến image display widget
+  Widget _buildImageSelector(String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        height: 120,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(60),
+          border: Border.all(
+            color: Colors.grey[300]!,
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: selectedImageBytes != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(58),
+                child: Image.memory(
+                  selectedImageBytes,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : (imageUrl != null && imageUrl.isNotEmpty)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(58),
+                    child: imageUrl.startsWith('http') 
+                      ? Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return _buildServiceImagePlaceholder();
+                          },
+                        )
+                      : _buildImageWidget(imageUrl),
+                  )
+                : _buildServiceImagePlaceholder(),
+      ),
+    );
   }
 
   String _formatPrice(double price) {
@@ -611,47 +698,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final picker = ImagePicker();
-                            final img = await picker.pickImage(source: ImageSource.gallery);
-                            if (img != null) {
-                              final bytes = await img.readAsBytes();
-                              setState(() {
-                                pickedImage = img;
-                                selectedImageBytes = bytes;
-                                imageUrl = '';
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[300]!, width: 2),
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey[50],
-                              backgroundImage: _getImageProvider(imageUrl),
-                              child: imageUrl == null || imageUrl!.isEmpty
-                                  ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Thêm ảnh',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primaryStart,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : null,
-                            ),
-                          ),
+                        _buildImageSelector(
+                          imageUrl,
+                          selectedImageBytes,
+                          () => _pickImage((image, bytes) {
+                            setState(() {
+                              pickedImage = image;
+                              selectedImageBytes = bytes;
+                              imageUrl = ''; // Clear old URL when new image is selected
+                            });
+                          }),
                         ),
                       const SizedBox(height: 20),
                       Container(
@@ -943,47 +999,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final picker = ImagePicker();
-                            final img = await picker.pickImage(source: ImageSource.gallery);
-                            if (img != null) {
-                              final bytes = await img.readAsBytes();
-                              setState(() {
-                                pickedImage = img;
-                                selectedImageBytes = bytes;
-                                imageUrl = '';
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[300]!, width: 2),
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.grey[50],
-                              backgroundImage: _getImageProvider(imageUrl),
-                              child: imageUrl == null || imageUrl!.isEmpty
-                                  ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add_a_photo, size: 32, color: AppTheme.primaryStart),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Thay đổi ảnh',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.primaryStart,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : null,
-                            ),
-                          ),
+                        _buildImageSelector(
+                          imageUrl,
+                          selectedImageBytes,
+                          () => _pickImage((image, bytes) {
+                            setState(() {
+                              pickedImage = image;
+                              selectedImageBytes = bytes;
+                              imageUrl = ''; // Clear old URL when new image is selected
+                            });
+                          }),
                         ),
                       const SizedBox(height: 20),
                       Container(
@@ -1205,12 +1230,31 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return Image.network(imageUrl, fit: BoxFit.cover);
-    } else if (imageUrl.startsWith('/')) {
-      return Image.file(File(imageUrl), fit: BoxFit.cover);
-    } else {
-      return Container(color: Colors.grey[300]);
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        // Xử lý data URL (base64)
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return Image.network(imageUrl, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[300],
+          child: Center(
+            child: Icon(Icons.image, color: Colors.grey[600], size: 32),
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[300],
+        child: Center(
+          child: Icon(Icons.broken_image, color: Colors.grey[600], size: 32),
+        ),
+      );
     }
   }
 

@@ -21,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 enum MessageType { success, error, info, warning }
 
 class _LoginScreenState extends State<LoginScreen> {
+  Information? _information;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.addListener(_onEmailChanged);
   }
 
-  void _onEmailChanged() {
+   void _onEmailChanged() {
     final email = _emailController.text;
     if (email.contains('@')) {
       setState(() {
@@ -504,15 +505,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo
-                  Image.asset(
-                    'assets/icons/logo.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.contain,
-                  ),
+                    _buildPlaceholderLogo(),
+
                   const SizedBox(height: 24),
-                  
+    
                   // Title
                   Text(
                     _currentStep == 'role_selection' ? 'Chọn loại tài khoản' :
@@ -878,4 +874,23 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Widget _buildPlaceholderLogo() {
+    return SizedBox(
+      width: 120,
+      height: 120,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.spa,
+            size: 72,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+              
 }

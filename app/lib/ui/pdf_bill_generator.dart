@@ -34,13 +34,18 @@ class PdfBillGenerator {
         ),
       );
 
+      // Use SalonConfig defaults if any value is null or empty
+      final displaySalonName = (salonName != null && salonName.isNotEmpty) ? salonName : SalonConfig.salonName;
+      final displaySalonAddress = (salonAddress != null && salonAddress.isNotEmpty) ? salonAddress : SalonConfig.salonAddress;
+      final displaySalonPhone = (salonPhone != null && salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
+
       // Tạo PDF
       final pdf = await _createPdf(
         order: order,
         services: services,
-        salonName: salonName ?? SalonConfig.salonName,
-        salonAddress: salonAddress ?? SalonConfig.salonAddress,
-        salonPhone: salonPhone ?? SalonConfig.salonPhone,
+        salonName: displaySalonName,
+        salonAddress: displaySalonAddress,
+        salonPhone: displaySalonPhone,
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -61,7 +66,7 @@ class PdfBillGenerator {
       Navigator.of(context).pop();
 
       // Hiển thị dialog chọn cách chia sẻ
-      await _showShareOptions(context, file, pdfBytes, order.customerPhone);
+      await _showShareOptions(context, file, pdfBytes, order.customerPhone, salonName: displaySalonName);
 
     } catch (e) {
       // Đóng loading dialog nếu có lỗi
@@ -820,7 +825,7 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _showShareOptions(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone) async {
+  static Future<void> _showShareOptions(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone, {String? salonName}) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -839,7 +844,7 @@ class PdfBillGenerator {
                     IconButton(
                       onPressed: () async {
                         Navigator.pop(context);
-                        await _shareToZalo(context, file, pdfBytes, customerPhone);
+                        await _shareToZalo(context, file, pdfBytes, customerPhone, salonName: salonName);
                       },
                       icon: const Icon(Icons.chat, size: 40, color: Colors.blue),
                     ),
@@ -852,7 +857,7 @@ class PdfBillGenerator {
                     IconButton(
                       onPressed: () async {
                         Navigator.pop(context);
-                        await _shareFile(context, file, pdfBytes);
+                        await _shareFile(context, file, pdfBytes, salonName: salonName);
                       },
                       icon: const Icon(Icons.share, size: 40, color: Colors.green),
                     ),
@@ -873,11 +878,11 @@ class PdfBillGenerator {
     );
   }
 
-  static Future<void> _shareToZalo(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone) async {
+  static Future<void> _shareToZalo(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone, {String? salonName}) async {
     try {
       // Trên desktop, Zalo không hoạt động tốt, chuyển sang chia sẻ thông thường
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        await _shareFile(context, file, pdfBytes);
+        await _shareFile(context, file, pdfBytes, salonName: salonName);
         return;
       }
 
@@ -890,10 +895,10 @@ class PdfBillGenerator {
         
         // Đợi một chút để Zalo mở, sau đó chia sẻ file
         await Future.delayed(const Duration(seconds: 2));
-        await _shareFile(context, file, pdfBytes);
+        await _shareFile(context, file, pdfBytes, salonName: salonName);
       } else {
         // Nếu không có Zalo, chia sẻ file thông thường
-        await _shareFile(context, file, pdfBytes);
+        await _shareFile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -904,17 +909,17 @@ class PdfBillGenerator {
       );
       
       // Fallback: chia sẻ file thông thường
-      await _shareFile(context, file, pdfBytes);
+      await _shareFile(context, file, pdfBytes, salonName: salonName);
     }
   }
 
-  static Future<void> _shareFile(BuildContext context, File? file, Uint8List? pdfBytes) async {
+  static Future<void> _shareFile(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
     try {
       // Kiểm tra platform và sử dụng phương pháp phù hợp
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-        await _shareFileDesktop(context, file, pdfBytes);
+        await _shareFileDesktop(context, file, pdfBytes, salonName: salonName);
       } else {
-        await _shareFileMobile(context, file, pdfBytes);
+        await _shareFileMobile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -926,12 +931,12 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _shareFileMobile(BuildContext context, File? file, Uint8List? pdfBytes) async {
+  static Future<void> _shareFileMobile(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
     if (file != null && await file.exists()) {
       // Sử dụng file nếu có
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'Hóa đơn từ ${SalonConfig.salonName}',
+        text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
       );
     } else if (pdfBytes != null) {
       // Sử dụng bytes trực tiếp nếu không có file
@@ -940,7 +945,7 @@ class PdfBillGenerator {
       
       await Share.shareXFiles(
         [XFile(tempFile.path)],
-        text: 'Hóa đơn từ ${SalonConfig.salonName}',
+        text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
       );
       
       // Xóa file tạm
@@ -956,14 +961,14 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _shareFileDesktop(BuildContext context, File? file, Uint8List? pdfBytes) async {
+  static Future<void> _shareFileDesktop(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
     // Trên desktop, sử dụng phương pháp khác
     try {
       // Thử sử dụng share_plus trước
       if (file != null && await file.exists()) {
         await Share.shareXFiles(
           [XFile(file.path)],
-          text: 'Hóa đơn từ ${SalonConfig.salonName}',
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
         );
       } else if (pdfBytes != null) {
         final tempFile = File('temp_bill.pdf');
@@ -971,7 +976,7 @@ class PdfBillGenerator {
         
         await Share.shareXFiles(
           [XFile(tempFile.path)],
-          text: 'Hóa đơn từ ${SalonConfig.salonName}',
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
         );
         
         // Xóa file tạm

@@ -19,6 +19,8 @@ class OrderScreen extends StatefulWidget {
 enum MessageType { success, error, info, warning }
 
 class _OrderScreenState extends State<OrderScreen> {
+  Information? _information;
+  bool _isInfoLoading = true;
   final _formKey = GlobalKey<FormState>();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
@@ -48,11 +50,29 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadCategories();
     _loadServices();
     _loadEmployees();
-    
+    _loadInformation();
     // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
+  }
+
+  Future<void> _loadInformation() async {
+    try {
+      final info = await widget.api.getInformation();
+      if (mounted) {
+        setState(() {
+          _information = info;
+          _isInfoLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isInfoLoading = false;
+        });
+      }
+    }
   }
 
   void showFlushbar(String message, {MessageType type = MessageType.info}) {
@@ -401,9 +421,9 @@ class _OrderScreenState extends State<OrderScreen> {
             context: context,
             order: createdOrder,
             services: servicesForBill,
-            salonName: SalonConfig.salonName,
-            salonAddress: SalonConfig.salonAddress,
-            salonPhone: SalonConfig.salonPhone,
+            salonName: _information?.salonName,
+            salonAddress: _information?.address,
+            salonPhone: _information?.phone,
           );
         });
       }

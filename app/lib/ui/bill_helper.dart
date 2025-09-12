@@ -3,6 +3,7 @@ import '../models.dart';
 import '../config/salon_config.dart';
 import 'design_system.dart';
 import 'pdf_bill_generator.dart';
+import 'salon_info_inherited.dart';
 
 class BillHelper {
   static List<Service>? _currentServices;
@@ -124,6 +125,10 @@ class BillHelper {
     required String salonAddress,
     required String salonPhone,
   }) {
+    // Use SalonConfig defaults if any value is null or empty
+    final displaySalonName = (salonName.isNotEmpty) ? salonName : SalonConfig.salonName;
+    final displaySalonAddress = (salonAddress.isNotEmpty) ? salonAddress : SalonConfig.salonAddress;
+    final displaySalonPhone = (salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
     return Column(
       children: [
         // Salon Info
@@ -137,7 +142,7 @@ class BillHelper {
           child: Column(
             children: [
               Text(
-                salonName,
+                displaySalonName,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -145,7 +150,7 @@ class BillHelper {
               ),
               const SizedBox(height: 4),
               Text(
-                salonAddress,
+                displaySalonAddress,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -154,7 +159,7 @@ class BillHelper {
               ),
               const SizedBox(height: 4),
               Text(
-                salonPhone,
+                displaySalonPhone,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -606,15 +611,20 @@ class BillHelper {
       return;
     }
 
-    // Gọi PdfBillGenerator để tạo PDF và chia sẻ
+    // Lấy thông tin salon từ dialog arguments nếu có
+    final inherited = context.getElementForInheritedWidgetOfExactType<SalonInfoInherited>()?.widget as SalonInfoInherited?;
+    final salonName = inherited?.salonName;
+    final salonAddress = inherited?.salonAddress;
+    final salonPhone = inherited?.salonPhone;
+
     PdfBillGenerator.generateAndShareBill(
       context: context,
       order: order,
       services: _currentServices!,
-      salonName: SalonConfig.salonName,
-      salonAddress: SalonConfig.salonAddress,
-      salonPhone: SalonConfig.salonPhone,
+      salonName: salonName,
+      salonAddress: salonAddress,
+      salonPhone: salonPhone,
     );
   }
-
 }
+

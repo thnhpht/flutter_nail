@@ -17,6 +17,8 @@ class BillsScreen extends StatefulWidget {
 }
 
 class _BillsScreenState extends State<BillsScreen> {
+  Information? _information;
+  bool _isInfoLoading = true;
   List<Order> _orders = [];
   List<Service> _allServices = [];
   bool _isLoading = true;
@@ -32,6 +34,25 @@ class _BillsScreenState extends State<BillsScreen> {
       end: DateTime.now(),
     );
     _loadData();
+    _loadInformation();
+  }
+
+  Future<void> _loadInformation() async {
+    try {
+      final info = await widget.api.getInformation();
+      if (mounted) {
+        setState(() {
+          _information = info;
+          _isInfoLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isInfoLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> refreshData() async {
@@ -137,9 +158,9 @@ class _BillsScreenState extends State<BillsScreen> {
       context: context,
       order: order,
       services: services,
-      salonName: SalonConfig.salonName,
-      salonAddress: SalonConfig.salonAddress,
-      salonPhone: SalonConfig.salonPhone,
+      salonName: _information?.salonName,
+      salonAddress: _information?.address,
+      salonPhone: _information?.phone,
     );
   }
 

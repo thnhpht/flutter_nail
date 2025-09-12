@@ -1,9 +1,9 @@
 class SalonConfig {
-  static const String salonName = 'AeRI Nailroom';
-  static const String salonAddress = '10 Nguyễn Văn Tráng, Phường Bến Thành, Quận 1, TP.HCM';
-  static const String salonPhone = '078 587 3000';
-  static const String salonEmail = 'aeri.nailroom@gmail.com';
-  static const String salonWebsite = 'https://www.facebook.com/AeRiNailroom/';
+  static const String salonName = 'Tên Salon';
+  static const String salonAddress = 'Địa chỉ Salon';
+  static const String salonPhone = 'Số điện thoại Salon';
+  static const String salonEmail = 'Email Salon';
+  static const String salonWebsite = 'Website Salon';
   
   // Bill configuration
   static const String billTitle = 'HÓA ĐƠN THANH TOÁN';
@@ -29,7 +29,7 @@ class SalonConfig {
   static const String businessHours = '8:00 - 20:00 (Thứ 2 - Chủ nhật)';
   
   // Social media
-  static const String facebook = 'https://www.facebook.com/AeRiNailroom/';
-  static const String instagram = 'https://www.instagram.com/aeri.nailroom/';
-  static const String zalo = 'zalo.me/aerinailroom';
+  static const String facebook = 'Facebook Salon';
+  static const String instagram = 'Instagram Salon';
+  static const String zalo = 'Zalo Salon';
 }
