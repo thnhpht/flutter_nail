@@ -31,38 +31,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
   bool _showCategoryFilter = false;
   bool _isFilterExpanded = false;
 
-  // Helper method to save image permanently
-  Future<String?> _saveImagePermanently(XFile imageFile) async {
-    try {
-      // Get app documents directory
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      final String imagesDir = path.join(appDocDir.path, 'service_images');
-      
-      // Create images directory if it doesn't exist
-      final Directory imagesDirectory = Directory(imagesDir);
-      if (!await imagesDirectory.exists()) {
-        await imagesDirectory.create(recursive: true);
-      }
-      
-      // Generate unique filename
-      final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(imageFile.path)}';
-      final String newPath = path.join(imagesDir, fileName);
-      
-      // Copy file to permanent location
-      await imageFile.saveTo(newPath);
-      
-      // Return relative path for storage
-      return 'service_images/$fileName';
-    } catch (e) {
-      print('Error saving image: $e');
-      return null;
-    }
-  }
-
   // Helper method to get image provider for dialog
+  Uint8List? _selectedImageBytes;
   ImageProvider? _getImageProvider(String? imageUrl) {
+    if (_selectedImageBytes != null) {
+      return MemoryImage(_selectedImageBytes!);
+    }
     if (imageUrl == null || imageUrl.isEmpty) return null;
-    
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return NetworkImage(imageUrl);
     } else if (imageUrl.startsWith('/')) {
@@ -554,8 +529,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
     final nameCtrl = TextEditingController();
     final priceCtrl = TextEditingController();
     String? selectedCatId = _categories.isNotEmpty ? _categories.first.id : null;
-    String? imageUrl;
-    XFile? pickedImage;
+  String? imageUrl;
+  XFile? pickedImage;
+  Uint8List? selectedImageBytes;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -640,9 +616,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             final picker = ImagePicker();
                             final img = await picker.pickImage(source: ImageSource.gallery);
                             if (img != null) {
+                              final bytes = await img.readAsBytes();
                               setState(() {
                                 pickedImage = img;
-                                imageUrl = img.path;
+                                selectedImageBytes = bytes;
+                                imageUrl = '';
                               });
                             }
                           },
@@ -855,16 +833,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
       final price = double.tryParse(priceCtrl.text.trim()) ?? 0;
 
       try {
-        String? savedImagePath;
-        if (pickedImage != null) {
-          savedImagePath = await _saveImagePermanently(pickedImage!);
-          if (savedImagePath == null) {
-            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+        String? imageUrlToSave;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName = 'service_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api.uploadServiceImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            showFlushbar('Lỗi khi upload ảnh lên server', type: MessageType.error);
             return;
           }
         }
-        
-        await widget.api.createService(selectedCatId!, name, price, image: savedImagePath);
+        await widget.api.createService(selectedCatId!, name, price, image: imageUrlToSave);
         await _reload();
         showFlushbar('Thêm dịch vụ thành công', type: MessageType.success);
       } catch (e) {
@@ -877,8 +860,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
     final nameCtrl = TextEditingController(text: s.name);
     final priceCtrl = TextEditingController(text: s.price.toStringAsFixed(0));
     String? selectedCatId = s.categoryId;
-    String? imageUrl = s.image;
-    XFile? pickedImage;
+  String? imageUrl = s.image;
+  XFile? pickedImage;
+  Uint8List? selectedImageBytes;
+  String? oldAssetPath = s.image;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -963,9 +948,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             final picker = ImagePicker();
                             final img = await picker.pickImage(source: ImageSource.gallery);
                             if (img != null) {
+                              final bytes = await img.readAsBytes();
                               setState(() {
                                 pickedImage = img;
-                                imageUrl = img.path;
+                                selectedImageBytes = bytes;
+                                imageUrl = '';
                               });
                             }
                           },
@@ -1178,21 +1165,26 @@ class _ServicesScreenState extends State<ServicesScreen> {
       final price = double.tryParse(priceCtrl.text.trim()) ?? s.price;
 
       try {
-        String? finalImagePath = imageUrl;
-        if (pickedImage != null) {
-          finalImagePath = await _saveImagePermanently(pickedImage!);
-          if (finalImagePath == null) {
-            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+        String? imageUrlToSave = imageUrl;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName = 'service_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api.uploadServiceImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            showFlushbar('Lỗi khi upload ảnh lên server', type: MessageType.error);
             return;
           }
         }
-        
         await widget.api.updateService(Service(
           id: s.id,
           categoryId: selectedCatId!,
           name: name,
           price: price,
-          image: finalImagePath,
+          image: imageUrlToSave,
         ));
         await _reload();
         showFlushbar('Thay đổi thông tin dịch vụ thành công', type: MessageType.success);
@@ -1213,30 +1205,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-    // Check if it's a local file path or network URL
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return Image.network(imageUrl, fit: BoxFit.cover);
+    } else if (imageUrl.startsWith('/')) {
+      return Image.file(File(imageUrl), fit: BoxFit.cover);
     } else {
-      // Local file path - handle both absolute and relative paths
-      if (imageUrl.startsWith('/')) {
-        // Absolute path
-        return Image.file(File(imageUrl), fit: BoxFit.cover);
-      } else {
-        // Relative path - use FutureBuilder to handle async operation
-        return FutureBuilder<Directory>(
-          future: getApplicationDocumentsDirectory(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final String fullPath = path.join(snapshot.data!.path, imageUrl);
-              return Image.file(File(fullPath), fit: BoxFit.cover);
-            }
-            return Container(
-              color: Colors.grey[300],
-              child: const Center(child: CircularProgressIndicator()),
-            );
-          },
-        );
-      }
+      return Container(color: Colors.grey[300]);
     }
   }
 

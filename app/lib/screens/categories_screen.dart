@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -24,38 +25,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final _formKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
 
-  // Helper method to save image permanently
-  Future<String?> _saveImagePermanently(XFile imageFile) async {
-    try {
-      // Get app documents directory
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      final String imagesDir = path.join(appDocDir.path, 'category_images');
-      
-      // Create images directory if it doesn't exist
-      final Directory imagesDirectory = Directory(imagesDir);
-      if (!await imagesDirectory.exists()) {
-        await imagesDirectory.create(recursive: true);
-      }
-      
-      // Generate unique filename
-      final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${path.basename(imageFile.path)}';
-      final String newPath = path.join(imagesDir, fileName);
-      
-      // Copy file to permanent location
-      await imageFile.saveTo(newPath);
-      
-      // Return relative path for storage
-      return 'category_images/$fileName';
-    } catch (e) {
-      print('Error saving image: $e');
-      return null;
-    }
-  }
-
   // Helper method to get image provider for dialog
-  ImageProvider? _getImageProvider(String? imageUrl) {
+  Uint8List? _selectedImageBytes;
+  ImageProvider? _getImageProvider(String? imageUrl, [Uint8List? selectedImageBytes]) {
+    if (selectedImageBytes != null) {
+      return MemoryImage(selectedImageBytes);
+    }
     if (imageUrl == null || imageUrl.isEmpty) return null;
-    
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return NetworkImage(imageUrl);
     } else if (imageUrl.startsWith('/')) {
@@ -110,10 +86,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
-    String? imageUrl;
-    XFile? pickedImage;
+  String? imageUrl;
+  XFile? pickedImage;
+  Uint8List? selectedImageBytes;
 
-    final ok = await showDialog<bool>(
+  final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
       builder: (_) => StatefulBuilder(
@@ -196,9 +173,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           final picker = ImagePicker();
                           final img = await picker.pickImage(source: ImageSource.gallery);
                           if (img != null) {
+                            final bytes = await img.readAsBytes();
                             setState(() {
                               pickedImage = img;
-                              imageUrl = img.path;
+                              selectedImageBytes = bytes;
+                              imageUrl = '';
                             });
                           }
                         },
@@ -210,7 +189,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.grey[50],
-                            backgroundImage: _getImageProvider(imageUrl),
+                            backgroundImage: _getImageProvider(imageUrl, selectedImageBytes),
                             child: imageUrl == null || imageUrl!.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -353,18 +332,23 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         return;
       }
       try {
-        String? savedImagePath;
-        if (pickedImage != null) {
-          savedImagePath = await _saveImagePermanently(pickedImage!);
-          if (savedImagePath == null) {
-            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+        String? imageUrlToSave;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName = 'category_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api.uploadCategoryImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            showFlushbar('Lỗi khi upload ảnh lên server: $e', type: MessageType.error);
             return;
           }
         }
-        
         await widget.api.createCategory(
           name,
-          image: savedImagePath,
+          image: imageUrlToSave,
         );
         await _reload();
         showFlushbar('Thêm danh mục thành công', type: MessageType.success);
@@ -377,8 +361,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Future<void> _showEditDialog(Category c) async {
     final nameCtrl = TextEditingController(text: c.name);
 
-    String? imageUrl = c.image;
-    XFile? pickedImage;
+  String? imageUrl = c.image;
+  XFile? pickedImage;
+  Uint8List? selectedImageBytes;
+  String? oldAssetPath = c.image;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -463,9 +449,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           final picker = ImagePicker();
                           final img = await picker.pickImage(source: ImageSource.gallery);
                           if (img != null) {
+                            final bytes = await img.readAsBytes();
                             setState(() {
                               pickedImage = img;
-                              imageUrl = img.path;
+                              selectedImageBytes = bytes;
+                              imageUrl = '';
                             });
                           }
                         },
@@ -477,7 +465,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           child: CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.grey[50],
-                            backgroundImage: _getImageProvider(imageUrl),
+                            backgroundImage: _getImageProvider(imageUrl, selectedImageBytes),
                             child: imageUrl == null || imageUrl!.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -620,20 +608,25 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         return;
       }
       try {
-        String? finalImagePath = imageUrl;
-        if (pickedImage != null) {
-          finalImagePath = await _saveImagePermanently(pickedImage!);
-          if (finalImagePath == null) {
-            showFlushbar('Lỗi khi lưu ảnh', type: MessageType.error);
+        String? imageUrlToSave = imageUrl;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName = 'category_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api.uploadCategoryImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            showFlushbar('Lỗi khi upload ảnh lên server: $e', type: MessageType.error);
             return;
           }
         }
-        
         await widget.api.updateCategory(Category(
           id: c.id,
           name: name,
           items: c.items,
-          image: finalImagePath,
+          image: imageUrlToSave,
         ));
         await _reload();
         showFlushbar('Thay đổi thông tin danh mục thành công', type: MessageType.success);
@@ -654,30 +647,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-    // Check if it's a local file path or network URL
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return Image.network(imageUrl, fit: BoxFit.cover);
+    } else if (imageUrl.startsWith('/')) {
+      return Image.file(File(imageUrl), fit: BoxFit.cover);
     } else {
-      // Local file path - handle both absolute and relative paths
-      if (imageUrl.startsWith('/')) {
-        // Absolute path
-        return Image.file(File(imageUrl), fit: BoxFit.cover);
-      } else {
-        // Relative path - use FutureBuilder to handle async operation
-        return FutureBuilder<Directory>(
-          future: getApplicationDocumentsDirectory(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final String fullPath = path.join(snapshot.data!.path, imageUrl);
-              return Image.file(File(fullPath), fit: BoxFit.cover);
-            }
-            return Container(
-              color: Colors.grey[300],
-              child: const Center(child: CircularProgressIndicator()),
-            );
-          },
-        );
-      }
+      return Container(color: Colors.grey[300]);
     }
   }
 

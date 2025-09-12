@@ -1,4 +1,4 @@
-package com.example.nail_app
+package aeri.nailroom.com
 
 import io.flutter.embedding.android.FlutterActivity
 

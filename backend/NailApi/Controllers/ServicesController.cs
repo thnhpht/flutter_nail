@@ -27,10 +27,10 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 return await dbContext.Services.AsNoTracking().ToListAsync();
             }
@@ -47,10 +47,10 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var entity = await dbContext.Services.FindAsync(id);
                 if (entity == null) return NotFound();
@@ -72,10 +72,10 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 dbContext.Services.Add(input);
                 await dbContext.SaveChangesAsync();
@@ -91,15 +91,15 @@ namespace NailApi.Controllers
         public async Task<IActionResult> Update(string id, Service input)
         {
             if (id != input.Id) return BadRequest("Id mismatch");
-            
+
             try
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var exists = await dbContext.Services.FindAsync(id);
                 if (exists == null) return NotFound();
@@ -120,10 +120,10 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var entity = await dbContext.Services.FindAsync(id);
                 if (entity == null) return NotFound();
@@ -134,6 +134,49 @@ namespace NailApi.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
+        // POST: api/services/upload-image
+        [HttpPost("upload-image")]
+        public async Task<ActionResult<string>> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            // Kiểm tra kích thước file (max 5MB)
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File size too large. Maximum 5MB allowed.");
+            }
+
+            // Kiểm tra loại file
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.");
+            }
+
+            try
+            {
+                // Đọc file thành byte array
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                // Convert thành base64 string
+                var base64String = Convert.ToBase64String(fileBytes);
+                var dataUrl = $"data:image/{fileExtension.Substring(1)};base64,{base64String}";
+
+                return Ok(new { imageUrl = dataUrl });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error processing file: {ex.Message}");
             }
         }
     }

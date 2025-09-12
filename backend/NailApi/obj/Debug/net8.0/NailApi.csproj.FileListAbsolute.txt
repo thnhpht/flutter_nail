@@ -687,3 +687,4 @@ C:\flutter_app\backend\NailApi\obj\Debug\net8.0\refint\NailApi.dll
 C:\flutter_app\backend\NailApi\obj\Debug\net8.0\NailApi.pdb
 C:\flutter_app\backend\NailApi\obj\Debug\net8.0\NailApi.genruntimeconfig.cache
 C:\flutter_app\backend\NailApi\obj\Debug\net8.0\ref\NailApi.dll
+C:\flutter_app\backend\NailApi\bin\Debug\net8.0\NailApi.staticwebassets.runtime.json

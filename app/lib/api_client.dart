@@ -233,6 +233,29 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
+  Future<String> uploadCategoryImage(List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
+    var request = http.MultipartRequest('POST', _u('/categories/upload-image'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+    
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+    
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+    
+    final responseData = jsonDecode(response.body);
+    return responseData['imageUrl'] as String;
+  }
+  
   // Category Items (Services)
   Future<List<Service>> getServices() async {
     final prefs = await SharedPreferences.getInstance();
@@ -282,6 +305,29 @@ class ApiClient {
       'Content-Type': 'application/json',
     });
     _check(r, expect204: true);
+  }
+
+  Future<String> uploadServiceImage(List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+    
+    var request = http.MultipartRequest('POST', _u('/services/upload-image'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+    
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+    
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+    
+    final responseData = jsonDecode(response.body);
+    return responseData['imageUrl'] as String;
   }
 
   // Orders

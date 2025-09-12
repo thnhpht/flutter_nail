@@ -158,10 +158,16 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       });
 
       String logoUrl = _logoUrl;
-      
       // Upload new image if selected
       if (_selectedImageBytes != null) {
-        logoUrl = await widget.api.uploadLogo(_selectedImageBytes!, 'logo.png');
+        final fileName = 'logo_${DateTime.now().millisecondsSinceEpoch}.png';
+        try {
+          logoUrl = await widget.api.uploadLogo(_selectedImageBytes!, fileName);
+        } catch (e) {
+          setState(() { _isSaving = false; });
+          showFlushbar('Lỗi khi upload logo lên server', type: MessageType.error);
+          return;
+        }
       }
 
       final information = Information(
@@ -180,7 +186,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       );
 
       await widget.api.updateInformation(information);
-      
+
       setState(() {
         _information = information;
         _logoUrl = logoUrl;
