@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 
 class ApiConfig {
   // URLs cho các platform khác nhau
-  static const String androidEmulator = 'http://10.0.2.2:5088/api';
-  static const String iosSimulator = 'http://192.168.1.154:5088/api';
-  static const String androidDevice = 'http://192.168.1.12:5088/api';
-  static const String iosDevice = 'http://172.20.10.9:5088/api';
-  static const String web = 'http://localhost:5088/api';
-  static const String desktop = 'http://localhost:5088/api';
-  static const String fallback = 'http://192.168.1.154:5088/api';
+  static const String androidEmulator = 'https://nailapi.logisticssoftware.vn/api';
+  static const String iosSimulator = 'https://nailapi.logisticssoftware.vn/api';
+  static const String androidDevice = 'https://nailapi.logisticssoftware.vn/api';
+  static const String iosDevice = 'https://nailapi.logisticssoftware.vn/api';
+  static const String web = 'https://nailapi.logisticssoftware.vn/api';
+  static const String desktop = 'https://nailapi.logisticssoftware.vn/api';
+  static const String fallback = 'https://nailapi.logisticssoftware.vn/api';
   
   static String get baseUrl {
     // Kiểm tra environment variable trước
