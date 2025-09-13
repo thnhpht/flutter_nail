@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NailApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e5c049b506ce591999d2f40d5db6eb180c8be39")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b57dd6f6c756929cf21913c1b4dc182eb2451b3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("NailApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NailApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
