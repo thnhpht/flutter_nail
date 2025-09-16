@@ -12,8 +12,11 @@ namespace NailApi.Models
         public string EmployeeNames { get; set; } = string.Empty;
         public string ServiceIds { get; set; } = string.Empty;
         public string ServiceNames { get; set; } = string.Empty;
+        [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal DiscountPercent { get; set; } = 0.0M;
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Tip { get; set; } = 0.0M;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }

@@ -9,6 +9,7 @@ namespace NailApi.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string CategoryId { get; set; } = string.Empty; // Remove nullable since DB doesn't allow NULL
         public string Name { get; set; } = string.Empty;
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public string? Image { get; set; } // URL or path to image
         [JsonIgnore]

@@ -8,6 +8,7 @@ namespace NailApi.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = string.Empty;
         public string? Phone { get; set; }
-        public string Password { get; set; } = string.Empty;
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string? Password { get; set; }
     }
 }

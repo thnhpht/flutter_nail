@@ -31,7 +31,7 @@ namespace NailApi.Controllers
             try
             {
                 var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-                
+
                 if (existingUser != null)
                 {
                     return Ok(new CheckEmailResponse
@@ -65,10 +65,10 @@ namespace NailApi.Controllers
             try
             {
                 Console.WriteLine($"Login attempt for email: {request.Email}");
-                
+
                 // Kiểm tra email có tồn tại không
                 var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-                
+
                 if (existingUser == null)
                 {
                     Console.WriteLine("User not found, creating new user...");
@@ -89,18 +89,18 @@ namespace NailApi.Controllers
                     var databaseName = request.Email;
                     Console.WriteLine($"Creating dynamic database: {databaseName}");
                     var success = await CreateDynamicDatabase(databaseName, request.UserLogin, request.PasswordLogin);
-                    
+
                     if (!success)
                     {
                         Console.WriteLine("Failed to create database, rolling back user creation...");
                         // Xóa user đã tạo nếu không thể tạo database
                         _context.Users.Remove(newUser);
                         await _context.SaveChangesAsync();
-                        
-                        return BadRequest(new LoginResponse 
-                        { 
-                            Success = false, 
-                            Message = "Tạo tài khoản thành công nhưng không thể tạo database. Vui lòng kiểm tra quyền truy cập hoặc liên hệ admin." 
+
+                        return BadRequest(new LoginResponse
+                        {
+                            Success = false,
+                            Message = "Tạo tài khoản thành công nhưng không thể tạo database. Vui lòng kiểm tra quyền truy cập hoặc liên hệ admin."
                         });
                     }
 
@@ -121,19 +121,19 @@ namespace NailApi.Controllers
                     if (!_passwordService.VerifyPassword(request.Password, existingUser.Password))
                     {
                         Console.WriteLine("Password verification failed");
-                        return BadRequest(new LoginResponse 
-                        { 
-                            Success = false, 
-                            Message = "Mật khẩu không chính xác. Vui lòng kiểm tra lại." 
+                        return BadRequest(new LoginResponse
+                        {
+                            Success = false,
+                            Message = "Mật khẩu không chính xác. Vui lòng kiểm tra lại."
                         });
                     }
 
                     // Kiểm tra thông tin database
                     var userLoginMatch = existingUser.UserLogin == request.UserLogin;
                     var passwordLoginMatch = request.PasswordLogin == _passwordService.DecryptPasswordLogin(existingUser.PasswordLogin); // Giải mã PasswordLogin để so sánh
-                    
+
                     Console.WriteLine($"User login match: {userLoginMatch}, Password login match: {passwordLoginMatch}");
-                    
+
                     if (!userLoginMatch || !passwordLoginMatch)
                     {
                         string errorMessage = "";
@@ -149,11 +149,11 @@ namespace NailApi.Controllers
                         {
                             errorMessage = "Mật khẩu database không chính xác.";
                         }
-                        
+
                         Console.WriteLine($"Database credentials mismatch: {errorMessage}");
-                        return BadRequest(new LoginResponse 
-                        { 
-                            Success = false, 
+                        return BadRequest(new LoginResponse
+                        {
+                            Success = false,
                             Message = errorMessage
                         });
                     }
@@ -174,7 +174,7 @@ namespace NailApi.Controllers
                 // Log lỗi chi tiết để debug
                 Console.WriteLine($"Login error: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
-                
+
                 return StatusCode(500, new LoginResponse
                 {
                     Success = false,
@@ -189,17 +189,17 @@ namespace NailApi.Controllers
             try
             {
                 Console.WriteLine($"Employee login attempt for shop email: {request.ShopEmail}");
-                
+
                 // Kiểm tra email chủ shop có tồn tại không
                 var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
-                
+
                 if (shopOwner == null)
                 {
                     Console.WriteLine("Shop owner not found");
-                    return BadRequest(new LoginResponse 
-                    { 
-                        Success = false, 
-                        Message = "Email chủ shop không tồn tại trong hệ thống." 
+                    return BadRequest(new LoginResponse
+                    {
+                        Success = false,
+                        Message = "Email chủ shop không tồn tại trong hệ thống."
                     });
                 }
 
@@ -209,7 +209,7 @@ namespace NailApi.Controllers
 
                 // Kết nối đến database của chủ shop để tìm nhân viên
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
-                
+
                 using (var connection = new SqlConnection(shopConnectionString))
                 {
                     await connection.OpenAsync();
@@ -218,7 +218,7 @@ namespace NailApi.Controllers
                     // Tìm nhân viên theo số điện thoại
                     var findEmployeeCommand = new SqlCommand("SELECT Id, Name, Phone, Password FROM Employees WHERE Phone = @phone", connection);
                     findEmployeeCommand.Parameters.AddWithValue("@phone", request.EmployeePhone);
-                    
+
                     using (var reader = await findEmployeeCommand.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
@@ -227,17 +227,17 @@ namespace NailApi.Controllers
                             var employeeName = reader["Name"].ToString();
                             var employeePhone = reader["Phone"].ToString();
                             var employeePassword = reader["Password"].ToString();
-                            
+
                             Console.WriteLine($"Employee found: {employeeName} ({employeePhone})");
-                            
+
                             // Kiểm tra mật khẩu nhân viên
                             if (_passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
                             {
                                 Console.WriteLine("Employee password verified successfully");
-                                
+
                                 // Tạo token cho nhân viên
                                 var token = _jwtService.GenerateToken(request.ShopEmail, shopOwner.UserLogin);
-                                
+
                                 return Ok(new LoginResponse
                                 {
                                     Success = true,
@@ -251,20 +251,20 @@ namespace NailApi.Controllers
                             else
                             {
                                 Console.WriteLine("Employee password verification failed");
-                                return BadRequest(new LoginResponse 
-                                { 
-                                    Success = false, 
-                                    Message = "Mật khẩu nhân viên không chính xác." 
+                                return BadRequest(new LoginResponse
+                                {
+                                    Success = false,
+                                    Message = "Mật khẩu nhân viên không chính xác."
                                 });
                             }
                         }
                         else
                         {
                             Console.WriteLine("Employee not found in shop database");
-                            return BadRequest(new LoginResponse 
-                            { 
-                                Success = false, 
-                                Message = "Không tìm thấy nhân viên với số điện thoại này trong hệ thống của chủ shop." 
+                            return BadRequest(new LoginResponse
+                            {
+                                Success = false,
+                                Message = "Không tìm thấy nhân viên với số điện thoại này trong hệ thống của chủ shop."
                             });
                         }
                     }
@@ -274,7 +274,7 @@ namespace NailApi.Controllers
             {
                 Console.WriteLine($"Employee login error: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
-                
+
                 return StatusCode(500, new LoginResponse
                 {
                     Success = false,
@@ -288,7 +288,7 @@ namespace NailApi.Controllers
             try
             {
                 // Connection string để kết nối tới master database
-                var masterConnectionString = _configuration.GetConnectionString("Master") ?? 
+                var masterConnectionString = _configuration.GetConnectionString("Master") ??
                     "Server=115.78.95.245;Database=master;User Id=sa;Password=qwerQWER1234!@#$;TrustServerCertificate=True;";
 
                 Console.WriteLine($"Attempting to create database: {databaseName}");
@@ -302,7 +302,7 @@ namespace NailApi.Controllers
                     // Kiểm tra xem database đã tồn tại chưa
                     var checkDbCommand = new SqlCommand($"SELECT COUNT(*) FROM sys.databases WHERE name = '{databaseName}'", connection);
                     var dbExists = (int)(await checkDbCommand.ExecuteScalarAsync() ?? 0);
-                    
+
                     if (dbExists == 0)
                     {
                         Console.WriteLine($"Creating new database: {databaseName}");
@@ -320,18 +320,18 @@ namespace NailApi.Controllers
                     try
                     {
                         // Kiểm tra mật khẩu có đủ mạnh không
-                        var isPasswordStrong = dbPassword.Length >= 8 && 
-                                               dbPassword.Any(char.IsUpper) && 
-                                               dbPassword.Any(char.IsLower) && 
+                        var isPasswordStrong = dbPassword.Length >= 8 &&
+                                               dbPassword.Any(char.IsUpper) &&
+                                               dbPassword.Any(char.IsLower) &&
                                                dbPassword.Any(char.IsDigit) &&
                                                dbPassword.Any(c => "!@#$%^&*()_+-=[]{}|;:,.<>?".Contains(c));
-                        
+
                         if (!isPasswordStrong)
                         {
                             Console.WriteLine("Database password is not strong enough");
                             return false;
                         }
-                        
+
                         Console.WriteLine($"Creating login for user: {dbUser}");
                         // Tạo login với mật khẩu gốc (đã đủ mạnh)
                         var createLoginCommand = new SqlCommand($@"
@@ -341,7 +341,7 @@ namespace NailApi.Controllers
                             END", connection);
                         await createLoginCommand.ExecuteNonQueryAsync();
                         Console.WriteLine($"Login {dbUser} created successfully");
-                        
+
                         // Tạo user trong database mới và cấp quyền db_owner
                         var createUserCommand = new SqlCommand($@"
                             USE [{databaseName}];
@@ -351,7 +351,7 @@ namespace NailApi.Controllers
                             END", connection);
                         await createUserCommand.ExecuteNonQueryAsync();
                         Console.WriteLine($"User {dbUser} created in database {databaseName}");
-                        
+
                         // Cấp quyền db_owner cho user
                         var grantDbOwnerCommand = new SqlCommand($@"
                             USE [{databaseName}];
@@ -369,7 +369,7 @@ namespace NailApi.Controllers
                 // Tạo các bảng trong database mới
                 Console.WriteLine("Creating tables in new database...");
                 var tablesCreated = await CreateTablesInDynamicDatabase(databaseName, dbUser, dbPassword);
-                
+
                 if (tablesCreated)
                 {
                     Console.WriteLine("All tables created successfully");
@@ -396,19 +396,19 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Connecting to new database: {databaseName}");
                 // Kết nối với user mới
                 var newDbConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=True;";
-                
+
                 try
                 {
                     using (var testConnection = new SqlConnection(newDbConnectionString))
                     {
                         await testConnection.OpenAsync();
                         Console.WriteLine("Test connection successful");
-                        
+
                         // Test tạo bảng
                         var testCommand = new SqlCommand("CREATE TABLE TestPermission (id int)", testConnection);
                         await testCommand.ExecuteNonQueryAsync();
                         Console.WriteLine("Test table creation successful");
-                        
+
                         // Xóa bảng test
                         var dropCommand = new SqlCommand("DROP TABLE TestPermission", testConnection);
                         await dropCommand.ExecuteNonQueryAsync();
@@ -420,7 +420,7 @@ namespace NailApi.Controllers
                     Console.WriteLine($"Test connection failed: {ex.Message}");
                     return false;
                 }
-                
+
                 using (var connection = new SqlConnection(newDbConnectionString))
                 {
                     await connection.OpenAsync();
@@ -434,22 +434,22 @@ namespace NailApi.Controllers
                             [Name] nvarchar(max) NOT NULL,
                             CONSTRAINT [PK_Customers] PRIMARY KEY ([Phone])
                         );",
-                        
+
                         @"CREATE TABLE [Employees] (
                             [Id] nvarchar(450) NOT NULL,
-                            [Name] nvarchar(max) NOT NULL,
+                            [Name] nvarchar(max) NULL,
                             [Phone] nvarchar(max) NULL,
-                            [Password] nvarchar(max) NOT NULL,
+                            [Password] nvarchar(max) NULL,
                             CONSTRAINT [PK_Employees] PRIMARY KEY ([Id])
                         );",
-                        
+
                         @"CREATE TABLE [Categories] (
                             [Id] nvarchar(450) NOT NULL,
                             [Name] nvarchar(max) NOT NULL,
                             [Image] nvarchar(max) NULL,
                             CONSTRAINT [PK_Categories] PRIMARY KEY ([Id])
                         );",
-                        
+
                         @"CREATE TABLE [Services] (
                             [Id] nvarchar(450) NOT NULL,
                             [CategoryId] nvarchar(450) NOT NULL,
@@ -459,7 +459,7 @@ namespace NailApi.Controllers
                             CONSTRAINT [PK_Services] PRIMARY KEY ([Id]),
                             CONSTRAINT [FK_Services_Categories_CategoryId] FOREIGN KEY ([CategoryId]) REFERENCES [Categories] ([Id]) ON DELETE CASCADE
                         );",
-                        
+
                         @"CREATE TABLE [Orders] (
                             [Id] nvarchar(450) NOT NULL,
                             [CustomerPhone] nvarchar(max) NOT NULL,
@@ -474,27 +474,30 @@ namespace NailApi.Controllers
                             [CreatedAt] datetime2 NOT NULL,
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
                         );",
-                        
+
                         @"CREATE TABLE [Information] (
                             [Id] int IDENTITY(1,1) NOT NULL,
-                            [SalonName] nvarchar(200) NULL,
-                            [Address] nvarchar(500) NULL,
-                            [Phone] nvarchar(20) NULL,
-                            [Email] nvarchar(100) NULL,
-                            [Website] nvarchar(200) NULL,
-                            [Facebook] nvarchar(200) NULL,
-                            [Instagram] nvarchar(200) NULL,
-                            [Zalo] nvarchar(200) NULL,
-                            [Logo] nvarchar(max) NULL,
+                            [SalonName] nvarchar(200) NULL DEFAULT '',
+                            [Address] nvarchar(500) NULL DEFAULT '',
+                            [Phone] nvarchar(20) NULL DEFAULT '',
+                            [Email] nvarchar(100) NULL DEFAULT '',
+                            [Website] nvarchar(200) NULL DEFAULT '',
+                            [Facebook] nvarchar(200) NULL DEFAULT '',
+                            [Instagram] nvarchar(200) NULL DEFAULT '',
+                            [Zalo] nvarchar(200) NULL DEFAULT '',
+                            [Logo] nvarchar(max) NULL DEFAULT '',
+                            [QRCode] nvarchar(max) NULL DEFAULT '',
                             [CreatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
                             [UpdatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
                             CONSTRAINT [PK_Information] PRIMARY KEY ([Id])
-                        );"
+                        );
+                        
+                        INSERT INTO [Information] DEFAULT VALUES;"
                     };
 
                     int successCount = 0;
                     int totalTables = createTablesCommands.Length;
-                    
+
                     foreach (var commandText in createTablesCommands)
                     {
                         try
@@ -510,7 +513,7 @@ namespace NailApi.Controllers
                             // Tiếp tục tạo các bảng khác
                         }
                     }
-                    
+
                     // Chỉ trả về true nếu tất cả các bảng được tạo thành công
                     if (successCount == totalTables)
                     {

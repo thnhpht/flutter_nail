@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NailApi.Data;
 using NailApi.Models;
 using NailApi.Services;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace NailApi.Controllers
@@ -28,13 +28,13 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var information = await dbContext.Information.FirstOrDefaultAsync();
-                
+
                 if (information == null)
                 {
                     return NotFound("Không tìm thấy thông tin salon");
@@ -61,13 +61,13 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
-                
+
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
-                
+
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var existingInfo = await dbContext.Information.FirstOrDefaultAsync();
-                
+
                 if (existingInfo == null)
                 {
                     // Tạo mới nếu chưa có
@@ -86,6 +86,7 @@ namespace NailApi.Controllers
                     existingInfo.Facebook = information.Facebook;
                     existingInfo.Instagram = information.Instagram;
                     existingInfo.Zalo = information.Zalo;
+                    existingInfo.QRCode = information.QRCode;
                     existingInfo.Logo = information.Logo;
                     existingInfo.UpdatedAt = DateTime.UtcNow;
                 }
@@ -121,7 +122,7 @@ namespace NailApi.Controllers
             // Kiểm tra loại file
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
             var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            
+
             if (!allowedExtensions.Contains(fileExtension))
             {
                 return BadRequest("Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.");
@@ -139,6 +140,49 @@ namespace NailApi.Controllers
                 var dataUrl = $"data:image/{fileExtension.Substring(1)};base64,{base64String}";
 
                 return Ok(new { logoUrl = dataUrl });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error processing file: {ex.Message}");
+            }
+        }
+
+        // POST: api/information/upload-qrcode
+        [HttpPost("upload-qrcode")]
+        public async Task<ActionResult<string>> UploadQRCode(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            // Kiểm tra kích thước file (max 5MB)
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File size too large. Maximum 5MB allowed.");
+            }
+
+            // Kiểm tra loại file
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.");
+            }
+
+            try
+            {
+                // Đọc file thành byte array
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                // Convert thành base64 string
+                var base64String = Convert.ToBase64String(fileBytes);
+                var dataUrl = $"data:image/{fileExtension.Substring(1)};base64,{base64String}";
+
+                return Ok(new { qrCodeUrl = dataUrl });
             }
             catch (Exception ex)
             {

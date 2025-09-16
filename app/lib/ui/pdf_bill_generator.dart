@@ -9,14 +9,15 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:convert';
+import 'dart:math';
 import '../models.dart';
 import '../config/salon_config.dart';
 
 class PdfBillGenerator {
   static pw.Font? _vietnameseFont;
   static pw.Font? _vietnameseFontBold;
+
   static Future<void> generateAndShareBill({
     required BuildContext context,
     required Order order,
@@ -234,122 +235,40 @@ class PdfBillGenerator {
     );
   }
 
-  // Tạo QR code cho VNPay
-  static Future<pw.Widget> _generateQRCode(Order order) async {
+  // Hàm để lấy hình ảnh từ URL hoặc base64 - sửa kiểu trả về
+  static Future<pw.ImageProvider?> _getImageFromUrlOrBase64(
+      String? imageData) async {
+    if (imageData == null || imageData.isEmpty) {
+      return null;
+    }
+
     try {
-      // Tạo URL thanh toán VNPay (ví dụ)
-      final vnpayUrl = _generateVNPayUrl(order);
-
-      // Tạo QR code
-      final qrValidationResult = QrValidator.validate(
-        data: vnpayUrl,
-        version: QrVersions.auto,
-        errorCorrectionLevel: QrErrorCorrectLevel.L,
-      );
-
-      if (qrValidationResult.status == QrValidationStatus.valid) {
-        final qrCode = qrValidationResult.qrCode!;
-
-        // Tạo image từ QR code
-        final painter = QrPainter.withQr(
-          qr: qrCode,
-          color: const Color(0xFF000000),
-          emptyColor: const Color(0xFFFFFFFF),
-          gapless: false,
-        );
-
-        // Convert thành image bytes
-        final picData =
-            await painter.toImageData(200, format: ui.ImageByteFormat.png);
-        if (picData != null) {
-          final image = pw.MemoryImage(picData.buffer.asUint8List());
-
-          return pw.Container(
-            width: 200,
-            height: 200,
-            child: pw.Column(
-              children: [
-                pw.Image(image, width: 150, height: 150),
-                pw.SizedBox(height: 8),
-                pw.Text(
-                  'Quét mã để thanh toán',
-                  style: _getVietnameseTextStyle(
-                    fontSize: 12,
-                    color: PdfColors.grey600,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
-                pw.Text(
-                  'VNPay',
-                  style: _getVietnameseTextStyle(
-                    fontSize: 10,
-                    color: PdfColors.grey500,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
-              ],
-            ),
-          );
+      // Kiểm tra nếu là base64
+      if (imageData.startsWith('data:image/') ||
+          (imageData.length > 100 && !imageData.startsWith('http'))) {
+        // Xử lý base64
+        String base64String = imageData;
+        if (imageData.startsWith('data:image/')) {
+          base64String = imageData.split(',')[1];
         }
+
+        final bytes = base64Decode(base64String);
+        return pw.MemoryImage(bytes);
+      } else if (imageData.startsWith('http')) {
+        // Xử lý URL
+        final uri = Uri.parse(imageData);
+        final response = await HttpClient().getUrl(uri);
+        final request = await response.close();
+        final bytes = await consolidateHttpClientResponseBytes(request);
+        return pw.MemoryImage(bytes);
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error generating QR code: $e');
+        print('Error loading image: $e');
       }
     }
 
-    // Fallback: hiển thị thông báo lỗi
-    return pw.Container(
-      width: 200,
-      height: 200,
-      decoration: pw.BoxDecoration(
-        border: pw.Border.all(color: PdfColors.grey300),
-        borderRadius: pw.BorderRadius.circular(8),
-      ),
-      child: pw.Center(
-        child: pw.Text(
-          'QR Code\nKhông khả dụng',
-          style: _getVietnameseTextStyle(
-            fontSize: 12,
-            color: PdfColors.grey600,
-          ),
-          textAlign: pw.TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  // Tạo URL thanh toán VNPay
-  static String _generateVNPayUrl(Order order) {
-    // Đây là ví dụ URL VNPay, trong thực tế cần tích hợp với API VNPay
-    final baseUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-    final params = {
-      'vnp_Version': '2.1.0',
-      'vnp_Command': 'pay',
-      'vnp_TmnCode': 'YOUR_TMN_CODE', // Cần thay bằng mã TMN thực tế
-      'vnp_Amount': (order.totalPrice * 100)
-          .toInt()
-          .toString(), // VNPay yêu cầu amount * 100
-      'vnp_CurrCode': 'VND',
-      'vnp_TxnRef': order.id,
-      'vnp_OrderInfo': 'Thanh toan hoa don ${_formatBillId(order.id)}',
-      'vnp_OrderType': 'other',
-      'vnp_Locale': 'vn',
-      'vnp_ReturnUrl':
-          'https://your-domain.com/return', // URL trả về sau thanh toán
-      'vnp_IpAddr': '127.0.0.1',
-      'vnp_CreateDate': DateTime.now()
-          .toIso8601String()
-          .replaceAll(RegExp(r'[-:T.]'), '')
-          .substring(0, 14),
-    };
-
-    // Tạo query string (trong thực tế cần hash và sign)
-    final queryString = params.entries
-        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
-        .join('&');
-
-    return '$baseUrl?$queryString';
+    return null;
   }
 
   static Future<pw.Document> _createPdf({
@@ -363,8 +282,8 @@ class PdfBillGenerator {
     // Load font hỗ trợ tiếng Việt
     await _loadVietnameseFont();
 
-    // Generate QR code widget before creating the PDF page
-    final qrCodeWidget = await _buildQRCodeSection(order);
+    // Lấy hình ảnh QRCode từ database
+    final qrCodeImageProvider = await _getImageFromUrlOrBase64(salonQRCode);
 
     final pdf = pw.Document();
 
@@ -401,25 +320,50 @@ class PdfBillGenerator {
 
               pw.SizedBox(height: 20),
 
-              // QR Code for Payment
-              qrCodeWidget,
+              // QR Code from database
+              if (qrCodeImageProvider != null)
+                pw.Container(
+                  width: double.infinity,
+                  padding: const pw.EdgeInsets.all(20),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey300),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    children: [
+                      pw.Text(
+                        'QR CODE SALON',
+                        style: _getVietnameseTextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                        textAlign: pw.TextAlign.center,
+                      ),
+                      pw.SizedBox(height: 15),
+                      pw.Center(
+                        child: pw.Image(
+                          qrCodeImageProvider,
+                          width: 150,
+                          height: 150,
+                        ),
+                      ),
+                      pw.SizedBox(height: 15),
+                      pw.Text(
+                        'Quét mã QR để liên hệ salon',
+                        style: _getVietnameseTextStyle(
+                          fontSize: 12,
+                          color: PdfColors.grey600,
+                        ),
+                        textAlign: pw.TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
 
               pw.Spacer(),
 
               // Footer
               _buildFooter(),
-
-              // QR Code
-              if (salonQRCode != null && salonQRCode.isNotEmpty)
-                pw.Container(
-                  alignment: pw.Alignment.center,
-                  padding: const pw.EdgeInsets.only(top: 20),
-                  child: pw.Image(
-                    pw.MemoryImage(base64Decode(salonQRCode)),
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
             ],
           );
         },
@@ -753,54 +697,6 @@ class PdfBillGenerator {
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<pw.Widget> _buildQRCodeSection(Order order) async {
-    final qrCodeWidget = await _generateQRCode(order);
-
-    return pw.Container(
-      width: double.infinity,
-      padding: const pw.EdgeInsets.all(20),
-      decoration: pw.BoxDecoration(
-        border: pw.Border.all(color: PdfColors.grey300),
-        borderRadius: pw.BorderRadius.circular(8),
-      ),
-      child: pw.Column(
-        children: [
-          pw.Text(
-            'THANH TOÁN QUA QR CODE',
-            style: _getVietnameseTextStyle(
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-            ),
-            textAlign: pw.TextAlign.center,
-          ),
-          pw.SizedBox(height: 15),
-          pw.Center(
-            child: qrCodeWidget,
-          ),
-          pw.SizedBox(height: 15),
-          pw.Text(
-            'Quét mã QR bằng ứng dụng VNPay để thanh toán',
-            style: _getVietnameseTextStyle(
-              fontSize: 12,
-              color: PdfColors.grey600,
-            ),
-            textAlign: pw.TextAlign.center,
-          ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            'Số tiền: ${_formatPrice(order.totalPrice)}',
-            style: _getVietnameseTextStyle(
-              fontSize: 14,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.red,
-            ),
-            textAlign: pw.TextAlign.center,
           ),
         ],
       ),
