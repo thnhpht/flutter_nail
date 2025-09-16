@@ -39,7 +39,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future<void> refreshData() async {
     await _loadData();
   }
-  
+
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -66,48 +66,54 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   void _calculateStatistics() {
     final filteredOrders = _getFilteredOrders();
-    
+
     // Tính tổng doanh thu
-    _totalRevenue = filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice);
-    
+    _totalRevenue =
+        filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice);
+
     // Tính số lượng hóa đơn
     _totalOrders = filteredOrders.length;
   }
 
   List<Order> _getFilteredOrders() {
     List<Order> filtered = _orders;
-    
+
     // Áp dụng tìm kiếm
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((order) {
-        return order.customerName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-               order.customerPhone.contains(_searchQuery) ||
-               order.id.contains(_searchQuery);
+        return order.customerName
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            order.customerPhone.contains(_searchQuery) ||
+            order.id.contains(_searchQuery);
       }).toList();
     }
-    
+
     // Áp dụng lọc theo khoảng thời gian
     if (_selectedDateRange != null) {
       filtered = filtered.where((order) {
-        final orderDate = DateTime(order.createdAt.year, order.createdAt.month, order.createdAt.day);
-        final startDate = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
-        final endDate = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day);
-        
-        return orderDate.isAfter(startDate.subtract(const Duration(days: 1))) && 
-               orderDate.isBefore(endDate.add(const Duration(days: 1)));
+        final orderDate = DateTime(
+            order.createdAt.year, order.createdAt.month, order.createdAt.day);
+        final startDate = DateTime(_selectedDateRange!.start.year,
+            _selectedDateRange!.start.month, _selectedDateRange!.start.day);
+        final endDate = DateTime(_selectedDateRange!.end.year,
+            _selectedDateRange!.end.month, _selectedDateRange!.end.day);
+
+        return orderDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
+            orderDate.isBefore(endDate.add(const Duration(days: 1)));
       }).toList();
     }
-    
+
     // Áp dụng lọc theo nhân viên
     if (_selectedEmployee != null) {
       filtered = filtered.where((order) {
         return order.employeeIds.contains(_selectedEmployee!.id);
       }).toList();
     }
-    
+
     // Sắp xếp theo thời gian mới nhất
     filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
+
     return filtered;
   }
 
@@ -116,16 +122,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
-      initialDateRange: _selectedDateRange ?? DateTimeRange(
-        start: DateTime.now(),
-        end: DateTime.now(),
-      ),
+      initialDateRange: _selectedDateRange ??
+          DateTimeRange(
+            start: DateTime.now(),
+            end: DateTime.now(),
+          ),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppTheme.primaryStart,
-            ),
+                  primary: AppTheme.primaryStart,
+                ),
           ),
           child: child!,
         );
@@ -196,7 +203,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.calendar_month, color: Colors.white, size: 24),
+                      child: const Icon(Icons.calendar_month,
+                          color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
                     const Expanded(
@@ -225,7 +233,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   ],
                 ),
               ),
-              
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -239,7 +247,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           Navigator.pop(context);
                           await _selectDateRange();
                         },
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium),
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -252,9 +261,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                            borderRadius:
+                                BorderRadius.circular(AppTheme.radiusMedium),
                             border: Border.all(
-                              color: AppTheme.primaryStart.withValues(alpha: 0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -317,14 +328,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         color: AppTheme.textPrimary,
                       ),
                     ),
-                    
+
                     const SizedBox(height: AppTheme.spacingM),
-                    
+
                     _buildPresetButtonsGrid(),
                   ],
                 ),
               ),
-              
+
               // Actions
               Container(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
@@ -420,25 +431,50 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   String _formatDateRange() {
     if (_selectedDateRange == null) return '';
-    
+
     final dateFormat = DateFormat('dd/MM/yyyy');
     final startDate = dateFormat.format(_selectedDateRange!.start);
     final endDate = dateFormat.format(_selectedDateRange!.end);
-    
+
     if (_selectedDateRange!.start.isAtSameMomentAs(_selectedDateRange!.end)) {
       return startDate;
     }
-    
+
     return '$startDate - $endDate';
   }
 
   Widget _buildPresetButtonsGrid() {
     final presets = [
-      {'label': 'Hôm nay', 'preset': 'today', 'icon': Icons.today, 'color': Colors.green},
-      {'label': 'Hôm qua', 'preset': 'yesterday', 'icon': Icons.history, 'color': Colors.orange},
-      {'label': 'Tuần này', 'preset': 'week', 'icon': Icons.view_week, 'color': Colors.blue},
-      {'label': 'Tháng này', 'preset': 'month', 'icon': Icons.calendar_view_month, 'color': Colors.purple},
-      {'label': '30 ngày qua', 'preset': 'last30days', 'icon': Icons.trending_up, 'color': Colors.teal},
+      {
+        'label': 'Hôm nay',
+        'preset': 'today',
+        'icon': Icons.today,
+        'color': Colors.green
+      },
+      {
+        'label': 'Hôm qua',
+        'preset': 'yesterday',
+        'icon': Icons.history,
+        'color': Colors.orange
+      },
+      {
+        'label': 'Tuần này',
+        'preset': 'week',
+        'icon': Icons.view_week,
+        'color': Colors.blue
+      },
+      {
+        'label': 'Tháng này',
+        'preset': 'month',
+        'icon': Icons.calendar_view_month,
+        'color': Colors.purple
+      },
+      {
+        'label': '30 ngày qua',
+        'preset': 'last30days',
+        'icon': Icons.trending_up,
+        'color': Colors.teal
+      },
     ];
 
     return GridView.builder(
@@ -463,7 +499,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildPresetButton(String label, String preset, IconData icon, Color color) {
+  Widget _buildPresetButton(
+      String label, String preset, IconData icon, Color color) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -513,7 +550,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredOrders = _getFilteredOrders();
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -573,7 +610,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     subtitle: 'Thống kê và báo cáo doanh thu',
                     fullWidth: true,
                   ),
-                    
+
                   const SizedBox(height: AppTheme.spacingXL),
 
                   // Search Bar
@@ -592,7 +629,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
-                                icon: Icon(Icons.clear, color: Colors.grey[600]),
+                                icon:
+                                    Icon(Icons.clear, color: Colors.grey[600]),
                                 onPressed: () {
                                   setState(() {
                                     _searchQuery = '';
@@ -602,12 +640,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               )
                             : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusMedium),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                     ),
                   ),
@@ -623,7 +663,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         prefixIcon: Icons.person,
                       ).copyWith(
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       value: _selectedEmployee,
                       items: [
@@ -631,10 +672,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           value: null,
                           child: Text('Tất cả nhân viên'),
                         ),
-                        ..._employees.map((employee) => DropdownMenuItem<Employee>(
-                          value: employee,
-                          child: Text(employee.name),
-                        )),
+                        ..._employees
+                            .map((employee) => DropdownMenuItem<Employee>(
+                                  value: employee,
+                                  child: Text(employee.name),
+                                )),
                       ],
                       onChanged: (Employee? value) {
                         setState(() {
@@ -644,15 +686,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       },
                     ),
                   ),
-                                      
+
                   // Date Range Info Display (only show when date range is selected)
                   if (_selectedDateRange != null) ...[
                     const SizedBox(height: AppTheme.spacingL),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingM, vertical: AppTheme.spacingS),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppTheme.spacingM,
+                          vertical: AppTheme.spacingS),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium),
                         border: Border.all(
                           color: AppTheme.primaryStart.withValues(alpha: 0.3),
                           width: 1,
@@ -703,19 +748,20 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: AppTheme.spacingL),
 
                   // Thống kê tổng quan
                   _buildSummaryCards(),
 
                   const SizedBox(height: AppTheme.spacingL),
-                  
+
                   // Danh sách hóa đơn
                   if (_isLoading)
                     const Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryStart),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryStart),
                       ),
                     )
                   else if (filteredOrders.isEmpty)
@@ -729,7 +775,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         child: _buildOrderCard(order),
                       );
                     }).toList(),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -739,8 +785,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
-
-
 
   Widget _buildSummaryCards() {
     return Container(
@@ -758,7 +802,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           Expanded(
             child: _buildSummaryCard(
               title: 'Doanh Thu',
-              value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_totalRevenue),
+              value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                  .format(_totalRevenue),
               icon: Icons.attach_money,
               color: Colors.green,
             ),
@@ -816,8 +861,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-
-
   Widget _buildOrderCard(Order order) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
@@ -862,10 +905,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppTheme.primaryStart.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                         border: Border.all(
                           color: AppTheme.primaryStart.withValues(alpha: 0.3),
                           width: 1,
@@ -954,7 +999,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 // Total Price
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
                     gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -1079,9 +1125,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   String _formatPrice(double price) {
     return price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    );
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        );
   }
 
   String _formatDate(DateTime date) {
@@ -1097,17 +1143,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
-    
+
     // Nếu ID có format GUID, lấy 8 ký tự đầu
     if (orderId.contains('-') && orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
   }
@@ -1150,4 +1196,4 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
-} 
+}

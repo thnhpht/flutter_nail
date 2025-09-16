@@ -68,7 +68,7 @@ class _BillsScreenState extends State<BillsScreen> {
       final orders = await widget.api.getOrders();
       final categories = await widget.api.getCategories();
       final services = await widget.api.getServices();
-      
+
       setState(() {
         _orders = orders;
         _allServices = services;
@@ -84,31 +84,36 @@ class _BillsScreenState extends State<BillsScreen> {
 
   List<Order> get _filteredOrders {
     List<Order> filtered = _orders;
-    
+
     // Áp dụng tìm kiếm
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((order) {
-        return order.customerName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-               order.customerPhone.contains(_searchQuery) ||
-               order.id.contains(_searchQuery);
+        return order.customerName
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            order.customerPhone.contains(_searchQuery) ||
+            order.id.contains(_searchQuery);
       }).toList();
     }
-    
+
     // Áp dụng lọc theo khoảng thời gian
     if (_selectedDateRange != null) {
       filtered = filtered.where((order) {
-        final orderDate = DateTime(order.createdAt.year, order.createdAt.month, order.createdAt.day);
-        final startDate = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
-        final endDate = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day);
-        
-        return orderDate.isAfter(startDate.subtract(const Duration(days: 1))) && 
-               orderDate.isBefore(endDate.add(const Duration(days: 1)));
+        final orderDate = DateTime(
+            order.createdAt.year, order.createdAt.month, order.createdAt.day);
+        final startDate = DateTime(_selectedDateRange!.start.year,
+            _selectedDateRange!.start.month, _selectedDateRange!.start.day);
+        final endDate = DateTime(_selectedDateRange!.end.year,
+            _selectedDateRange!.end.month, _selectedDateRange!.end.day);
+
+        return orderDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
+            orderDate.isBefore(endDate.add(const Duration(days: 1)));
       }).toList();
     }
-    
+
     // Sắp xếp theo thời gian mới nhất
     filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
+
     return filtered;
   }
 
@@ -116,25 +121,30 @@ class _BillsScreenState extends State<BillsScreen> {
     if (order.serviceIds.isEmpty) {
       return [];
     }
-    
+
     // Try to parse as JSON first if it's a string
     if (order.serviceIds is String) {
       try {
         final serviceIdsString = order.serviceIds as String;
-        if (serviceIdsString.startsWith('[') && serviceIdsString.endsWith(']')) {
+        if (serviceIdsString.startsWith('[') &&
+            serviceIdsString.endsWith(']')) {
           final decoded = jsonDecode(serviceIdsString) as List<dynamic>;
           final serviceIdList = decoded.cast<String>();
-          
-          final services = _allServices.where((service) => serviceIdList.contains(service.id)).toList();
+
+          final services = _allServices
+              .where((service) => serviceIdList.contains(service.id))
+              .toList();
           return services;
         }
       } catch (e) {
         // Ignore parsing errors and fall back to direct matching
       }
     }
-    
+
     // Fallback: try direct string matching
-    final services = _allServices.where((service) => order.serviceIds.contains(service.id)).toList();
+    final services = _allServices
+        .where((service) => order.serviceIds.contains(service.id))
+        .toList();
     return services;
   }
 
@@ -161,14 +171,15 @@ class _BillsScreenState extends State<BillsScreen> {
       salonName: _information?.salonName,
       salonAddress: _information?.address,
       salonPhone: _information?.phone,
+      salonQRCode: _information?.qrCode,
     );
   }
 
   String _formatPrice(double price) {
     return price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    );
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        );
   }
 
   String _formatDate(DateTime date) {
@@ -184,17 +195,17 @@ class _BillsScreenState extends State<BillsScreen> {
     if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
-    
+
     // Nếu ID có format GUID, lấy 8 ký tự đầu
     if (orderId.contains('-') && orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
   }
@@ -211,10 +222,11 @@ class _BillsScreenState extends State<BillsScreen> {
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      initialDateRange: _selectedDateRange ?? DateTimeRange(
-        start: DateTime.now(),
-        end: DateTime.now(),
-      ),
+      initialDateRange: _selectedDateRange ??
+          DateTimeRange(
+            start: DateTime.now(),
+            end: DateTime.now(),
+          ),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -277,7 +289,8 @@ class _BillsScreenState extends State<BillsScreen> {
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.calendar_month, color: Colors.white, size: 24),
+                      child: const Icon(Icons.calendar_month,
+                          color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
                     const Expanded(
@@ -306,7 +319,7 @@ class _BillsScreenState extends State<BillsScreen> {
                   ],
                 ),
               ),
-              
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -320,7 +333,8 @@ class _BillsScreenState extends State<BillsScreen> {
                           Navigator.pop(context);
                           await _selectDateRange();
                         },
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium),
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -333,9 +347,11 @@ class _BillsScreenState extends State<BillsScreen> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                            borderRadius:
+                                BorderRadius.circular(AppTheme.radiusMedium),
                             border: Border.all(
-                              color: AppTheme.primaryStart.withValues(alpha: 0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -398,14 +414,14 @@ class _BillsScreenState extends State<BillsScreen> {
                         color: AppTheme.textPrimary,
                       ),
                     ),
-                    
+
                     const SizedBox(height: AppTheme.spacingM),
-                    
+
                     _buildPresetButtonsGrid(),
                   ],
                 ),
               ),
-              
+
               // Actions
               Container(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
@@ -499,15 +515,15 @@ class _BillsScreenState extends State<BillsScreen> {
 
   String _formatDateRange() {
     if (_selectedDateRange == null) return '';
-    
+
     final dateFormat = DateFormat('dd/MM/yyyy');
     final startDate = dateFormat.format(_selectedDateRange!.start);
     final endDate = dateFormat.format(_selectedDateRange!.end);
-    
+
     if (_selectedDateRange!.start.isAtSameMomentAs(_selectedDateRange!.end)) {
       return startDate;
     }
-    
+
     return '$startDate - $endDate';
   }
 
@@ -533,11 +549,36 @@ class _BillsScreenState extends State<BillsScreen> {
 
   Widget _buildPresetButtonsGrid() {
     final presets = [
-      {'label': 'Hôm nay', 'preset': 'today', 'icon': Icons.today, 'color': Colors.green},
-      {'label': 'Hôm qua', 'preset': 'yesterday', 'icon': Icons.history, 'color': Colors.orange},
-      {'label': 'Tuần này', 'preset': 'week', 'icon': Icons.view_week, 'color': Colors.blue},
-      {'label': 'Tháng này', 'preset': 'month', 'icon': Icons.calendar_view_month, 'color': Colors.purple},
-      {'label': '30 ngày qua', 'preset': 'last30days', 'icon': Icons.trending_up, 'color': Colors.teal},
+      {
+        'label': 'Hôm nay',
+        'preset': 'today',
+        'icon': Icons.today,
+        'color': Colors.green
+      },
+      {
+        'label': 'Hôm qua',
+        'preset': 'yesterday',
+        'icon': Icons.history,
+        'color': Colors.orange
+      },
+      {
+        'label': 'Tuần này',
+        'preset': 'week',
+        'icon': Icons.view_week,
+        'color': Colors.blue
+      },
+      {
+        'label': 'Tháng này',
+        'preset': 'month',
+        'icon': Icons.calendar_view_month,
+        'color': Colors.purple
+      },
+      {
+        'label': '30 ngày qua',
+        'preset': 'last30days',
+        'icon': Icons.trending_up,
+        'color': Colors.teal
+      },
     ];
 
     return GridView.builder(
@@ -562,7 +603,8 @@ class _BillsScreenState extends State<BillsScreen> {
     );
   }
 
-  Widget _buildPresetButton(String label, String preset, IconData icon, Color color) {
+  Widget _buildPresetButton(
+      String label, String preset, IconData icon, Color color) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -688,7 +730,8 @@ class _BillsScreenState extends State<BillsScreen> {
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
-                                icon: Icon(Icons.clear, color: Colors.grey[600]),
+                                icon:
+                                    Icon(Icons.clear, color: Colors.grey[600]),
                                 onPressed: () {
                                   setState(() {
                                     _searchQuery = '';
@@ -697,24 +740,29 @@ class _BillsScreenState extends State<BillsScreen> {
                               )
                             : null,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusMedium),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                     ),
                   ),
-                  
+
                   // Date Range Info Display (only show when date range is selected)
                   if (_selectedDateRange != null) ...[
                     const SizedBox(height: AppTheme.spacingL),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingM, vertical: AppTheme.spacingS),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppTheme.spacingM,
+                          vertical: AppTheme.spacingS),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium),
                         border: Border.all(
                           color: AppTheme.primaryStart.withValues(alpha: 0.3),
                           width: 1,
@@ -774,7 +822,9 @@ class _BillsScreenState extends State<BillsScreen> {
                       children: [
                         Expanded(
                           child: _buildStatCard(
-                            title: _selectedDateRange != null ? 'Hóa đơn đã lọc' : 'Tổng hóa đơn',
+                            title: _selectedDateRange != null
+                                ? 'Hóa đơn đã lọc'
+                                : 'Tổng hóa đơn',
                             value: _filteredOrders.length.toString(),
                             icon: Icons.receipt,
                             color: Colors.blue,
@@ -783,8 +833,11 @@ class _BillsScreenState extends State<BillsScreen> {
                         const SizedBox(width: AppTheme.spacingS),
                         Expanded(
                           child: _buildStatCard(
-                            title: _selectedDateRange != null ? 'Doanh thu đã lọc' : 'Tổng doanh thu',
-                            value: '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
+                            title: _selectedDateRange != null
+                                ? 'Doanh thu đã lọc'
+                                : 'Tổng doanh thu',
+                            value:
+                                '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
                             icon: Icons.attach_money,
                             color: Colors.green,
                           ),
@@ -799,7 +852,8 @@ class _BillsScreenState extends State<BillsScreen> {
                   if (_isLoading)
                     const Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryStart),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryStart),
                       ),
                     )
                   else if (_filteredOrders.isEmpty)
@@ -813,7 +867,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         child: _buildOrderCard(order),
                       );
                     }).toList(),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -915,10 +969,12 @@ class _BillsScreenState extends State<BillsScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppTheme.primaryStart.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                         border: Border.all(
                           color: AppTheme.primaryStart.withValues(alpha: 0.3),
                           width: 1,
@@ -1007,7 +1063,8 @@ class _BillsScreenState extends State<BillsScreen> {
                 // Total Price
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
                     gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -1073,7 +1130,7 @@ class _BillsScreenState extends State<BillsScreen> {
   Widget _buildServicesDisplay(Order order) {
     // First try to get services from the loaded services list
     final services = _getServicesForOrder(order);
-    
+
     if (services.isNotEmpty) {
       final displayServices = services.take(2).map((s) => s.name).join(', ');
       if (services.length > 2) {

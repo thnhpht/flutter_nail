@@ -28,7 +28,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final _employeeNameController = TextEditingController();
   final _discountController = TextEditingController();
   final _tipController = TextEditingController();
-  
+
   List<Category> _categories = [];
   List<Service> _services = [];
   List<Service> _selectedServices = [];
@@ -167,12 +167,15 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _customerNameController.text = customer.name;
           });
-          showFlushbar('Đã tìm thấy khách hàng: ${customer.name}', type: MessageType.success);
+          showFlushbar('Đã tìm thấy khách hàng: ${customer.name}',
+              type: MessageType.success);
         } else {
           setState(() {
             _customerNameController.clear();
           });
-          showFlushbar('Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.', type: MessageType.info);
+          showFlushbar(
+              'Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.',
+              type: MessageType.info);
         }
       } catch (e) {
         showFlushbar('Lỗi tìm kiếm khách hàng: $e', type: MessageType.error);
@@ -193,12 +196,15 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _employeeNameController.text = employee.name;
           });
-          showFlushbar('Đã tìm thấy nhân viên: ${employee.name}', type: MessageType.success);
+          showFlushbar('Đã tìm thấy nhân viên: ${employee.name}',
+              type: MessageType.success);
         } else {
           setState(() {
             _employeeNameController.clear();
           });
-          showFlushbar('Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.', type: MessageType.info);
+          showFlushbar(
+              'Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.',
+              type: MessageType.info);
         }
       } catch (e) {
         showFlushbar('Lỗi tìm kiếm nhân viên: $e', type: MessageType.error);
@@ -259,9 +265,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
   String _formatPrice(double price) {
     return price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    );
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        );
   }
 
   void _onCategoryToggled(Category category) {
@@ -269,7 +275,8 @@ class _OrderScreenState extends State<OrderScreen> {
       if (_selectedCategories.contains(category)) {
         _selectedCategories.remove(category);
         // Remove all services from this category
-        _selectedServices.removeWhere((service) => service.categoryId == category.id);
+        _selectedServices
+            .removeWhere((service) => service.categoryId == category.id);
       } else {
         _selectedCategories.add(category);
       }
@@ -284,7 +291,8 @@ class _OrderScreenState extends State<OrderScreen> {
       } else {
         _selectedServices.add(service);
         // Add category if not already selected
-        final category = _categories.firstWhere((c) => c.id == service.categoryId);
+        final category =
+            _categories.firstWhere((c) => c.id == service.categoryId);
         if (!_selectedCategories.contains(category)) {
           _selectedCategories.add(category);
         }
@@ -297,7 +305,8 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {
       _selectedCategories.remove(category);
       // Remove all services from this category
-      _selectedServices.removeWhere((service) => service.categoryId == category.id);
+      _selectedServices
+          .removeWhere((service) => service.categoryId == category.id);
       _calculateTotal();
     });
   }
@@ -310,7 +319,8 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void _calculateTotal() {
-    _totalPrice = _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+    _totalPrice =
+        _selectedServices.fold(0.0, (sum, service) => sum + service.price);
     _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100) + _tip;
   }
 
@@ -352,11 +362,13 @@ class _OrderScreenState extends State<OrderScreen> {
   Future<void> _createOrder() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedServices.isEmpty) {
-      showFlushbar('Vui lòng chọn ít nhất một dịch vụ', type: MessageType.warning);
+      showFlushbar('Vui lòng chọn ít nhất một dịch vụ',
+          type: MessageType.warning);
       return;
     }
     if (_selectedEmployees.isEmpty) {
-      showFlushbar('Vui lòng chọn ít nhất một nhân viên', type: MessageType.warning);
+      showFlushbar('Vui lòng chọn ít nhất một nhân viên',
+          type: MessageType.warning);
       return;
     }
 
@@ -368,12 +380,13 @@ class _OrderScreenState extends State<OrderScreen> {
       // Create customer if not exists
       final customerPhone = _customerPhoneController.text.trim();
       final customerName = _customerNameController.text.trim();
-      
+
       try {
         await widget.api.getCustomer(customerPhone);
       } catch (e) {
         // Customer doesn't exist, create new one
-        await widget.api.createCustomer(Customer(phone: customerPhone, name: customerName));
+        await widget.api
+            .createCustomer(Customer(phone: customerPhone, name: customerName));
       }
 
       // Create orders for each selected employee
@@ -400,23 +413,23 @@ class _OrderScreenState extends State<OrderScreen> {
 
         // Create order and get the response with real ID
         final createdOrder = await widget.api.createOrder(order);
-        createdOrders.add(createdOrder);   
+        createdOrders.add(createdOrder);
       }
-      
+
       showFlushbar('Đã tạo đơn thành công!', type: MessageType.success);
-      
+
       // Create a backup of selected services before showing bills
       final selectedServicesBackup = List<Service>.from(_selectedServices);
-      
+
       // Show bill for each created order using the real order data
       for (final createdOrder in createdOrders) {
         // Show bill dialog with the real order data
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // Create services list from the backup data
-          final servicesForBill = selectedServicesBackup.where((service) => 
-            createdOrder.serviceIds.contains(service.id)
-          ).toList();
-          
+          final servicesForBill = selectedServicesBackup
+              .where((service) => createdOrder.serviceIds.contains(service.id))
+              .toList();
+
           BillHelper.showBillDialog(
             context: context,
             order: createdOrder,
@@ -427,12 +440,12 @@ class _OrderScreenState extends State<OrderScreen> {
           );
         });
       }
-      
+
       // Call the callback after a delay to ensure bills are shown first
       Future.delayed(const Duration(milliseconds: 1000), () {
         widget.onOrderCreated?.call();
       });
-      
+
       // Reset form after showing bills and calling callback
       Future.delayed(const Duration(milliseconds: 1500), () {
         _resetForm();
@@ -468,13 +481,14 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         // Close dropdowns when tapping outside
-        if (_showCategoryDropdown || _showServiceDropdown || _showEmployeeDropdown) {
+        if (_showCategoryDropdown ||
+            _showServiceDropdown ||
+            _showEmployeeDropdown) {
           setState(() {
             _showCategoryDropdown = false;
             _showServiceDropdown = false;
@@ -511,409 +525,354 @@ class _OrderScreenState extends State<OrderScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                  // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                    // Header
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Tạo đơn mới',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.shopping_cart,
                             color: Colors.white,
+                            size: 32,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${_selectedServices.length} dịch vụ đã chọn',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-
-                  // Customer Information
-                  _buildSectionCard(
-                    title: 'Thông tin khách hàng',
-                    icon: Icons.person,
-                    child: Column(
-                      children: [
-                        _buildTextField(
-                          controller: _customerPhoneController,
-                          label: 'Số điện thoại',
-                          prefixIcon: Icons.phone,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập số điện thoại';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _customerNameController,
-                          label: 'Tên khách hàng',
-                          prefixIcon: Icons.person_outline,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập tên khách hàng';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-
-                  // Employee Information
-                  _buildSectionCard(
-                    title: 'Thông tin nhân viên',
-                    icon: Icons.work,
-                    child: Column(
-                      children: [
-                        // Selected Employees Chips
-                        if (_selectedEmployees.isNotEmpty) ...[
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: _selectedEmployees.map((employee) => _buildChip(
-                              label: employee.name,
-                              onDeleted: () => _toggleEmployee(employee),
-                              color: const Color(0xFF667eea),
-                            )).toList(),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-
-                        // Employee Dropdown
-                        _buildDropdownButton(
-                          onTap: _toggleEmployeeDropdown,
-                          label: _selectedEmployees.isEmpty 
-                              ? 'Chọn nhân viên' 
-                              : '${_selectedEmployees.length} nhân viên đã chọn',
-                          isExpanded: _showEmployeeDropdown,
-                        ),
-                        if (_showEmployeeDropdown) ...[
                           const SizedBox(height: 8),
-                          _buildDropdownMenu(
-                            maxHeight: 200,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _employees.length,
-                              itemBuilder: (context, index) {
-                                final employee = _employees[index];
-                                final isSelected = _selectedEmployees.contains(employee);
-                                return _buildDropdownItem(
-                                  title: employee.name,
-                                  subtitle: employee.phone ?? '',
-                                  isSelected: isSelected,
-                                  onTap: () => _toggleEmployee(employee),
-                                );
-                              },
+                          const Text(
+                            'Tạo đơn mới',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${_selectedServices.length} dịch vụ đã chọn',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
                             ),
                           ),
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  
-                  const SizedBox(height: 16),
 
-                  // Category Selection
-                  _buildSectionCard(
-                    title: 'Danh mục dịch vụ',
-                    icon: Icons.category,
-                    child: Column(
-                      children: [
-                        // Selected Categories Chips
-                        if (_selectedCategories.isNotEmpty) ...[
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: _selectedCategories.map((category) {
-                              return _buildChip(
-                                label: category.name,
-                                onDeleted: () => _removeSelectedCategory(category),
-                                color: const Color(0xFF7386dd),
-                              );
-                            }).toList(),
+                    const SizedBox(height: 24),
+
+                    // Customer Information
+                    _buildSectionCard(
+                      title: 'Thông tin khách hàng',
+                      icon: Icons.person,
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                            controller: _customerPhoneController,
+                            label: 'Số điện thoại',
+                            prefixIcon: Icons.phone,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập số điện thoại';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 16),
-                        ],
-
-                        // Category Dropdown
-                        _buildDropdownButton(
-                          onTap: _toggleCategoryDropdown,
-                          label: _selectedCategories.isEmpty 
-                              ? 'Chọn danh mục' 
-                              : '${_selectedCategories.length} danh mục đã chọn',
-                          isExpanded: _showCategoryDropdown,
-                        ),
-
-                        // Category Dropdown Menu
-                        if (_showCategoryDropdown) ...[
-                          const SizedBox(height: 8),
-                          _buildDropdownMenu(
-                            maxHeight: 200,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _categories.length,
-                              itemBuilder: (context, index) {
-                                final category = _categories[index];
-                                final isSelected = _selectedCategories.contains(category);
-                                return _buildDropdownItem(
-                                  title: category.name,
-                                  isSelected: isSelected,
-                                  onTap: () => _onCategoryToggled(category),
-                                );
-                              },
-                            ),
+                          _buildTextField(
+                            controller: _customerNameController,
+                            label: 'Tên khách hàng',
+                            prefixIcon: Icons.person_outline,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập tên khách hàng';
+                              }
+                              return null;
+                            },
                           ),
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  
-                  const SizedBox(height: 16),
 
-                  // Services Selection
-                  _buildSectionCard(
-                    title: 'Dịch vụ',
-                    icon: Icons.spa,
-                    child: Column(
-                      children: [
-                        // Selected Services Chips
-                        if (_selectedServices.isNotEmpty) ...[
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: _selectedServices.map((service) {
-                              return _buildChip(
-                                label: service.name,
-                                onDeleted: () => _removeSelectedService(service),
-                                color: const Color(0xFF764ba2),
-                              );
-                            }).toList(),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                    const SizedBox(height: 16),
 
-                        // Service Dropdown
-                        _buildDropdownButton(
-                          onTap: _toggleServiceDropdown,
-                          label: _selectedServices.isEmpty 
-                              ? 'Chọn dịch vụ' 
-                              : '${_selectedServices.length} dịch vụ đã chọn',
-                          isExpanded: _showServiceDropdown,
-                        ),
-
-                        // Service Dropdown Menu
-                        if (_showServiceDropdown) ...[
-                          const SizedBox(height: 8),
-                          _buildDropdownMenu(
-                            maxHeight: 300,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: (_selectedCategories.isEmpty
-                                      ? _categories
-                                      : _selectedCategories)
-                                  .length,
-                              itemBuilder: (context, categoryIndex) {
-                                final visibleCategories = _selectedCategories.isEmpty
-                                    ? _categories
-                                    : _selectedCategories;
-                                final category = visibleCategories[categoryIndex];
-                                final categoryServices = _services.where((service) => service.categoryId == category.id).toList();
-                                
-                                if (categoryServices.isEmpty) return const SizedBox.shrink();
-                                
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Category Header
-                                    Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          topRight: Radius.circular(8),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        category.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    // Services in this category
-                                    ...categoryServices.map((service) {
-                                      final isSelected = _selectedServices.contains(service);
-                                      return _buildDropdownItem(
-                                        title: service.name,
-                                        subtitle: '${_formatPrice(service.price)} VNĐ',
-                                        isSelected: isSelected,
-                                        onTap: () => _onServiceToggled(service),
-                                      );
-                                    }).toList(),
-                                  ],
-                                );
-                              },
+                    // Employee Information
+                    _buildSectionCard(
+                      title: 'Thông tin nhân viên',
+                      icon: Icons.work,
+                      child: Column(
+                        children: [
+                          // Selected Employees Chips
+                          if (_selectedEmployees.isNotEmpty) ...[
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _selectedEmployees
+                                  .map((employee) => _buildChip(
+                                        label: employee.name,
+                                        onDeleted: () =>
+                                            _toggleEmployee(employee),
+                                        color: const Color(0xFF667eea),
+                                      ))
+                                  .toList(),
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
+                            const SizedBox(height: 16),
+                          ],
 
-                  // Discount Section
-                  _buildSectionCard(
-                    title: 'Giảm giá',
-                    icon: Icons.discount,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _discountController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  hintText: '0',
-                                  suffixText: '%',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 12,
-                                  ),
-                                ),
-                                onChanged: _onDiscountChanged,
-                                validator: (value) {
-                                  if (value != null && value.isNotEmpty) {
-                                    final discount = double.tryParse(value);
-                                    if (discount == null || discount < 0 || discount > 100) {
-                                      return 'Giảm giá phải từ 0-100%';
-                                    }
-                                  }
-                                  return null;
+                          // Employee Dropdown
+                          _buildDropdownButton(
+                            onTap: _toggleEmployeeDropdown,
+                            label: _selectedEmployees.isEmpty
+                                ? 'Chọn nhân viên'
+                                : '${_selectedEmployees.length} nhân viên đã chọn',
+                            isExpanded: _showEmployeeDropdown,
+                          ),
+                          if (_showEmployeeDropdown) ...[
+                            const SizedBox(height: 8),
+                            _buildDropdownMenu(
+                              maxHeight: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _employees.length,
+                                itemBuilder: (context, index) {
+                                  final employee = _employees[index];
+                                  final isSelected =
+                                      _selectedEmployees.contains(employee);
+                                  return _buildDropdownItem(
+                                    title: employee.name,
+                                    subtitle: employee.phone ?? '',
+                                    isSelected: isSelected,
+                                    onTap: () => _toggleEmployee(employee),
+                                  );
                                 },
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                                  begin: Alignment.bottomLeft,
-                                  end: Alignment.topRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Text(
-                                'Tiết kiệm: ${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
                               ),
                             ),
                           ],
-                        ),
-                        
-                        const SizedBox(height: 16),
-                        
-                        // Tip input
-                        Row(
-                          children: [
-                            const Text(
-                              'Tiền bo:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Category Selection
+                    _buildSectionCard(
+                      title: 'Danh mục dịch vụ',
+                      icon: Icons.category,
+                      child: Column(
+                        children: [
+                          // Selected Categories Chips
+                          if (_selectedCategories.isNotEmpty) ...[
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _selectedCategories.map((category) {
+                                return _buildChip(
+                                  label: category.name,
+                                  onDeleted: () =>
+                                      _removeSelectedCategory(category),
+                                  color: const Color(0xFF7386dd),
+                                );
+                              }).toList(),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              flex: 1,
-                              child: TextFormField(
-                                controller: _tipController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'VNĐ',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 12,
-                                  ),
-                                ),
-                                onChanged: (value) => _onTipChanged(),
-                                validator: (value) {
-                                  if (value != null && value.isNotEmpty) {
-                                    final tip = double.tryParse(value);
-                                    if (tip == null || tip < 0) {
-                                      return 'Tiền bo phải lớn hơn 0';
-                                    }
-                                  }
-                                  return null;
+                            const SizedBox(height: 16),
+                          ],
+
+                          // Category Dropdown
+                          _buildDropdownButton(
+                            onTap: _toggleCategoryDropdown,
+                            label: _selectedCategories.isEmpty
+                                ? 'Chọn danh mục'
+                                : '${_selectedCategories.length} danh mục đã chọn',
+                            isExpanded: _showCategoryDropdown,
+                          ),
+
+                          // Category Dropdown Menu
+                          if (_showCategoryDropdown) ...[
+                            const SizedBox(height: 8),
+                            _buildDropdownMenu(
+                              maxHeight: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _categories.length,
+                                itemBuilder: (context, index) {
+                                  final category = _categories[index];
+                                  final isSelected =
+                                      _selectedCategories.contains(category);
+                                  return _buildDropdownItem(
+                                    title: category.name,
+                                    isSelected: isSelected,
+                                    onTap: () => _onCategoryToggled(category),
+                                  );
                                 },
                               ),
                             ),
-                            if (_tip > 0) ...[
+                          ],
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Services Selection
+                    _buildSectionCard(
+                      title: 'Dịch vụ',
+                      icon: Icons.spa,
+                      child: Column(
+                        children: [
+                          // Selected Services Chips
+                          if (_selectedServices.isNotEmpty) ...[
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _selectedServices.map((service) {
+                                return _buildChip(
+                                  label: service.name,
+                                  onDeleted: () =>
+                                      _removeSelectedService(service),
+                                  color: const Color(0xFF764ba2),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+
+                          // Service Dropdown
+                          _buildDropdownButton(
+                            onTap: _toggleServiceDropdown,
+                            label: _selectedServices.isEmpty
+                                ? 'Chọn dịch vụ'
+                                : '${_selectedServices.length} dịch vụ đã chọn',
+                            isExpanded: _showServiceDropdown,
+                          ),
+
+                          // Service Dropdown Menu
+                          if (_showServiceDropdown) ...[
+                            const SizedBox(height: 8),
+                            _buildDropdownMenu(
+                              maxHeight: 300,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: (_selectedCategories.isEmpty
+                                        ? _categories
+                                        : _selectedCategories)
+                                    .length,
+                                itemBuilder: (context, categoryIndex) {
+                                  final visibleCategories =
+                                      _selectedCategories.isEmpty
+                                          ? _categories
+                                          : _selectedCategories;
+                                  final category =
+                                      visibleCategories[categoryIndex];
+                                  final categoryServices = _services
+                                      .where((service) =>
+                                          service.categoryId == category.id)
+                                      .toList();
+
+                                  if (categoryServices.isEmpty)
+                                    return const SizedBox.shrink();
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Category Header
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          category.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      // Services in this category
+                                      ...categoryServices.map((service) {
+                                        final isSelected =
+                                            _selectedServices.contains(service);
+                                        return _buildDropdownItem(
+                                          title: service.name,
+                                          subtitle:
+                                              '${_formatPrice(service.price)} VNĐ',
+                                          isSelected: isSelected,
+                                          onTap: () =>
+                                              _onServiceToggled(service),
+                                        );
+                                      }).toList(),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Discount Section
+                    _buildSectionCard(
+                      title: 'Giảm giá',
+                      icon: Icons.discount,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _discountController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    hintText: '0',
+                                    suffixText: '%',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xFF667eea), width: 2),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[50],
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                  onChanged: _onDiscountChanged,
+                                  validator: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      final discount = double.tryParse(value);
+                                      if (discount == null ||
+                                          discount < 0 ||
+                                          discount > 100) {
+                                        return 'Giảm giá phải từ 0-100%';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                               const SizedBox(width: 12),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -922,14 +881,17 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                    colors: [
+                                      Color(0xFF667eea),
+                                      Color(0xFF764ba2)
+                                    ],
                                     begin: Alignment.bottomLeft,
                                     end: Alignment.topRight,
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Text(
-                                  'Tip: ${_formatPrice(_tip)} VNĐ',
+                                  'Tiết kiệm: ${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -937,79 +899,113 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                               ),
                             ],
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
+                          ),
 
-                  // Total Price
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Thành tiền:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              '${_formatPrice(_totalPrice)} VNĐ',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (_discountPercent > 0) ...[
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 16),
+
+                          // Tip input
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Giảm giá (${_discountPercent.toStringAsFixed(0)}%):',
-                                style: const TextStyle(
+                              const Text(
+                                'Tiền bo:',
+                                style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              Text(
-                                '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
+                              const SizedBox(width: 16),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: _tipController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'VNĐ',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xFF667eea), width: 2),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[50],
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                  onChanged: (value) => _onTipChanged(),
+                                  validator: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      final tip = double.tryParse(value);
+                                      if (tip == null || tip < 0) {
+                                        return 'Tiền bo phải lớn hơn 0';
+                                      }
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
+                              if (_tip > 0) ...[
+                                const SizedBox(width: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF667eea),
+                                        Color(0xFF764ba2)
+                                      ],
+                                      begin: Alignment.bottomLeft,
+                                      end: Alignment.topRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Text(
+                                    'Tip: ${_formatPrice(_tip)} VNĐ',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ],
-                        if (_tip > 0) ...[
-                          const SizedBox(height: 8),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Total Price
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                'Tiền bo:',
+                                'Thành tiền:',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -1017,7 +1013,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                               ),
                               Text(
-                                '+${_formatPrice(_tip)} VNĐ',
+                                '${_formatPrice(_totalPrice)} VNĐ',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -1026,66 +1022,113 @@ class _OrderScreenState extends State<OrderScreen> {
                               ),
                             ],
                           ),
-                        ],
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Tổng thanh toán:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              '${_formatPrice(_finalTotalPrice)} VNĐ',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                          if (_discountPercent > 0) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Giảm giá (${_discountPercent.toStringAsFixed(0)}%):',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
+                          if (_tip > 0) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tiền bo:',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  '+${_formatPrice(_tip)} VNĐ',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Tổng thanh toán:',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '${_formatPrice(_finalTotalPrice)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Action Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildPrimaryButton(
+                            onPressed: _isLoading ? null : _createOrder,
+                            isLoading: _isLoading,
+                            label: 'Tạo đơn',
+                            icon: Icons.check,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildSecondaryButton(
+                            onPressed: _isLoading ? null : _resetForm,
+                            label: 'Làm mới',
+                            icon: Icons.refresh,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  
-                  const SizedBox(height: 24),
 
-                  // Action Buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildPrimaryButton(
-                          onPressed: _isLoading ? null : _createOrder,
-                          isLoading: _isLoading,
-                          label: 'Tạo đơn',
-                          icon: Icons.check,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildSecondaryButton(
-                          onPressed: _isLoading ? null : _resetForm,
-                          label: 'Làm mới',
-                          icon: Icons.refresh,
-                        ),
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildSectionCard({
@@ -1217,7 +1260,8 @@ class _OrderScreenState extends State<OrderScreen> {
     return Chip(
       label: Text(
         label,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
       ),
       deleteIcon: const Icon(Icons.close, color: Colors.white, size: 18),
       onDeleted: onDeleted,
@@ -1296,7 +1340,8 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
       ),
       subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing: isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
       tileColor: isSelected ? const Color(0xFF667eea).withOpacity(0.1) : null,
       onTap: onTap,
       shape: RoundedRectangleBorder(

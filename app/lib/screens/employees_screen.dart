@@ -109,7 +109,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.person_add, color: Colors.white, size: 24),
+                      child: const Icon(Icons.person_add,
+                          color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
                     const Expanded(
@@ -146,108 +147,119 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: nameCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Họ và tên',
-                            prefixIcon: Icon(Icons.person, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập họ và tên';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: phoneCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Số điện thoại',
-                            prefixIcon: Icon(Icons.phone, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                          child: TextFormField(
+                            controller: nameCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'Họ và tên',
+                              prefixIcon: Icon(Icons.person,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
                             ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập họ và tên';
+                              }
+                              return null;
+                            },
                           ),
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập số điện thoại';
-                            }
-                            return null;
-                          },
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: passwordCtrl,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Mật khẩu',
-                            prefixIcon: Icon(Icons.lock, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập mật khẩu';
-                            }
-                            if (value.length < 6) {
-                              return 'Mật khẩu phải có ít nhất 6 ký tự';
-                            }
-                            return null;
-                          },
+                          child: TextFormField(
+                            controller: phoneCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'Số điện thoại',
+                              prefixIcon: Icon(Icons.phone,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập số điện thoại';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: passwordCtrl,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Mật khẩu',
+                              prefixIcon: Icon(Icons.lock,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập mật khẩu';
+                              }
+                              if (value.length < 6) {
+                                return 'Mật khẩu phải có ít nhất 6 ký tự';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               ),
               // Actions
               Container(
@@ -328,14 +340,16 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
         if (existing != null) {
-          showFlushbar('SĐT của nhân viên đã được tạo', type: MessageType.warning);
+          showFlushbar('SĐT của nhân viên đã được tạo',
+              type: MessageType.warning);
           return;
         }
-      } catch (e) {
+      } catch (ex) {
         // If not found, continue
       }
       try {
-        await widget.api.createEmployee(name, phone: phone, password: passwordCtrl.text.trim());
+        await widget.api.createEmployee(name,
+            phone: phone, password: passwordCtrl.text.trim());
         await _reload();
         showFlushbar('Thêm nhân viên thành công', type: MessageType.success);
       } catch (e) {
@@ -390,7 +404,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.edit, color: Colors.white, size: 24),
+                      child:
+                          const Icon(Icons.edit, color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
                     const Expanded(
@@ -427,105 +442,119 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     key: _editFormKey,
                     child: Column(
                       children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: nameCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Họ và tên',
-                            prefixIcon: Icon(Icons.person, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập họ và tên';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: phoneCtrl,
-                          decoration: InputDecoration(
-                            labelText: 'Số điện thoại',
-                            prefixIcon: Icon(Icons.phone, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
+                          child: TextFormField(
+                            controller: nameCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'Họ và tên',
+                              prefixIcon: Icon(Icons.person,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
                             ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập họ và tên';
+                              }
+                              return null;
+                            },
                           ),
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Vui lòng nhập số điện thoại';
-                            }
-                            return null;
-                          },
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: TextFormField(
-                          controller: passwordCtrl,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Mật khẩu mới (để trống nếu không đổi)',
-                            prefixIcon: Icon(Icons.lock, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: Colors.red, width: 2),
-                            ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
                           ),
-                          validator: (value) {
-                            if (value != null && value.isNotEmpty && value.length < 6) {
-                              return 'Mật khẩu phải có ít nhất 6 ký tự';
-                            }
-                            return null;
-                          },
+                          child: TextFormField(
+                            controller: phoneCtrl,
+                            decoration: InputDecoration(
+                              labelText: 'Số điện thoại',
+                              prefixIcon: Icon(Icons.phone,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Vui lòng nhập số điện thoại';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: passwordCtrl,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText:
+                                  'Mật khẩu mới (để trống nếu không đổi)',
+                              prefixIcon: Icon(Icons.lock,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.length < 6) {
+                                return 'Mật khẩu phải có ít nhất 6 ký tự';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               ),
               // Actions
               Container(
@@ -605,14 +634,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
 
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
-        if (existing != null) {
-          showFlushbar('SĐT của nhân viên đã được tạo', type: MessageType.warning);
+        if (existing != null && existing.id != e.id) {
+          showFlushbar('SĐT của nhân viên đã được tạo',
+              type: MessageType.warning);
           return;
         }
-      } catch (e) {
+      } catch (ex) {
         // If not found, continue
       }
-      
+
       try {
         final password = passwordCtrl.text.trim();
         await widget.api.updateEmployee(Employee(
@@ -622,9 +652,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           password: password.isEmpty ? null : password,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin nhân viên thành công', type: MessageType.success);
+        showFlushbar('Thay đổi thông tin nhân viên thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi thay đổi thông tin nhân viên', type: MessageType.error);
+        showFlushbar('Lỗi thay đổi thông tin nhân viên',
+            type: MessageType.error);
       }
     }
   }
@@ -697,21 +729,22 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                   subtitle: 'Quản lý nhân viên salon',
                   fullWidth: true,
                 ),
-                                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: AppTheme.controlHeight,
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: AppTheme.inputDecoration(
-                        label: 'Tìm kiếm nhân viên...',
-                        prefixIcon: Icons.search,
-                      ),
-                      onChanged: (v) => setState(() => _search = v.trim()),
+                const SizedBox(height: 24),
+                SizedBox(
+                  height: AppTheme.controlHeight,
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: AppTheme.inputDecoration(
+                      label: 'Tìm kiếm nhân viên...',
+                      prefixIcon: Icons.search,
                     ),
+                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
+                ),
                 const SizedBox(height: 12),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 300, // Đảm bảo có chiều cao cố định
+                  height: MediaQuery.of(context).size.height -
+                      300, // Đảm bảo có chiều cao cố định
                   child: FutureBuilder<List<Employee>>(
                     future: _future,
                     builder: (context, snapshot) {
@@ -719,7 +752,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách nhân viên', type: MessageType.error);
+                        showFlushbar('Lỗi tải danh sách nhân viên',
+                            type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
                           child: ListView(
@@ -728,16 +762,20 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               Center(
                                 child: Column(
                                   children: [
-                                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                                    const Icon(Icons.error_outline,
+                                        size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
                                     const Text(
                                       'Không thể tải danh sách nhân viên',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
                                     const Text(
                                       'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
@@ -752,15 +790,23 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         );
                       }
                       final data = snapshot.data ?? [];
-                      final filtered = data.where((e) =>
-                        e.name.toLowerCase().contains(_search.toLowerCase()) ||
-                        (e.phone ?? '').toLowerCase().contains(_search.toLowerCase())
-                      ).toList();
+                      final filtered = data
+                          .where((e) =>
+                              e.name
+                                  .toLowerCase()
+                                  .contains(_search.toLowerCase()) ||
+                              (e.phone ?? '')
+                                  .toLowerCase()
+                                  .contains(_search.toLowerCase()))
+                          .toList();
 
                       if (filtered.isEmpty) {
                         return RefreshIndicator(
                           onRefresh: _reload,
-                          child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Không tìm thấy nhân viên'))]),
+                          child: ListView(children: const [
+                            SizedBox(height: 200),
+                            Center(child: Text('Không tìm thấy nhân viên'))
+                          ]),
                         );
                       }
 
@@ -776,33 +822,52 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 onTap: () => _showEditDialog(e),
                                 borderRadius: BorderRadius.circular(16),
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
                                   decoration: AppTheme.cardDecoration(),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
                                     child: Row(
                                       children: [
                                         CircleAvatar(
                                           radius: 24,
-                                          backgroundColor: Colors.green.shade100,
+                                          backgroundColor:
+                                              Colors.green.shade100,
                                           child: Text(
-                                            e.name.isNotEmpty ? e.name[0].toUpperCase() : (e.phone != null && e.phone!.isNotEmpty ? e.phone![0] : '?'),
-                                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green),
+                                            e.name.isNotEmpty
+                                                ? e.name[0].toUpperCase()
+                                                : (e.phone != null &&
+                                                        e.phone!.isNotEmpty
+                                                    ? e.phone![0]
+                                                    : '?'),
+                                            style: const TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green),
                                           ),
                                         ),
                                         const SizedBox(width: 16),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                e.name.isEmpty ? (e.phone ?? '') : e.name,
-                                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                                e.name.isEmpty
+                                                    ? (e.phone ?? '')
+                                                    : e.name,
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
                                                 e.phone ?? '',
-                                                style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.grey[700]),
                                               ),
                                             ],
                                           ),
@@ -811,21 +876,27 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                         Container(
                                           decoration: BoxDecoration(
                                             gradient: const LinearGradient(
-                                              colors: [Color(0xFFFF9800), Color(0xFFFF5722)],
+                                              colors: [
+                                                Color(0xFFFF9800),
+                                                Color(0xFFFF5722)
+                                              ],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                             ),
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.orange.withOpacity(0.3),
+                                                color: Colors.orange
+                                                    .withOpacity(0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
                                             ],
                                           ),
                                           child: IconButton(
-                                            icon: const Icon(Icons.edit, color: Colors.white, size: 20),
+                                            icon: const Icon(Icons.edit,
+                                                color: Colors.white, size: 20),
                                             tooltip: 'Sửa',
                                             onPressed: () => _showEditDialog(e),
                                           ),
@@ -834,21 +905,27 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                         Container(
                                           decoration: BoxDecoration(
                                             gradient: const LinearGradient(
-                                              colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
+                                              colors: [
+                                                Color(0xFFE91E63),
+                                                Color(0xFFC2185B)
+                                              ],
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
                                             ),
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.red.withOpacity(0.3),
+                                                color:
+                                                    Colors.red.withOpacity(0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
                                             ],
                                           ),
                                           child: IconButton(
-                                            icon: const Icon(Icons.delete, color: Colors.white, size: 20),
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.white, size: 20),
                                             tooltip: 'Xóa',
                                             onPressed: () => _delete(e),
                                           ),

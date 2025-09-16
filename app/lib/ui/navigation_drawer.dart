@@ -28,12 +28,13 @@ class AppNavigationDrawer extends StatelessWidget {
                 context,
                 mobile: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
                 tablet: const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
-                desktop: const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
+                desktop:
+                    const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
               ),
               children: _buildNavigationItems(),
             ),
           ),
-          
+
           // Logout button
           Container(
             padding: AppTheme.getResponsivePadding(
@@ -45,7 +46,9 @@ class AppNavigationDrawer extends StatelessWidget {
             child: Column(
               children: [
                 const Divider(),
-                SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
+                SizedBox(
+                    height: AppTheme.getResponsiveSpacing(context,
+                        mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
                 _buildLogoutButton(),
               ],
             ),
@@ -67,7 +70,7 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 0,
           isSelected: selectedIndex == 0,
         ),
-        
+
         // Tạo đơn section
         _buildSectionHeader('Tạo đơn'),
         _buildNavItem(
@@ -76,7 +79,7 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 1,
           isSelected: selectedIndex == 1,
         ),
-        
+
         // Hóa đơn section
         _buildSectionHeader('Hóa đơn'),
         _buildNavItem(
@@ -124,7 +127,7 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 4,
           isSelected: selectedIndex == 4,
         ),
-        
+
         // Tạo đơn section
         _buildSectionHeader('Tạo đơn'),
         _buildNavItem(
@@ -133,7 +136,7 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 5,
           isSelected: selectedIndex == 5,
         ),
-        
+
         // Hóa đơn & Báo cáo section
         _buildSectionHeader('Hóa đơn & Báo cáo'),
         _buildNavItem(
@@ -157,10 +160,14 @@ class AppNavigationDrawer extends StatelessWidget {
       builder: (context) {
         return Container(
           margin: EdgeInsets.only(
-            left: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
-            right: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
-            top: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingL, tablet: AppTheme.spacingXL),
-            bottom: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+            left: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            right: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            top: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingL, tablet: AppTheme.spacingXL),
+            bottom: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
           ),
           child: Text(
             title,
@@ -192,11 +199,14 @@ class AppNavigationDrawer extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           margin: EdgeInsets.symmetric(
-            horizontal: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+            horizontal: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
             vertical: 2,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.primaryStart.withOpacity(0.1) : Colors.transparent,
+            color: isSelected
+                ? AppTheme.primaryStart.withOpacity(0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(100),
           ),
           child: Material(
@@ -206,8 +216,10 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: () => onItemSelected(index),
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
-                  vertical: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
                 ),
                 child: Row(
                   children: [
@@ -216,7 +228,9 @@ class AppNavigationDrawer extends StatelessWidget {
                       child: Icon(
                         icon,
                         key: ValueKey('$icon-$isSelected'),
-                        color: isSelected ? AppTheme.primaryStart : Colors.grey[600],
+                        color: isSelected
+                            ? AppTheme.primaryStart
+                            : Colors.grey[600],
                         size: AppTheme.getResponsiveFontSize(
                           context,
                           mobile: 18,
@@ -225,7 +239,10 @@ class AppNavigationDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: AppTheme.getResponsiveSpacing(context, mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
+                    SizedBox(
+                        width: AppTheme.getResponsiveSpacing(context,
+                            mobile: AppTheme.spacingS,
+                            tablet: AppTheme.spacingM)),
                     Expanded(
                       child: AnimatedDefaultTextStyle(
                         duration: const Duration(milliseconds: 200),
@@ -236,8 +253,11 @@ class AppNavigationDrawer extends StatelessWidget {
                             tablet: 16,
                             desktop: 18,
                           ),
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                          color: isSelected ? AppTheme.primaryStart : Colors.grey[800],
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected
+                              ? AppTheme.primaryStart
+                              : Colors.grey[800],
                           letterSpacing: 0.2,
                         ),
                         child: Text(title),
@@ -273,7 +293,8 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: onLogout,
               child: ListTile(
                 leading: Container(
-                  padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context, mobile: 6, tablet: 8, desktop: 10)),
+                  padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
+                      mobile: 6, tablet: 8, desktop: 10)),
                   decoration: BoxDecoration(
                     color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(100),
@@ -339,10 +360,13 @@ class AppNavigationRail extends StatelessWidget {
       destinations: _buildRailDestinations(),
       leading: Column(
         children: [
-          SizedBox(height: AppTheme.getResponsiveSpacing(context, tablet: 16, desktop: 20)),
+          SizedBox(
+              height: AppTheme.getResponsiveSpacing(context,
+                  tablet: 16, desktop: 20)),
           Container(
             margin: EdgeInsets.symmetric(
-              horizontal: AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
+              horizontal:
+                  AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
               vertical: 4,
             ),
             child: Material(
@@ -352,8 +376,10 @@ class AppNavigationRail extends StatelessWidget {
                 onTap: onLogout,
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: AppTheme.getResponsiveSpacing(context, tablet: 10, desktop: 12),
-                    horizontal: AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
+                    vertical: AppTheme.getResponsiveSpacing(context,
+                        tablet: 10, desktop: 12),
+                    horizontal: AppTheme.getResponsiveSpacing(context,
+                        tablet: 6, desktop: 8),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -368,7 +394,9 @@ class AppNavigationRail extends StatelessWidget {
                           desktop: 24,
                         ),
                       ),
-                      SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 2, tablet: 2, desktop: 4)),
+                      SizedBox(
+                          height: AppTheme.getResponsiveSpacing(context,
+                              mobile: 2, tablet: 2, desktop: 4)),
                       Text(
                         'Đăng xuất',
                         style: TextStyle(
@@ -396,11 +424,15 @@ class AppNavigationRail extends StatelessWidget {
           children: [
             Image.asset(
               'assets/icon/logo.png',
-              width: AppTheme.getResponsiveFontSize(context, mobile: 32, tablet: 36, desktop: 40),
-              height: AppTheme.getResponsiveFontSize(context, mobile: 32, tablet: 36, desktop: 40),
+              width: AppTheme.getResponsiveFontSize(context,
+                  mobile: 32, tablet: 36, desktop: 40),
+              height: AppTheme.getResponsiveFontSize(context,
+                  mobile: 32, tablet: 36, desktop: 40),
               fit: BoxFit.contain,
             ),
-            SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 4, tablet: 6, desktop: 8)),
+            SizedBox(
+                height: AppTheme.getResponsiveSpacing(context,
+                    mobile: 4, tablet: 6, desktop: 8)),
             Text(
               'AeRI',
               style: TextStyle(
@@ -414,7 +446,9 @@ class AppNavigationRail extends StatelessWidget {
                 color: AppTheme.primaryStart,
               ),
             ),
-            SizedBox(height: AppTheme.getResponsiveSpacing(context, mobile: 12, tablet: 16, desktop: 20)),
+            SizedBox(
+                height: AppTheme.getResponsiveSpacing(context,
+                    mobile: 12, tablet: 16, desktop: 20)),
           ],
         ),
       ),
@@ -447,12 +481,12 @@ class AppNavigationRail extends StatelessWidget {
   NavigationRailDestination _buildRailDestination(IconData icon, String label) {
     return NavigationRailDestination(
       icon: Icon(
-        icon, 
+        icon,
         color: Colors.grey[600],
         size: 20,
       ),
       selectedIcon: Icon(
-        icon, 
+        icon,
         color: AppTheme.primaryStart,
         size: 20,
       ),

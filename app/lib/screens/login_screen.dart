@@ -30,12 +30,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _shopEmailController = TextEditingController();
   final _employeePhoneController = TextEditingController();
   final _employeePasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _emailChecked = false;
   bool _emailExists = false;
   String _databaseName = '';
-  String _currentStep = 'role_selection'; // 'role_selection', 'email', 'password', 'create_account', 'employee_login'
+  String _currentStep =
+      'role_selection'; // 'role_selection', 'email', 'password', 'create_account', 'employee_login'
   String _selectedRole = 'shop_owner'; // 'shop_owner' or 'employee'
 
   @override
@@ -44,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.addListener(_onEmailChanged);
   }
 
-   void _onEmailChanged() {
+  void _onEmailChanged() {
     final email = _emailController.text;
     if (email.contains('@')) {
       setState(() {
@@ -108,9 +109,11 @@ class _LoginScreenState extends State<LoginScreen> {
       showFlushbar('Vui lòng nhập email của bạn', type: MessageType.warning);
       return;
     }
-    
+
     if (!_emailController.text.contains('@')) {
-      showFlushbar('Vui lòng nhập email có định dạng hợp lệ (ví dụ: example@email.com)', type: MessageType.warning);
+      showFlushbar(
+          'Vui lòng nhập email có định dạng hợp lệ (ví dụ: example@email.com)',
+          type: MessageType.warning);
       return;
     }
 
@@ -119,8 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final response = await widget.api.checkEmail(_emailController.text.trim());
-      
+      final response =
+          await widget.api.checkEmail(_emailController.text.trim());
+
       setState(() {
         _emailChecked = true;
         _emailExists = response.exists;
@@ -132,10 +136,14 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (mounted) {
-        showFlushbar(
-          response.message,
-          type: MessageType.info 
-        );
+        if (response.exists) {
+          showFlushbar(
+            'Chào mừng quay trở lại: ${_emailController.text.trim()}!',
+            type: MessageType.success,
+          );
+        } else {
+          showFlushbar(response.message, type: MessageType.info);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -167,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       final response = await widget.api.login(request);
-      
+
       if (response.success) {
         // Lưu thông tin đăng nhập
         final prefs = await SharedPreferences.getInstance();
@@ -217,7 +225,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _goBack() {
     setState(() {
-      if (_currentStep == 'email' || _currentStep == 'password' || _currentStep == 'create_account') {
+      if (_currentStep == 'email' ||
+          _currentStep == 'password' ||
+          _currentStep == 'create_account') {
         _currentStep = 'role_selection';
       } else if (_currentStep == 'employee_login') {
         _currentStep = 'role_selection';
@@ -251,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       final response = await widget.api.employeeLogin(request);
-      
+
       if (response.success) {
         // Lưu thông tin đăng nhập
         final prefs = await SharedPreferences.getInstance();
@@ -306,14 +316,15 @@ class _LoginScreenState extends State<LoginScreen> {
       return 'Thông tin đăng nhập không chính xác. Vui lòng kiểm tra lại.';
     } else if (error.contains('HTTP 500')) {
       return 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
-    } else if (error.contains('Connection refused') || error.contains('Failed host lookup')) {
+    } else if (error.contains('Connection refused') ||
+        error.contains('Failed host lookup')) {
       return 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.';
     } else if (error.contains('Timeout')) {
       return 'Kết nối bị timeout. Vui lòng thử lại.';
     } else if (error.contains('SocketException')) {
       return 'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.';
     }
-    
+
     // Nếu không nhận diện được lỗi cụ thể, trả về thông báo chung
     return 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
   }
@@ -366,12 +377,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: _selectedRole == 'shop_owner' 
+                  color: _selectedRole == 'shop_owner'
                       ? Colors.white.withOpacity(0.2)
                       : Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _selectedRole == 'shop_owner' 
+                    color: _selectedRole == 'shop_owner'
                         ? Colors.white
                         : Colors.white.withOpacity(0.3),
                     width: 2,
@@ -381,7 +392,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Icon(
                       Icons.business,
-                      color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                      color: _selectedRole == 'shop_owner'
+                          ? Colors.white
+                          : Colors.white70,
                       size: 24,
                     ),
                     const SizedBox(width: 16),
@@ -394,7 +407,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                              color: _selectedRole == 'shop_owner'
+                                  ? Colors.white
+                                  : Colors.white70,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -402,14 +417,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Quản lý toàn bộ hệ thống',
                             style: TextStyle(
                               fontSize: 14,
-                              color: _selectedRole == 'shop_owner' ? Colors.white : Colors.white70,
+                              color: _selectedRole == 'shop_owner'
+                                  ? Colors.white
+                                  : Colors.white70,
                             ),
                           ),
                         ],
                       ),
                     ),
                     if (_selectedRole == 'shop_owner')
-                      const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                      const Icon(Icons.check_circle,
+                          color: Colors.white, size: 24),
                   ],
                 ),
               ),
@@ -429,12 +447,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: _selectedRole == 'employee' 
+                  color: _selectedRole == 'employee'
                       ? Colors.white.withOpacity(0.2)
                       : Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: _selectedRole == 'employee' 
+                    color: _selectedRole == 'employee'
                         ? Colors.white
                         : Colors.white.withOpacity(0.3),
                     width: 2,
@@ -444,7 +462,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Icon(
                       Icons.person,
-                      color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                      color: _selectedRole == 'employee'
+                          ? Colors.white
+                          : Colors.white70,
                       size: 24,
                     ),
                     const SizedBox(width: 16),
@@ -457,7 +477,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                              color: _selectedRole == 'employee'
+                                  ? Colors.white
+                                  : Colors.white70,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -465,21 +487,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Truy cập dịch vụ, tạo đơn và hóa đơn',
                             style: TextStyle(
                               fontSize: 14,
-                              color: _selectedRole == 'employee' ? Colors.white : Colors.white70,
+                              color: _selectedRole == 'employee'
+                                  ? Colors.white
+                                  : Colors.white70,
                             ),
                           ),
                         ],
                       ),
                     ),
                     if (_selectedRole == 'employee')
-                      const Icon(Icons.check_circle, color: Colors.white, size: 24),
+                      const Icon(Icons.check_circle,
+                          color: Colors.white, size: 24),
                   ],
                 ),
               ),
             ),
           ),
         ),
-
       ],
     );
   }
@@ -505,16 +529,21 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                    _buildPlaceholderLogo(),
+                  _buildPlaceholderLogo(),
 
                   const SizedBox(height: 24),
-    
+
                   // Title
                   Text(
-                    _currentStep == 'role_selection' ? 'Chọn loại tài khoản' :
-                    _currentStep == 'email' ? 'Kết nối' : 
-                    _currentStep == 'password' ? 'Đăng nhập' : 
-                    _currentStep == 'create_account' ? 'Đăng ký' : 'Đăng nhập nhân viên',
+                    _currentStep == 'role_selection'
+                        ? 'Chọn loại tài khoản'
+                        : _currentStep == 'email'
+                            ? 'Kết nối'
+                            : _currentStep == 'password'
+                                ? 'Đăng nhập'
+                                : _currentStep == 'create_account'
+                                    ? 'Đăng ký'
+                                    : 'Đăng nhập nhân viên',
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -522,12 +551,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Text(
-                    _currentStep == 'role_selection' ? 'Chọn loại tài khoản để tiếp tục' :
-                    _currentStep == 'email' ? 'Nhập email để kiểm tra tài khoản' :
-                    _currentStep == 'password' ? 'Nhập mật khẩu để đăng nhập' : 
-                    _currentStep == 'create_account' ? 'Tạo tài khoản mới' : 'Nhập thông tin đăng nhập nhân viên',
+                    _currentStep == 'role_selection'
+                        ? 'Chọn loại tài khoản để tiếp tục'
+                        : _currentStep == 'email'
+                            ? 'Nhập email để kiểm tra tài khoản'
+                            : _currentStep == 'password'
+                                ? 'Nhập mật khẩu để đăng nhập'
+                                : _currentStep == 'create_account'
+                                    ? 'Tạo tài khoản mới'
+                                    : 'Nhập thông tin đăng nhập nhân viên',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -542,8 +576,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerLeft,
                       child: TextButton.icon(
                         onPressed: _goBack,
-                        icon: const Icon(Icons.arrow_back, color: Colors.white70),
-                        label: const Text('Quay lại', style: TextStyle(color: Colors.white70)),
+                        icon:
+                            const Icon(Icons.arrow_back, color: Colors.white70),
+                        label: const Text('Quay lại',
+                            style: TextStyle(color: Colors.white70)),
                       ),
                     ),
 
@@ -575,19 +611,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: 'Email chủ shop',
-                                labelStyle: const TextStyle(color: Colors.white70),
-                                prefixIcon: const Icon(Icons.business, color: Colors.white70),
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.business,
+                                    color: Colors.white70),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
                                 ),
                               ),
                               validator: (value) {
@@ -607,19 +648,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: 'Số điện thoại nhân viên',
-                                labelStyle: const TextStyle(color: Colors.white70),
-                                prefixIcon: const Icon(Icons.phone, color: Colors.white70),
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.phone,
+                                    color: Colors.white70),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
                                 ),
                               ),
                               validator: (value) {
@@ -636,19 +682,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: 'Mật khẩu nhân viên',
-                                labelStyle: const TextStyle(color: Colors.white70),
-                                prefixIcon: const Icon(Icons.lock, color: Colors.white70),
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.lock,
+                                    color: Colors.white70),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
                                 ),
                               ),
                               validator: (value) {
@@ -668,19 +719,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: const TextStyle(color: Colors.white70),
-                                prefixIcon: const Icon(Icons.email, color: Colors.white70),
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.email,
+                                    color: Colors.white70),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white30),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.white),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
                                 ),
                               ),
                               validator: (value) {
@@ -698,7 +754,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
 
                           // Password field (visible after email check for shop owner)
-                          if (_currentStep == 'password' || _currentStep == 'create_account')
+                          if (_currentStep == 'password' ||
+                              _currentStep == 'create_account')
                             Column(
                               children: [
                                 const SizedBox(height: 16),
@@ -708,19 +765,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: 'Mật khẩu',
-                                    labelStyle: const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(Icons.lock, color: Colors.white70),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white70),
+                                    prefixIcon: const Icon(Icons.lock,
+                                        color: Colors.white70),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white),
+                                      borderSide:
+                                          const BorderSide(color: Colors.white),
                                     ),
                                   ),
                                   validator: (value) {
@@ -739,7 +801,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (!value.contains(RegExp(r'[0-9]'))) {
                                       return 'Mật khẩu phải có ít nhất 1 số (0-9)';
                                     }
-                                    if (!value.contains(RegExp(r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
+                                    if (!value.contains(RegExp(
+                                        r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
                                       return 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt';
                                     }
                                     return null;
@@ -749,7 +812,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
 
                           // Database login fields (visible for shop owner login steps)
-                          if (_currentStep == 'password' || _currentStep == 'create_account')
+                          if (_currentStep == 'password' ||
+                              _currentStep == 'create_account')
                             Column(
                               children: [
                                 const SizedBox(height: 16),
@@ -758,19 +822,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: 'Tên đăng nhập Database',
-                                    labelStyle: const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(Icons.person, color: Colors.white70),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white70),
+                                    prefixIcon: const Icon(Icons.person,
+                                        color: Colors.white70),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white),
+                                      borderSide:
+                                          const BorderSide(color: Colors.white),
                                     ),
                                   ),
                                   validator: (value) {
@@ -787,19 +856,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: 'Mật khẩu Database',
-                                    labelStyle: const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(Icons.key, color: Colors.white70),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white70),
+                                    prefixIcon: const Icon(Icons.key,
+                                        color: Colors.white70),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white30),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(color: Colors.white),
+                                      borderSide:
+                                          const BorderSide(color: Colors.white),
                                     ),
                                   ),
                                   validator: (value) {
@@ -818,7 +892,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (!value.contains(RegExp(r'[0-9]'))) {
                                       return 'Mật khẩu database phải có ít nhất 1 số (0-9)';
                                     }
-                                    if (!value.contains(RegExp(r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
+                                    if (!value.contains(RegExp(
+                                        r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
                                       return 'Mật khẩu database phải có ít nhất 1 ký tự đặc biệt';
                                     }
                                     return null;
@@ -835,7 +910,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: double.infinity,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: _isLoading ? null : _getActionButtonHandler(),
+                                onPressed: _isLoading
+                                    ? null
+                                    : _getActionButtonHandler(),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   foregroundColor: const Color(0xFF667eea),
@@ -850,7 +927,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         height: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Color(0xFF667eea)),
                                         ),
                                       )
                                     : Text(
@@ -892,5 +971,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-              
 }

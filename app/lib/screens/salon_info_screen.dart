@@ -13,7 +13,8 @@ class SalonInfoScreen extends StatefulWidget {
   final ApiClient api;
   final VoidCallback? onSalonInfoUpdated;
 
-  const SalonInfoScreen({super.key, required this.api, this.onSalonInfoUpdated});
+  const SalonInfoScreen(
+      {super.key, required this.api, this.onSalonInfoUpdated});
 
   @override
   State<SalonInfoScreen> createState() => _SalonInfoScreenState();
@@ -36,7 +37,9 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
   bool _isLoading = true;
   bool _isSaving = false;
   String _logoUrl = '';
+  String _qrCodeUrl = '';
   Uint8List? _selectedImageBytes;
+  Uint8List? _selectedQRCodeBytes;
 
   @override
   void initState() {
@@ -110,6 +113,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _instagramController.text = information.instagram;
         _zaloController.text = information.zalo;
         _logoUrl = information.logo;
+        _qrCodeUrl = information.qrCode;
         _isLoading = false;
       });
     } catch (e) {
@@ -117,12 +121,14 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        showFlushbar('Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.', type: MessageType.error);
+        showFlushbar(
+            'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
+            type: MessageType.error);
       }
     }
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage({bool isQRCode = false}) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(
@@ -134,15 +140,22 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
 
       if (image != null) {
         final bytes = await image.readAsBytes();
-        
+
         setState(() {
-          _selectedImageBytes = bytes;
-          _logoUrl = ''; // Clear old URL when new image is selected
+          if (isQRCode) {
+            _selectedQRCodeBytes = bytes;
+            _qrCodeUrl = '';
+          } else {
+            _selectedImageBytes = bytes;
+            _logoUrl = '';
+          }
         });
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar('Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.', type: MessageType.error);
+        showFlushbar(
+            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+            type: MessageType.error);
       }
     }
   }
@@ -158,14 +171,34 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       });
 
       String logoUrl = _logoUrl;
-      // Upload new image if selected
+      // Upload new images if selected
+      String qrCodeUrl = _qrCodeUrl;
+
       if (_selectedImageBytes != null) {
         final fileName = 'logo_${DateTime.now().millisecondsSinceEpoch}.png';
         try {
           logoUrl = await widget.api.uploadLogo(_selectedImageBytes!, fileName);
         } catch (e) {
-          setState(() { _isSaving = false; });
-          showFlushbar('Lỗi khi upload logo lên server', type: MessageType.error);
+          setState(() {
+            _isSaving = false;
+          });
+          showFlushbar('Lỗi khi upload logo lên server',
+              type: MessageType.error);
+          return;
+        }
+      }
+
+      if (_selectedQRCodeBytes != null) {
+        final fileName = 'qrcode_${DateTime.now().millisecondsSinceEpoch}.png';
+        try {
+          qrCodeUrl =
+              await widget.api.uploadQRCode(_selectedQRCodeBytes!, fileName);
+        } catch (e) {
+          setState(() {
+            _isSaving = false;
+          });
+          showFlushbar('Lỗi khi upload QR code lên server',
+              type: MessageType.error);
           return;
         }
       }
@@ -181,6 +214,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         instagram: _instagramController.text.trim(),
         zalo: _zaloController.text.trim(),
         logo: logoUrl,
+        qrCode: qrCodeUrl,
         createdAt: _information?.createdAt ?? DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -190,12 +224,15 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       setState(() {
         _information = information;
         _logoUrl = logoUrl;
+        _qrCodeUrl = qrCodeUrl;
         _selectedImageBytes = null;
+        _selectedQRCodeBytes = null;
         _isSaving = false;
       });
 
       if (mounted) {
-        showFlushbar('Lưu thông tin salon thành công!', type: MessageType.success);
+        showFlushbar('Lưu thông tin salon thành công!',
+            type: MessageType.success);
         // Call callback to refresh main screen
         widget.onSalonInfoUpdated?.call();
       }
@@ -204,7 +241,9 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isSaving = false;
       });
       if (mounted) {
-        showFlushbar('Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.', type: MessageType.error);
+        showFlushbar(
+            'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
+            type: MessageType.error);
       }
     }
   }
@@ -231,23 +270,27 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
               // Header
               _buildHeader(),
               const SizedBox(height: AppTheme.spacingXL),
-              
+
               // Logo Section
               _buildLogoSection(),
               const SizedBox(height: AppTheme.spacingXL),
-              
+
+              // QR Code Section
+              _buildQRCodeSection(),
+              const SizedBox(height: AppTheme.spacingXL),
+
               // Basic Information
               _buildSectionTitle('Thông tin cơ bản'),
               const SizedBox(height: AppTheme.spacingL),
               _buildBasicInfoFields(),
               const SizedBox(height: AppTheme.spacingXL),
-              
+
               // Social Media
               _buildSectionTitle('Mạng xã hội'),
               const SizedBox(height: AppTheme.spacingL),
               _buildSocialMediaFields(),
               const SizedBox(height: AppTheme.spacingXL),
-              
+
               // Save Button
               _buildSaveButton(),
             ],
@@ -318,6 +361,104 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     );
   }
 
+  Widget _buildQRCodeSection() {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingL),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'QR Code',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingL),
+          Center(
+            child: InkWell(
+              onTap: () => _pickImage(isQRCode: true),
+              child: Container(
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.grey[300]!,
+                    width: 2,
+                  ),
+                ),
+                child: _selectedQRCodeBytes != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.memory(
+                          _selectedQRCodeBytes!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : (_qrCodeUrl.isNotEmpty)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: _qrCodeUrl.startsWith('http')
+                                ? Image.network(
+                                    _qrCodeUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            _buildPlaceholderQRCode(),
+                                  )
+                                : _buildImageWidget(_qrCodeUrl),
+                          )
+                        : _buildPlaceholderQRCode(),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingM),
+          Center(
+            child: TextButton.icon(
+              onPressed: () => _pickImage(isQRCode: true),
+              icon: const Icon(Icons.add_photo_alternate),
+              label: const Text('Chọn QR Code'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholderQRCode() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.qr_code,
+          size: 48,
+          color: Colors.grey[400],
+        ),
+        const SizedBox(height: AppTheme.spacingS),
+        Text(
+          'Chọn QR Code',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildLogoSection() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingL),
@@ -372,7 +513,9 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                                 ? Image.network(
                                     _logoUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => _buildPlaceholderLogo(),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            _buildPlaceholderLogo(),
                                   )
                                 : _buildImageWidget(_logoUrl),
                           )
@@ -420,7 +563,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         final base64String = imageUrl.split(',')[1];
         final bytes = base64Decode(base64String);
         return Image.memory(bytes, fit: BoxFit.cover);
-      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
         return Image.network(imageUrl, fit: BoxFit.cover);
       } else if (imageUrl.startsWith('/')) {
         return Image.file(File(imageUrl), fit: BoxFit.cover);
@@ -634,7 +778,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
                       SizedBox(width: AppTheme.spacingM),

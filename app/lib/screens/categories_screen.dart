@@ -28,7 +28,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // Helper method to get image provider for dialog
   Uint8List? _selectedImageBytes;
-  ImageProvider? _getImageProvider(String? imageUrl, [Uint8List? selectedImageBytes]) {
+  ImageProvider? _getImageProvider(String? imageUrl,
+      [Uint8List? selectedImageBytes]) {
     if (selectedImageBytes != null) {
       return MemoryImage(selectedImageBytes);
     }
@@ -101,7 +102,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar('Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.', type: MessageType.error);
+        showFlushbar(
+            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+            type: MessageType.error);
       }
     }
   }
@@ -128,7 +131,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
-  Widget _buildImageSelector(String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
+  Widget _buildImageSelector(
+      String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -154,15 +158,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             : (imageUrl != null && imageUrl.isNotEmpty)
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(58),
-                    child: imageUrl.startsWith('http') 
-                      ? Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildCategoryImagePlaceholder();
-                          },
-                        )
-                      : _buildImageWidget(imageUrl),
+                    child: imageUrl.startsWith('http')
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildCategoryImagePlaceholder();
+                            },
+                          )
+                        : _buildImageWidget(imageUrl),
                   )
                 : _buildCategoryImagePlaceholder(),
       ),
@@ -171,11 +175,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
-  String? imageUrl;
-  XFile? pickedImage;
-  Uint8List? selectedImageBytes;
+    String? imageUrl;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
 
-  final ok = await showDialog<bool>(
+    final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
       builder: (_) => StatefulBuilder(
@@ -218,7 +222,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.category, color: Colors.white, size: 24),
+                        child: const Icon(Icons.category,
+                            color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
                       const Expanded(
@@ -253,54 +258,60 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                      _buildImageSelector(imageUrl, selectedImageBytes, () => _pickImage((image, bytes) {
-                        setState(() {
-                          pickedImage = image;
-                          selectedImageBytes = bytes;
-                          imageUrl = '';
-                        });
-                      })),
-                      const SizedBox(height: 20),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: nameCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Tên danh mục',
-                                  prefixIcon: Icon(Icons.category, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                        _buildImageSelector(
+                            imageUrl,
+                            selectedImageBytes,
+                            () => _pickImage((image, bytes) {
+                                  setState(() {
+                                    pickedImage = image;
+                                    selectedImageBytes = bytes;
+                                    imageUrl = '';
+                                  });
+                                })),
+                        const SizedBox(height: 20),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập tên danh mục';
-                                  }
-                                  return null;
-                                },
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Tên danh mục',
+                                    prefixIcon: Icon(Icons.category,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập tên danh mục';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 // Actions
                 Container(
@@ -378,21 +389,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        showFlushbar('Tên danh mục không được để trống', type: MessageType.warning);
+        showFlushbar('Tên danh mục không được để trống',
+            type: MessageType.warning);
         return;
       }
       try {
         String? imageUrlToSave;
         if (selectedImageBytes != null) {
           // Lấy extension hợp lệ, nếu không thì mặc định là .png
-          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
           const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
           if (!allowed.contains(ext)) ext = '.png';
-          final fileName = 'category_${DateTime.now().millisecondsSinceEpoch}$ext';
+          final fileName =
+              'category_${DateTime.now().millisecondsSinceEpoch}$ext';
           try {
-            imageUrlToSave = await widget.api.uploadCategoryImage(selectedImageBytes!, fileName);
+            imageUrlToSave = await widget.api
+                .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server: $e', type: MessageType.error);
+            showFlushbar('Lỗi khi upload ảnh lên server: $e',
+                type: MessageType.error);
             return;
           }
         }
@@ -411,10 +428,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Future<void> _showEditDialog(Category c) async {
     final nameCtrl = TextEditingController(text: c.name);
 
-  String? imageUrl = c.image;
-  XFile? pickedImage;
-  Uint8List? selectedImageBytes;
-  String? oldAssetPath = c.image;
+    String? imageUrl = c.image;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
+    String? oldAssetPath = c.image;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -459,7 +476,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.edit, color: Colors.white, size: 24),
+                        child: const Icon(Icons.edit,
+                            color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
                       const Expanded(
@@ -494,54 +512,60 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                      _buildImageSelector(imageUrl, selectedImageBytes, () => _pickImage((image, bytes) {
-                        setState(() {
-                          pickedImage = image;
-                          selectedImageBytes = bytes;
-                          imageUrl = '';
-                        });
-                      })),
-                      const SizedBox(height: 20),
-                      Form(
-                        key: _editFormKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: nameCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Tên danh mục',
-                                  prefixIcon: Icon(Icons.category, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                        _buildImageSelector(
+                            imageUrl,
+                            selectedImageBytes,
+                            () => _pickImage((image, bytes) {
+                                  setState(() {
+                                    pickedImage = image;
+                                    selectedImageBytes = bytes;
+                                    imageUrl = '';
+                                  });
+                                })),
+                        const SizedBox(height: 20),
+                        Form(
+                          key: _editFormKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập tên danh mục';
-                                  }
-                                  return null;
-                                },
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Tên danh mục',
+                                    prefixIcon: Icon(Icons.category,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập tên danh mục';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 // Actions
                 Container(
@@ -619,21 +643,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        showFlushbar('Tên danh mục không được để trống', type: MessageType.warning);
+        showFlushbar('Tên danh mục không được để trống',
+            type: MessageType.warning);
         return;
       }
       try {
         String? imageUrlToSave = imageUrl;
         if (selectedImageBytes != null) {
           // Lấy extension hợp lệ, nếu không thì mặc định là .png
-          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
           const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
           if (!allowed.contains(ext)) ext = '.png';
-          final fileName = 'category_${DateTime.now().millisecondsSinceEpoch}$ext';
+          final fileName =
+              'category_${DateTime.now().millisecondsSinceEpoch}$ext';
           try {
-            imageUrlToSave = await widget.api.uploadCategoryImage(selectedImageBytes!, fileName);
+            imageUrlToSave = await widget.api
+                .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server: $e', type: MessageType.error);
+            showFlushbar('Lỗi khi upload ảnh lên server: $e',
+                type: MessageType.error);
             return;
           }
         }
@@ -644,9 +674,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin danh mục thành công', type: MessageType.success);
+        showFlushbar('Thay đổi thông tin danh mục thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi thay đổi thông tin danh mục', type: MessageType.error);
+        showFlushbar('Lỗi thay đổi thông tin danh mục',
+            type: MessageType.error);
       }
     }
   }
@@ -668,7 +700,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         final base64String = imageUrl.split(',')[1];
         final bytes = base64Decode(base64String);
         return Image.memory(bytes, fit: BoxFit.cover);
-      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
         return Image.network(imageUrl, fit: BoxFit.cover);
       } else if (imageUrl.startsWith('/')) {
         return Image.file(File(imageUrl), fit: BoxFit.cover);
@@ -748,21 +781,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   subtitle: 'Danh sách danh mục dịch vụ',
                   fullWidth: true,
                 ),
-                                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: AppTheme.controlHeight,
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: AppTheme.inputDecoration(
-                        label: 'Tìm kiếm danh mục...',
-                        prefixIcon: Icons.search,
-                      ),
-                      onChanged: (v) => setState(() => _search = v.trim()),
+                const SizedBox(height: 24),
+                SizedBox(
+                  height: AppTheme.controlHeight,
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: AppTheme.inputDecoration(
+                      label: 'Tìm kiếm danh mục...',
+                      prefixIcon: Icons.search,
                     ),
+                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
+                ),
                 const SizedBox(height: 12),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 300, // Đảm bảo có chiều cao cố định
+                  height: MediaQuery.of(context).size.height -
+                      300, // Đảm bảo có chiều cao cố định
                   child: FutureBuilder<List<Category>>(
                     future: _future,
                     builder: (context, snapshot) {
@@ -770,7 +804,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách danh mục', type: MessageType.error);
+                        showFlushbar('Lỗi tải danh sách danh mục',
+                            type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
                           child: ListView(
@@ -779,16 +814,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               Center(
                                 child: Column(
                                   children: [
-                                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                                    const Icon(Icons.error_outline,
+                                        size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
                                     const Text(
                                       'Không thể tải danh sách danh mục',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
                                     const Text(
                                       'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
@@ -804,8 +843,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       }
 
                       final data = snapshot.data ?? [];
-                      final filtered = data.where((c) =>
-                          c.name.toLowerCase().contains(_search.toLowerCase())).toList();
+                      final filtered = data
+                          .where((c) => c.name
+                              .toLowerCase()
+                              .contains(_search.toLowerCase()))
+                          .toList();
 
                       if (filtered.isEmpty) {
                         return RefreshIndicator(
@@ -823,8 +865,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         onRefresh: _reload,
                         child: GridView.builder(
                           key: const ValueKey('grid'),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
@@ -840,21 +884,29 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 child: Container(
                                   decoration: AppTheme.cardDecoration(),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Expanded(
                                         child: ClipRRect(
-                                          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                          child: c.image != null && c.image!.isNotEmpty
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  top: Radius.circular(16)),
+                                          child: c.image != null &&
+                                                  c.image!.isNotEmpty
                                               ? _buildImageWidget(c.image!)
                                               : Container(
                                                   color: Colors.orange.shade100,
                                                   child: Center(
                                                     child: Text(
-                                                      c.name.isNotEmpty ? c.name[0].toUpperCase() : '?',
+                                                      c.name.isNotEmpty
+                                                          ? c.name[0]
+                                                              .toUpperCase()
+                                                          : '?',
                                                       style: const TextStyle(
                                                         fontSize: 32,
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         color: Colors.orange,
                                                       ),
                                                     ),
@@ -868,7 +920,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           children: [
                                             Text(c.name,
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.w600, fontSize: 14),
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14),
                                                 textAlign: TextAlign.center,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1),
@@ -878,48 +931,73 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                                     fontStyle: FontStyle.italic,
                                                     color: Colors.grey)),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    gradient: const LinearGradient(
-                                                      colors: [Color(0xFFFF9800), Color(0xFFFF5722)],
+                                                    gradient:
+                                                        const LinearGradient(
+                                                      colors: [
+                                                        Color(0xFFFF9800),
+                                                        Color(0xFFFF5722)
+                                                      ],
                                                       begin: Alignment.topLeft,
-                                                      end: Alignment.bottomRight,
+                                                      end:
+                                                          Alignment.bottomRight,
                                                     ),
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: Colors.orange.withOpacity(0.3),
+                                                        color: Colors.orange
+                                                            .withOpacity(0.3),
                                                         blurRadius: 4,
-                                                        offset: const Offset(0, 2),
+                                                        offset:
+                                                            const Offset(0, 2),
                                                       ),
                                                     ],
                                                   ),
                                                   child: IconButton(
-                                                    icon: const Icon(Icons.edit, color: Colors.white, size: 18),
-                                                    onPressed: () => _showEditDialog(c),
+                                                    icon: const Icon(Icons.edit,
+                                                        color: Colors.white,
+                                                        size: 18),
+                                                    onPressed: () =>
+                                                        _showEditDialog(c),
                                                   ),
                                                 ),
                                                 const SizedBox(width: 8),
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    gradient: const LinearGradient(
-                                                      colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
+                                                    gradient:
+                                                        const LinearGradient(
+                                                      colors: [
+                                                        Color(0xFFE91E63),
+                                                        Color(0xFFC2185B)
+                                                      ],
                                                       begin: Alignment.topLeft,
-                                                      end: Alignment.bottomRight,
+                                                      end:
+                                                          Alignment.bottomRight,
                                                     ),
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: Colors.red.withOpacity(0.3),
+                                                        color: Colors.red
+                                                            .withOpacity(0.3),
                                                         blurRadius: 4,
-                                                        offset: const Offset(0, 2),
+                                                        offset:
+                                                            const Offset(0, 2),
                                                       ),
                                                     ],
                                                   ),
                                                   child: IconButton(
-                                                    icon: const Icon(Icons.delete, color: Colors.white, size: 18),
+                                                    icon: const Icon(
+                                                        Icons.delete,
+                                                        color: Colors.white,
+                                                        size: 18),
                                                     onPressed: () => _delete(c),
                                                   ),
                                                 ),

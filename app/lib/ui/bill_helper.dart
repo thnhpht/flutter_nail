@@ -15,10 +15,11 @@ class BillHelper {
     String? salonName,
     String? salonAddress,
     String? salonPhone,
+    String? salonQRCode,
   }) async {
     // Lưu trữ services hiện tại
     _currentServices = services;
-    
+
     final name = salonName ?? SalonConfig.salonName;
     final address = salonAddress ?? SalonConfig.salonAddress;
     final phone = salonPhone ?? SalonConfig.salonPhone;
@@ -26,94 +27,99 @@ class BillHelper {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.8,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-            ),
-            child: Column(
-              children: [
-                // Header
-                Container(
-                  padding: const EdgeInsets.all(AppTheme.spacingM),
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.primaryGradient,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(AppTheme.radiusLarge),
-                      topRight: Radius.circular(AppTheme.radiusLarge),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.receipt,
-                        color: Colors.white,
-                        size: 24,
+        return SalonInfoInherited(
+            salonName: name,
+            salonAddress: address,
+            salonPhone: phone,
+            salonQRCode: salonQRCode,
+            child: Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.8,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                ),
+                child: Column(
+                  children: [
+                    // Header
+                    Container(
+                      padding: const EdgeInsets.all(AppTheme.spacingM),
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(AppTheme.radiusLarge),
+                          topRight: Radius.circular(AppTheme.radiusLarge),
+                        ),
                       ),
-                      const SizedBox(width: AppTheme.spacingS),
-                      const Expanded(
-                        child: Text(
-                          'Hóa đơn thanh toán',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.receipt,
                             color: Colors.white,
+                            size: 24,
                           ),
+                          const SizedBox(width: AppTheme.spacingS),
+                          const Expanded(
+                            child: Text(
+                              'Hóa đơn thanh toán',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close, color: Colors.white),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Bill Content
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(AppTheme.spacingM),
+                        child: _buildBillContent(
+                          order: order,
+                          services: services,
+                          salonName: name,
+                          salonAddress: address,
+                          salonPhone: phone,
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.close, color: Colors.white),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                // Bill Content
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(AppTheme.spacingM),
-                    child: _buildBillContent(
-                      order: order,
-                      services: services,
-                      salonName: name,
-                      salonAddress: address,
-                      salonPhone: phone,
                     ),
-                  ),
-                ),
-                
-                // Action Buttons
-                Container(
-                  padding: const EdgeInsets.all(AppTheme.spacingM),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceAlt,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(AppTheme.radiusLarge),
-                      bottomRight: Radius.circular(AppTheme.radiusLarge),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildActionButton(
-                          onPressed: () => _printBill(context, order),
-                          label: 'In',
-                          icon: Icons.print,
-                          color: AppTheme.primaryEnd,
+
+                    // Action Buttons
+                    Container(
+                      padding: const EdgeInsets.all(AppTheme.spacingM),
+                      decoration: BoxDecoration(
+                        color: AppTheme.surfaceAlt,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(AppTheme.radiusLarge),
+                          bottomRight: Radius.circular(AppTheme.radiusLarge),
                         ),
                       ),
-                    ],
-                  ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionButton(
+                              onPressed: () => _printBill(context, order),
+                              label: 'In',
+                              icon: Icons.print,
+                              color: AppTheme.primaryEnd,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
+              ),
+            ));
       },
     );
   }
@@ -126,9 +132,12 @@ class BillHelper {
     required String salonPhone,
   }) {
     // Use SalonConfig defaults if any value is null or empty
-    final displaySalonName = (salonName.isNotEmpty) ? salonName : SalonConfig.salonName;
-    final displaySalonAddress = (salonAddress.isNotEmpty) ? salonAddress : SalonConfig.salonAddress;
-    final displaySalonPhone = (salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
+    final displaySalonName =
+        (salonName.isNotEmpty) ? salonName : SalonConfig.salonName;
+    final displaySalonAddress =
+        (salonAddress.isNotEmpty) ? salonAddress : SalonConfig.salonAddress;
+    final displaySalonPhone =
+        (salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
     return Column(
       children: [
         // Salon Info
@@ -168,9 +177,9 @@ class BillHelper {
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppTheme.spacingM),
-        
+
         // Bill Info
         Container(
           padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -223,9 +232,9 @@ class BillHelper {
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppTheme.spacingM),
-        
+
         // Customer Info
         Container(
           padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -257,13 +266,14 @@ class BillHelper {
               const SizedBox(height: AppTheme.spacingS),
               _buildInfoRow('Tên khách hàng:', order.customerName),
               _buildInfoRow('Số điện thoại:', order.customerPhone),
-              _buildInfoRow('Nhân viên phục vụ:', order.employeeNames.join(', ')),
+              _buildInfoRow(
+                  'Nhân viên phục vụ:', order.employeeNames.join(', ')),
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppTheme.spacingM),
-        
+
         // Services
         Container(
           decoration: BoxDecoration(
@@ -301,15 +311,15 @@ class BillHelper {
                   ],
                 ),
               ),
-              
+
               // Services List
               ...services.map((service) => _buildServiceItem(service)).toList(),
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppTheme.spacingM),
-        
+
         // Total
         Container(
           padding: const EdgeInsets.all(AppTheme.spacingL),
@@ -341,7 +351,7 @@ class BillHelper {
                   ),
                 ],
               ),
-              
+
               // Discount (if any)
               if (order.discountPercent > 0) ...[
                 const SizedBox(height: 8),
@@ -367,7 +377,7 @@ class BillHelper {
                   ],
                 ),
               ],
-              
+
               // Tip (if any)
               if (order.tip > 0) ...[
                 const SizedBox(height: 8),
@@ -393,9 +403,9 @@ class BillHelper {
                   ],
                 ),
               ],
-              
+
               const SizedBox(height: 8),
-              
+
               // Final Total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -421,9 +431,9 @@ class BillHelper {
             ],
           ),
         ),
-        
+
         const SizedBox(height: AppTheme.spacingM),
-        
+
         // Footer
         Container(
           padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -562,9 +572,9 @@ class BillHelper {
 
   static String _formatPrice(double price) {
     return '${price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    )} ${SalonConfig.currency}';
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        )} ${SalonConfig.currency}';
   }
 
   static String _formatDate(DateTime date) {
@@ -576,17 +586,17 @@ class BillHelper {
     if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
-    
+
     // Nếu ID có format GUID, lấy 8 ký tự đầu
     if (orderId.contains('-') && orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
   }
@@ -597,7 +607,6 @@ class BillHelper {
     // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
     return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
-
 
   static void _printBill(BuildContext context, Order order) {
     // Lấy services từ biến static
@@ -612,10 +621,13 @@ class BillHelper {
     }
 
     // Lấy thông tin salon từ dialog arguments nếu có
-    final inherited = context.getElementForInheritedWidgetOfExactType<SalonInfoInherited>()?.widget as SalonInfoInherited?;
+    final inherited = context
+        .getElementForInheritedWidgetOfExactType<SalonInfoInherited>()
+        ?.widget as SalonInfoInherited?;
     final salonName = inherited?.salonName;
     final salonAddress = inherited?.salonAddress;
     final salonPhone = inherited?.salonPhone;
+    final salonQRCode = inherited?.salonQRCode;
 
     PdfBillGenerator.generateAndShareBill(
       context: context,
@@ -624,7 +636,7 @@ class BillHelper {
       salonName: salonName,
       salonAddress: salonAddress,
       salonPhone: salonPhone,
+      salonQRCode: salonQRCode,
     );
   }
 }
-

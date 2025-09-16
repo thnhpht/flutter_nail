@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:convert';
 import '../models.dart';
 import '../config/salon_config.dart';
 
@@ -23,6 +24,7 @@ class PdfBillGenerator {
     String? salonName,
     String? salonAddress,
     String? salonPhone,
+    String? salonQRCode,
   }) async {
     try {
       // Hiển thị loading
@@ -35,9 +37,16 @@ class PdfBillGenerator {
       );
 
       // Use SalonConfig defaults if any value is null or empty
-      final displaySalonName = (salonName != null && salonName.isNotEmpty) ? salonName : SalonConfig.salonName;
-      final displaySalonAddress = (salonAddress != null && salonAddress.isNotEmpty) ? salonAddress : SalonConfig.salonAddress;
-      final displaySalonPhone = (salonPhone != null && salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
+      final displaySalonName = (salonName != null && salonName.isNotEmpty)
+          ? salonName
+          : SalonConfig.salonName;
+      final displaySalonAddress =
+          (salonAddress != null && salonAddress.isNotEmpty)
+              ? salonAddress
+              : SalonConfig.salonAddress;
+      final displaySalonPhone = (salonPhone != null && salonPhone.isNotEmpty)
+          ? salonPhone
+          : SalonConfig.salonPhone;
 
       // Tạo PDF
       final pdf = await _createPdf(
@@ -46,12 +55,13 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
+        salonQRCode: salonQRCode,
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
       File? file;
       Uint8List? pdfBytes;
-      
+
       try {
         file = await _savePdf(pdf, order);
       } catch (e) {
@@ -66,20 +76,21 @@ class PdfBillGenerator {
       Navigator.of(context).pop();
 
       // Hiển thị dialog chọn cách chia sẻ
-      await _showShareOptions(context, file, pdfBytes, order.customerPhone, salonName: displaySalonName);
-
+      await _showShareOptions(context, file, pdfBytes, order.customerPhone,
+          salonName: displaySalonName);
     } catch (e) {
       // Đóng loading dialog nếu có lỗi
       if (Navigator.canPop(context)) {
         Navigator.of(context).pop();
       }
-      
+
       // Hiển thị thông báo lỗi chi tiết hơn
       String errorMessage = 'Lỗi tạo PDF: $e';
       if (e.toString().contains('MissingPluginException')) {
-        errorMessage = 'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
+        errorMessage =
+            'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
       }
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),
@@ -95,28 +106,31 @@ class PdfBillGenerator {
       // Trên Flutter Web, sử dụng font system thay vì load từ assets
       if (kIsWeb) {
         if (kDebugMode) {
-          print('Running on Flutter Web, using system fonts for Vietnamese support');
+          print(
+              'Running on Flutter Web, using system fonts for Vietnamese support');
         }
         // Sử dụng font system có hỗ trợ Unicode tốt hơn
         _vietnameseFont = pw.Font.helvetica();
         _vietnameseFontBold = pw.Font.helveticaBold();
         return;
       }
-      
+
       try {
         // Ưu tiên Noto Sans (hỗ trợ tiếng Việt tốt nhất)
-        final fontData = await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
+        final fontData =
+            await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
         _vietnameseFont = pw.Font.ttf(fontData);
-        
+
         // Thử load Noto Sans Bold
         try {
-          final fontBoldData = await rootBundle.load('assets/fonts/NotoSans-Bold.ttf');
+          final fontBoldData =
+              await rootBundle.load('assets/fonts/NotoSans-Bold.ttf');
           _vietnameseFontBold = pw.Font.ttf(fontBoldData);
         } catch (e) {
           // Nếu không có bold, sử dụng regular font
           _vietnameseFontBold = _vietnameseFont;
         }
-        
+
         if (kDebugMode) {
           print('Loaded Noto Sans fonts for Vietnamese support');
         }
@@ -126,24 +140,26 @@ class PdfBillGenerator {
           final fontData = await rootBundle.load('assets/fonts/DejaVuSans.ttf');
           _vietnameseFont = pw.Font.ttf(fontData);
           _vietnameseFontBold = pw.Font.ttf(fontData);
-          
+
           if (kDebugMode) {
             print('Loaded DejaVu Sans font for Vietnamese support');
           }
         } catch (e1) {
           try {
             // Fallback: thử Liberation Sans
-            final fontData = await rootBundle.load('assets/fonts/LiberationSans-Regular.ttf');
+            final fontData = await rootBundle
+                .load('assets/fonts/LiberationSans-Regular.ttf');
             _vietnameseFont = pw.Font.ttf(fontData);
             _vietnameseFontBold = pw.Font.ttf(fontData);
-            
+
             if (kDebugMode) {
               print('Loaded Liberation Sans font for Vietnamese support');
             }
           } catch (e2) {
             try {
               // Fallback: thử OpenSans
-              final fontData = await rootBundle.load('assets/fonts/OpenSans-Regular.ttf');
+              final fontData =
+                  await rootBundle.load('assets/fonts/OpenSans-Regular.ttf');
               _vietnameseFont = pw.Font.ttf(fontData);
               _vietnameseFontBold = pw.Font.ttf(fontData);
               if (kDebugMode) {
@@ -152,7 +168,8 @@ class PdfBillGenerator {
             } catch (e3) {
               try {
                 // Fallback: thử Roboto
-                final fontData = await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
+                final fontData =
+                    await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
                 _vietnameseFont = pw.Font.ttf(fontData);
                 _vietnameseFontBold = pw.Font.ttf(fontData);
                 if (kDebugMode) {
@@ -161,7 +178,8 @@ class PdfBillGenerator {
               } catch (e4) {
                 // Cuối cùng: sử dụng font mặc định với fallback tốt hơn
                 if (kDebugMode) {
-                  print('Could not load Vietnamese font from assets, using default: $e4');
+                  print(
+                      'Could not load Vietnamese font from assets, using default: $e4');
                 }
                 _vietnameseFont = pw.Font.helvetica();
                 _vietnameseFontBold = pw.Font.helveticaBold();
@@ -186,10 +204,10 @@ class PdfBillGenerator {
     } else {
       selectedFont = _vietnameseFont;
     }
-    
+
     // Tạo font fallback tốt hơn cho tiếng Việt
     List<pw.Font> fontFallback = [];
-    
+
     if (kIsWeb) {
       // Trên web, sử dụng font system có hỗ trợ Unicode
       fontFallback = [
@@ -205,7 +223,7 @@ class PdfBillGenerator {
         pw.Font.courier(),
       ];
     }
-    
+
     return pw.TextStyle(
       font: selectedFont,
       fontSize: fontSize,
@@ -221,17 +239,17 @@ class PdfBillGenerator {
     try {
       // Tạo URL thanh toán VNPay (ví dụ)
       final vnpayUrl = _generateVNPayUrl(order);
-      
+
       // Tạo QR code
       final qrValidationResult = QrValidator.validate(
         data: vnpayUrl,
         version: QrVersions.auto,
         errorCorrectionLevel: QrErrorCorrectLevel.L,
       );
-      
+
       if (qrValidationResult.status == QrValidationStatus.valid) {
         final qrCode = qrValidationResult.qrCode!;
-        
+
         // Tạo image từ QR code
         final painter = QrPainter.withQr(
           qr: qrCode,
@@ -239,12 +257,13 @@ class PdfBillGenerator {
           emptyColor: const Color(0xFFFFFFFF),
           gapless: false,
         );
-        
+
         // Convert thành image bytes
-        final picData = await painter.toImageData(200, format: ui.ImageByteFormat.png);
+        final picData =
+            await painter.toImageData(200, format: ui.ImageByteFormat.png);
         if (picData != null) {
           final image = pw.MemoryImage(picData.buffer.asUint8List());
-          
+
           return pw.Container(
             width: 200,
             height: 200,
@@ -278,7 +297,7 @@ class PdfBillGenerator {
         print('Error generating QR code: $e');
       }
     }
-    
+
     // Fallback: hiển thị thông báo lỗi
     return pw.Container(
       width: 200,
@@ -308,22 +327,28 @@ class PdfBillGenerator {
       'vnp_Version': '2.1.0',
       'vnp_Command': 'pay',
       'vnp_TmnCode': 'YOUR_TMN_CODE', // Cần thay bằng mã TMN thực tế
-      'vnp_Amount': (order.totalPrice * 100).toInt().toString(), // VNPay yêu cầu amount * 100
+      'vnp_Amount': (order.totalPrice * 100)
+          .toInt()
+          .toString(), // VNPay yêu cầu amount * 100
       'vnp_CurrCode': 'VND',
       'vnp_TxnRef': order.id,
       'vnp_OrderInfo': 'Thanh toan hoa don ${_formatBillId(order.id)}',
       'vnp_OrderType': 'other',
       'vnp_Locale': 'vn',
-      'vnp_ReturnUrl': 'https://your-domain.com/return', // URL trả về sau thanh toán
+      'vnp_ReturnUrl':
+          'https://your-domain.com/return', // URL trả về sau thanh toán
       'vnp_IpAddr': '127.0.0.1',
-      'vnp_CreateDate': DateTime.now().toIso8601String().replaceAll(RegExp(r'[-:T.]'), '').substring(0, 14),
+      'vnp_CreateDate': DateTime.now()
+          .toIso8601String()
+          .replaceAll(RegExp(r'[-:T.]'), '')
+          .substring(0, 14),
     };
-    
+
     // Tạo query string (trong thực tế cần hash và sign)
     final queryString = params.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
-    
+
     return '$baseUrl?$queryString';
   }
 
@@ -333,13 +358,14 @@ class PdfBillGenerator {
     required String salonName,
     required String salonAddress,
     required String salonPhone,
+    String? salonQRCode,
   }) async {
     // Load font hỗ trợ tiếng Việt
     await _loadVietnameseFont();
-    
+
     // Generate QR code widget before creating the PDF page
     final qrCodeWidget = await _buildQRCodeSection(order);
-    
+
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -352,36 +378,48 @@ class PdfBillGenerator {
             children: [
               // Header - Salon Info
               _buildSalonHeader(salonName, salonAddress, salonPhone),
-              
+
               pw.SizedBox(height: 20),
-              
+
               // Bill Info
               _buildBillInfo(order),
-              
+
               pw.SizedBox(height: 20),
-              
+
               // Customer Info
               _buildCustomerInfo(order),
-              
+
               pw.SizedBox(height: 20),
-              
+
               // Services
               _buildServicesTable(services),
-              
+
               pw.SizedBox(height: 20),
-              
+
               // Total
               _buildTotalSection(order),
-              
+
               pw.SizedBox(height: 20),
-              
+
               // QR Code for Payment
               qrCodeWidget,
-              
+
               pw.Spacer(),
-              
+
               // Footer
               _buildFooter(),
+
+              // QR Code
+              if (salonQRCode != null && salonQRCode.isNotEmpty)
+                pw.Container(
+                  alignment: pw.Alignment.center,
+                  padding: const pw.EdgeInsets.only(top: 20),
+                  child: pw.Image(
+                    pw.MemoryImage(base64Decode(salonQRCode)),
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
             ],
           );
         },
@@ -391,7 +429,8 @@ class PdfBillGenerator {
     return pdf;
   }
 
-  static pw.Widget _buildSalonHeader(String salonName, String salonAddress, String salonPhone) {
+  static pw.Widget _buildSalonHeader(
+      String salonName, String salonAddress, String salonPhone) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(20),
@@ -566,7 +605,7 @@ class PdfBillGenerator {
               ),
             ),
           ),
-          
+
           // Services
           ...services.map((service) => _buildServiceRow(service)).toList(),
         ],
@@ -642,7 +681,7 @@ class PdfBillGenerator {
               ),
             ],
           ),
-          
+
           // Discount (if any)
           if (order.discountPercent > 0) ...[
             pw.SizedBox(height: 8),
@@ -666,7 +705,7 @@ class PdfBillGenerator {
               ],
             ),
           ],
-          
+
           // Tip (if any)
           if (order.tip > 0) ...[
             pw.SizedBox(height: 8),
@@ -690,11 +729,11 @@ class PdfBillGenerator {
               ],
             ),
           ],
-          
+
           pw.SizedBox(height: 8),
           pw.Divider(color: PdfColors.grey400),
           pw.SizedBox(height: 8),
-          
+
           // Final Total
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -722,7 +761,7 @@ class PdfBillGenerator {
 
   static Future<pw.Widget> _buildQRCodeSection(Order order) async {
     final qrCodeWidget = await _generateQRCode(order);
-    
+
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(20),
@@ -806,9 +845,10 @@ class PdfBillGenerator {
     try {
       // Thử sử dụng path_provider trước
       final output = await getTemporaryDirectory();
-      final fileName = 'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final fileName =
+          'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       final file = File('${output.path}/$fileName');
-      
+
       await file.writeAsBytes(await pdf.save());
       return file;
     } catch (e) {
@@ -816,16 +856,19 @@ class PdfBillGenerator {
       if (kDebugMode) {
         print('path_provider failed, using fallback: $e');
       }
-      
-      final fileName = 'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      final fileName =
+          'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       final file = File(fileName);
-      
+
       await file.writeAsBytes(await pdf.save());
       return file;
     }
   }
 
-  static Future<void> _showShareOptions(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone, {String? salonName}) async {
+  static Future<void> _showShareOptions(BuildContext context, File? file,
+      Uint8List? pdfBytes, String customerPhone,
+      {String? salonName}) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -844,9 +887,12 @@ class PdfBillGenerator {
                     IconButton(
                       onPressed: () async {
                         Navigator.pop(context);
-                        await _shareToZalo(context, file, pdfBytes, customerPhone, salonName: salonName);
+                        await _shareToZalo(
+                            context, file, pdfBytes, customerPhone,
+                            salonName: salonName);
                       },
-                      icon: const Icon(Icons.chat, size: 40, color: Colors.blue),
+                      icon:
+                          const Icon(Icons.chat, size: 40, color: Colors.blue),
                     ),
                     const Text('Zalo', style: TextStyle(fontSize: 12)),
                   ],
@@ -857,9 +903,11 @@ class PdfBillGenerator {
                     IconButton(
                       onPressed: () async {
                         Navigator.pop(context);
-                        await _shareFile(context, file, pdfBytes, salonName: salonName);
+                        await _shareFile(context, file, pdfBytes,
+                            salonName: salonName);
                       },
-                      icon: const Icon(Icons.share, size: 40, color: Colors.green),
+                      icon: const Icon(Icons.share,
+                          size: 40, color: Colors.green),
                     ),
                     const Text('Khác', style: TextStyle(fontSize: 12)),
                   ],
@@ -878,7 +926,9 @@ class PdfBillGenerator {
     );
   }
 
-  static Future<void> _shareToZalo(BuildContext context, File? file, Uint8List? pdfBytes, String customerPhone, {String? salonName}) async {
+  static Future<void> _shareToZalo(BuildContext context, File? file,
+      Uint8List? pdfBytes, String customerPhone,
+      {String? salonName}) async {
     try {
       // Trên desktop, Zalo không hoạt động tốt, chuyển sang chia sẻ thông thường
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
@@ -888,11 +938,11 @@ class PdfBillGenerator {
 
       // Tạo URL scheme cho Zalo (chỉ trên mobile)
       final zaloUrl = 'zalo://chat?phone=$customerPhone';
-      
+
       // Thử mở Zalo trước
       if (await canLaunchUrl(Uri.parse(zaloUrl))) {
         await launchUrl(Uri.parse(zaloUrl));
-        
+
         // Đợi một chút để Zalo mở, sau đó chia sẻ file
         await Future.delayed(const Duration(seconds: 2));
         await _shareFile(context, file, pdfBytes, salonName: salonName);
@@ -907,13 +957,15 @@ class PdfBillGenerator {
           backgroundColor: Colors.orange,
         ),
       );
-      
+
       // Fallback: chia sẻ file thông thường
       await _shareFile(context, file, pdfBytes, salonName: salonName);
     }
   }
 
-  static Future<void> _shareFile(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
+  static Future<void> _shareFile(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
     try {
       // Kiểm tra platform và sử dụng phương pháp phù hợp
       if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
@@ -931,7 +983,9 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _shareFileMobile(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
+  static Future<void> _shareFileMobile(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
     if (file != null && await file.exists()) {
       // Sử dụng file nếu có
       await Share.shareXFiles(
@@ -942,12 +996,12 @@ class PdfBillGenerator {
       // Sử dụng bytes trực tiếp nếu không có file
       final tempFile = File('temp_bill.pdf');
       await tempFile.writeAsBytes(pdfBytes);
-      
+
       await Share.shareXFiles(
         [XFile(tempFile.path)],
         text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
       );
-      
+
       // Xóa file tạm
       try {
         await tempFile.delete();
@@ -961,7 +1015,9 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _shareFileDesktop(BuildContext context, File? file, Uint8List? pdfBytes, {String? salonName}) async {
+  static Future<void> _shareFileDesktop(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
     // Trên desktop, sử dụng phương pháp khác
     try {
       // Thử sử dụng share_plus trước
@@ -973,12 +1029,12 @@ class PdfBillGenerator {
       } else if (pdfBytes != null) {
         final tempFile = File('temp_bill.pdf');
         await tempFile.writeAsBytes(pdfBytes);
-        
+
         await Share.shareXFiles(
           [XFile(tempFile.path)],
           text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
         );
-        
+
         // Xóa file tạm
         try {
           await tempFile.delete();
@@ -997,10 +1053,11 @@ class PdfBillGenerator {
     }
   }
 
-  static Future<void> _shareFileAlternative(BuildContext context, File? file, Uint8List? pdfBytes) async {
+  static Future<void> _shareFileAlternative(
+      BuildContext context, File? file, Uint8List? pdfBytes) async {
     // Phương pháp thay thế cho desktop
     String filePath = '';
-    
+
     if (file != null && await file.exists()) {
       filePath = file.path;
     } else if (pdfBytes != null) {
@@ -1054,7 +1111,8 @@ class PdfBillGenerator {
                 // Fallback: copy path to clipboard
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Đã copy đường dẫn file vào clipboard: $filePath'),
+                    content:
+                        Text('Đã copy đường dẫn file vào clipboard: $filePath'),
                     backgroundColor: Colors.blue,
                   ),
                 );
@@ -1069,9 +1127,9 @@ class PdfBillGenerator {
 
   static String _formatPrice(double price) {
     return '${price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    )} ${SalonConfig.currency}';
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        )} ${SalonConfig.currency}';
   }
 
   static String _formatDate(DateTime date) {
@@ -1083,17 +1141,17 @@ class PdfBillGenerator {
     if (orderId.isEmpty) {
       return "TẠM THỜI";
     }
-    
+
     // Nếu ID có format GUID, lấy 8 ký tự đầu
     if (orderId.contains('-') && orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
     if (orderId.length >= 8) {
       return orderId.substring(0, 8).toUpperCase();
     }
-    
+
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
   }

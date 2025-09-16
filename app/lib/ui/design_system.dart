@@ -28,7 +28,8 @@ class AppTheme {
   static const double largeDesktopBreakpoint = 1600;
 
   // Responsive spacing
-  static double getResponsiveSpacing(BuildContext context, {
+  static double getResponsiveSpacing(
+    BuildContext context, {
     double mobile = spacingM,
     double? tablet,
     double? desktop,
@@ -43,7 +44,8 @@ class AppTheme {
   }
 
   // Responsive font size
-  static double getResponsiveFontSize(BuildContext context, {
+  static double getResponsiveFontSize(
+    BuildContext context, {
     required double mobile,
     double? tablet,
     double? desktop,
@@ -58,7 +60,8 @@ class AppTheme {
   }
 
   // Responsive padding
-  static EdgeInsets getResponsivePadding(BuildContext context, {
+  static EdgeInsets getResponsivePadding(
+    BuildContext context, {
     EdgeInsets? mobile,
     EdgeInsets? tablet,
     EdgeInsets? desktop,
@@ -73,17 +76,25 @@ class AppTheme {
   }
 
   // Check screen size categories
-  static bool isMobile(BuildContext context) => MediaQuery.of(context).size.width < mobileBreakpoint;
-  static bool isTablet(BuildContext context) => MediaQuery.of(context).size.width >= mobileBreakpoint && MediaQuery.of(context).size.width < tabletBreakpoint;
-  static bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= tabletBreakpoint;
-  static bool isLargeDesktop(BuildContext context) => MediaQuery.of(context).size.width >= largeDesktopBreakpoint;
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < mobileBreakpoint;
+  static bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width >= mobileBreakpoint &&
+      MediaQuery.of(context).size.width < tabletBreakpoint;
+  static bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= tabletBreakpoint;
+  static bool isLargeDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= largeDesktopBreakpoint;
 
   // Check orientation
-  static bool isPortrait(BuildContext context) => MediaQuery.of(context).orientation == Orientation.portrait;
-  static bool isLandscape(BuildContext context) => MediaQuery.of(context).orientation == Orientation.landscape;
+  static bool isPortrait(BuildContext context) =>
+      MediaQuery.of(context).orientation == Orientation.portrait;
+  static bool isLandscape(BuildContext context) =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   // Get responsive column count for grid layouts
-  static int getResponsiveColumns(BuildContext context, {
+  static int getResponsiveColumns(
+    BuildContext context, {
     int mobile = 1,
     int? tablet,
     int? desktop,
@@ -98,7 +109,8 @@ class AppTheme {
   }
 
   // Get responsive max width for content
-  static double getResponsiveMaxWidth(BuildContext context, {
+  static double getResponsiveMaxWidth(
+    BuildContext context, {
     double? mobile,
     double? tablet,
     double? desktop,
@@ -133,7 +145,8 @@ class AppTheme {
   static InputDecoration inputDecoration({
     required String label,
     IconData? prefixIcon,
-  }) => InputDecoration(
+  }) =>
+      InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         border: OutlineInputBorder(
@@ -329,14 +342,16 @@ class AppWidgets {
     bool fullWidth = false,
   }) {
     return Container(
-      margin: fullWidth ? EdgeInsets.zero : const EdgeInsets.all(AppTheme.spacingL),
+      margin:
+          fullWidth ? EdgeInsets.zero : const EdgeInsets.all(AppTheme.spacingL),
       padding: const EdgeInsets.all(AppTheme.spacingL),
       decoration: BoxDecoration(
         gradient: AppTheme.primaryGradient,
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
       ),
       child: Column(
-        crossAxisAlignment: fullWidth ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            fullWidth ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           Icon(icon, color: Colors.white, size: 32),
           const SizedBox(height: AppTheme.spacingS),
@@ -350,7 +365,8 @@ class AppWidgets {
           ),
           if (subtitle != null) ...[
             const SizedBox(height: 4),
-            Text(subtitle, style: const TextStyle(fontSize: 14, color: Colors.white70)),
+            Text(subtitle,
+                style: const TextStyle(fontSize: 14, color: Colors.white70)),
           ],
         ],
       ),
@@ -413,10 +429,13 @@ class AppWidgets {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount ?? AppTheme.getResponsiveColumns(context),
+            crossAxisCount:
+                crossAxisCount ?? AppTheme.getResponsiveColumns(context),
             childAspectRatio: childAspectRatio ?? 1.0,
-            crossAxisSpacing: crossAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
-            mainAxisSpacing: mainAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
+            crossAxisSpacing:
+                crossAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
+            mainAxisSpacing:
+                mainAxisSpacing ?? AppTheme.getResponsiveSpacing(context),
           ),
           itemCount: children.length,
           itemBuilder: (context, index) => children[index],
@@ -425,5 +444,3 @@ class AppWidgets {
     );
   }
 }
-
-

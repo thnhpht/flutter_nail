@@ -26,7 +26,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   String _search = '';
   final _formKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
-  
+
   // Filter state
   List<Category> _selectedCategories = [];
   bool _showCategoryFilter = false;
@@ -90,6 +90,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       icon: icon,
     ).show(context);
   }
+
   // Thêm method _pickImage cải tiến
   Future<void> _pickImage(Function(XFile?, Uint8List?) onImageSelected) async {
     try {
@@ -107,7 +108,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar('Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.', type: MessageType.error);
+        showFlushbar(
+            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+            type: MessageType.error);
       }
     }
   }
@@ -136,7 +139,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   // Cải tiến image display widget
-  Widget _buildImageSelector(String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
+  Widget _buildImageSelector(
+      String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -162,15 +166,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
             : (imageUrl != null && imageUrl.isNotEmpty)
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(58),
-                    child: imageUrl.startsWith('http') 
-                      ? Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildServiceImagePlaceholder();
-                          },
-                        )
-                      : _buildImageWidget(imageUrl),
+                    child: imageUrl.startsWith('http')
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildServiceImagePlaceholder();
+                            },
+                          )
+                        : _buildImageWidget(imageUrl),
                   )
                 : _buildServiceImagePlaceholder(),
       ),
@@ -179,9 +183,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   String _formatPrice(double price) {
     return price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match match) => '${match[1]}.',
-    );
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        );
   }
 
   Future<void> _load() async {
@@ -231,21 +235,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   List<Service> _filterServices(List<Service> services) {
     List<Service> filtered = services;
-    
+
     // Filter by search
     if (_search.isNotEmpty) {
-      filtered = filtered.where((s) =>
-        s.name.toLowerCase().contains(_search.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where((s) => s.name.toLowerCase().contains(_search.toLowerCase()))
+          .toList();
     }
-    
+
     // Filter by selected categories
     if (_selectedCategories.isNotEmpty) {
-      filtered = filtered.where((s) =>
-        _selectedCategories.any((cat) => cat.id == s.categoryId)
-      ).toList();
+      filtered = filtered
+          .where(
+              (s) => _selectedCategories.any((cat) => cat.id == s.categoryId))
+          .toList();
     }
-    
+
     return filtered;
   }
 
@@ -366,7 +371,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             ),
           ),
 
-                    // Filter Content
+          // Filter Content
           AnimatedCrossFade(
             firstChild: const SizedBox.shrink(),
             secondChild: Container(
@@ -377,7 +382,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   if (_selectedCategories.isNotEmpty) ...[
                     Row(
                       children: [
-                        Icon(Icons.check_circle, color: Colors.green.shade600, size: 16),
+                        Icon(Icons.check_circle,
+                            color: Colors.green.shade600, size: 16),
                         const SizedBox(width: 8),
                         Text(
                           'Danh mục đã chọn:',
@@ -406,10 +412,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       runSpacing: 8,
                       children: _selectedCategories.map((category) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.purple.shade100, Colors.blue.shade100],
+                              colors: [
+                                Colors.purple.shade100,
+                                Colors.blue.shade100
+                              ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
@@ -467,10 +477,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           InkWell(
                             onTap: _toggleFilterExpansion,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12)),
                               ),
                               child: Row(
                                 children: [
@@ -490,7 +502,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ),
                                   const Spacer(),
                                   Icon(
-                                    _isFilterExpanded ? Icons.expand_less : Icons.expand_more,
+                                    _isFilterExpanded
+                                        ? Icons.expand_less
+                                        : Icons.expand_more,
                                     size: 16,
                                     color: Colors.grey.shade600,
                                   ),
@@ -504,17 +518,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: _isFilterExpanded ? _categories.length : (_categories.length > 6 ? 6 : _categories.length),
+                            itemCount: _isFilterExpanded
+                                ? _categories.length
+                                : (_categories.length > 6
+                                    ? 6
+                                    : _categories.length),
                             itemBuilder: (context, index) {
                               final category = _categories[index];
-                              final isSelected = _selectedCategories.contains(category);
-                              
+                              final isSelected =
+                                  _selectedCategories.contains(category);
+
                               return InkWell(
                                 onTap: () => _onCategoryToggled(category),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? Colors.purple.shade50 : Colors.transparent,
+                                    color: isSelected
+                                        ? Colors.purple.shade50
+                                        : Colors.transparent,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: Colors.grey.shade200,
@@ -528,10 +550,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                         width: 20,
                                         height: 20,
                                         decoration: BoxDecoration(
-                                          color: isSelected ? Colors.purple.shade100 : Colors.grey.shade200,
-                                          borderRadius: BorderRadius.circular(4),
+                                          color: isSelected
+                                              ? Colors.purple.shade100
+                                              : Colors.grey.shade200,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                           border: Border.all(
-                                            color: isSelected ? Colors.purple.shade300 : Colors.grey.shade300,
+                                            color: isSelected
+                                                ? Colors.purple.shade300
+                                                : Colors.grey.shade300,
                                           ),
                                         ),
                                         child: isSelected
@@ -548,8 +575,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           category.name,
                                           style: TextStyle(
                                             fontSize: 14,
-                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                            color: isSelected ? Colors.purple.shade700 : Colors.grey.shade800,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w600
+                                                : FontWeight.normal,
+                                            color: isSelected
+                                                ? Colors.purple.shade700
+                                                : Colors.grey.shade800,
                                           ),
                                         ),
                                       ),
@@ -604,7 +635,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 ],
               ),
             ),
-            crossFadeState: _showCategoryFilter ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState: _showCategoryFilter
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
             duration: const Duration(milliseconds: 300),
           ),
         ],
@@ -615,10 +648,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
     final priceCtrl = TextEditingController();
-    String? selectedCatId = _categories.isNotEmpty ? _categories.first.id : null;
-  String? imageUrl;
-  XFile? pickedImage;
-  Uint8List? selectedImageBytes;
+    String? selectedCatId =
+        _categories.isNotEmpty ? _categories.first.id : null;
+    String? imageUrl;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -663,7 +697,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.spa, color: Colors.white, size: 24),
+                        child: const Icon(Icons.spa,
+                            color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
                       const Expanded(
@@ -705,110 +740,119 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             setState(() {
                               pickedImage = image;
                               selectedImageBytes = bytes;
-                              imageUrl = ''; // Clear old URL when new image is selected
+                              imageUrl =
+                                  ''; // Clear old URL when new image is selected
                             });
                           }),
                         ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: DropdownButtonFormField<String>(
-                          value: selectedCatId,
-                          items: _categories
-                              .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
-                              .toList(),
-                          onChanged: (v) => selectedCatId = v,
-                          decoration: InputDecoration(
-                            labelText: 'Danh mục',
-                            prefixIcon: Icon(Icons.category, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
+                        const SizedBox(height: 20),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: DropdownButtonFormField<String>(
+                            value: selectedCatId,
+                            items: _categories
+                                .map((c) => DropdownMenuItem(
+                                    value: c.id, child: Text(c.name)))
+                                .toList(),
+                            onChanged: (v) => selectedCatId = v,
+                            decoration: InputDecoration(
+                              labelText: 'Danh mục',
+                              prefixIcon: Icon(Icons.category,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: nameCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Tên dịch vụ',
-                                  prefixIcon: Icon(Icons.spa, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                        const SizedBox(height: 16),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập tên dịch vụ';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: priceCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Giá (VNĐ)',
-                                  prefixIcon: Icon(Icons.attach_money, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Tên dịch vụ',
+                                    prefixIcon: Icon(Icons.spa,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
                                   ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập tên dịch vụ';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập giá';
-                                  }
-                                  if (double.tryParse(value.trim()) == null) {
-                                    return 'Vui lòng nhập giá hợp lệ';
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: priceCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Giá (VNĐ)',
+                                    prefixIcon: Icon(Icons.attach_money,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập giá';
+                                    }
+                                    if (double.tryParse(value.trim()) == null) {
+                                      return 'Vui lòng nhập giá hợp lệ';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 // Actions
                 Container(
@@ -892,18 +936,24 @@ class _ServicesScreenState extends State<ServicesScreen> {
         String? imageUrlToSave;
         if (selectedImageBytes != null) {
           // Lấy extension hợp lệ, nếu không thì mặc định là .png
-          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
           const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
           if (!allowed.contains(ext)) ext = '.png';
-          final fileName = 'service_${DateTime.now().millisecondsSinceEpoch}$ext';
+          final fileName =
+              'service_${DateTime.now().millisecondsSinceEpoch}$ext';
           try {
-            imageUrlToSave = await widget.api.uploadServiceImage(selectedImageBytes!, fileName);
+            imageUrlToSave = await widget.api
+                .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server', type: MessageType.error);
+            showFlushbar('Lỗi khi upload ảnh lên server',
+                type: MessageType.error);
             return;
           }
         }
-        await widget.api.createService(selectedCatId!, name, price, image: imageUrlToSave);
+        await widget.api
+            .createService(selectedCatId!, name, price, image: imageUrlToSave);
         await _reload();
         showFlushbar('Thêm dịch vụ thành công', type: MessageType.success);
       } catch (e) {
@@ -916,10 +966,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
     final nameCtrl = TextEditingController(text: s.name);
     final priceCtrl = TextEditingController(text: s.price.toStringAsFixed(0));
     String? selectedCatId = s.categoryId;
-  String? imageUrl = s.image;
-  XFile? pickedImage;
-  Uint8List? selectedImageBytes;
-  String? oldAssetPath = s.image;
+    String? imageUrl = s.image;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
+    String? oldAssetPath = s.image;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -964,7 +1014,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.edit, color: Colors.white, size: 24),
+                        child: const Icon(Icons.edit,
+                            color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
                       const Expanded(
@@ -1006,110 +1057,119 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             setState(() {
                               pickedImage = image;
                               selectedImageBytes = bytes;
-                              imageUrl = ''; // Clear old URL when new image is selected
+                              imageUrl =
+                                  ''; // Clear old URL when new image is selected
                             });
                           }),
                         ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.grey[200]!),
-                        ),
-                        child: DropdownButtonFormField<String>(
-                          value: selectedCatId,
-                          items: _categories
-                              .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
-                              .toList(),
-                          onChanged: (v) => selectedCatId = v,
-                          decoration: InputDecoration(
-                            labelText: 'Danh mục',
-                            prefixIcon: Icon(Icons.category, color: AppTheme.primaryStart),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
+                        const SizedBox(height: 20),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: DropdownButtonFormField<String>(
+                            value: selectedCatId,
+                            items: _categories
+                                .map((c) => DropdownMenuItem(
+                                    value: c.id, child: Text(c.name)))
+                                .toList(),
+                            onChanged: (v) => selectedCatId = v,
+                            decoration: InputDecoration(
+                              labelText: 'Danh mục',
+                              prefixIcon: Icon(Icons.category,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Form(
-                        key: _editFormKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: nameCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Tên dịch vụ',
-                                  prefixIcon: Icon(Icons.spa, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                        const SizedBox(height: 16),
+                        Form(
+                          key: _editFormKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập tên dịch vụ';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey[200]!),
-                              ),
-                              child: TextFormField(
-                                controller: priceCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Giá (VNĐ)',
-                                  prefixIcon: Icon(Icons.attach_money, color: AppTheme.primaryStart),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.all(16),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Tên dịch vụ',
+                                    prefixIcon: Icon(Icons.spa,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
                                   ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                    borderSide: const BorderSide(color: Colors.red, width: 2),
-                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập tên dịch vụ';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Vui lòng nhập giá';
-                                  }
-                                  if (double.tryParse(value.trim()) == null) {
-                                    return 'Vui lòng nhập giá hợp lệ';
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: priceCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Giá (VNĐ)',
+                                    prefixIcon: Icon(Icons.attach_money,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập giá';
+                                    }
+                                    if (double.tryParse(value.trim()) == null) {
+                                      return 'Vui lòng nhập giá hợp lệ';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 // Actions
                 Container(
@@ -1193,14 +1253,19 @@ class _ServicesScreenState extends State<ServicesScreen> {
         String? imageUrlToSave = imageUrl;
         if (selectedImageBytes != null) {
           // Lấy extension hợp lệ, nếu không thì mặc định là .png
-          String ext = pickedImage?.path != null ? path.extension(pickedImage!.path).toLowerCase() : '.png';
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
           const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
           if (!allowed.contains(ext)) ext = '.png';
-          final fileName = 'service_${DateTime.now().millisecondsSinceEpoch}$ext';
+          final fileName =
+              'service_${DateTime.now().millisecondsSinceEpoch}$ext';
           try {
-            imageUrlToSave = await widget.api.uploadServiceImage(selectedImageBytes!, fileName);
+            imageUrlToSave = await widget.api
+                .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server', type: MessageType.error);
+            showFlushbar('Lỗi khi upload ảnh lên server',
+                type: MessageType.error);
             return;
           }
         }
@@ -1212,9 +1277,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin dịch vụ thành công', type: MessageType.success);
+        showFlushbar('Thay đổi thông tin dịch vụ thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thay đổi thông tin dịch vụ', type: MessageType.error);
+        showFlushbar('Lỗi khi thay đổi thông tin dịch vụ',
+            type: MessageType.error);
       }
     }
   }
@@ -1236,7 +1303,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
         final base64String = imageUrl.split(',')[1];
         final bytes = base64Decode(base64String);
         return Image.memory(bytes, fit: BoxFit.cover);
-      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
         return Image.network(imageUrl, fit: BoxFit.cover);
       } else if (imageUrl.startsWith('/')) {
         return Image.file(File(imageUrl), fit: BoxFit.cover);
@@ -1316,24 +1384,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   subtitle: 'Quản lý dịch vụ theo danh mục',
                   fullWidth: true,
                 ),
-                                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: AppTheme.controlHeight,
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: AppTheme.inputDecoration(
-                        label: 'Tìm kiếm dịch vụ...',
-                        prefixIcon: Icons.search,
-                      ),
-                      onChanged: (v) => setState(() => _search = v.trim()),
+                const SizedBox(height: 24),
+                SizedBox(
+                  height: AppTheme.controlHeight,
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: AppTheme.inputDecoration(
+                      label: 'Tìm kiếm dịch vụ...',
+                      prefixIcon: Icons.search,
                     ),
+                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
+                ),
                 const SizedBox(height: 12),
                 _buildCategoryFilter(),
-                
+
                 // Results counter
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
@@ -1352,7 +1421,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         child: FutureBuilder<List<Service>>(
                           future: _future,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState != ConnectionState.done) {
+                            if (snapshot.connectionState !=
+                                ConnectionState.done) {
                               return const Text(
                                 'Đang tải...',
                                 style: TextStyle(
@@ -1365,18 +1435,23 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             final filtered = _filterServices(data);
                             final total = data.length;
                             final shown = filtered.length;
-                            
+
                             String message;
-                            if (_selectedCategories.isEmpty && _search.isEmpty) {
+                            if (_selectedCategories.isEmpty &&
+                                _search.isEmpty) {
                               message = 'Hiển thị tất cả $total dịch vụ';
-                            } else if (_selectedCategories.isNotEmpty && _search.isNotEmpty) {
-                              message = 'Tìm thấy $shown/$total dịch vụ (lọc theo danh mục và tìm kiếm)';
+                            } else if (_selectedCategories.isNotEmpty &&
+                                _search.isNotEmpty) {
+                              message =
+                                  'Tìm thấy $shown/$total dịch vụ (lọc theo danh mục và tìm kiếm)';
                             } else if (_selectedCategories.isNotEmpty) {
-                              message = 'Tìm thấy $shown/$total dịch vụ (lọc theo ${_selectedCategories.length} danh mục)';
+                              message =
+                                  'Tìm thấy $shown/$total dịch vụ (lọc theo ${_selectedCategories.length} danh mục)';
                             } else {
-                              message = 'Tìm thấy $shown/$total dịch vụ (tìm kiếm: "$_search")';
+                              message =
+                                  'Tìm thấy $shown/$total dịch vụ (tìm kiếm: "$_search")';
                             }
-                            
+
                             return Text(
                               message,
                               style: TextStyle(
@@ -1403,9 +1478,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     ],
                   ),
                 ),
-                
+
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 500, // Điều chỉnh chiều cao để phù hợp với bộ lọc và counter
+                  height: MediaQuery.of(context).size.height -
+                      500, // Điều chỉnh chiều cao để phù hợp với bộ lọc và counter
                   child: FutureBuilder<List<Service>>(
                     future: _future,
                     builder: (context, snapshot) {
@@ -1413,7 +1489,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách dịch vụ', type: MessageType.error);
+                        showFlushbar('Lỗi tải danh sách dịch vụ',
+                            type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
                           child: ListView(
@@ -1422,16 +1499,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               Center(
                                 child: Column(
                                   children: [
-                                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                                    const Icon(Icons.error_outline,
+                                        size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
                                     const Text(
                                       'Không thể tải danh sách dịch vụ',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
                                     const Text(
                                       'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
@@ -1451,7 +1532,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       if (filtered.isEmpty) {
                         return RefreshIndicator(
                           onRefresh: _reload,
-                          child: ListView(children: const [SizedBox(height: 200), Center(child: Text('Không tìm thấy dịch vụ'))]),
+                          child: ListView(children: const [
+                            SizedBox(height: 200),
+                            Center(child: Text('Không tìm thấy dịch vụ'))
+                          ]),
                         );
                       }
 
@@ -1459,8 +1543,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         onRefresh: _reload,
                         child: GridView.builder(
                           key: const ValueKey('grid'),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
@@ -1480,21 +1566,29 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: Container(
                                   decoration: AppTheme.cardDecoration(),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Expanded(
                                         child: ClipRRect(
-                                          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                          child: s.image != null && s.image!.isNotEmpty
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  top: Radius.circular(16)),
+                                          child: s.image != null &&
+                                                  s.image!.isNotEmpty
                                               ? _buildImageWidget(s.image!)
                                               : Container(
                                                   color: Colors.purple.shade100,
                                                   child: Center(
                                                     child: Text(
-                                                      s.name.isNotEmpty ? s.name[0].toUpperCase() : '?',
+                                                      s.name.isNotEmpty
+                                                          ? s.name[0]
+                                                              .toUpperCase()
+                                                          : '?',
                                                       style: const TextStyle(
                                                         fontSize: 32,
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         color: Colors.purple,
                                                       ),
                                                     ),
@@ -1533,48 +1627,73 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    gradient: const LinearGradient(
-                                                      colors: [Color(0xFFFF9800), Color(0xFFFF5722)],
+                                                    gradient:
+                                                        const LinearGradient(
+                                                      colors: [
+                                                        Color(0xFFFF9800),
+                                                        Color(0xFFFF5722)
+                                                      ],
                                                       begin: Alignment.topLeft,
-                                                      end: Alignment.bottomRight,
+                                                      end:
+                                                          Alignment.bottomRight,
                                                     ),
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: Colors.orange.withOpacity(0.3),
+                                                        color: Colors.orange
+                                                            .withOpacity(0.3),
                                                         blurRadius: 4,
-                                                        offset: const Offset(0, 2),
+                                                        offset:
+                                                            const Offset(0, 2),
                                                       ),
                                                     ],
                                                   ),
                                                   child: IconButton(
-                                                    icon: const Icon(Icons.edit, color: Colors.white, size: 18),
-                                                    onPressed: () => _showEditDialog(s),
+                                                    icon: const Icon(Icons.edit,
+                                                        color: Colors.white,
+                                                        size: 18),
+                                                    onPressed: () =>
+                                                        _showEditDialog(s),
                                                   ),
                                                 ),
                                                 const SizedBox(width: 8),
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    gradient: const LinearGradient(
-                                                      colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
+                                                    gradient:
+                                                        const LinearGradient(
+                                                      colors: [
+                                                        Color(0xFFE91E63),
+                                                        Color(0xFFC2185B)
+                                                      ],
                                                       begin: Alignment.topLeft,
-                                                      end: Alignment.bottomRight,
+                                                      end:
+                                                          Alignment.bottomRight,
                                                     ),
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: Colors.red.withOpacity(0.3),
+                                                        color: Colors.red
+                                                            .withOpacity(0.3),
                                                         blurRadius: 4,
-                                                        offset: const Offset(0, 2),
+                                                        offset:
+                                                            const Offset(0, 2),
                                                       ),
                                                     ],
                                                   ),
                                                   child: IconButton(
-                                                    icon: const Icon(Icons.delete, color: Colors.white, size: 18),
+                                                    icon: const Icon(
+                                                        Icons.delete,
+                                                        color: Colors.white,
+                                                        size: 18),
                                                     onPressed: () => _delete(s),
                                                   ),
                                                 ),

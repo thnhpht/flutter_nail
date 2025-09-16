@@ -6,39 +6,52 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiClient {
   ApiClient({required this.baseUrl});
   final String baseUrl; // e.g. http://localhost:5088/api
-  
+
   // HTTP client với timeout configuration
   final http.Client _client = http.Client();
-  
+
   // Timeout duration cho các requests
   static const Duration _timeout = Duration(seconds: 10);
-  
+
   // Auth methods
   Future<CheckEmailResponse> checkEmail(String email) async {
-    final r = await _client.post(_u('/auth/check-email'),
-        headers: {'Content-Type': 'application/json'}, 
-        body: jsonEncode(CheckEmailRequest(email: email).toJson()))
+    final r = await _client
+        .post(_u('/auth/check-email'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(CheckEmailRequest(email: email).toJson()))
         .timeout(_timeout);
     _check(r);
     return CheckEmailResponse.fromJson(jsonDecode(r.body));
   }
 
   Future<LoginResponse> login(LoginRequest request) async {
-    final r = await _client.post(_u('/auth/login'),
-        headers: {'Content-Type': 'application/json'}, 
-        body: jsonEncode(request.toJson()))
+    final r = await _client
+        .post(_u('/auth/login'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(request.toJson()))
         .timeout(_timeout);
     _check(r);
-    return LoginResponse.fromJson(jsonDecode(r.body));
+
+    final response = LoginResponse.fromJson(jsonDecode(r.body));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_token', response.token);
+
+    return response;
   }
 
   Future<LoginResponse> employeeLogin(EmployeeLoginRequest request) async {
-    final r = await _client.post(_u('/auth/employee-login'),
-        headers: {'Content-Type': 'application/json'}, 
-        body: jsonEncode(request.toJson()))
+    final r = await _client
+        .post(_u('/auth/employee-login'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(request.toJson()))
         .timeout(_timeout);
     _check(r);
-    return LoginResponse.fromJson(jsonDecode(r.body));
+
+    final response = LoginResponse.fromJson(jsonDecode(r.body));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_token', response.token);
+
+    return response;
   }
 
   Future<void> logout() async {
@@ -64,28 +77,29 @@ class ApiClient {
     return prefs.getString('database_name');
   }
 
-
-
-  Uri _u(String path, [Map<String, String>? q]) => Uri.parse('$baseUrl$path').replace(queryParameters: q);
+  Uri _u(String path, [Map<String, String>? q]) =>
+      Uri.parse('$baseUrl$path').replace(queryParameters: q);
 
   // Customers
   Future<List<Customer>> getCustomers() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/customers'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
     });
     _check(r);
     final list = jsonDecode(r.body) as List<dynamic>;
-    return list.map((e) => Customer.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => Customer.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<Customer> getCustomer(String phone) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/customers/$phone'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -97,12 +111,12 @@ class ApiClient {
   Future<void> createCustomer(Customer c) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.post(_u('/customers'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(c.toJson()));
     _check(r, expect201: true);
   }
@@ -110,12 +124,12 @@ class ApiClient {
   Future<void> updateCustomer(Customer c) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.put(_u('/customers/${c.phone}'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(c.toJson()));
     _check(r, expect204: true);
   }
@@ -123,7 +137,7 @@ class ApiClient {
   Future<void> deleteCustomer(String phone) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.delete(_u('/customers/$phone'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -135,46 +149,56 @@ class ApiClient {
   Future<List<Employee>> getEmployees() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/employees'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
     });
     _check(r);
     final list = jsonDecode(r.body) as List<dynamic>;
-    return list.map((e) => Employee.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => Employee.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<void> createEmployee(String name, {String? phone, String? password}) async {
+  Future<void> createEmployee(String name,
+      {String? phone, String? password}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.post(_u('/employees'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode({'name': name, 'phone': phone, 'password': password ?? ''}));
+        body: jsonEncode(
+            {'name': name, 'phone': phone, 'password': password ?? ''}));
     _check(r, expect201: true);
   }
 
   Future<void> updateEmployee(Employee e) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
-    final r = await http.put(_u('/employees/${e.id}'),
-        headers: {
-          'Authorization': 'Bearer $jwtToken',
-          'Content-Type': 'application/json'
-        }, 
-        body: jsonEncode(e.toJson()));
-    _check(r, expect204: true);
+
+    final response = await http.put(
+      _u('/employees/${e.id}'),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode(e.toJson()),
+    );
+
+    if (response.statusCode >= 400) {
+      final errorBody = jsonDecode(response.body);
+      throw Exception(errorBody['title'] ?? 'Lỗi cập nhật nhân viên');
+    }
   }
 
   Future<void> deleteEmployee(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.delete(_u('/employees/$id'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -186,38 +210,40 @@ class ApiClient {
   Future<List<Category>> getCategories() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/categories'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
     });
     _check(r);
     final list = jsonDecode(r.body) as List<dynamic>;
-    return list.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => Category.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> createCategory(String name, {String? image}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.post(_u('/categories'),
-      headers: {
-        'Authorization': 'Bearer $jwtToken',
-        'Content-Type': 'application/json'
-      },
-      body: jsonEncode({'name': name, 'items': [], 'image': image}));
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'name': name, 'items': [], 'image': image}));
     _check(r, expect201: true);
   }
 
   Future<void> updateCategory(Category c) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.put(_u('/categories/${c.id}'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(c.toJson()));
     _check(r, expect204: true);
   }
@@ -225,7 +251,7 @@ class ApiClient {
   Future<void> deleteCategory(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.delete(_u('/categories/$id'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -233,65 +259,74 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
-  Future<String> uploadCategoryImage(List<int> imageBytes, String fileName) async {
+  Future<String> uploadCategoryImage(
+      List<int> imageBytes, String fileName) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     var request = http.MultipartRequest('POST', _u('/categories/upload-image'));
     request.headers.addAll({
       'Authorization': 'Bearer $jwtToken',
     });
-    
+
     request.files.add(http.MultipartFile.fromBytes(
       'file',
       imageBytes,
       filename: fileName,
     ));
-    
+
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
     _check(response);
-    
+
     final responseData = jsonDecode(response.body);
     return responseData['imageUrl'] as String;
   }
-  
+
   // Category Items (Services)
   Future<List<Service>> getServices() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/services'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
     });
     _check(r);
     final list = jsonDecode(r.body) as List<dynamic>;
-    return list.map((e) => Service.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => Service.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<void> createService(String categoryId, String name, double price, {String? image}) async {
+  Future<void> createService(String categoryId, String name, double price,
+      {String? image}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.post(_u('/services'),
-      headers: {
-        'Authorization': 'Bearer $jwtToken',
-        'Content-Type': 'application/json'
-      },
-      body: jsonEncode({'categoryId': categoryId, 'name': name, 'price': price, 'image': image}));
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'categoryId': categoryId,
+          'name': name,
+          'price': price,
+          'image': image
+        }));
     _check(r, expect201: true);
   }
 
   Future<void> updateService(Service i) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.put(_u('/services/${i.id}'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(i.toJson()));
     _check(r, expect204: true);
   }
@@ -299,7 +334,7 @@ class ApiClient {
   Future<void> deleteService(String categoryId, String serviceId) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.delete(_u('/services/$serviceId'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -307,25 +342,26 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
-  Future<String> uploadServiceImage(List<int> imageBytes, String fileName) async {
+  Future<String> uploadServiceImage(
+      List<int> imageBytes, String fileName) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     var request = http.MultipartRequest('POST', _u('/services/upload-image'));
     request.headers.addAll({
       'Authorization': 'Bearer $jwtToken',
     });
-    
+
     request.files.add(http.MultipartFile.fromBytes(
       'file',
       imageBytes,
       filename: fileName,
     ));
-    
+
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
     _check(response);
-    
+
     final responseData = jsonDecode(response.body);
     return responseData['imageUrl'] as String;
   }
@@ -334,7 +370,7 @@ class ApiClient {
   Future<List<Order>> getOrders() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/orders'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -347,22 +383,22 @@ class ApiClient {
   Future<Order> createOrder(Order order) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     // Convert lists to JSON strings for backend
     final orderData = order.toJson();
     orderData['employeeIds'] = jsonEncode(order.employeeIds);
     orderData['employeeNames'] = jsonEncode(order.employeeNames);
     orderData['serviceIds'] = jsonEncode(order.serviceIds);
     orderData['serviceNames'] = jsonEncode(order.serviceNames);
-    
+
     final r = await http.post(_u('/orders'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(orderData));
     _check(r, expect201: true);
-    
+
     return Order.fromJson(jsonDecode(r.body));
   }
 
@@ -388,7 +424,7 @@ class ApiClient {
   Future<Map<String, dynamic>> getTodayStats() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/dashboard/today-stats'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -401,7 +437,7 @@ class ApiClient {
   Future<Information> getInformation() async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.get(_u('/information'), headers: {
       'Authorization': 'Bearer $jwtToken',
       'Content-Type': 'application/json',
@@ -413,46 +449,78 @@ class ApiClient {
   Future<void> updateInformation(Information information) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
+
     final r = await http.put(_u('/information'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
-        }, 
+        },
         body: jsonEncode(information.toJson()));
     _check(r, expect204: true);
   }
 
-  Future<String> uploadLogo(List<int> imageBytes, String fileName) async {
+  Future<String> uploadQRCode(List<int> imageBytes, String fileName) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
-    
-    var request = http.MultipartRequest('POST', _u('/information/upload-logo'));
+
+    var request =
+        http.MultipartRequest('POST', _u('/information/upload-qrcode'));
     request.headers.addAll({
       'Authorization': 'Bearer $jwtToken',
     });
-    
+
     request.files.add(http.MultipartFile.fromBytes(
       'file',
       imageBytes,
       filename: fileName,
     ));
-    
+
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
     _check(response);
-    
+
+    final responseData = jsonDecode(response.body);
+    return responseData['qrCodeUrl'] as String;
+  }
+
+  Future<String> uploadLogo(List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    var request = http.MultipartRequest('POST', _u('/information/upload-logo'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+
     final responseData = jsonDecode(response.body);
     return responseData['logoUrl'] as String;
   }
 
-  void _check(http.Response r, {bool expect201 = false, bool expect204 = false}) {
-    final ok = expect201 ? r.statusCode == 201 : expect204 ? r.statusCode == 204 : (r.statusCode >= 200 && r.statusCode < 300);
+  void _check(http.Response r,
+      {bool expect201 = false, bool expect204 = false}) {
+    final ok = expect201
+        ? r.statusCode == 201
+        : expect204
+            ? r.statusCode == 204
+            : (r.statusCode >= 200 && r.statusCode < 300);
     if (!ok) {
+      if (r.statusCode == 401) {
+        logout();
+      }
       throw Exception('HTTP ${r.statusCode}: ${r.body}');
     }
   }
-  
+
   // Dispose client khi không cần thiết
   void dispose() {
     _client.close();
