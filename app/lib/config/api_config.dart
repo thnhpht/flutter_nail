@@ -2,16 +2,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
-  // URLs cho các platform khác nhau
-  static const String androidEmulator =
-      'https://nailapi.logisticssoftware.vn/api';
-  static const String iosSimulator = 'https://nailapi.logisticssoftware.vn/api';
-  static const String androidDevice =
-      'https://nailapi.logisticssoftware.vn/api';
-  static const String iosDevice = 'https://nailapi.logisticssoftware.vn/api';
-  static const String web = 'https://nailapi.logisticssoftware.vn/api';
-  static const String desktop = 'https://nailapi.logisticssoftware.vn/api';
-  static const String fallback = 'https://nailapi.logisticssoftware.vn/api';
+  // Base URL cho tất cả platform
+  static const String _ApiServer = 'https://nailapi.logisticssoftware.vn/api';
+  static const String _ApiLocal = 'http://localhost:5088/api';
+
+  // Swagger URLs
+  static const String _SwaggerServer =
+      'https://nailapi.logisticssoftware.vn/swagger';
+  static const String _SwaggerLocal = 'http://localhost:5088/swagger';
 
   static String get baseUrl {
     // Kiểm tra environment variable trước
@@ -20,52 +18,22 @@ class ApiConfig {
       return envUrl;
     }
 
-    // Detect platform và trả về URL phù hợp
-    if (kIsWeb) {
-      return web;
-    } else if (Platform.isAndroid) {
-      // Kiểm tra xem có phải emulator không
-      if (_isAndroidEmulator()) {
-        return androidEmulator;
-      } else {
-        return androidDevice;
-      }
-    } else if (Platform.isIOS) {
-      // Kiểm tra xem có phải simulator không
-      if (_isIOSSimulator()) {
-        return iosSimulator;
-      } else {
-        return iosDevice;
-      }
-    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      return desktop;
-    }
-
-    // Fallback
-    return fallback;
+    // Trả về URL cố định
+    return _ApiServer;
   }
 
-  // Helper methods để detect emulator/simulator
-  static bool _isAndroidEmulator() {
-    // Trong Android emulator, hostname thường là "android"
-    try {
-      final hostname = Platform.localHostname;
-      return hostname.toLowerCase().contains('android') ||
-          hostname.toLowerCase().contains('emulator');
-    } catch (e) {
-      return false;
+  static String get swaggerUrl {
+    // Kiểm tra environment variable trước
+    const envUrl = String.fromEnvironment('SWAGGER_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
     }
-  }
 
-  static bool _isIOSSimulator() {
-    // Trong iOS simulator, có thể kiểm tra một số điều kiện
-    try {
-      final hostname = Platform.localHostname;
-      return hostname.toLowerCase().contains('simulator') ||
-          hostname.toLowerCase().contains('iphone') ||
-          hostname.toLowerCase().contains('ipad');
-    } catch (e) {
-      return false;
+    // Trả về Swagger URL dựa trên API URL hiện tại
+    if (baseUrl.contains('localhost')) {
+      return _SwaggerLocal;
+    } else {
+      return _SwaggerServer;
     }
   }
 
@@ -92,8 +60,7 @@ class ApiConfig {
     return {
       'platform': platformInfo,
       'baseUrl': baseUrl,
-      'isAndroidEmulator': Platform.isAndroid ? _isAndroidEmulator() : null,
-      'isIOSSimulator': Platform.isIOS ? _isIOSSimulator() : null,
+      'swaggerUrl': swaggerUrl,
       'hostname': Platform.localHostname,
     };
   }

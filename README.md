@@ -44,9 +44,6 @@ dotnet run
 dotnet publish -c Release -o ./publish
 ```
 
-- API chạy tại: `http://localhost:5088`
-- Swagger UI: `http://localhost:5088/swagger`
-
 ### Frontend (Flutter App)
 
 ```bash

@@ -59,10 +59,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger cho tất cả environment (có thể tắt bằng config)
+var enableSwagger = builder.Configuration.GetValue<bool>("EnableSwagger", true);
+if (enableSwagger)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nail API V1");
+        // Có thể truy cập Swagger tại /swagger
+        c.RoutePrefix = "swagger";
+    });
 }
 
 // Add request logging middleware
