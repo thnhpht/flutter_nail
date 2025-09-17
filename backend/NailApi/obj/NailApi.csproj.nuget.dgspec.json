@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj": {}
+    "/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/NailApi.csproj": {}
   },
   "projects": {
-    "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj": {
+    "/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/NailApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj",
+        "projectUniqueName": "/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/NailApi.csproj",
         "projectName": "NailApi",
-        "projectPath": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/NailApi.csproj",
+        "projectPath": "/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/NailApi.csproj",
         "packagesPath": "/Users/thnhpht/.nuget/packages/",
-        "outputPath": "/Users/thnhpht/Documents/Workspace/vidoanh/flutter_nail/backend/NailApi/obj/",
+        "outputPath": "/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/thnhpht/.nuget/NuGet/NuGet.Config"
