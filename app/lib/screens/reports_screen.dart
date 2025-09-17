@@ -60,7 +60,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       setState(() {
         _isLoading = false;
       });
-      AppWidgets.showFlushbar(context, 'Lỗi tải dữ liệu: $e', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi tải dữ liệu: $e',
+          type: MessageType.error);
     }
   }
 
@@ -146,7 +147,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       _updateFilters();
     }
   }
-
 
   void _updateFilters() {
     if (mounted) {
@@ -886,7 +886,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            order.customerPhone,
+                            _formatPhoneNumber(order.customerPhone),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -1154,6 +1154,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
     // totalPrice = originalTotal * (1 - discountPercent/100) + tip
     // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
     return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
+  }
+
+  String _formatPhoneNumber(String phoneNumber) {
+    // Loại bỏ tất cả ký tự không phải số
+    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Kiểm tra nếu số điện thoại có 10 số
+    if (cleanPhone.length == 10) {
+      // Format: 0xxx xxx xxx
+      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
+    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
+      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
+      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
+    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
+      // Format cho số không có số 0 đầu: 0xxx xxx xxx
+      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
+    }
+
+    // Nếu không phù hợp với format Việt Nam, trả về số gốc
+    return phoneNumber;
   }
 
   Widget _buildServicesDisplay(Order order) {

@@ -238,6 +238,26 @@ class _OrderScreenState extends State<OrderScreen> {
         );
   }
 
+  String _formatPhoneNumber(String phoneNumber) {
+    // Loại bỏ tất cả ký tự không phải số
+    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Kiểm tra nếu số điện thoại có 10 số
+    if (cleanPhone.length == 10) {
+      // Format: 0xxx xxx xxx
+      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
+    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
+      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
+      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
+    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
+      // Format cho số không có số 0 đầu: 0xxx xxx xxx
+      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
+    }
+
+    // Nếu không phù hợp với format Việt Nam, trả về số gốc
+    return phoneNumber;
+  }
+
   void _onCategoryToggled(Category category) {
     setState(() {
       if (_selectedCategories.contains(category)) {
@@ -616,7 +636,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                       _selectedEmployees.contains(employee);
                                   return _buildDropdownItem(
                                     title: employee.name,
-                                    subtitle: employee.phone ?? '',
+                                    subtitle: employee.phone != null
+                                        ? _formatPhoneNumber(employee.phone!)
+                                        : '',
                                     isSelected: isSelected,
                                     onTap: () => _toggleEmployee(employee),
                                   );

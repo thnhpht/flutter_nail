@@ -7,7 +7,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
 import '../models.dart';
 import '../config/salon_config.dart';
 import '../api_client.dart';
@@ -25,7 +24,6 @@ class PdfBillGenerator {
     String? salonName,
     String? salonAddress,
     String? salonPhone,
-    String? salonQRCode,
   }) async {
     try {
       // Hiển thị loading
@@ -54,8 +52,6 @@ class PdfBillGenerator {
           salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
       final displaySalonPhone =
           salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
-      final displaySalonQRCode =
-          salonInfo?.qrCode ?? salonQRCode ?? SalonConfig.salonQRCode;
 
       // Tạo PDF
       final pdf = await _createPdf(
@@ -64,7 +60,6 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
-        salonQRCode: displaySalonQRCode,
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -110,7 +105,6 @@ class PdfBillGenerator {
     String? salonName,
     String? salonAddress,
     String? salonPhone,
-    String? salonQRCode,
   }) async {
     try {
       // Hiển thị loading
@@ -139,8 +133,6 @@ class PdfBillGenerator {
           salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
       final displaySalonPhone =
           salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
-      final displaySalonQRCode =
-          salonInfo?.qrCode ?? salonQRCode ?? SalonConfig.salonQRCode;
 
       // Tạo PDF
       final pdf = await _createPdf(
@@ -149,7 +141,6 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
-        salonQRCode: displaySalonQRCode,
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -433,69 +424,15 @@ class PdfBillGenerator {
     );
   }
 
-  // Hàm để lấy hình ảnh từ URL hoặc base64 - cách mới
-  static Future<pw.ImageProvider?> _getImageFromUrlOrBase64(
-      String? imageData) async {
-    if (imageData == null || imageData.isEmpty) {
-      return null;
-    }
-
-    try {
-      // Kiểm tra nếu là base64
-      if (imageData.startsWith('data:image/') ||
-          (imageData.length > 100 && !imageData.startsWith('http'))) {
-        // Xử lý base64
-        String base64String = imageData;
-        if (imageData.startsWith('data:image/')) {
-          base64String = imageData.split(',')[1];
-        }
-
-        final bytes = base64Decode(base64String);
-
-        // Tạo image provider với cách mới
-        try {
-          final imageProvider = pw.MemoryImage(bytes);
-          return imageProvider;
-        } catch (e) {
-          return null;
-        }
-      } else if (imageData.startsWith('http')) {
-        // Xử lý URL
-        final uri = Uri.parse(imageData);
-        final response = await HttpClient().getUrl(uri);
-        final request = await response.close();
-        final bytes = await consolidateHttpClientResponseBytes(request);
-        return pw.MemoryImage(bytes);
-      }
-    } catch (e) {
-      return null;
-    }
-
-    return null;
-  }
-
   static Future<pw.Document> _createPdf({
     required Order order,
     required List<Service> services,
     required String salonName,
     required String salonAddress,
     required String salonPhone,
-    String? salonQRCode,
   }) async {
     // Load font hỗ trợ tiếng Việt
     await _loadVietnameseFont();
-
-    // Lấy hình ảnh QRCode từ database
-    pw.ImageProvider? qrCodeImageProvider;
-    String? qrCodeText;
-
-    if (salonQRCode != null &&
-        salonQRCode.isNotEmpty &&
-        salonQRCode != 'Chưa có mã QR Code') {
-      qrCodeImageProvider = await _getImageFromUrlOrBase64(salonQRCode);
-    } else {
-      qrCodeText = salonQRCode ?? 'Chưa có mã QR Code';
-    }
 
     final pdf = pw.Document();
 
@@ -529,76 +466,6 @@ class PdfBillGenerator {
 
               // Total
               _buildTotalSection(order),
-
-              pw.SizedBox(height: 20),
-
-              // QR Code section - Based on official documentation
-              pw.SizedBox(height: 20),
-
-              pw.Container(
-                width: double.infinity,
-                padding: const pw.EdgeInsets.all(20),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border.all(color: PdfColors.grey300),
-                  borderRadius: pw.BorderRadius.circular(8),
-                ),
-                child: pw.Column(
-                  children: [
-                    pw.Text(
-                      'QR CODE SALON',
-                      style: _getVietnameseTextStyle(
-                        fontSize: 16,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                      textAlign: pw.TextAlign.center,
-                    ),
-                    pw.SizedBox(height: 15),
-
-                    // Sử dụng cách hiển thị đơn giản nhất
-                    pw.Center(
-                      child: qrCodeImageProvider != null
-                          ? pw.Container(
-                              width: 150,
-                              height: 150,
-                              child: pw.Image(
-                                qrCodeImageProvider,
-                                width: 150,
-                                height: 150,
-                              ),
-                            )
-                          : pw.Container(
-                              width: 150,
-                              height: 150,
-                              decoration: pw.BoxDecoration(
-                                color: PdfColors.grey100,
-                                border: pw.Border.all(
-                                    color: PdfColors.black, width: 1),
-                              ),
-                              child: pw.Center(
-                                child: pw.Text(
-                                  qrCodeText ?? 'Chưa có mã QR Code',
-                                  style: _getVietnameseTextStyle(
-                                    fontSize: 12,
-                                    color: PdfColors.grey600,
-                                  ),
-                                  textAlign: pw.TextAlign.center,
-                                ),
-                              ),
-                            ),
-                    ),
-
-                    pw.SizedBox(height: 15),
-                    pw.Text(
-                      'Quét mã QR để liên hệ salon',
-                      style: _getVietnameseTextStyle(
-                        fontSize: 12,
-                        color: PdfColors.grey600,
-                      ),
-                      textAlign: pw.TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
 
               pw.Spacer(),
 
@@ -643,7 +510,7 @@ class PdfBillGenerator {
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            'ĐT: $salonPhone',
+            'Số điện thoại: ${_formatPhoneNumber(salonPhone)}',
             style: _getVietnameseTextStyle(
               fontSize: 14,
               color: PdfColors.grey600,
@@ -729,7 +596,8 @@ class PdfBillGenerator {
           ),
           pw.SizedBox(height: 10),
           _buildInfoRow('Tên khách hàng:', order.customerName),
-          _buildInfoRow('Số điện thoại:', order.customerPhone),
+          _buildInfoRow(
+              'Số điện thoại:', _formatPhoneNumber(order.customerPhone)),
           _buildInfoRow('Nhân viên phục vụ:', order.employeeNames.join(', ')),
         ],
       ),
@@ -1285,5 +1153,25 @@ class PdfBillGenerator {
     // totalPrice = originalTotal * (1 - discountPercent/100) + tip
     // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
     return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
+  }
+
+  static String _formatPhoneNumber(String phoneNumber) {
+    // Loại bỏ tất cả ký tự không phải số
+    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Kiểm tra nếu số điện thoại có 10 số
+    if (cleanPhone.length == 10) {
+      // Format: 0xxx xxx xxx
+      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
+    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
+      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
+      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
+    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
+      // Format cho số không có số 0 đầu: 0xxx xxx xxx
+      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
+    }
+
+    // Nếu không phù hợp với format Việt Nam, trả về số gốc
+    return phoneNumber;
   }
 }

@@ -185,7 +185,7 @@ class BillHelper {
               ),
               const SizedBox(height: 4),
               Text(
-                displaySalonPhone,
+                'Số điện thoại: ${_formatPhoneNumber(displaySalonPhone)}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -282,7 +282,8 @@ class BillHelper {
               ),
               const SizedBox(height: AppTheme.spacingS),
               _buildInfoRow('Tên khách hàng:', order.customerName),
-              _buildInfoRow('Số điện thoại:', order.customerPhone),
+              _buildInfoRow(
+                  'Số điện thoại:', _formatPhoneNumber(order.customerPhone)),
               _buildInfoRow(
                   'Nhân viên phục vụ:', order.employeeNames.join(', ')),
             ],
@@ -715,6 +716,26 @@ class BillHelper {
     return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
 
+  static String _formatPhoneNumber(String phoneNumber) {
+    // Loại bỏ tất cả ký tự không phải số
+    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Kiểm tra nếu số điện thoại có 10 số
+    if (cleanPhone.length == 10) {
+      // Format: 0xxx xxx xxx
+      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
+    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
+      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
+      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
+    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
+      // Format cho số không có số 0 đầu: 0xxx xxx xxx
+      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
+    }
+
+    // Nếu không phù hợp với format Việt Nam, trả về số gốc
+    return phoneNumber;
+  }
+
   static Future<void> _printBill(BuildContext context, Order order) async {
     // Lấy services từ biến static
     if (_currentServices == null || _currentServices!.isEmpty) {
@@ -737,7 +758,6 @@ class BillHelper {
     final salonName = salonInfo?.salonName;
     final salonAddress = salonInfo?.address;
     final salonPhone = salonInfo?.phone;
-    final salonQRCode = salonInfo?.qrCode;
 
     PdfBillGenerator.generateAndSendToZalo(
       context: context,
@@ -747,7 +767,6 @@ class BillHelper {
       salonName: salonName,
       salonAddress: salonAddress,
       salonPhone: salonPhone,
-      salonQRCode: salonQRCode,
     );
   }
 }
