@@ -18,7 +18,6 @@ class BillsScreen extends StatefulWidget {
 
 class _BillsScreenState extends State<BillsScreen> {
   Information? _information;
-  bool _isInfoLoading = true;
   List<Order> _orders = [];
   List<Service> _allServices = [];
   bool _isLoading = true;
@@ -43,15 +42,10 @@ class _BillsScreenState extends State<BillsScreen> {
       if (mounted) {
         setState(() {
           _information = info;
-          _isInfoLoading = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isInfoLoading = false;
-        });
-      }
+      // Handle error silently
     }
   }
 
@@ -66,7 +60,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
     try {
       final orders = await widget.api.getOrders();
-      final categories = await widget.api.getCategories();
+      await widget.api.getCategories(); // Load categories but don't store them
       final services = await widget.api.getServices();
 
       setState(() {
@@ -78,7 +72,8 @@ class _BillsScreenState extends State<BillsScreen> {
       setState(() {
         _isLoading = false;
       });
-      _showErrorSnackBar('Lỗi tải dữ liệu: $e');
+      AppWidgets.showFlushbar(context, 'Lỗi tải dữ liệu: $e',
+          type: MessageType.error);
     }
   }
 
@@ -148,19 +143,12 @@ class _BillsScreenState extends State<BillsScreen> {
     return services;
   }
 
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
   void _showBill(Order order) {
     final services = _getServicesForOrder(order);
     if (services.isEmpty) {
-      _showErrorSnackBar('Không tìm thấy thông tin dịch vụ cho đơn hàng này');
+      AppWidgets.showFlushbar(
+          context, 'Không tìm thấy thông tin dịch vụ cho đơn hàng này',
+          type: MessageType.error);
       return;
     }
 
@@ -254,7 +242,7 @@ class _BillsScreenState extends State<BillsScreen> {
   Future<void> _showDateFilterDialog() async {
     await showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -263,7 +251,7 @@ class _BillsScreenState extends State<BillsScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -287,7 +275,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.calendar_month,
@@ -663,7 +651,7 @@ class _BillsScreenState extends State<BillsScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -682,7 +670,7 @@ class _BillsScreenState extends State<BillsScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -770,7 +758,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -818,33 +806,31 @@ class _BillsScreenState extends State<BillsScreen> {
                   const SizedBox(height: AppTheme.spacingL),
 
                   // Stats
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildStatCard(
-                            title: _selectedDateRange != null
-                                ? 'Hóa đơn đã lọc'
-                                : 'Tổng hóa đơn',
-                            value: _filteredOrders.length.toString(),
-                            icon: Icons.receipt,
-                            color: Colors.blue,
-                          ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          title: _selectedDateRange != null
+                              ? 'Hóa đơn đã lọc'
+                              : 'Tổng hóa đơn',
+                          value: _filteredOrders.length.toString(),
+                          icon: Icons.receipt,
+                          color: Colors.blue,
                         ),
-                        const SizedBox(width: AppTheme.spacingS),
-                        Expanded(
-                          child: _buildStatCard(
-                            title: _selectedDateRange != null
-                                ? 'Doanh thu đã lọc'
-                                : 'Tổng doanh thu',
-                            value:
-                                '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
-                            icon: Icons.attach_money,
-                            color: Colors.green,
-                          ),
+                      ),
+                      const SizedBox(width: AppTheme.spacingS),
+                      Expanded(
+                        child: _buildStatCard(
+                          title: _selectedDateRange != null
+                              ? 'Doanh thu đã lọc'
+                              : 'Tổng doanh thu',
+                          value:
+                              '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
+                          icon: Icons.attach_money,
+                          color: Colors.green,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: AppTheme.spacingM),
@@ -867,7 +853,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         index: index,
                         child: _buildOrderCard(order),
                       );
-                    }).toList(),
+                    }),
 
                   const SizedBox(height: 20),
                 ],

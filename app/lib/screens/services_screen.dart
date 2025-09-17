@@ -2,8 +2,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:another_flushbar/flushbar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../api_client.dart';
 import '../models.dart';
@@ -18,8 +16,6 @@ class ServicesScreen extends StatefulWidget {
   State<ServicesScreen> createState() => _ServicesScreenState();
 }
 
-enum MessageType { success, error, warning, info }
-
 class _ServicesScreenState extends State<ServicesScreen> {
   late Future<List<Service>> _future = Future.value([]);
   List<Category> _categories = [];
@@ -32,63 +28,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
   bool _showCategoryFilter = false;
   bool _isFilterExpanded = false;
 
-  // Helper method to get image provider for dialog
-  Uint8List? _selectedImageBytes;
-  ImageProvider? _getImageProvider(String? imageUrl) {
-    if (_selectedImageBytes != null) {
-      return MemoryImage(_selectedImageBytes!);
-    }
-    if (imageUrl == null || imageUrl.isEmpty) return null;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return NetworkImage(imageUrl);
-    } else if (imageUrl.startsWith('/')) {
-      return FileImage(File(imageUrl));
-    } else {
-      // For relative paths, we'll handle this in the widget itself
-      return null;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _load();
-  }
-
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      case MessageType.info:
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
   }
 
   // Thêm method _pickImage cải tiến
@@ -108,7 +51,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar(
+        AppWidgets.showFlushbar(context,
             'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
             type: MessageType.error);
       }
@@ -148,7 +91,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         height: 120,
         decoration: BoxDecoration(
           color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(60),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: Colors.grey[300]!,
             width: 2,
@@ -157,7 +100,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ),
         child: selectedImageBytes != null
             ? ClipRRect(
-                borderRadius: BorderRadius.circular(58),
+                borderRadius: BorderRadius.circular(10),
                 child: Image.memory(
                   selectedImageBytes,
                   fit: BoxFit.cover,
@@ -165,7 +108,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               )
             : (imageUrl != null && imageUrl.isNotEmpty)
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(58),
+                    borderRadius: BorderRadius.circular(10),
                     child: imageUrl.startsWith('http')
                         ? Image.network(
                             imageUrl,
@@ -264,7 +207,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -656,7 +599,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => StatefulBuilder(
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
@@ -670,7 +613,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -682,9 +625,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 // Header
                 Container(
                   padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: AppTheme.primaryGradient,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
@@ -694,7 +637,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.spa,
@@ -753,18 +696,18 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             border: Border.all(color: Colors.grey[200]!),
                           ),
                           child: DropdownButtonFormField<String>(
-                            value: selectedCatId,
+                            initialValue: selectedCatId,
                             items: _categories
                                 .map((c) => DropdownMenuItem(
                                     value: c.id, child: Text(c.name)))
                                 .toList(),
                             onChanged: (v) => selectedCatId = v,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Danh mục',
                               prefixIcon: Icon(Icons.category,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
+                              contentPadding: EdgeInsets.all(16),
                             ),
                           ),
                         ),
@@ -783,7 +726,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
                                     labelText: 'Tên dịch vụ',
-                                    prefixIcon: Icon(Icons.spa,
+                                    prefixIcon: const Icon(Icons.spa,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -817,7 +760,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   controller: priceCtrl,
                                   decoration: InputDecoration(
                                     labelText: 'Giá (VNĐ)',
-                                    prefixIcon: Icon(Icons.attach_money,
+                                    prefixIcon: const Icon(Icons.attach_money,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -887,7 +830,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryStart.withOpacity(0.3),
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -947,7 +891,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             imageUrlToSave = await widget.api
                 .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server',
+            AppWidgets.showFlushbar(context, 'Lỗi khi upload ảnh lên server',
                 type: MessageType.error);
             return;
           }
@@ -955,9 +899,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
         await widget.api
             .createService(selectedCatId!, name, price, image: imageUrlToSave);
         await _reload();
-        showFlushbar('Thêm dịch vụ thành công', type: MessageType.success);
+        AppWidgets.showFlushbar(context, 'Thêm dịch vụ thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thêm dịch vụ', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi khi thêm dịch vụ',
+            type: MessageType.error);
       }
     }
   }
@@ -969,11 +915,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
     String? imageUrl = s.image;
     XFile? pickedImage;
     Uint8List? selectedImageBytes;
-    String? oldAssetPath = s.image;
 
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => StatefulBuilder(
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
@@ -987,7 +932,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -999,9 +944,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 // Header
                 Container(
                   padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: AppTheme.primaryGradient,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
@@ -1011,7 +956,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.edit,
@@ -1070,18 +1015,18 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             border: Border.all(color: Colors.grey[200]!),
                           ),
                           child: DropdownButtonFormField<String>(
-                            value: selectedCatId,
+                            initialValue: selectedCatId,
                             items: _categories
                                 .map((c) => DropdownMenuItem(
                                     value: c.id, child: Text(c.name)))
                                 .toList(),
                             onChanged: (v) => selectedCatId = v,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Danh mục',
                               prefixIcon: Icon(Icons.category,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
+                              contentPadding: EdgeInsets.all(16),
                             ),
                           ),
                         ),
@@ -1100,7 +1045,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
                                     labelText: 'Tên dịch vụ',
-                                    prefixIcon: Icon(Icons.spa,
+                                    prefixIcon: const Icon(Icons.spa,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -1134,7 +1079,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   controller: priceCtrl,
                                   decoration: InputDecoration(
                                     labelText: 'Giá (VNĐ)',
-                                    prefixIcon: Icon(Icons.attach_money,
+                                    prefixIcon: const Icon(Icons.attach_money,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -1204,7 +1149,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryStart.withOpacity(0.3),
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -1264,7 +1210,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             imageUrlToSave = await widget.api
                 .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server',
+            AppWidgets.showFlushbar(context, 'Lỗi khi upload ảnh lên server',
                 type: MessageType.error);
             return;
           }
@@ -1277,10 +1223,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin dịch vụ thành công',
+        AppWidgets.showFlushbar(
+            context, 'Thay đổi thông tin dịch vụ thành công',
             type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thay đổi thông tin dịch vụ',
+        AppWidgets.showFlushbar(context, 'Lỗi khi thay đổi thông tin dịch vụ',
             type: MessageType.error);
       }
     }
@@ -1290,9 +1237,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
     try {
       await widget.api.deleteService(s.categoryId, s.id);
       await _reload();
-      showFlushbar('Xóa dịch vụ thành công', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Xóa dịch vụ thành công',
+          type: MessageType.success);
     } catch (e) {
-      showFlushbar('Lỗi khi xóa dịch vụ', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi khi xóa dịch vụ',
+          type: MessageType.error);
     }
   }
 
@@ -1337,7 +1286,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -1356,7 +1305,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -1489,7 +1438,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách dịch vụ',
+                        AppWidgets.showFlushbar(
+                            context, 'Lỗi tải danh sách dịch vụ',
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -1648,7 +1598,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.orange
-                                                            .withOpacity(0.3),
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                         blurRadius: 4,
                                                         offset:
                                                             const Offset(0, 2),
@@ -1682,7 +1633,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.red
-                                                            .withOpacity(0.3),
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                         blurRadius: 4,
                                                         offset:
                                                             const Offset(0, 2),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:another_flushbar/flushbar.dart';
+
 import '../api_client.dart';
 import '../models.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +13,6 @@ class EmployeesScreen extends StatefulWidget {
   State<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-enum MessageType { success, error, warning, info }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
   late Future<List<Employee>> _future = widget.api.getEmployees();
@@ -27,41 +26,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     });
   }
 
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      case MessageType.info:
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
-  }
 
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
@@ -69,7 +33,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     final passwordCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -82,7 +46,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -106,7 +70,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.person_add,
@@ -294,7 +258,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryStart.withOpacity(0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -340,7 +305,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
         if (existing != null) {
-          showFlushbar('SĐT của nhân viên đã được tạo',
+          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
               type: MessageType.warning);
           return;
         }
@@ -351,9 +316,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         await widget.api.createEmployee(name,
             phone: phone, password: passwordCtrl.text.trim());
         await _reload();
-        showFlushbar('Thêm nhân viên thành công', type: MessageType.success);
+        AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công', type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thêm nhân viên', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi khi thêm nhân viên', type: MessageType.error);
       }
     }
   }
@@ -364,7 +329,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     final passwordCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -377,7 +342,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -401,7 +366,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child:
@@ -589,7 +554,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryStart.withOpacity(0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -635,7 +601,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
         if (existing != null && existing.id != e.id) {
-          showFlushbar('SĐT của nhân viên đã được tạo',
+          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
               type: MessageType.warning);
           return;
         }
@@ -652,10 +618,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           password: password.isEmpty ? null : password,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin nhân viên thành công',
+        AppWidgets.showFlushbar(context, 'Thay đổi thông tin nhân viên thành công',
             type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi thay đổi thông tin nhân viên',
+        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin nhân viên',
             type: MessageType.error);
       }
     }
@@ -665,9 +631,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     try {
       await widget.api.deleteEmployee(e.id);
       await _reload();
-      showFlushbar('Xóa nhân viên thành công', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công', type: MessageType.success);
     } catch (e) {
-      showFlushbar('Lỗi khi xóa nhân viên', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi khi xóa nhân viên', type: MessageType.error);
     }
   }
 
@@ -682,7 +648,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -701,7 +667,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -752,7 +718,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách nhân viên',
+                        AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên',
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -888,7 +854,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.orange
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
@@ -916,8 +882,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                                 BorderRadius.circular(8),
                                             boxShadow: [
                                               BoxShadow(
-                                                color:
-                                                    Colors.red.withOpacity(0.3),
+                                                color: Colors.red
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),

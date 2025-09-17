@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:another_flushbar/flushbar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../api_client.dart';
 import '../models.dart';
@@ -18,72 +16,16 @@ class CategoriesScreen extends StatefulWidget {
   State<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-enum MessageType { success, error, warning, info }
-
 class _CategoriesScreenState extends State<CategoriesScreen> {
   late Future<List<Category>> _future = widget.api.getCategories();
   String _search = '';
   final _formKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
 
-  // Helper method to get image provider for dialog
-  Uint8List? _selectedImageBytes;
-  ImageProvider? _getImageProvider(String? imageUrl,
-      [Uint8List? selectedImageBytes]) {
-    if (selectedImageBytes != null) {
-      return MemoryImage(selectedImageBytes);
-    }
-    if (imageUrl == null || imageUrl.isEmpty) return null;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return NetworkImage(imageUrl);
-    } else if (imageUrl.startsWith('/')) {
-      return FileImage(File(imageUrl));
-    } else {
-      // For relative paths, we'll handle this in the widget itself
-      return null;
-    }
-  }
-
   Future<void> _reload() async {
     setState(() {
       _future = widget.api.getCategories();
     });
-  }
-
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      case MessageType.info:
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
   }
 
   Future<void> _pickImage(Function(XFile?, Uint8List?) onImageSelected) async {
@@ -102,7 +44,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar(
+        AppWidgets.showFlushbar(context,
             'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
             type: MessageType.error);
       }
@@ -140,7 +82,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         height: 120,
         decoration: BoxDecoration(
           color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(60),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: Colors.grey[300]!,
             width: 2,
@@ -149,7 +91,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         child: selectedImageBytes != null
             ? ClipRRect(
-                borderRadius: BorderRadius.circular(58),
+                borderRadius: BorderRadius.circular(10),
                 child: Image.memory(
                   selectedImageBytes,
                   fit: BoxFit.cover,
@@ -157,7 +99,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               )
             : (imageUrl != null && imageUrl.isNotEmpty)
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(58),
+                    borderRadius: BorderRadius.circular(10),
                     child: imageUrl.startsWith('http')
                         ? Image.network(
                             imageUrl,
@@ -181,7 +123,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => StatefulBuilder(
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
@@ -207,9 +149,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 // Header
                 Container(
                   padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: AppTheme.primaryGradient,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
@@ -219,7 +161,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.category,
@@ -389,7 +331,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        showFlushbar('Tên danh mục không được để trống',
+        AppWidgets.showFlushbar(context, 'Tên danh mục không được để trống',
             type: MessageType.warning);
         return;
       }
@@ -408,7 +350,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             imageUrlToSave = await widget.api
                 .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server: $e',
+            AppWidgets.showFlushbar(
+                context, 'Lỗi khi upload ảnh lên server: $e',
                 type: MessageType.error);
             return;
           }
@@ -418,9 +361,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           image: imageUrlToSave,
         );
         await _reload();
-        showFlushbar('Thêm danh mục thành công', type: MessageType.success);
+        AppWidgets.showFlushbar(context, 'Thêm danh mục thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thêm danh mục', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi khi thêm danh mục',
+            type: MessageType.error);
       }
     }
   }
@@ -431,11 +376,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     String? imageUrl = c.image;
     XFile? pickedImage;
     Uint8List? selectedImageBytes;
-    String? oldAssetPath = c.image;
 
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => StatefulBuilder(
         builder: (context, setState) => Dialog(
           backgroundColor: Colors.transparent,
@@ -643,7 +587,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        showFlushbar('Tên danh mục không được để trống',
+        AppWidgets.showFlushbar(context, 'Tên danh mục không được để trống',
             type: MessageType.warning);
         return;
       }
@@ -662,7 +606,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             imageUrlToSave = await widget.api
                 .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
-            showFlushbar('Lỗi khi upload ảnh lên server: $e',
+            AppWidgets.showFlushbar(
+                context, 'Lỗi khi upload ảnh lên server: $e',
                 type: MessageType.error);
             return;
           }
@@ -674,10 +619,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        showFlushbar('Thay đổi thông tin danh mục thành công',
+        AppWidgets.showFlushbar(
+            context, 'Thay đổi thông tin danh mục thành công',
             type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi thay đổi thông tin danh mục',
+        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin danh mục',
             type: MessageType.error);
       }
     }
@@ -687,9 +633,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     try {
       await widget.api.deleteCategory(c.id);
       await _reload();
-      showFlushbar('Xóa danh mục thành công', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Xóa danh mục thành công',
+          type: MessageType.success);
     } catch (e) {
-      showFlushbar('Lỗi khi xóa danh mục', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi khi xóa danh mục',
+          type: MessageType.error);
     }
   }
 
@@ -804,7 +752,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách danh mục',
+                        AppWidgets.showFlushbar(
+                            context, 'Lỗi tải danh sách danh mục',
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,

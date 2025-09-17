@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:another_flushbar/flushbar.dart';
 import '../api_client.dart';
 import '../models.dart';
+import '../ui/design_system.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiClient api;
@@ -18,10 +18,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-enum MessageType { success, error, info, warning }
-
 class _LoginScreenState extends State<LoginScreen> {
-  Information? _information;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -56,42 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      case MessageType.info:
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -106,12 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _checkEmail() async {
     if (_emailController.text.trim().isEmpty) {
-      showFlushbar('Vui lòng nhập email của bạn', type: MessageType.warning);
+      AppWidgets.showFlushbar(context, 'Vui lòng nhập email của bạn',
+          type: MessageType.warning);
       return;
     }
 
     if (!_emailController.text.contains('@')) {
-      showFlushbar(
+      AppWidgets.showFlushbar(context,
           'Vui lòng nhập email có định dạng hợp lệ (ví dụ: example@email.com)',
           type: MessageType.warning);
       return;
@@ -137,18 +99,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (mounted) {
         if (response.exists) {
-          showFlushbar(
+          AppWidgets.showFlushbar(
+            context,
             'Chào mừng quay trở lại: ${_emailController.text.trim()}!',
             type: MessageType.success,
           );
         } else {
-          showFlushbar(response.message, type: MessageType.info);
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.info);
         }
       }
     } catch (e) {
       if (mounted) {
         String errorMessage = _getUserFriendlyErrorMessage(e.toString());
-        showFlushbar(errorMessage, type: MessageType.error);
+        AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
       }
     } finally {
       if (mounted) {
@@ -188,20 +152,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Hiển thị thông báo thành công
         if (mounted) {
-          showFlushbar(response.message, type: MessageType.success);
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.success);
         }
 
         // Chuyển đến màn hình chính
         widget.onLoginSuccess();
       } else {
         if (mounted) {
-          showFlushbar(response.message, type: MessageType.error);
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.error);
         }
       }
     } catch (e) {
       if (mounted) {
         String errorMessage = _getUserFriendlyErrorMessage(e.toString());
-        showFlushbar(errorMessage, type: MessageType.error);
+        AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
       }
     } finally {
       if (mounted) {
@@ -273,20 +239,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Hiển thị thông báo thành công
         if (mounted) {
-          showFlushbar(response.message, type: MessageType.success);
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.success);
         }
 
         // Chuyển đến màn hình chính
         widget.onLoginSuccess();
       } else {
         if (mounted) {
-          showFlushbar(response.message, type: MessageType.error);
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.error);
         }
       }
     } catch (e) {
       if (mounted) {
         String errorMessage = _getUserFriendlyErrorMessage(e.toString());
-        showFlushbar(errorMessage, type: MessageType.error);
+        AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
       }
     } finally {
       if (mounted) {
@@ -378,13 +346,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: _selectedRole == 'shop_owner'
-                      ? Colors.white.withOpacity(0.2)
-                      : Colors.white.withOpacity(0.1),
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _selectedRole == 'shop_owner'
                         ? Colors.white
-                        : Colors.white.withOpacity(0.3),
+                        : Colors.white.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
@@ -448,13 +416,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: _selectedRole == 'employee'
-                      ? Colors.white.withOpacity(0.2)
-                      : Colors.white.withOpacity(0.1),
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _selectedRole == 'employee'
                         ? Colors.white
-                        : Colors.white.withOpacity(0.3),
+                        : Colors.white.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
@@ -587,10 +555,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),

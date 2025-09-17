@@ -33,8 +33,7 @@ enum _HomeView {
 void main() {
 // Sử dụng ApiConfig để tự động detect platform và chọn URL phù hợp
   final baseUrl = ApiConfig.baseUrl;
-  print('Platform: ${ApiConfig.platformInfo}');
-  print('API URL: $baseUrl');
+  // Removed print statements for production
   runApp(NailApp(baseUrl: baseUrl));
 }
 
@@ -280,10 +279,10 @@ class _NailAppState extends State<NailApp> {
                   // Menu Button (all devices)
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
@@ -329,8 +328,9 @@ class _NailAppState extends State<NailApp> {
                                     height: 16,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              Colors.white),
                                     ),
                                   ),
                                 ),
@@ -494,16 +494,6 @@ class _NailAppState extends State<NailApp> {
     });
   }
 
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(1)}K';
-    } else {
-      return amount.toStringAsFixed(0);
-    }
-  }
-
   String _formatCurrencyVN(double amount) {
     // Format số tiền theo định dạng Việt Nam: 150.000 VNĐ
     final formatter = NumberFormat('#,###', 'vi_VN');
@@ -526,7 +516,6 @@ class _NailAppState extends State<NailApp> {
           return OrderScreen(api: api, onOrderCreated: _refreshBills);
         case _HomeView.bills:
           return BillsScreen(api: api);
-        case _HomeView.welcome:
         default:
           return _buildWelcomeScreen();
       }
@@ -550,7 +539,6 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.salonInfo:
           return SalonInfoScreen(
               api: api, onSalonInfoUpdated: _refreshSalonInfo);
-        case _HomeView.welcome:
         default:
           return _buildWelcomeScreen();
       }
@@ -584,7 +572,8 @@ class _NailAppState extends State<NailApp> {
                             : 160,
                     child: Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
                   )
@@ -719,10 +708,10 @@ class _NailAppState extends State<NailApp> {
                 desktop: const EdgeInsets.all(24),
               ),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -833,10 +822,10 @@ class _NailAppState extends State<NailApp> {
                 desktop: const EdgeInsets.all(20),
               ),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -910,10 +899,10 @@ class _NailAppState extends State<NailApp> {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           width: 2,
         ),
       ),

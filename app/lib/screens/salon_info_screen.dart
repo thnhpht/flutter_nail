@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:another_flushbar/flushbar.dart';
+
 import 'dart:io';
 import 'dart:convert';
 import '../api_client.dart';
@@ -19,7 +19,6 @@ class SalonInfoScreen extends StatefulWidget {
   State<SalonInfoScreen> createState() => _SalonInfoScreenState();
 }
 
-enum MessageType { success, error, warning, info }
 
 class _SalonInfoScreenState extends State<SalonInfoScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -59,40 +58,6 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     super.dispose();
   }
 
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
-  }
 
   Future<void> _loadInformation() async {
     try {
@@ -120,7 +85,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        showFlushbar(
+        AppWidgets.showFlushbar(context, 
             'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
             type: MessageType.error);
       }
@@ -152,7 +117,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       }
     } catch (e) {
       if (mounted) {
-        showFlushbar(
+        AppWidgets.showFlushbar(context, 
             'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
             type: MessageType.error);
       }
@@ -181,7 +146,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           setState(() {
             _isSaving = false;
           });
-          showFlushbar('Lỗi khi upload logo lên server',
+          AppWidgets.showFlushbar(context, 'Lỗi khi upload logo lên server',
               type: MessageType.error);
           return;
         }
@@ -196,7 +161,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           setState(() {
             _isSaving = false;
           });
-          showFlushbar('Lỗi khi upload QR code lên server',
+          AppWidgets.showFlushbar(context, 'Lỗi khi upload QR code lên server',
               type: MessageType.error);
           return;
         }
@@ -230,7 +195,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       });
 
       if (mounted) {
-        showFlushbar('Lưu thông tin salon thành công!',
+        AppWidgets.showFlushbar(context, 'Lưu thông tin salon thành công!',
             type: MessageType.success);
         // Call callback to refresh main screen
         widget.onSalonInfoUpdated?.call();
@@ -240,7 +205,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isSaving = false;
       });
       if (mounted) {
-        showFlushbar(
+        AppWidgets.showFlushbar(context, 
             'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
             type: MessageType.error);
       }
@@ -311,7 +276,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryStart.withOpacity(0.3),
+            color: AppTheme.primaryStart.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -322,7 +287,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           Container(
             padding: const EdgeInsets.all(AppTheme.spacingM),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
             ),
             child: const Icon(
@@ -349,7 +314,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                   'Quản lý thông tin và liên hệ của salon',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -368,7 +333,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -466,7 +431,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -641,7 +606,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -699,7 +664,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -756,7 +721,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryStart.withOpacity(0.3),
+            color: AppTheme.primaryStart.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),

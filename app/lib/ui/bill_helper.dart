@@ -59,6 +59,7 @@ class BillHelper {
               children: [
                 // Header
                 Container(
+                  width: double.infinity, // Thêm dòng này
                   padding: const EdgeInsets.all(AppTheme.spacingM),
                   decoration: BoxDecoration(
                     gradient: AppTheme.primaryGradient,
@@ -541,6 +542,7 @@ class BillHelper {
 
         // Footer
         Container(
+          width: double.infinity, // Thêm dòng này
           padding: const EdgeInsets.all(AppTheme.spacingM),
           decoration: BoxDecoration(
             color: AppTheme.surfaceAlt,
@@ -716,12 +718,9 @@ class BillHelper {
   static Future<void> _printBill(BuildContext context, Order order) async {
     // Lấy services từ biến static
     if (_currentServices == null || _currentServices!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Không tìm thấy thông tin dịch vụ cho đơn hàng này'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppWidgets.showFlushbar(
+          context, 'Không tìm thấy thông tin dịch vụ cho đơn hàng này',
+          type: MessageType.error);
       return;
     }
 
@@ -732,9 +731,7 @@ class BillHelper {
         salonInfo = await _apiClient!.getInformation();
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading salon info for PDF: $e');
-      }
+      return;
     }
 
     final salonName = salonInfo?.salonName;
@@ -742,7 +739,7 @@ class BillHelper {
     final salonPhone = salonInfo?.phone;
     final salonQRCode = salonInfo?.qrCode;
 
-    PdfBillGenerator.generateAndShareBill(
+    PdfBillGenerator.generateAndSendToZalo(
       context: context,
       order: order,
       services: _currentServices!,

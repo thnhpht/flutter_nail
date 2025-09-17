@@ -11,12 +11,98 @@ import 'dart:convert';
 import '../models.dart';
 import '../config/salon_config.dart';
 import '../api_client.dart';
+import 'design_system.dart';
 
 class PdfBillGenerator {
   static pw.Font? _vietnameseFont;
   static pw.Font? _vietnameseFontBold;
 
   static Future<void> generateAndShareBill({
+    required BuildContext context,
+    required Order order,
+    required List<Service> services,
+    required ApiClient api,
+    String? salonName,
+    String? salonAddress,
+    String? salonPhone,
+    String? salonQRCode,
+  }) async {
+    try {
+      // Hiển thị loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Lấy thông tin salon từ database
+      Information? salonInfo;
+      try {
+        salonInfo = await api.getInformation();
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error loading salon info for PDF: $e');
+        }
+      }
+
+      // Sử dụng thông tin từ database hoặc fallback về tham số truyền vào hoặc SalonConfig
+      final displaySalonName =
+          salonInfo?.salonName ?? salonName ?? SalonConfig.salonName;
+      final displaySalonAddress =
+          salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
+      final displaySalonPhone =
+          salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
+      final displaySalonQRCode =
+          salonInfo?.qrCode ?? salonQRCode ?? SalonConfig.salonQRCode;
+
+      // Tạo PDF
+      final pdf = await _createPdf(
+        order: order,
+        services: services,
+        salonName: displaySalonName,
+        salonAddress: displaySalonAddress,
+        salonPhone: displaySalonPhone,
+        salonQRCode: displaySalonQRCode,
+      );
+
+      // Lưu file PDF hoặc sử dụng bytes trực tiếp
+      File? file;
+      Uint8List? pdfBytes;
+
+      try {
+        file = await _savePdf(pdf, order);
+      } catch (e) {
+        // Nếu không thể lưu file, sử dụng bytes trực tiếp
+        pdfBytes = await pdf.save();
+      }
+
+      // Đóng loading dialog
+      Navigator.of(context).pop();
+
+      // Hiển thị dialog chọn cách chia sẻ
+      await _showShareOptions(context, file, pdfBytes, order.customerPhone,
+          salonName: displaySalonName);
+    } catch (e) {
+      // Đóng loading dialog nếu có lỗi
+      if (Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+
+      // Hiển thị thông báo lỗi chi tiết hơn
+      String errorMessage = 'Lỗi tạo PDF: $e';
+      if (e.toString().contains('MissingPluginException')) {
+        errorMessage =
+            'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
+      }
+
+      AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
+    }
+  }
+
+  // Phương thức mới để tự động gửi PDF tới Zalo
+  static Future<void> generateAndSendToZalo({
     required BuildContext context,
     required Order order,
     required List<Service> services,
@@ -83,8 +169,8 @@ class PdfBillGenerator {
       // Đóng loading dialog
       Navigator.of(context).pop();
 
-      // Hiển thị dialog chọn cách chia sẻ
-      await _showShareOptions(context, file, pdfBytes, order.customerPhone,
+      // Tự động gửi tới Zalo mà không hiển thị dialog
+      await _shareDirectlyToZalo(context, file, pdfBytes, order.customerPhone,
           salonName: displaySalonName);
     } catch (e) {
       // Đóng loading dialog nếu có lỗi
@@ -99,13 +185,143 @@ class PdfBillGenerator {
             'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-        ),
-      );
+      AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
+    }
+  } // Phương thức chia sẻ tới Zalo với trải nghiệm tốt nhất có thể
+
+  static Future<void> _shareDirectlyToZalo(BuildContext context, File? file,
+      Uint8List? pdfBytes, String customerPhone,
+      {String? salonName}) async {
+    try {
+      // Trên desktop, Zalo không hoạt động tốt, chuyển sang chia sẻ thông thường
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        await _shareFileDirectly(context, file, pdfBytes, salonName: salonName);
+        return;
+      }
+
+      // Trên mobile, thử mở Zalo trước
+      final zaloUrl = 'zalo://chat?phone=$customerPhone';
+
+      if (await canLaunchUrl(Uri.parse(zaloUrl))) {
+        // Mở Zalo với LaunchMode.externalApplication để tránh dialog
+        await launchUrl(
+          Uri.parse(zaloUrl),
+          mode: LaunchMode.externalApplication,
+        );
+
+        // Đợi Zalo mở
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Hiển thị thông báo hướng dẫn người dùng
+        AppWidgets.showFlushbar(context,
+            'Zalo đã mở! Vui lòng chọn Zalo trong menu chia sẻ để gửi hóa đơn.',
+            type: MessageType.info);
+      } else {
+        // Nếu không có Zalo, chia sẻ file thông thường
+        await _shareFileDirectly(context, file, pdfBytes, salonName: salonName);
+      }
+    } catch (e) {
+      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ Zalo: $e',
+          type: MessageType.error);
+
+      // Fallback: chia sẻ file thông thường
+      await _shareFileDirectly(context, file, pdfBytes, salonName: salonName);
+    }
+  }
+
+  // Phương thức chia sẻ file trực tiếp mà không hiển thị dialog
+  static Future<void> _shareFileDirectly(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
+    try {
+      // Kiểm tra platform và sử dụng phương pháp phù hợp
+      if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+        await _shareFileDesktopDirectly(context, file, pdfBytes,
+            salonName: salonName);
+      } else {
+        await _shareFileMobileDirectly(context, file, pdfBytes,
+            salonName: salonName);
+      }
+    } catch (e) {
+      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ file: $e',
+          type: MessageType.error);
+    }
+  } // Chia sẻ file trên mobile mà không hiển thị dialog
+
+  static Future<void> _shareFileMobileDirectly(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
+    // Thử gửi trực tiếp tới Zalo trước
+    try {
+      if (file != null && await file.exists()) {
+        // Sử dụng file nếu có - chia sẻ với Zalo
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        );
+      } else if (pdfBytes != null) {
+        // Sử dụng bytes trực tiếp nếu không có file
+        final tempFile = File('temp_bill.pdf');
+        await tempFile.writeAsBytes(pdfBytes);
+
+        await Share.shareXFiles(
+          [XFile(tempFile.path)],
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        );
+
+        // Xóa file tạm
+        try {
+          await tempFile.delete();
+        } catch (e) {
+          return;
+        }
+      } else {
+        throw Exception('Không có file PDF hoặc dữ liệu để chia sẻ');
+      }
+    } catch (e) {
+      // Nếu không thể chia sẻ, hiển thị thông báo
+      AppWidgets.showFlushbar(context, 'Không thể chia sẻ file: $e',
+          type: MessageType.error);
+    }
+  }
+
+  // Chia sẻ file trên desktop mà không hiển thị dialog
+  static Future<void> _shareFileDesktopDirectly(
+      BuildContext context, File? file, Uint8List? pdfBytes,
+      {String? salonName}) async {
+    // Trên desktop, sử dụng phương pháp khác
+    try {
+      // Thử sử dụng share_plus trước
+      if (file != null && await file.exists()) {
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        );
+      } else if (pdfBytes != null) {
+        final tempFile = File('temp_bill.pdf');
+        await tempFile.writeAsBytes(pdfBytes);
+
+        await Share.shareXFiles(
+          [XFile(tempFile.path)],
+          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        );
+
+        // Xóa file tạm
+        try {
+          await tempFile.delete();
+        } catch (e) {
+          return;
+        }
+      }
+    } catch (e) {
+      // Nếu share_plus không hoạt động, hiển thị thông báo
+      AppWidgets.showFlushbar(
+          context, 'File PDF đã được tạo. Vui lòng chia sẻ thủ công.',
+          type: MessageType.info);
     }
   }
 
@@ -113,10 +329,6 @@ class PdfBillGenerator {
     if (_vietnameseFont == null || _vietnameseFontBold == null) {
       // Trên Flutter Web, sử dụng font system thay vì load từ assets
       if (kIsWeb) {
-        if (kDebugMode) {
-          print(
-              'Running on Flutter Web, using system fonts for Vietnamese support');
-        }
         // Sử dụng font system có hỗ trợ Unicode tốt hơn
         _vietnameseFont = pw.Font.helvetica();
         _vietnameseFontBold = pw.Font.helveticaBold();
@@ -138,20 +350,12 @@ class PdfBillGenerator {
           // Nếu không có bold, sử dụng regular font
           _vietnameseFontBold = _vietnameseFont;
         }
-
-        if (kDebugMode) {
-          print('Loaded Noto Sans fonts for Vietnamese support');
-        }
       } catch (e) {
         try {
           // Fallback: thử DejaVu Sans (hỗ trợ Unicode tốt)
           final fontData = await rootBundle.load('assets/fonts/DejaVuSans.ttf');
           _vietnameseFont = pw.Font.ttf(fontData);
           _vietnameseFontBold = pw.Font.ttf(fontData);
-
-          if (kDebugMode) {
-            print('Loaded DejaVu Sans font for Vietnamese support');
-          }
         } catch (e1) {
           try {
             // Fallback: thử Liberation Sans
@@ -159,10 +363,6 @@ class PdfBillGenerator {
                 .load('assets/fonts/LiberationSans-Regular.ttf');
             _vietnameseFont = pw.Font.ttf(fontData);
             _vietnameseFontBold = pw.Font.ttf(fontData);
-
-            if (kDebugMode) {
-              print('Loaded Liberation Sans font for Vietnamese support');
-            }
           } catch (e2) {
             try {
               // Fallback: thử OpenSans
@@ -170,9 +370,6 @@ class PdfBillGenerator {
                   await rootBundle.load('assets/fonts/OpenSans-Regular.ttf');
               _vietnameseFont = pw.Font.ttf(fontData);
               _vietnameseFontBold = pw.Font.ttf(fontData);
-              if (kDebugMode) {
-                print('Loaded OpenSans font for Vietnamese support');
-              }
             } catch (e3) {
               try {
                 // Fallback: thử Roboto
@@ -180,15 +377,9 @@ class PdfBillGenerator {
                     await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
                 _vietnameseFont = pw.Font.ttf(fontData);
                 _vietnameseFontBold = pw.Font.ttf(fontData);
-                if (kDebugMode) {
-                  print('Loaded Roboto font for Vietnamese support');
-                }
               } catch (e4) {
                 // Cuối cùng: sử dụng font mặc định với fallback tốt hơn
-                if (kDebugMode) {
-                  print(
-                      'Could not load Vietnamese font from assets, using default: $e4');
-                }
+
                 _vietnameseFont = pw.Font.helvetica();
                 _vietnameseFontBold = pw.Font.helveticaBold();
               }
@@ -246,15 +437,7 @@ class PdfBillGenerator {
   static Future<pw.ImageProvider?> _getImageFromUrlOrBase64(
       String? imageData) async {
     if (imageData == null || imageData.isEmpty) {
-      if (kDebugMode) {
-        print('QR Code data is null or empty');
-      }
       return null;
-    }
-
-    if (kDebugMode) {
-      print(
-          'Processing QR Code data: ${imageData.substring(0, imageData.length > 100 ? 100 : imageData.length)}...');
     }
 
     try {
@@ -267,100 +450,28 @@ class PdfBillGenerator {
           base64String = imageData.split(',')[1];
         }
 
-        if (kDebugMode) {
-          print('Processing base64 QR Code, length: ${base64String.length}');
-        }
-
         final bytes = base64Decode(base64String);
-        if (kDebugMode) {
-          print('Base64 decoded successfully, bytes length: ${bytes.length}');
-        }
 
         // Tạo image provider với cách mới
         try {
           final imageProvider = pw.MemoryImage(bytes);
-          if (kDebugMode) {
-            print('MemoryImage created successfully');
-          }
           return imageProvider;
         } catch (e) {
-          if (kDebugMode) {
-            print('Error creating MemoryImage: $e');
-          }
           return null;
         }
       } else if (imageData.startsWith('http')) {
         // Xử lý URL
-        if (kDebugMode) {
-          print('Processing URL QR Code: $imageData');
-        }
         final uri = Uri.parse(imageData);
         final response = await HttpClient().getUrl(uri);
         final request = await response.close();
         final bytes = await consolidateHttpClientResponseBytes(request);
-        if (kDebugMode) {
-          print('URL image loaded successfully, bytes length: ${bytes.length}');
-        }
         return pw.MemoryImage(bytes);
-      } else {
-        if (kDebugMode) {
-          print(
-              'QR Code data format not recognized: ${imageData.substring(0, imageData.length > 50 ? 50 : imageData.length)}...');
-        }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading QR Code image: $e');
-      }
+      return null;
     }
 
     return null;
-  }
-
-  // Hàm test để kiểm tra image
-  static Future<void> _testImageCreation(String? imageData) async {
-    if (imageData == null || imageData.isEmpty) return;
-
-    try {
-      String base64String = imageData;
-      if (imageData.startsWith('data:image/')) {
-        base64String = imageData.split(',')[1];
-      }
-
-      final bytes = base64Decode(base64String);
-      final imageProvider = pw.MemoryImage(bytes);
-
-      if (kDebugMode) {
-        print('=== IMAGE TEST ===');
-        print('Image bytes length: ${bytes.length}');
-        print('Image provider: $imageProvider');
-        print('Image provider type: ${imageProvider.runtimeType}');
-
-        // Thử tạo một PDF đơn giản chỉ để test image
-        final testPdf = pw.Document();
-        testPdf.addPage(
-          pw.Page(
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Image(
-                  imageProvider,
-                  width: 100,
-                  height: 100,
-                ),
-              );
-            },
-          ),
-        );
-
-        final pdfBytes = await testPdf.save();
-        print('Test PDF created successfully, size: ${pdfBytes.length} bytes');
-        print('==================');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Image test failed: $e');
-      }
-    }
   }
 
   static Future<pw.Document> _createPdf({
@@ -378,46 +489,12 @@ class PdfBillGenerator {
     pw.ImageProvider? qrCodeImageProvider;
     String? qrCodeText;
 
-    if (kDebugMode) {
-      print('=== QR Code Processing Debug ===');
-      print('salonQRCode: $salonQRCode');
-      print('salonQRCode is null: ${salonQRCode == null}');
-      print('salonQRCode isEmpty: ${salonQRCode?.isEmpty ?? true}');
-      print(
-          'salonQRCode != "Chưa có mã QR Code": ${salonQRCode != "Chưa có mã QR Code"}');
-    }
-
     if (salonQRCode != null &&
         salonQRCode.isNotEmpty &&
         salonQRCode != 'Chưa có mã QR Code') {
-      if (kDebugMode) {
-        print('Attempting to load QR Code image...');
-      }
       qrCodeImageProvider = await _getImageFromUrlOrBase64(salonQRCode);
-
-      // Thêm test này
-      await _testImageCreation(salonQRCode);
-
-      if (kDebugMode) {
-        print('QR Code image provider result: $qrCodeImageProvider');
-        if (qrCodeImageProvider != null) {
-          print(
-              'QR Code image provider type: ${qrCodeImageProvider.runtimeType}');
-        }
-      }
     } else {
       qrCodeText = salonQRCode ?? 'Chưa có mã QR Code';
-      if (kDebugMode) {
-        print('Using QR Code text: $qrCodeText');
-      }
-    }
-
-    // Thêm debug trước khi tạo PDF
-    if (kDebugMode) {
-      print('=== PDF Creation Debug ===');
-      print('qrCodeImageProvider: $qrCodeImageProvider');
-      print('qrCodeText: $qrCodeText');
-      print('========================');
     }
 
     final pdf = pw.Document();
@@ -1010,12 +1087,8 @@ class PdfBillGenerator {
         await _shareFile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi chia sẻ Zalo: $e'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ Zalo: $e',
+          type: MessageType.error);
 
       // Fallback: chia sẻ file thông thường
       await _shareFile(context, file, pdfBytes, salonName: salonName);
@@ -1033,12 +1106,8 @@ class PdfBillGenerator {
         await _shareFileMobile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi chia sẻ file: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ file: $e',
+          type: MessageType.error);
     }
   }
 
@@ -1168,13 +1237,9 @@ class PdfBillGenerator {
                   print('Could not open file: $e');
                 }
                 // Fallback: copy path to clipboard
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Text('Đã copy đường dẫn file vào clipboard: $filePath'),
-                    backgroundColor: Colors.blue,
-                  ),
-                );
+                AppWidgets.showFlushbar(
+                    context, 'Đã copy đường dẫn file vào clipboard: $filePath',
+                    type: MessageType.info);
               }
             },
             child: const Text('Mở file'),

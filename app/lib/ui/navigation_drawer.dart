@@ -205,7 +205,7 @@ class AppNavigationDrawer extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppTheme.primaryStart.withOpacity(0.1)
+                ? AppTheme.primaryStart.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(100),
           ),

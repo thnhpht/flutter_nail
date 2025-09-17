@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:uuid/uuid.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
-import '../config/salon_config.dart';
+import '../ui/design_system.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key, required this.api, this.onOrderCreated});
@@ -15,8 +14,6 @@ class OrderScreen extends StatefulWidget {
   @override
   State<OrderScreen> createState() => _OrderScreenState();
 }
-
-enum MessageType { success, error, info, warning }
 
 class _OrderScreenState extends State<OrderScreen> {
   Information? _information;
@@ -75,42 +72,6 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      case MessageType.info:
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
-  }
-
   @override
   void dispose() {
     _customerPhoneController.removeListener(_onCustomerPhoneChanged);
@@ -132,7 +93,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _categories = categories;
       });
     } catch (e) {
-      showFlushbar('Lỗi tải danh mục: $e', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi tải danh mục: $e',
+          type: MessageType.error);
     }
   }
 
@@ -143,7 +105,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _services = services;
       });
     } catch (e) {
-      showFlushbar('Lỗi tải dịch vụ: $e', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi tải dịch vụ: $e',
+          type: MessageType.error);
     }
   }
 
@@ -154,7 +117,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _employees = employees;
       });
     } catch (e) {
-      showFlushbar('Lỗi tải danh sách nhân viên: $e', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên: $e',
+          type: MessageType.error);
     }
   }
 
@@ -167,18 +131,20 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _customerNameController.text = customer.name;
           });
-          showFlushbar('Đã tìm thấy khách hàng: ${customer.name}',
+          AppWidgets.showFlushbar(
+              context, 'Đã tìm thấy khách hàng: ${customer.name}',
               type: MessageType.success);
         } else {
           setState(() {
             _customerNameController.clear();
           });
-          showFlushbar(
+          AppWidgets.showFlushbar(context,
               'Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.',
               type: MessageType.info);
         }
       } catch (e) {
-        showFlushbar('Lỗi tìm kiếm khách hàng: $e', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm khách hàng: $e',
+            type: MessageType.error);
       }
     } else {
       setState(() {
@@ -196,18 +162,20 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _employeeNameController.text = employee.name;
           });
-          showFlushbar('Đã tìm thấy nhân viên: ${employee.name}',
+          AppWidgets.showFlushbar(
+              context, 'Đã tìm thấy nhân viên: ${employee.name}',
               type: MessageType.success);
         } else {
           setState(() {
             _employeeNameController.clear();
           });
-          showFlushbar(
+          AppWidgets.showFlushbar(context,
               'Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.',
               type: MessageType.info);
         }
       } catch (e) {
-        showFlushbar('Lỗi tìm kiếm nhân viên: $e', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm nhân viên: $e',
+            type: MessageType.error);
       }
     } else {
       setState(() {
@@ -362,12 +330,12 @@ class _OrderScreenState extends State<OrderScreen> {
   Future<void> _createOrder() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedServices.isEmpty) {
-      showFlushbar('Vui lòng chọn ít nhất một dịch vụ',
+      AppWidgets.showFlushbar(context, 'Vui lòng chọn ít nhất một dịch vụ',
           type: MessageType.warning);
       return;
     }
     if (_selectedEmployees.isEmpty) {
-      showFlushbar('Vui lòng chọn ít nhất một nhân viên',
+      AppWidgets.showFlushbar(context, 'Vui lòng chọn ít nhất một nhân viên',
           type: MessageType.warning);
       return;
     }
@@ -416,7 +384,8 @@ class _OrderScreenState extends State<OrderScreen> {
         createdOrders.add(createdOrder);
       }
 
-      showFlushbar('Đã tạo đơn thành công!', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Đã tạo đơn thành công!',
+          type: MessageType.success);
 
       // Create a backup of selected services before showing bills
       final selectedServicesBackup = List<Service>.from(_selectedServices);
@@ -452,7 +421,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _resetForm();
       });
     } catch (e) {
-      showFlushbar('Lỗi tạo đơn: $e', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi tạo đơn: $e',
+          type: MessageType.error);
     } finally {
       setState(() {
         _isLoading = false;
@@ -506,7 +476,7 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -1144,7 +1114,7 @@ class _OrderScreenState extends State<OrderScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1158,7 +1128,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  color: const Color(0xFF667eea).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -1210,46 +1180,6 @@ class _OrderScreenState extends State<OrderScreen> {
         fillColor: Colors.grey[50],
       ),
       validator: validator,
-    );
-  }
-
-  Widget _buildActionButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-    required String label,
-  }) {
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onPressed,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -1317,7 +1247,7 @@ class _OrderScreenState extends State<OrderScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1343,7 +1273,8 @@ class _OrderScreenState extends State<OrderScreen> {
       subtitle: subtitle != null ? Text(subtitle) : null,
       trailing:
           isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
-      tileColor: isSelected ? const Color(0xFF667eea).withOpacity(0.1) : null,
+      tileColor:
+          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
       onTap: onTap,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -1366,7 +1297,7 @@ class _OrderScreenState extends State<OrderScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF667eea).withOpacity(0.3),
+            color: const Color(0xFF667eea).withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

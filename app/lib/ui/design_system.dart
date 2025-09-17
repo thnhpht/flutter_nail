@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:another_flushbar/flushbar.dart';
+
+enum MessageType { success, error, warning, info }
 
 class AppTheme {
   static const Color primaryStart = Color(0xFF667eea);
@@ -135,7 +138,7 @@ class AppTheme {
         borderRadius: BorderRadius.circular(radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -179,7 +182,7 @@ class AppWidgets {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryStart.withOpacity(0.3),
+            color: AppTheme.primaryStart.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -442,5 +445,47 @@ class AppWidgets {
         );
       },
     );
+  }
+
+  // Flushbar utility function
+  static void showFlushbar(
+    BuildContext context,
+    String message, {
+    MessageType type = MessageType.info,
+    Duration duration = const Duration(seconds: 3),
+    FlushbarPosition position = FlushbarPosition.TOP,
+  }) {
+    Color backgroundColor;
+    Icon icon;
+
+    switch (type) {
+      case MessageType.success:
+        backgroundColor = Colors.green;
+        icon = const Icon(Icons.check_circle, color: Colors.white);
+        break;
+      case MessageType.error:
+        backgroundColor = Colors.red;
+        icon = const Icon(Icons.error, color: Colors.white);
+        break;
+      case MessageType.warning:
+        backgroundColor = Colors.orange;
+        icon = const Icon(Icons.warning, color: Colors.white);
+        break;
+      case MessageType.info:
+        backgroundColor = Colors.blue;
+        icon = const Icon(Icons.info, color: Colors.white);
+        break;
+    }
+
+    Flushbar(
+      message: message,
+      backgroundColor: backgroundColor,
+      flushbarPosition: position,
+      margin: const EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+      duration: duration,
+      messageColor: Colors.white,
+      icon: icon,
+    ).show(context);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:another_flushbar/flushbar.dart';
 import '../api_client.dart';
 import '../models.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +11,6 @@ class CustomersScreen extends StatefulWidget {
   @override
   State<CustomersScreen> createState() => _CustomersScreenState();
 }
-
-enum MessageType { success, error, warning, info }
 
 class _CustomersScreenState extends State<CustomersScreen> {
   late Future<List<Customer>> _future;
@@ -33,47 +30,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
     });
   }
 
-  void showFlushbar(String message, {MessageType type = MessageType.info}) {
-    Color backgroundColor;
-    Icon icon;
-
-    switch (type) {
-      case MessageType.success:
-        backgroundColor = Colors.green;
-        icon = const Icon(Icons.check_circle, color: Colors.white);
-        break;
-      case MessageType.error:
-        backgroundColor = Colors.red;
-        icon = const Icon(Icons.error, color: Colors.white);
-        break;
-      case MessageType.warning:
-        backgroundColor = Colors.orange;
-        icon = const Icon(Icons.warning, color: Colors.white);
-        break;
-      default:
-        backgroundColor = Colors.blue;
-        icon = const Icon(Icons.info, color: Colors.white);
-        break;
-    }
-
-    Flushbar(
-      message: message,
-      backgroundColor: backgroundColor,
-      flushbarPosition: FlushbarPosition.TOP,
-      margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      duration: const Duration(seconds: 3),
-      messageColor: Colors.white,
-      icon: icon,
-    ).show(context);
-  }
-
   Future<void> _showAddDialog() async {
     final phoneCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -86,7 +48,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -110,7 +72,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.person_add,
@@ -260,7 +222,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryStart.withOpacity(0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -308,7 +271,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
         try {
           final existing = await widget.api.getCustomer(phone);
           if (existing != null) {
-            showFlushbar('SĐT của khách hàng đã được tạo',
+            AppWidgets.showFlushbar(context, 'SĐT của khách hàng đã được tạo',
                 type: MessageType.warning);
             return;
           }
@@ -317,9 +280,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
         }
         await widget.api.createCustomer(Customer(name: name, phone: phone));
         await _reload();
-        showFlushbar('Thêm khách hàng thành công', type: MessageType.success);
+        AppWidgets.showFlushbar(context, 'Thêm khách hàng thành công',
+            type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi khi thêm khách hàng', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi khi thêm khách hàng',
+            type: MessageType.error);
       }
     }
   }
@@ -328,7 +293,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     final nameCtrl = TextEditingController(text: c.name);
     final ok = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -341,7 +306,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -353,9 +318,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
               // Header
               Container(
                 padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: AppTheme.primaryGradient,
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
@@ -365,7 +330,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child:
@@ -415,7 +380,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.phone,
+                              const Icon(Icons.phone,
                                   color: AppTheme.primaryStart, size: 20),
                               const SizedBox(width: 12),
                               Text(
@@ -440,7 +405,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             controller: nameCtrl,
                             decoration: InputDecoration(
                               labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
+                              prefixIcon: const Icon(Icons.person,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(16),
@@ -501,7 +466,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryStart.withOpacity(0.3),
+                              color:
+                                  AppTheme.primaryStart.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -546,10 +512,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
       try {
         await widget.api.updateCustomer(Customer(phone: c.phone, name: name));
         await _reload();
-        showFlushbar('Thay đổi thông tin khách hàng thành công',
+        AppWidgets.showFlushbar(
+            context, 'Thay đổi thông tin khách hàng thành công',
             type: MessageType.success);
       } catch (e) {
-        showFlushbar('Lỗi thay đổi thông tin khách hàng',
+        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin khách hàng',
             type: MessageType.error);
       }
     }
@@ -559,9 +526,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
     try {
       await widget.api.deleteCustomer(c.phone);
       await _reload();
-      showFlushbar('Xóa khách hàng thành công', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Xóa khách hàng thành công',
+          type: MessageType.success);
     } catch (e) {
-      showFlushbar('Lỗi khi xóa khách hàng', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi khi xóa khách hàng',
+          type: MessageType.error);
     }
   }
 
@@ -576,7 +545,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -595,7 +564,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -646,7 +615,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        showFlushbar('Lỗi tải danh sách khách hàng',
+                        AppWidgets.showFlushbar(
+                            context, 'Lỗi tải danh sách khách hàng',
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -778,7 +748,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.orange
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),
@@ -806,8 +776,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                                 BorderRadius.circular(8),
                                             boxShadow: [
                                               BoxShadow(
-                                                color:
-                                                    Colors.red.withOpacity(0.3),
+                                                color: Colors.red
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 4,
                                                 offset: const Offset(0, 2),
                                               ),

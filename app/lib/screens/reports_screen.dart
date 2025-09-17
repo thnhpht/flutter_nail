@@ -60,7 +60,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       setState(() {
         _isLoading = false;
       });
-      _showErrorSnackBar('Lỗi tải dữ liệu: $e');
+      AppWidgets.showFlushbar(context, 'Lỗi tải dữ liệu: $e', type: MessageType.error);
     }
   }
 
@@ -147,15 +147,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
 
   void _updateFilters() {
     if (mounted) {
@@ -167,7 +158,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Future<void> _showDateFilterDialog() async {
     await showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (_) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
@@ -176,7 +167,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -200,7 +191,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.calendar_month,
@@ -560,7 +551,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -579,7 +570,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -704,7 +695,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -830,7 +821,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 20),
