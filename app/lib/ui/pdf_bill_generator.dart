@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
-import 'dart:math';
 import '../models.dart';
 import '../config/salon_config.dart';
+import '../api_client.dart';
 
 class PdfBillGenerator {
   static pw.Font? _vietnameseFont;
@@ -22,6 +20,7 @@ class PdfBillGenerator {
     required BuildContext context,
     required Order order,
     required List<Service> services,
+    required ApiClient api,
     String? salonName,
     String? salonAddress,
     String? salonPhone,
@@ -37,17 +36,25 @@ class PdfBillGenerator {
         ),
       );
 
-      // Use SalonConfig defaults if any value is null or empty
-      final displaySalonName = (salonName != null && salonName.isNotEmpty)
-          ? salonName
-          : SalonConfig.salonName;
+      // Lấy thông tin salon từ database
+      Information? salonInfo;
+      try {
+        salonInfo = await api.getInformation();
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error loading salon info for PDF: $e');
+        }
+      }
+
+      // Sử dụng thông tin từ database hoặc fallback về tham số truyền vào hoặc SalonConfig
+      final displaySalonName =
+          salonInfo?.salonName ?? salonName ?? SalonConfig.salonName;
       final displaySalonAddress =
-          (salonAddress != null && salonAddress.isNotEmpty)
-              ? salonAddress
-              : SalonConfig.salonAddress;
-      final displaySalonPhone = (salonPhone != null && salonPhone.isNotEmpty)
-          ? salonPhone
-          : SalonConfig.salonPhone;
+          salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
+      final displaySalonPhone =
+          salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
+      final displaySalonQRCode =
+          salonInfo?.qrCode ?? salonQRCode ?? SalonConfig.salonQRCode;
 
       // Tạo PDF
       final pdf = await _createPdf(
@@ -56,7 +63,7 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
-        salonQRCode: salonQRCode,
+        salonQRCode: displaySalonQRCode,
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -235,11 +242,19 @@ class PdfBillGenerator {
     );
   }
 
-  // Hàm để lấy hình ảnh từ URL hoặc base64 - sửa kiểu trả về
+  // Hàm để lấy hình ảnh từ URL hoặc base64 - cách mới
   static Future<pw.ImageProvider?> _getImageFromUrlOrBase64(
       String? imageData) async {
     if (imageData == null || imageData.isEmpty) {
+      if (kDebugMode) {
+        print('QR Code data is null or empty');
+      }
       return null;
+    }
+
+    if (kDebugMode) {
+      print(
+          'Processing QR Code data: ${imageData.substring(0, imageData.length > 100 ? 100 : imageData.length)}...');
     }
 
     try {
@@ -252,23 +267,100 @@ class PdfBillGenerator {
           base64String = imageData.split(',')[1];
         }
 
+        if (kDebugMode) {
+          print('Processing base64 QR Code, length: ${base64String.length}');
+        }
+
         final bytes = base64Decode(base64String);
-        return pw.MemoryImage(bytes);
+        if (kDebugMode) {
+          print('Base64 decoded successfully, bytes length: ${bytes.length}');
+        }
+
+        // Tạo image provider với cách mới
+        try {
+          final imageProvider = pw.MemoryImage(bytes);
+          if (kDebugMode) {
+            print('MemoryImage created successfully');
+          }
+          return imageProvider;
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error creating MemoryImage: $e');
+          }
+          return null;
+        }
       } else if (imageData.startsWith('http')) {
         // Xử lý URL
+        if (kDebugMode) {
+          print('Processing URL QR Code: $imageData');
+        }
         final uri = Uri.parse(imageData);
         final response = await HttpClient().getUrl(uri);
         final request = await response.close();
         final bytes = await consolidateHttpClientResponseBytes(request);
+        if (kDebugMode) {
+          print('URL image loaded successfully, bytes length: ${bytes.length}');
+        }
         return pw.MemoryImage(bytes);
+      } else {
+        if (kDebugMode) {
+          print(
+              'QR Code data format not recognized: ${imageData.substring(0, imageData.length > 50 ? 50 : imageData.length)}...');
+        }
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error loading image: $e');
+        print('Error loading QR Code image: $e');
       }
     }
 
     return null;
+  }
+
+  // Hàm test để kiểm tra image
+  static Future<void> _testImageCreation(String? imageData) async {
+    if (imageData == null || imageData.isEmpty) return;
+
+    try {
+      String base64String = imageData;
+      if (imageData.startsWith('data:image/')) {
+        base64String = imageData.split(',')[1];
+      }
+
+      final bytes = base64Decode(base64String);
+      final imageProvider = pw.MemoryImage(bytes);
+
+      if (kDebugMode) {
+        print('=== IMAGE TEST ===');
+        print('Image bytes length: ${bytes.length}');
+        print('Image provider: $imageProvider');
+        print('Image provider type: ${imageProvider.runtimeType}');
+
+        // Thử tạo một PDF đơn giản chỉ để test image
+        final testPdf = pw.Document();
+        testPdf.addPage(
+          pw.Page(
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Image(
+                  imageProvider,
+                  width: 100,
+                  height: 100,
+                ),
+              );
+            },
+          ),
+        );
+
+        final pdfBytes = await testPdf.save();
+        print('Test PDF created successfully, size: ${pdfBytes.length} bytes');
+        print('==================');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Image test failed: $e');
+      }
+    }
   }
 
   static Future<pw.Document> _createPdf({
@@ -283,7 +375,50 @@ class PdfBillGenerator {
     await _loadVietnameseFont();
 
     // Lấy hình ảnh QRCode từ database
-    final qrCodeImageProvider = await _getImageFromUrlOrBase64(salonQRCode);
+    pw.ImageProvider? qrCodeImageProvider;
+    String? qrCodeText;
+
+    if (kDebugMode) {
+      print('=== QR Code Processing Debug ===');
+      print('salonQRCode: $salonQRCode');
+      print('salonQRCode is null: ${salonQRCode == null}');
+      print('salonQRCode isEmpty: ${salonQRCode?.isEmpty ?? true}');
+      print(
+          'salonQRCode != "Chưa có mã QR Code": ${salonQRCode != "Chưa có mã QR Code"}');
+    }
+
+    if (salonQRCode != null &&
+        salonQRCode.isNotEmpty &&
+        salonQRCode != 'Chưa có mã QR Code') {
+      if (kDebugMode) {
+        print('Attempting to load QR Code image...');
+      }
+      qrCodeImageProvider = await _getImageFromUrlOrBase64(salonQRCode);
+
+      // Thêm test này
+      await _testImageCreation(salonQRCode);
+
+      if (kDebugMode) {
+        print('QR Code image provider result: $qrCodeImageProvider');
+        if (qrCodeImageProvider != null) {
+          print(
+              'QR Code image provider type: ${qrCodeImageProvider.runtimeType}');
+        }
+      }
+    } else {
+      qrCodeText = salonQRCode ?? 'Chưa có mã QR Code';
+      if (kDebugMode) {
+        print('Using QR Code text: $qrCodeText');
+      }
+    }
+
+    // Thêm debug trước khi tạo PDF
+    if (kDebugMode) {
+      print('=== PDF Creation Debug ===');
+      print('qrCodeImageProvider: $qrCodeImageProvider');
+      print('qrCodeText: $qrCodeText');
+      print('========================');
+    }
 
     final pdf = pw.Document();
 
@@ -320,45 +455,73 @@ class PdfBillGenerator {
 
               pw.SizedBox(height: 20),
 
-              // QR Code from database
-              if (qrCodeImageProvider != null)
-                pw.Container(
-                  width: double.infinity,
-                  padding: const pw.EdgeInsets.all(20),
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border.all(color: PdfColors.grey300),
-                    borderRadius: pw.BorderRadius.circular(8),
-                  ),
-                  child: pw.Column(
-                    children: [
-                      pw.Text(
-                        'QR CODE SALON',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.bold,
-                        ),
-                        textAlign: pw.TextAlign.center,
-                      ),
-                      pw.SizedBox(height: 15),
-                      pw.Center(
-                        child: pw.Image(
-                          qrCodeImageProvider,
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                      pw.SizedBox(height: 15),
-                      pw.Text(
-                        'Quét mã QR để liên hệ salon',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 12,
-                          color: PdfColors.grey600,
-                        ),
-                        textAlign: pw.TextAlign.center,
-                      ),
-                    ],
-                  ),
+              // QR Code section - Based on official documentation
+              pw.SizedBox(height: 20),
+
+              pw.Container(
+                width: double.infinity,
+                padding: const pw.EdgeInsets.all(20),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey300),
+                  borderRadius: pw.BorderRadius.circular(8),
                 ),
+                child: pw.Column(
+                  children: [
+                    pw.Text(
+                      'QR CODE SALON',
+                      style: _getVietnameseTextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                      textAlign: pw.TextAlign.center,
+                    ),
+                    pw.SizedBox(height: 15),
+
+                    // Sử dụng cách hiển thị đơn giản nhất
+                    pw.Center(
+                      child: qrCodeImageProvider != null
+                          ? pw.Container(
+                              width: 150,
+                              height: 150,
+                              child: pw.Image(
+                                qrCodeImageProvider,
+                                width: 150,
+                                height: 150,
+                              ),
+                            )
+                          : pw.Container(
+                              width: 150,
+                              height: 150,
+                              decoration: pw.BoxDecoration(
+                                color: PdfColors.grey100,
+                                border: pw.Border.all(
+                                    color: PdfColors.black, width: 1),
+                              ),
+                              child: pw.Center(
+                                child: pw.Text(
+                                  qrCodeText ?? 'Chưa có mã QR Code',
+                                  style: _getVietnameseTextStyle(
+                                    fontSize: 12,
+                                    color: PdfColors.grey600,
+                                  ),
+                                  textAlign: pw.TextAlign.center,
+                                ),
+                              ),
+                            ),
+                    ),
+
+                    pw.SizedBox(height: 15),
+                    pw.Text(
+                      'Quét mã QR để liên hệ salon',
+                      style: _getVietnameseTextStyle(
+                        fontSize: 12,
+                        color: PdfColors.grey600,
+                      ),
+                      textAlign: pw.TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
 
               pw.Spacer(),
 

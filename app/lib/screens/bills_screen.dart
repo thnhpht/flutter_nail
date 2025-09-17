@@ -168,6 +168,7 @@ class _BillsScreenState extends State<BillsScreen> {
       context: context,
       order: order,
       services: services,
+      api: widget.api, // Thêm parameter này
       salonName: _information?.salonName,
       salonAddress: _information?.address,
       salonPhone: _information?.phone,

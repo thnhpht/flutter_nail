@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:convert';
 import '../api_client.dart';
 import '../models.dart';
@@ -492,7 +491,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                 height: 160,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(80),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: Colors.grey[300]!,
                     width: 2,
@@ -500,7 +499,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                 ),
                 child: _selectedImageBytes != null
                     ? ClipRRect(
-                        borderRadius: BorderRadius.circular(78),
+                        borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
                           _selectedImageBytes!,
                           fit: BoxFit.cover,
@@ -508,7 +507,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                       )
                     : (_logoUrl.isNotEmpty)
                         ? ClipRRect(
-                            borderRadius: BorderRadius.circular(78),
+                            borderRadius: BorderRadius.circular(10),
                             child: _logoUrl.startsWith('http')
                                 ? Image.network(
                                     _logoUrl,
@@ -541,7 +540,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.business,
+          Icons.qr_code,
           size: 48,
           color: Colors.grey[400],
         ),

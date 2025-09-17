@@ -4,6 +4,7 @@ class SalonConfig {
   static const String salonPhone = 'Số điện thoại Salon';
   static const String salonEmail = 'Email Salon';
   static const String salonWebsite = 'Website Salon';
+  static const String salonQRCode = 'Chưa có mã QR Code';
 
   // Bill configuration
   static const String billTitle = 'HÓA ĐƠN THANH TOÁN';

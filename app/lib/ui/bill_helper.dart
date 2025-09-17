@@ -3,123 +3,138 @@ import '../models.dart';
 import '../config/salon_config.dart';
 import 'design_system.dart';
 import 'pdf_bill_generator.dart';
-import 'salon_info_inherited.dart';
+import '../api_client.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert'; // Added for base64Decode
 
 class BillHelper {
   static List<Service>? _currentServices;
+  static ApiClient? _apiClient;
 
   static Future<void> showBillDialog({
     required BuildContext context,
     required Order order,
     required List<Service> services,
+    required ApiClient api,
     String? salonName,
     String? salonAddress,
     String? salonPhone,
     String? salonQRCode,
   }) async {
-    // Lưu trữ services hiện tại
+    // Lưu trữ services và api client hiện tại
     _currentServices = services;
+    _apiClient = api;
 
-    final name = salonName ?? SalonConfig.salonName;
-    final address = salonAddress ?? SalonConfig.salonAddress;
-    final phone = salonPhone ?? SalonConfig.salonPhone;
+    // Lấy thông tin salon từ database
+    Information? salonInfo;
+    try {
+      salonInfo = await api.getInformation();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading salon info: $e');
+      }
+    }
+
+    // Sử dụng thông tin từ database hoặc fallback về tham số truyền vào hoặc SalonConfig
+    final name = salonInfo?.salonName ?? salonName ?? SalonConfig.salonName;
+    final address =
+        salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
+    final phone = salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
+    final qrCode = salonInfo?.qrCode ?? salonQRCode;
+
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return SalonInfoInherited(
-            salonName: name,
-            salonAddress: address,
-            salonPhone: phone,
-            salonQRCode: salonQRCode,
-            child: Dialog(
-              backgroundColor: Colors.transparent,
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.8,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-                ),
-                child: Column(
-                  children: [
-                    // Header
-                    Container(
-                      padding: const EdgeInsets.all(AppTheme.spacingM),
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(AppTheme.radiusLarge),
-                          topRight: Radius.circular(AppTheme.radiusLarge),
-                        ),
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+            ),
+            child: Column(
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.spacingM),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppTheme.radiusLarge),
+                      topRight: Radius.circular(AppTheme.radiusLarge),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.receipt,
+                        color: Colors.white,
+                        size: 24,
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.receipt,
+                      const SizedBox(width: AppTheme.spacingS),
+                      const Expanded(
+                        child: Text(
+                          'Hóa đơn thanh toán',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            size: 24,
                           ),
-                          const SizedBox(width: AppTheme.spacingS),
-                          const Expanded(
-                            child: Text(
-                              'Hóa đơn thanh toán',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Bill Content
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(AppTheme.spacingM),
-                        child: _buildBillContent(
-                          order: order,
-                          services: services,
-                          salonName: name,
-                          salonAddress: address,
-                          salonPhone: phone,
                         ),
                       ),
-                    ),
-
-                    // Action Buttons
-                    Container(
-                      padding: const EdgeInsets.all(AppTheme.spacingM),
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceAlt,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(AppTheme.radiusLarge),
-                          bottomRight: Radius.circular(AppTheme.radiusLarge),
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionButton(
-                              onPressed: () => _printBill(context, order),
-                              label: 'In',
-                              icon: Icons.print,
-                              color: AppTheme.primaryEnd,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ));
+
+                // Bill Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppTheme.spacingM),
+                    child: _buildBillContent(
+                      order: order,
+                      services: services,
+                      salonName: name,
+                      salonAddress: address,
+                      salonPhone: phone,
+                      qrCode: qrCode, // Thêm parameter này
+                    ),
+                  ),
+                ),
+
+                // Action Buttons
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.spacingM),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceAlt,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(AppTheme.radiusLarge),
+                      bottomRight: Radius.circular(AppTheme.radiusLarge),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildActionButton(
+                          onPressed: () => _printBill(context, order),
+                          label: 'In',
+                          icon: Icons.print,
+                          color: AppTheme.primaryEnd,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -130,6 +145,7 @@ class BillHelper {
     required String salonName,
     required String salonAddress,
     required String salonPhone,
+    String? qrCode, // Thêm parameter này
   }) {
     // Use SalonConfig defaults if any value is null or empty
     final displaySalonName =
@@ -336,7 +352,7 @@ class BillHelper {
                   const Text(
                     'Thành tiền:',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -344,7 +360,7 @@ class BillHelper {
                   Text(
                     _formatPrice(_getOriginalTotal(order)),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -361,7 +377,7 @@ class BillHelper {
                     Text(
                       'Giảm giá (${order.discountPercent.toStringAsFixed(0)}%):',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
@@ -369,7 +385,7 @@ class BillHelper {
                     Text(
                       '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)}',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
@@ -387,7 +403,7 @@ class BillHelper {
                     const Text(
                       'Tiền bo:',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
@@ -395,7 +411,7 @@ class BillHelper {
                     Text(
                       '+${_formatPrice(order.tip)}',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
@@ -413,7 +429,7 @@ class BillHelper {
                   const Text(
                     'Tổng thanh toán:',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -421,12 +437,101 @@ class BillHelper {
                   Text(
                     _formatPrice(order.totalPrice),
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: AppTheme.spacingM),
+
+        // QR Code section - THÊM PHẦN NÀY
+        Container(
+          padding: const EdgeInsets.all(AppTheme.spacingM),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.qr_code,
+                    color: AppTheme.primaryStart,
+                    size: 20,
+                  ),
+                  const SizedBox(width: AppTheme.spacingS),
+                  const Text(
+                    'QR Code thanh toán',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTheme.spacingM),
+              Center(
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: qrCode != null &&
+                          qrCode.isNotEmpty &&
+                          qrCode != 'Chưa có mã QR Code'
+                      ? ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusSmall),
+                          child: Image.memory(
+                            base64Decode(qrCode.startsWith('data:image/')
+                                ? qrCode.split(',')[1]
+                                : qrCode),
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Text(
+                                  'Lỗi hiển thị QR Code',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            qrCode ?? 'Chưa có mã QR Code',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: AppTheme.spacingS),
+              Text(
+                'Quét mã QR để thanh toán',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -608,7 +713,7 @@ class BillHelper {
     return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
 
-  static void _printBill(BuildContext context, Order order) {
+  static Future<void> _printBill(BuildContext context, Order order) async {
     // Lấy services từ biến static
     if (_currentServices == null || _currentServices!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -620,19 +725,28 @@ class BillHelper {
       return;
     }
 
-    // Lấy thông tin salon từ dialog arguments nếu có
-    final inherited = context
-        .getElementForInheritedWidgetOfExactType<SalonInfoInherited>()
-        ?.widget as SalonInfoInherited?;
-    final salonName = inherited?.salonName;
-    final salonAddress = inherited?.salonAddress;
-    final salonPhone = inherited?.salonPhone;
-    final salonQRCode = inherited?.salonQRCode;
+    // Lấy thông tin salon từ database
+    Information? salonInfo;
+    try {
+      if (_apiClient != null) {
+        salonInfo = await _apiClient!.getInformation();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading salon info for PDF: $e');
+      }
+    }
+
+    final salonName = salonInfo?.salonName;
+    final salonAddress = salonInfo?.address;
+    final salonPhone = salonInfo?.phone;
+    final salonQRCode = salonInfo?.qrCode;
 
     PdfBillGenerator.generateAndShareBill(
       context: context,
       order: order,
       services: _currentServices!,
+      api: _apiClient!,
       salonName: salonName,
       salonAddress: salonAddress,
       salonPhone: salonPhone,

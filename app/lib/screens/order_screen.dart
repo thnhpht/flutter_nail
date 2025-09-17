@@ -434,6 +434,7 @@ class _OrderScreenState extends State<OrderScreen> {
             context: context,
             order: createdOrder,
             services: servicesForBill,
+            api: widget.api,
             salonName: _information?.salonName,
             salonAddress: _information?.address,
             salonPhone: _information?.phone,
