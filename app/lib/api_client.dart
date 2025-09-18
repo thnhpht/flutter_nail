@@ -402,6 +402,26 @@ class ApiClient {
     return Order.fromJson(jsonDecode(r.body));
   }
 
+  Future<void> updateOrder(Order order) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    // Convert lists to JSON strings for backend
+    final orderData = order.toJson();
+    orderData['employeeIds'] = jsonEncode(order.employeeIds);
+    orderData['employeeNames'] = jsonEncode(order.employeeNames);
+    orderData['serviceIds'] = jsonEncode(order.serviceIds);
+    orderData['serviceNames'] = jsonEncode(order.serviceNames);
+
+    final r = await http.put(_u('/orders/${order.id}'),
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(orderData));
+    _check(r, expect204: true);
+  }
+
   // Helper methods for finding customers and employees by phone
   Future<Customer?> findCustomerByPhone(String phone) async {
     try {

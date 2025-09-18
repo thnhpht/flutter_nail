@@ -6,6 +6,7 @@ import '../ui/design_system.dart';
 import '../config/salon_config.dart';
 import 'dart:convert'; // Added for jsonDecode
 import 'package:intl/intl.dart';
+import 'update_order_screen.dart';
 
 class BillsScreen extends StatefulWidget {
   const BillsScreen({super.key, required this.api});
@@ -161,6 +162,44 @@ class _BillsScreenState extends State<BillsScreen> {
       salonAddress: _information?.address,
       salonPhone: _information?.phone,
       salonQRCode: _information?.qrCode,
+    );
+  }
+
+  bool _canUpdateOrder(Order order) {
+    // Check if order is from today
+    final today = DateTime.now();
+    final orderDate = DateTime(
+      order.createdAt.year,
+      order.createdAt.month,
+      order.createdAt.day,
+    );
+    final todayDate = DateTime(today.year, today.month, today.day);
+
+    return orderDate.isAtSameMomentAs(todayDate);
+  }
+
+  void _showUpdateOrderDialog(Order order) {
+    if (!_canUpdateOrder(order)) {
+      AppWidgets.showFlushbar(
+        context,
+        'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay',
+        type: MessageType.warning,
+      );
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => UpdateOrderScreen(
+        api: widget.api,
+        order: order,
+        onOrderUpdated: () {
+          // Refresh data after update
+          refreshData();
+        },
+      ),
     );
   }
 
@@ -935,6 +974,8 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   Widget _buildOrderCard(Order order) {
+    final canUpdate = _canUpdateOrder(order);
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
       decoration: AppTheme.cardDecoration(),
@@ -943,6 +984,7 @@ class _BillsScreenState extends State<BillsScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
           onTap: () => _showBill(order),
+          onLongPress: canUpdate ? () => _showUpdateOrderDialog(order) : null,
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.spacingM),
             child: Column(
@@ -956,13 +998,32 @@ class _BillsScreenState extends State<BillsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            order.customerName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.textPrimary,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                order.customerName,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textPrimary,
+                                ),
+                              ),
+                              if (canUpdate) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Icon(
+                                    Icons.edit,
+                                    size: 12,
+                                    color: Colors.green[600],
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                           const SizedBox(height: 4),
                           Text(

@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
 import '../ui/design_system.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key, required this.api, this.onOrderCreated});
+class UpdateOrderScreen extends StatefulWidget {
+  const UpdateOrderScreen({
+    super.key,
+    required this.api,
+    required this.order,
+    this.onOrderUpdated,
+  });
 
   final ApiClient api;
-  final VoidCallback? onOrderCreated;
+  final Order order;
+  final VoidCallback? onOrderUpdated;
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<UpdateOrderScreen> createState() => _UpdateOrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   Information? _information;
-  bool _isInfoLoading = true;
   final _formKey = GlobalKey<FormState>();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
@@ -48,10 +52,39 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadServices();
     _loadEmployees();
     _loadInformation();
+    _initializeFormData();
     // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
+  }
+
+  void _initializeFormData() {
+    // Initialize form with existing order data
+    _customerPhoneController.text = widget.order.customerPhone;
+    _customerNameController.text = widget.order.customerName;
+    _discountController.text = widget.order.discountPercent.toStringAsFixed(0);
+    _tipController.text = widget.order.tip.toStringAsFixed(0);
+
+    _discountPercent = widget.order.discountPercent;
+    _tip = widget.order.tip;
+
+    // Initialize selected employees
+    _selectedEmployees = _employees
+        .where((employee) => widget.order.employeeIds.contains(employee.id))
+        .toList();
+
+    // Initialize selected services and categories
+    _selectedServices = _services
+        .where((service) => widget.order.serviceIds.contains(service.id))
+        .toList();
+
+    _selectedCategories = _categories
+        .where((category) => _selectedServices
+            .any((service) => service.categoryId == category.id))
+        .toList();
+
+    _calculateTotal();
   }
 
   Future<void> _loadInformation() async {
@@ -60,15 +93,10 @@ class _OrderScreenState extends State<OrderScreen> {
       if (mounted) {
         setState(() {
           _information = info;
-          _isInfoLoading = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isInfoLoading = false;
-        });
-      }
+      // Handle error silently
     }
   }
 
@@ -91,6 +119,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final categories = await widget.api.getCategories();
       setState(() {
         _categories = categories;
+        _initializeFormData(); // Re-initialize after loading data
       });
     } catch (e) {
       AppWidgets.showFlushbar(context, 'Lỗi tải danh mục: $e',
@@ -103,6 +132,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final services = await widget.api.getServices();
       setState(() {
         _services = services;
+        _initializeFormData(); // Re-initialize after loading data
       });
     } catch (e) {
       AppWidgets.showFlushbar(context, 'Lỗi tải dịch vụ: $e',
@@ -115,6 +145,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final employees = await widget.api.getEmployees();
       setState(() {
         _employees = employees;
+        _initializeFormData(); // Re-initialize after loading data
       });
     } catch (e) {
       AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên: $e',
@@ -341,13 +372,29 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
-  String _generateOrderId() {
-    // Generate a real UUID using the uuid package
-    const uuid = Uuid();
-    return uuid.v4();
+  bool _canUpdateOrder() {
+    // Check if order is from today
+    final today = DateTime.now();
+    final orderDate = DateTime(
+      widget.order.createdAt.year,
+      widget.order.createdAt.month,
+      widget.order.createdAt.day,
+    );
+    final todayDate = DateTime(today.year, today.month, today.day);
+
+    return orderDate.isAtSameMomentAs(todayDate);
   }
 
-  Future<void> _createOrder() async {
+  Future<void> _updateOrder() async {
+    if (!_canUpdateOrder()) {
+      AppWidgets.showFlushbar(
+        context,
+        'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay',
+        type: MessageType.warning,
+      );
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) return;
     if (_selectedServices.isEmpty) {
       AppWidgets.showFlushbar(context, 'Vui lòng chọn ít nhất một dịch vụ',
@@ -377,99 +424,43 @@ class _OrderScreenState extends State<OrderScreen> {
             .createCustomer(Customer(phone: customerPhone, name: customerName));
       }
 
-      // Create orders for each selected employee
-      List<Order> createdOrders = [];
-      if (_selectedCategories.isNotEmpty && _selectedServices.isNotEmpty) {
-        final order = Order(
-          id: _generateOrderId(), // Generate unique ID locally
-          customerPhone: customerPhone,
-          customerName: customerName,
-          employeeIds: _selectedEmployees.map((e) => e.id).toList(),
-          employeeNames: _selectedEmployees.map((e) => e.name).toList(),
-          serviceIds: _selectedServices.map((s) => s.id).toList(),
-          serviceNames: _selectedServices.map((s) => s.name).toList(),
-          totalPrice: _finalTotalPrice,
-          discountPercent: _discountPercent,
-          tip: _tip,
-          createdAt: DateTime.now(),
-        );
+      // Update the order
+      final updatedOrder = Order(
+        id: widget.order.id, // Keep the same ID
+        customerPhone: customerPhone,
+        customerName: customerName,
+        employeeIds: _selectedEmployees.map((e) => e.id).toList(),
+        employeeNames: _selectedEmployees.map((e) => e.name).toList(),
+        serviceIds: _selectedServices.map((s) => s.id).toList(),
+        serviceNames: _selectedServices.map((s) => s.name).toList(),
+        totalPrice: _finalTotalPrice,
+        discountPercent: _discountPercent,
+        tip: _tip,
+        createdAt: widget.order.createdAt, // Keep original creation date
+      );
 
-        // Validate order data
-        if (order.serviceIds.isEmpty || order.serviceNames.isEmpty) {
-          throw Exception('Dữ liệu dịch vụ không hợp lệ');
-        }
-
-        // Create order and get the response with real ID
-        final createdOrder = await widget.api.createOrder(order);
-        createdOrders.add(createdOrder);
+      // Validate order data
+      if (updatedOrder.serviceIds.isEmpty ||
+          updatedOrder.serviceNames.isEmpty) {
+        throw Exception('Dữ liệu dịch vụ không hợp lệ');
       }
 
-      AppWidgets.showFlushbar(context, 'Đã tạo đơn thành công!',
+      // Update order
+      await widget.api.updateOrder(updatedOrder);
+
+      AppWidgets.showFlushbar(context, 'Đã cập nhật đơn thành công!',
           type: MessageType.success);
 
-      // Create a backup of selected services before showing bills
-      final selectedServicesBackup = List<Service>.from(_selectedServices);
-
-      // Show bill for each created order using the real order data
-      for (final createdOrder in createdOrders) {
-        // Show bill dialog with the real order data
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          // Create services list from the backup data
-          final servicesForBill = selectedServicesBackup
-              .where((service) => createdOrder.serviceIds.contains(service.id))
-              .toList();
-
-          BillHelper.showBillDialog(
-            context: context,
-            order: createdOrder,
-            services: servicesForBill,
-            api: widget.api,
-            salonName: _information?.salonName,
-            salonAddress: _information?.address,
-            salonPhone: _information?.phone,
-          );
-        });
-      }
-
-      // Call the callback after a delay to ensure bills are shown first
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        widget.onOrderCreated?.call();
-      });
-
-      // Reset form after showing bills and calling callback
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        _resetForm();
-      });
+      // Call the callback immediately
+      widget.onOrderUpdated?.call();
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tạo đơn: $e',
+      AppWidgets.showFlushbar(context, 'Lỗi cập nhật đơn: $e',
           type: MessageType.error);
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
-  }
-
-  void _resetForm() {
-    _formKey.currentState!.reset();
-    _customerPhoneController.clear();
-    _customerNameController.clear();
-    _employeePhoneController.clear();
-    _employeeNameController.clear();
-    _discountController.clear();
-    _tipController.clear();
-    setState(() {
-      _selectedCategories.clear();
-      _selectedServices.clear();
-      _selectedEmployees.clear();
-      _totalPrice = 0.0;
-      _discountPercent = 0.0;
-      _tip = 0.0;
-      _finalTotalPrice = 0.0;
-      _showCategoryDropdown = false;
-      _showServiceDropdown = false;
-      _showEmployeeDropdown = false;
-    });
   }
 
   @override
@@ -530,13 +521,13 @@ class _OrderScreenState extends State<OrderScreen> {
                       child: Column(
                         children: [
                           const Icon(
-                            Icons.shopping_cart,
+                            Icons.edit,
                             color: Colors.white,
                             size: 32,
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'Tạo đơn mới',
+                            'Cập nhật đơn hàng',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -551,6 +542,30 @@ class _OrderScreenState extends State<OrderScreen> {
                               color: Colors.white70,
                             ),
                           ),
+                          if (!_canUpdateOrder()) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.orange.withValues(alpha: 0.5),
+                                ),
+                              ),
+                              child: const Text(
+                                'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -1079,18 +1094,22 @@ class _OrderScreenState extends State<OrderScreen> {
                       children: [
                         Expanded(
                           child: _buildPrimaryButton(
-                            onPressed: _isLoading ? null : _createOrder,
+                            onPressed: _isLoading || !_canUpdateOrder()
+                                ? null
+                                : _updateOrder,
                             isLoading: _isLoading,
-                            label: 'Tạo đơn',
-                            icon: Icons.check,
+                            label: 'Lưu',
+                            icon: Icons.save,
                           ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: _buildSecondaryButton(
-                            onPressed: _isLoading ? null : _resetForm,
-                            label: 'Làm mới',
-                            icon: Icons.refresh,
+                            onPressed: _isLoading
+                                ? null
+                                : () => Navigator.pop(context),
+                            label: 'Hủy',
+                            icon: Icons.close,
                           ),
                         ),
                       ],

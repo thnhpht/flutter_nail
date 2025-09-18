@@ -49,6 +49,8 @@ dotnet publish -c Release -o ./publish
 ```bash
 cd app
 flutter pub get
+# Apply icon app
+flutter pub run flutter_launcher_icons:main
 ```
 
 **Chạy trên các nền tảng:**
