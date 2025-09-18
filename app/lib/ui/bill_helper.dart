@@ -126,7 +126,7 @@ class BillHelper {
                           onPressed: () => _printBill(context, order),
                           label: 'In',
                           icon: Icons.print,
-                          color: AppTheme.primaryEnd,
+                          color: AppTheme.primaryPinkDark,
                         ),
                       ),
                     ],
@@ -267,7 +267,7 @@ class BillHelper {
                 children: [
                   Icon(
                     Icons.person,
-                    color: AppTheme.primaryStart,
+                    color: AppTheme.primaryPink,
                     size: 20,
                   ),
                   const SizedBox(width: AppTheme.spacingS),
@@ -315,7 +315,7 @@ class BillHelper {
                   children: [
                     Icon(
                       Icons.spa,
-                      color: AppTheme.primaryStart,
+                      color: AppTheme.primaryPink,
                       size: 20,
                     ),
                     const SizedBox(width: AppTheme.spacingS),
@@ -466,7 +466,7 @@ class BillHelper {
                 children: [
                   Icon(
                     Icons.qr_code,
-                    color: AppTheme.primaryStart,
+                    color: AppTheme.primaryPink,
                     size: 20,
                   ),
                   const SizedBox(width: AppTheme.spacingS),

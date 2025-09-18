@@ -15,8 +15,7 @@ class CustomersScreen extends StatefulWidget {
 class _CustomersScreenState extends State<CustomersScreen> {
   late Future<List<Customer>> _future;
   String _search = '';
-  final _formKey = GlobalKey<FormState>();
-  final _editFormKey = GlobalKey<FormState>();
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -33,70 +32,60 @@ class _CustomersScreenState extends State<CustomersScreen> {
   Future<void> _showAddDialog() async {
     final phoneCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
-    final ok = await showDialog<bool>(
+    final formKey = GlobalKey<FormState>();
+
+    final result = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
+      barrierDismissible: false,
+      builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          constraints: const BoxConstraints(maxWidth: 400),
+          decoration: AppTheme.floatingCardDecoration(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppTheme.spacingL),
                 decoration: BoxDecoration(
                   gradient: AppTheme.primaryGradient,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(AppTheme.radiusXL),
+                    topRight: Radius.circular(AppTheme.radiusXL),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppTheme.spacingS),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppTheme.textOnPrimary.withOpacity(0.2),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                       ),
-                      child: const Icon(Icons.person_add,
-                          color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.person_add,
+                        color: AppTheme.textOnPrimary,
+                        size: 24,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    const Expanded(
+                    const SizedBox(width: AppTheme.spacingM),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Thêm khách hàng',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            style: AppTheme.headingSmall.copyWith(
+                              color: AppTheme.textOnPrimary,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(height: 4),
                           Text(
                             'Nhập thông tin khách hàng mới',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            style: AppTheme.bodySmall.copyWith(
+                              color: AppTheme.textOnPrimary.withOpacity(0.8),
                             ),
                           ),
                         ],
@@ -105,156 +94,65 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   ],
                 ),
               ),
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: phoneCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              prefixIcon: Icon(Icons.phone,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
+
+              // Form
+              Padding(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: nameCtrl,
+                        decoration: AppTheme.inputDecoration(
+                          label: 'Tên khách hàng',
+                          prefixIcon: Icons.person,
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
-                          ),
+                        validator: (v) => v?.trim().isEmpty == true
+                            ? 'Vui lòng nhập tên'
+                            : null,
+                      ),
+                      const SizedBox(height: AppTheme.spacingM),
+                      TextFormField(
+                        controller: phoneCtrl,
+                        decoration: AppTheme.inputDecoration(
+                          label: 'Số điện thoại',
+                          prefixIcon: Icons.phone,
                         ),
-                      ],
-                    ),
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: (v) => v?.trim().isEmpty == true
+                            ? 'Vui lòng nhập số điện thoại'
+                            : null,
+                      ),
+                      const SizedBox(height: AppTheme.spacingXL),
+
+                      // Buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppWidgets.secondaryButton(
+                              label: 'Hủy',
+                              onPressed: () => Navigator.pop(context, false),
+                            ),
+                          ),
+                          const SizedBox(width: AppTheme.spacingM),
+                          Expanded(
+                            child: AppWidgets.primaryButton(
+                              label: 'Lưu',
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Lưu',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -262,7 +160,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
         ),
       ),
     );
-    if (ok == true) {
+
+    if (result == true) {
       final phone = phoneCtrl.text.trim();
       final name = nameCtrl.text.trim();
 
@@ -271,90 +170,90 @@ class _CustomersScreenState extends State<CustomersScreen> {
         try {
           final existing = await widget.api.getCustomer(phone);
           if (existing != null) {
-            AppWidgets.showFlushbar(context, 'SĐT của khách hàng đã được tạo',
-                type: MessageType.warning);
+            AppWidgets.showFlushbar(
+              context,
+              'Số điện thoại đã được sử dụng',
+              type: MessageType.warning,
+            );
             return;
           }
         } catch (e) {
           // If not found, continue
         }
+
         await widget.api.createCustomer(Customer(name: name, phone: phone));
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm khách hàng thành công',
-            type: MessageType.success);
+        AppWidgets.showFlushbar(
+          context,
+          'Thêm khách hàng thành công',
+          type: MessageType.success,
+        );
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm khách hàng',
-            type: MessageType.error);
+        AppWidgets.showFlushbar(
+          context,
+          'Lỗi khi thêm khách hàng',
+          type: MessageType.error,
+        );
       }
     }
   }
 
-  Future<void> _showEditDialog(Customer c) async {
-    final nameCtrl = TextEditingController(text: c.name);
-    final ok = await showDialog<bool>(
+  Future<void> _showEditDialog(Customer customer) async {
+    final nameCtrl = TextEditingController(text: customer.name);
+    final formKey = GlobalKey<FormState>();
+
+    final result = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
+      barrierDismissible: false,
+      builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          constraints: const BoxConstraints(maxWidth: 400),
+          decoration: AppTheme.floatingCardDecoration(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.all(24),
-                decoration: const BoxDecoration(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                decoration: BoxDecoration(
                   gradient: AppTheme.primaryGradient,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppTheme.radiusXL),
+                    topRight: Radius.circular(AppTheme.radiusXL),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppTheme.spacingS),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppTheme.textOnPrimary.withOpacity(0.2),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                       ),
-                      child:
-                          const Icon(Icons.edit, color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.edit,
+                        color: AppTheme.textOnPrimary,
+                        size: 24,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    const Expanded(
+                    const SizedBox(width: AppTheme.spacingM),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chỉnh sửa khách hàng',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            'Sửa thông tin',
+                            style: AppTheme.headingSmall.copyWith(
+                              color: AppTheme.textOnPrimary,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(height: 4),
                           Text(
                             'Cập nhật thông tin khách hàng',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            style: AppTheme.bodySmall.copyWith(
+                              color: AppTheme.textOnPrimary.withOpacity(0.8),
                             ),
                           ),
                         ],
@@ -363,142 +262,61 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   ],
                 ),
               ),
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _editFormKey,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.phone,
-                                  color: AppTheme.primaryStart, size: 20),
-                              const SizedBox(width: 12),
-                              Text(
-                                'SĐT: ${c.phone}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
+
+              // Form
+              Padding(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: nameCtrl,
+                        decoration: AppTheme.inputDecoration(
+                          label: 'Tên khách hàng',
+                          prefixIcon: Icons.person,
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: const Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
+                        validator: (v) => v?.trim().isEmpty == true
+                            ? 'Vui lòng nhập tên'
+                            : null,
+                      ),
+                      const SizedBox(height: AppTheme.spacingM),
+
+                      // Phone (read-only)
+                      TextFormField(
+                        initialValue: customer.phone,
+                        decoration: AppTheme.inputDecoration(
+                          label: 'Số điện thoại',
+                          prefixIcon: Icons.phone,
+                        ),
+                        enabled: false,
+                      ),
+                      const SizedBox(height: AppTheme.spacingXL),
+
+                      // Buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppWidgets.secondaryButton(
+                              label: 'Hủy',
+                              onPressed: () => Navigator.pop(context, false),
                             ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(width: AppTheme.spacingM),
+                          Expanded(
+                            child: AppWidgets.primaryButton(
+                              label: 'Lưu',
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_editFormKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Lưu',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -506,306 +324,270 @@ class _CustomersScreenState extends State<CustomersScreen> {
         ),
       ),
     );
-    if (ok == true) {
-      final name = nameCtrl.text.trim();
 
+    if (result == true) {
+      final name = nameCtrl.text.trim();
       try {
-        await widget.api.updateCustomer(Customer(phone: c.phone, name: name));
+        await widget.api
+            .updateCustomer(Customer(phone: customer.phone, name: name));
         await _reload();
         AppWidgets.showFlushbar(
-            context, 'Thay đổi thông tin khách hàng thành công',
-            type: MessageType.success);
+          context,
+          'Cập nhật thông tin thành công',
+          type: MessageType.success,
+        );
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin khách hàng',
-            type: MessageType.error);
+        AppWidgets.showFlushbar(
+          context,
+          'Lỗi khi cập nhật thông tin',
+          type: MessageType.error,
+        );
       }
     }
   }
 
-  Future<void> _delete(Customer c) async {
-    try {
-      await widget.api.deleteCustomer(c.phone);
-      await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa khách hàng thành công',
-          type: MessageType.success);
-    } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa khách hàng',
-          type: MessageType.error);
+  Future<void> _delete(Customer customer) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+        ),
+        title: Text(
+          'Xác nhận xóa',
+          style: AppTheme.headingSmall,
+        ),
+        content: Text(
+          'Bạn có chắc chắn muốn xóa khách hàng "${customer.name}"?',
+          style: AppTheme.bodyLarge,
+        ),
+        actions: [
+          AppWidgets.secondaryButton(
+            label: 'Hủy',
+            onPressed: () => Navigator.pop(context, false),
+            isSmall: true,
+          ),
+          AppWidgets.primaryButton(
+            label: 'Xóa',
+            onPressed: () => Navigator.pop(context, true),
+            isSmall: true,
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      try {
+        await widget.api.deleteCustomer(customer.phone);
+        await _reload();
+        AppWidgets.showFlushbar(
+          context,
+          'Xóa khách hàng thành công',
+          type: MessageType.success,
+        );
+      } catch (e) {
+        AppWidgets.showFlushbar(
+          context,
+          'Lỗi khi xóa khách hàng',
+          type: MessageType.error,
+        );
+      }
     }
+  }
+
+  List<Customer> _filterCustomers(List<Customer> customers) {
+    if (_search.isEmpty) return customers;
+
+    return customers.where((customer) {
+      final searchLower = _search.toLowerCase();
+      return customer.name.toLowerCase().contains(searchLower) ||
+          customer.phone.contains(_search);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundPrimary,
+      appBar: AppBar(
+        title: Text(
+          'Khách hàng',
+          style: AppTheme.headingSmall.copyWith(
+            fontWeight: FontWeight.w700,
           ),
+        ),
+        backgroundColor: AppTheme.surface,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          AppWidgets.iconButton(
+            icon: Icons.add,
+            onPressed: _showAddDialog,
+            backgroundColor: AppTheme.primaryPink,
+            iconColor: AppTheme.textOnPrimary,
+            elevated: true,
+          ),
+          const SizedBox(width: 16),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.grey[50],
-          floatingActionButton: Container(
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
+      body: Column(
+        children: [
+          // Search Section
+          Container(
+            padding: const EdgeInsets.all(20),
+            color: AppTheme.surface,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Quản lý thông tin khách hàng',
+                  style: AppTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                AppWidgets.searchField(
+                  hintText: 'Tìm kiếm theo tên hoặc số điện thoại...',
+                  controller: _searchController,
+                  onChanged: (v) => setState(() => _search = v.trim()),
+                  onClear: () {
+                    _searchController.clear();
+                    setState(() => _search = '');
+                  },
                 ),
               ],
             ),
-            child: FloatingActionButton(
-              onPressed: _showAddDialog,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppWidgets.gradientHeader(
-                  icon: Icons.people,
-                  title: 'Khách hàng',
-                  subtitle: 'Quản lý thông tin khách hàng',
-                  fullWidth: true,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  height: AppTheme.controlHeight,
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm khách hàng...',
-                      prefixIcon: Icons.search,
+
+          // Customer List
+          Expanded(
+            child: FutureBuilder<List<Customer>>(
+              future: _future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppTheme.primaryPink,
                     ),
-                    onChanged: (v) => setState(() => _search = v.trim()),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      300, // Đảm bảo có chiều cao cố định
-                  child: FutureBuilder<List<Customer>>(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        AppWidgets.showFlushbar(
-                            context, 'Lỗi tải danh sách khách hàng',
-                            type: MessageType.error);
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(
-                            children: [
-                              const SizedBox(height: 200),
-                              Center(
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.error_outline,
-                                        size: 64, color: Colors.red),
-                                    const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách khách hàng',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ElevatedButton(
-                                      onPressed: _reload,
-                                      child: const Text('Thử lại'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      final data = snapshot.data ?? [];
-                      final filtered = data
-                          .where((c) =>
-                              c.name
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()) ||
-                              c.phone
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()))
-                          .toList();
+                  );
+                }
 
-                      if (filtered.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(children: const [
-                            SizedBox(height: 200),
-                            Center(child: Text('Không tìm thấy khách hàng'))
-                          ]),
-                        );
-                      }
-
-                      return RefreshIndicator(
-                        onRefresh: _reload,
-                        child: ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (context, i) {
-                            final c = filtered[i];
-                            return AppWidgets.animatedItem(
-                              index: i,
-                              child: InkWell(
-                                onTap: () => _showEditDialog(c),
-                                borderRadius: BorderRadius.circular(16),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: AppTheme.cardDecoration(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor: Colors.blue.shade100,
-                                          child: Text(
-                                            c.name.isNotEmpty
-                                                ? c.name[0].toUpperCase()
-                                                : c.phone[0],
-                                            style: const TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blue),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                c.name.isEmpty
-                                                    ? c.phone
-                                                    : c.name,
-                                                style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                c.phone,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF9800),
-                                                Color(0xFFFF5722)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.orange
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Sửa',
-                                            onPressed: () => _showEditDialog(c),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE91E63),
-                                                Color(0xFFC2185B)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.red
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.delete,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Xóa',
-                                            onPressed: () => _delete(c),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: AppTheme.error,
                         ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Không thể tải danh sách khách hàng',
+                          style: AppTheme.headingSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Vui lòng kiểm tra kết nối mạng và thử lại',
+                          style: AppTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        AppWidgets.primaryButton(
+                          label: 'Thử lại',
+                          onPressed: _reload,
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                final customers = _filterCustomers(snapshot.data ?? []);
+
+                if (customers.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _search.isEmpty
+                              ? Icons.people_outline
+                              : Icons.search_off,
+                          size: 64,
+                          color: AppTheme.textTertiary,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _search.isEmpty
+                              ? 'Chưa có khách hàng nào'
+                              : 'Không tìm thấy kết quả',
+                          style: AppTheme.headingSmall.copyWith(
+                            color: AppTheme.textTertiary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _search.isEmpty
+                              ? 'Hãy thêm khách hàng đầu tiên'
+                              : 'Thử tìm kiếm với từ khóa khác',
+                          style: AppTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        if (_search.isEmpty) ...[
+                          const SizedBox(height: 24),
+                          AppWidgets.primaryButton(
+                            label: 'Thêm khách hàng',
+                            onPressed: _showAddDialog,
+                            icon: Icons.add,
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: _reload,
+                  color: AppTheme.primaryPink,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: customers.length,
+                    itemBuilder: (context, index) {
+                      final customer = customers[index];
+                      return AppWidgets.modernListTile(
+                        title: customer.name,
+                        subtitle: customer.phone,
+                        leadingIcon: Icons.person,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppWidgets.iconButton(
+                              icon: Icons.edit,
+                              onPressed: () => _showEditDialog(customer),
+                              backgroundColor: AppTheme.info.withOpacity(0.1),
+                              iconColor: AppTheme.info,
+                              size: 36,
+                            ),
+                            const SizedBox(width: 8),
+                            AppWidgets.iconButton(
+                              icon: Icons.delete,
+                              onPressed: () => _delete(customer),
+                              backgroundColor: AppTheme.error.withOpacity(0.1),
+                              iconColor: AppTheme.error,
+                              size: 36,
+                            ),
+                          ],
+                        ),
+                        onTap: () => _showEditDialog(customer),
                       );
                     },
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-        ),
+        ],
       ),
     );
   }

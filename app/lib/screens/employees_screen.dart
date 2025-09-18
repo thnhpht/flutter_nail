@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import '../api_client.dart';
 import '../models.dart';
-import 'package:flutter/services.dart';
 import '../ui/design_system.dart';
 
 class EmployeesScreen extends StatefulWidget {
@@ -13,12 +12,10 @@ class EmployeesScreen extends StatefulWidget {
   State<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-
 class _EmployeesScreenState extends State<EmployeesScreen> {
   late Future<List<Employee>> _future = widget.api.getEmployees();
   String _search = '';
-  final _formKey = GlobalKey<FormState>();
-  final _editFormKey = GlobalKey<FormState>();
+  final _searchController = TextEditingController();
 
   Future<void> _reload() async {
     setState(() {
@@ -26,271 +23,177 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     });
   }
 
+  List<Employee> _filterEmployees(List<Employee> employees) {
+    if (_search.isEmpty) return employees;
+    return employees.where((employee) {
+      return employee.name.toLowerCase().contains(_search.toLowerCase()) ||
+          (employee.phone?.contains(_search) ?? false);
+    }).toList();
+  }
 
   Future<void> _showAddDialog() async {
-    final nameCtrl = TextEditingController();
-    final phoneCtrl = TextEditingController();
-    final passwordCtrl = TextEditingController();
-    final ok = await showDialog<bool>(
+    final nameController = TextEditingController();
+    final phoneController = TextEditingController();
+    final passwordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final result = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
+      builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          constraints: const BoxConstraints(maxWidth: 500),
+          decoration: AppTheme.floatingCardDecoration(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppTheme.spacingL),
                 decoration: BoxDecoration(
                   gradient: AppTheme.primaryGradient,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(AppTheme.radiusXL),
+                    topRight: Radius.circular(AppTheme.radiusXL),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppTheme.spacingS),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppTheme.textOnPrimary.withOpacity(0.2),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                       ),
-                      child: const Icon(Icons.person_add,
-                          color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.person_add,
+                        color: AppTheme.textOnPrimary,
+                        size: 24,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    const Expanded(
+                    const SizedBox(width: AppTheme.spacingM),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Thêm nhân viên',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            style: AppTheme.headingSmall.copyWith(
+                              color: AppTheme.textOnPrimary,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(height: 4),
                           Text(
                             'Nhập thông tin nhân viên mới',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            style: AppTheme.bodySmall.copyWith(
+                              color: AppTheme.textOnPrimary.withOpacity(0.8),
                             ),
                           ),
                         ],
                       ),
                     ),
+                    AppWidgets.iconButton(
+                      icon: Icons.close,
+                      onPressed: () => Navigator.pop(context, false),
+                      iconColor: AppTheme.textOnPrimary,
+                      size: 40,
+                    ),
                   ],
                 ),
               ),
+
               // Content
               Flexible(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppTheme.spacingL),
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Tên nhân viên',
+                            prefixIcon: Icons.person,
                           ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
-                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập tên nhân viên';
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        const SizedBox(height: AppTheme.spacingM),
+                        TextFormField(
+                          controller: phoneController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Số điện thoại',
+                            prefixIcon: Icons.phone,
                           ),
-                          child: TextFormField(
-                            controller: phoneCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              prefixIcon: Icon(Icons.phone,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập số điện thoại';
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        const SizedBox(height: AppTheme.spacingM),
+                        TextFormField(
+                          controller: passwordController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Mật khẩu',
+                            prefixIcon: Icons.lock,
                           ),
-                          child: TextFormField(
-                            controller: passwordCtrl,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Mật khẩu',
-                              prefixIcon: Icon(Icons.lock,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập mật khẩu';
+                            }
+                            if (value.length < 6) {
+                              return 'Mật khẩu phải có ít nhất 6 ký tự';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppTheme.spacingL),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppWidgets.secondaryButton(
+                                label: 'Hủy',
+                                onPressed: () => Navigator.pop(context, false),
                               ),
                             ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập mật khẩu';
-                              }
-                              if (value.length < 6) {
-                                return 'Mật khẩu phải có ít nhất 6 ký tự';
-                              }
-                              return null;
-                            },
-                          ),
+                            const SizedBox(width: AppTheme.spacingM),
+                            Expanded(
+                              child: AppWidgets.primaryButton(
+                                label: 'Thêm',
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    try {
+                                      await widget.api.createEmployee(
+                                        nameController.text.trim(),
+                                        phone: phoneController.text.trim(),
+                                        password:
+                                            passwordController.text.trim(),
+                                      );
+                                      Navigator.pop(context, true);
+                                    } catch (e) {
+                                      AppWidgets.showFlushbar(
+                                          context, 'Lỗi thêm nhân viên: $e',
+                                          type: MessageType.error);
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Lưu',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -298,295 +201,182 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
       ),
     );
-    if (ok == true) {
-      final name = nameCtrl.text.trim();
-      final phone = phoneCtrl.text.trim();
 
-      try {
-        final existing = await widget.api.findEmployeeByPhone(phone);
-        if (existing != null) {
-          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
-              type: MessageType.warning);
-          return;
-        }
-      } catch (ex) {
-        // If not found, continue
-      }
-      try {
-        await widget.api.createEmployee(name,
-            phone: phone, password: passwordCtrl.text.trim());
-        await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công', type: MessageType.success);
-      } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm nhân viên', type: MessageType.error);
-      }
+    if (result == true) {
+      _reload();
+      AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công!',
+          type: MessageType.success);
     }
   }
 
-  Future<void> _showEditDialog(Employee e) async {
-    final nameCtrl = TextEditingController(text: e.name);
-    final phoneCtrl = TextEditingController(text: e.phone ?? '');
-    final passwordCtrl = TextEditingController();
-    final ok = await showDialog<bool>(
+  Future<void> _showEditDialog(Employee employee) async {
+    final nameController = TextEditingController(text: employee.name);
+    final phoneController = TextEditingController(text: employee.phone ?? '');
+    final passwordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final result = await showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
+      builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          constraints: const BoxConstraints(maxWidth: 500),
+          decoration: AppTheme.floatingCardDecoration(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppTheme.spacingL),
                 decoration: BoxDecoration(
                   gradient: AppTheme.primaryGradient,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(AppTheme.radiusXL),
+                    topRight: Radius.circular(AppTheme.radiusXL),
                   ),
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppTheme.spacingS),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        color: AppTheme.textOnPrimary.withOpacity(0.2),
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusSmall),
                       ),
-                      child:
-                          const Icon(Icons.edit, color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.edit,
+                        color: AppTheme.textOnPrimary,
+                        size: 24,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    const Expanded(
+                    const SizedBox(width: AppTheme.spacingM),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chỉnh sửa nhân viên',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            'Sửa nhân viên',
+                            style: AppTheme.headingSmall.copyWith(
+                              color: AppTheme.textOnPrimary,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(height: 4),
                           Text(
                             'Cập nhật thông tin nhân viên',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            style: AppTheme.bodySmall.copyWith(
+                              color: AppTheme.textOnPrimary.withOpacity(0.8),
                             ),
                           ),
                         ],
                       ),
                     ),
+                    AppWidgets.iconButton(
+                      icon: Icons.close,
+                      onPressed: () => Navigator.pop(context, false),
+                      iconColor: AppTheme.textOnPrimary,
+                      size: 40,
+                    ),
                   ],
                 ),
               ),
+
               // Content
               Flexible(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppTheme.spacingL),
                   child: Form(
-                    key: _editFormKey,
+                    key: formKey,
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Tên nhân viên',
+                            prefixIcon: Icons.person,
                           ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
-                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập tên nhân viên';
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        const SizedBox(height: AppTheme.spacingM),
+                        TextFormField(
+                          controller: phoneController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Số điện thoại',
+                            prefixIcon: Icons.phone,
                           ),
-                          child: TextFormField(
-                            controller: phoneCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              prefixIcon: Icon(Icons.phone,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Vui lòng nhập số điện thoại';
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
+                        const SizedBox(height: AppTheme.spacingM),
+                        TextFormField(
+                          controller: passwordController,
+                          decoration: AppTheme.inputDecoration(
+                            label: 'Mật khẩu mới (để trống nếu không đổi)',
+                            prefixIcon: Icons.lock,
                           ),
-                          child: TextFormField(
-                            controller: passwordCtrl,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText:
-                                  'Mật khẩu mới (để trống nếu không đổi)',
-                              prefixIcon: Icon(Icons.lock,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value != null &&
+                                value.isNotEmpty &&
+                                value.length < 6) {
+                              return 'Mật khẩu phải có ít nhất 6 ký tự';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppTheme.spacingL),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppWidgets.secondaryButton(
+                                label: 'Hủy',
+                                onPressed: () => Navigator.pop(context, false),
                               ),
                             ),
-                            validator: (value) {
-                              if (value != null &&
-                                  value.isNotEmpty &&
-                                  value.length < 6) {
-                                return 'Mật khẩu phải có ít nhất 6 ký tự';
-                              }
-                              return null;
-                            },
-                          ),
+                            const SizedBox(width: AppTheme.spacingM),
+                            Expanded(
+                              child: AppWidgets.primaryButton(
+                                label: 'Cập nhật',
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    try {
+                                      final updatedEmployee = Employee(
+                                        id: employee.id,
+                                        name: nameController.text.trim(),
+                                        phone: phoneController.text.trim(),
+                                        password: passwordController.text
+                                                .trim()
+                                                .isNotEmpty
+                                            ? passwordController.text.trim()
+                                            : employee.password,
+                                      );
+                                      await widget.api
+                                          .updateEmployee(updatedEmployee);
+                                      Navigator.pop(context, true);
+                                    } catch (e) {
+                                      AppWidgets.showFlushbar(
+                                          context, 'Lỗi cập nhật nhân viên: $e',
+                                          type: MessageType.error);
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_editFormKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Lưu',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -594,319 +384,355 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
       ),
     );
-    if (ok == true) {
-      final name = nameCtrl.text.trim();
-      final phone = phoneCtrl.text.trim();
 
-      try {
-        final existing = await widget.api.findEmployeeByPhone(phone);
-        if (existing != null && existing.id != e.id) {
-          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
-              type: MessageType.warning);
-          return;
-        }
-      } catch (ex) {
-        // If not found, continue
-      }
+    if (result == true) {
+      _reload();
+      AppWidgets.showFlushbar(context, 'Cập nhật nhân viên thành công!',
+          type: MessageType.success);
+    }
+  }
 
+  Future<void> _delete(Employee employee) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+        ),
+        title: Text(
+          'Xác nhận xóa',
+          style: AppTheme.headingSmall,
+        ),
+        content: Text(
+          'Bạn có chắc chắn muốn xóa nhân viên "${employee.name}"?',
+          style: AppTheme.bodyLarge,
+        ),
+        actions: [
+          AppWidgets.secondaryButton(
+            label: 'Hủy',
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.error,
+              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                onTap: () => Navigator.pop(context, true),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppTheme.spacingM,
+                    horizontal: AppTheme.spacingL,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Xóa',
+                        style: AppTheme.labelLarge.copyWith(
+                          color: AppTheme.textOnPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
       try {
-        final password = passwordCtrl.text.trim();
-        await widget.api.updateEmployee(Employee(
-          id: e.id,
-          name: name,
-          phone: phone.isEmpty ? null : phone,
-          password: password.isEmpty ? null : password,
-        ));
-        await _reload();
-        AppWidgets.showFlushbar(context, 'Thay đổi thông tin nhân viên thành công',
+        await widget.api.deleteEmployee(employee.id);
+        _reload();
+        AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công!',
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin nhân viên',
+        AppWidgets.showFlushbar(context, 'Lỗi xóa nhân viên: $e',
             type: MessageType.error);
       }
     }
   }
 
-  Future<void> _delete(Employee e) async {
-    try {
-      await widget.api.deleteEmployee(e.id);
-      await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công', type: MessageType.success);
-    } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa nhân viên', type: MessageType.error);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundPrimary,
+      appBar: AppBar(
+        title: Text(
+          'Nhân viên',
+          style: AppTheme.headingSmall.copyWith(
+            fontWeight: FontWeight.w700,
           ),
+        ),
+        backgroundColor: AppTheme.surface,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          AppWidgets.iconButton(
+            icon: Icons.refresh,
+            onPressed: _reload,
+            size: 40,
+          ),
+          AppWidgets.iconButton(
+            icon: Icons.add,
+            onPressed: _showAddDialog,
+            size: 40,
+          ),
+          const SizedBox(width: 16),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.grey[50],
-          floatingActionButton: Container(
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            padding: const EdgeInsets.all(20),
+            color: AppTheme.surface,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Quản lý thông tin nhân viên',
+                  style: AppTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+
+                // Search Field
+                AppWidgets.searchField(
+                  hintText: 'Tìm theo tên hoặc số điện thoại...',
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _search = value.trim();
+                    });
+                  },
+                  onClear: () {
+                    _searchController.clear();
+                    setState(() {
+                      _search = '';
+                    });
+                  },
                 ),
               ],
             ),
-            child: FloatingActionButton(
-              onPressed: _showAddDialog,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 28,
-              ),
+          ),
+
+          // Employees List
+          Expanded(
+            child: FutureBuilder<List<Employee>>(
+              future: _future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppTheme.primaryPink,
+                    ),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: AppTheme.error,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Có lỗi xảy ra',
+                          style: AppTheme.headingSmall.copyWith(
+                            color: AppTheme.error,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Không thể tải danh sách nhân viên',
+                          style: AppTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        AppWidgets.primaryButton(
+                          label: 'Thử lại',
+                          onPressed: _reload,
+                          icon: Icons.refresh,
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                final employees = snapshot.data ?? [];
+                final filteredEmployees = _filterEmployees(employees);
+
+                if (filteredEmployees.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _search.isNotEmpty
+                              ? Icons.search_off
+                              : Icons.person_outline,
+                          size: 64,
+                          color: AppTheme.textTertiary,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _search.isNotEmpty
+                              ? 'Không tìm thấy nhân viên'
+                              : 'Chưa có nhân viên nào',
+                          style: AppTheme.headingSmall.copyWith(
+                            color: AppTheme.textTertiary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _search.isNotEmpty
+                              ? 'Thử tìm kiếm với từ khóa khác'
+                              : 'Thêm nhân viên đầu tiên để bắt đầu',
+                          style: AppTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        if (_search.isEmpty) ...[
+                          const SizedBox(height: 16),
+                          AppWidgets.primaryButton(
+                            label: 'Thêm nhân viên',
+                            onPressed: _showAddDialog,
+                            icon: Icons.add,
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: filteredEmployees.length,
+                  itemBuilder: (context, index) {
+                    final employee = filteredEmployees[index];
+                    return _buildEmployeeCard(employee);
+                  },
+                );
+              },
             ),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmployeeCard(Employee employee) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: AppTheme.cardDecoration(elevated: true),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+          onTap: () => _showEditDialog(employee),
+          child: Padding(
+            padding: const EdgeInsets.all(AppTheme.spacingL),
+            child: Row(
               children: [
-                AppWidgets.gradientHeader(
-                  icon: Icons.work,
-                  title: 'Nhân viên',
-                  subtitle: 'Quản lý nhân viên salon',
-                  fullWidth: true,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  height: AppTheme.controlHeight,
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm nhân viên...',
-                      prefixIcon: Icons.search,
+                // Avatar
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.softPinkGradient,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                  ),
+                  child: Center(
+                    child: Text(
+                      employee.name.isNotEmpty
+                          ? employee.name[0].toUpperCase()
+                          : 'N',
+                      style: AppTheme.headingSmall.copyWith(
+                        color: AppTheme.primaryPink,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      300, // Đảm bảo có chiều cao cố định
-                  child: FutureBuilder<List<Employee>>(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên',
-                            type: MessageType.error);
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(
-                            children: [
-                              const SizedBox(height: 200),
-                              Center(
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.error_outline,
-                                        size: 64, color: Colors.red),
-                                    const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách nhân viên',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ElevatedButton(
-                                      onPressed: _reload,
-                                      child: const Text('Thử lại'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      final data = snapshot.data ?? [];
-                      final filtered = data
-                          .where((e) =>
-                              e.name
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()) ||
-                              (e.phone ?? '')
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()))
-                          .toList();
+                const SizedBox(width: AppTheme.spacingM),
 
-                      if (filtered.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(children: const [
-                            SizedBox(height: 200),
-                            Center(child: Text('Không tìm thấy nhân viên'))
-                          ]),
-                        );
-                      }
-
-                      return RefreshIndicator(
-                        onRefresh: _reload,
-                        child: ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (context, i) {
-                            final e = filtered[i];
-                            return AppWidgets.animatedItem(
-                              index: i,
-                              child: InkWell(
-                                onTap: () => _showEditDialog(e),
-                                borderRadius: BorderRadius.circular(16),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: AppTheme.cardDecoration(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor:
-                                              Colors.green.shade100,
-                                          child: Text(
-                                            e.name.isNotEmpty
-                                                ? e.name[0].toUpperCase()
-                                                : (e.phone != null &&
-                                                        e.phone!.isNotEmpty
-                                                    ? e.phone![0]
-                                                    : '?'),
-                                            style: const TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                e.name.isEmpty
-                                                    ? (e.phone ?? '')
-                                                    : e.name,
-                                                style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                e.phone ?? '',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF9800),
-                                                Color(0xFFFF5722)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.orange
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Sửa',
-                                            onPressed: () => _showEditDialog(e),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE91E63),
-                                                Color(0xFFC2185B)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.red
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.delete,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Xóa',
-                                            onPressed: () => _delete(e),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                // Employee Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        employee.name,
+                        style: AppTheme.labelLarge.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
-                      );
-                    },
+                      ),
+                      const SizedBox(height: AppTheme.spacingXXS),
+                      if (employee.phone != null &&
+                          employee.phone!.isNotEmpty) ...[
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              size: 16,
+                              color: AppTheme.textSecondary,
+                            ),
+                            const SizedBox(width: AppTheme.spacingXS),
+                            Text(
+                              employee.phone!,
+                              style: AppTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        Text(
+                          'Chưa có số điện thoại',
+                          style: AppTheme.bodySmall.copyWith(
+                            color: AppTheme.textTertiary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: AppTheme.spacingXXS),
+                      AppWidgets.statusBadge(
+                        text: 'Nhân viên',
+                        color: AppTheme.info,
+                      ),
+                    ],
                   ),
+                ),
+
+                // Actions
+                Column(
+                  children: [
+                    AppWidgets.iconButton(
+                      icon: Icons.edit,
+                      onPressed: () => _showEditDialog(employee),
+                      backgroundColor: AppTheme.info.withOpacity(0.1),
+                      iconColor: AppTheme.info,
+                      size: 40,
+                    ),
+                    const SizedBox(height: AppTheme.spacingS),
+                    AppWidgets.iconButton(
+                      icon: Icons.delete,
+                      onPressed: () => _delete(employee),
+                      backgroundColor: AppTheme.error.withOpacity(0.1),
+                      iconColor: AppTheme.error,
+                      size: 40,
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -204,13 +204,47 @@ class _NailAppState extends State<NailApp> {
     return MaterialApp(
       title: 'Nail Manager',
       theme: ThemeData(
-        colorSchemeSeed: Colors.pink,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppTheme.primaryPink,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(
+        scaffoldBackgroundColor: AppTheme.backgroundPrimary,
+        appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: true,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          backgroundColor: AppTheme.surface,
+          foregroundColor: AppTheme.textPrimary,
+          surfaceTintColor: Colors.transparent,
+          titleTextStyle: AppTheme.headingSmall,
+        ),
+        cardTheme: CardThemeData(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+          ),
+          color: AppTheme.surface,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primaryPink,
+            foregroundColor: AppTheme.textOnPrimary,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+            ),
+          ),
+        ),
+        textTheme: TextTheme(
+          headlineLarge: AppTheme.headingLarge,
+          headlineMedium: AppTheme.headingMedium,
+          headlineSmall: AppTheme.headingSmall,
+          bodyLarge: AppTheme.bodyLarge,
+          bodyMedium: AppTheme.bodyMedium,
+          bodySmall: AppTheme.bodySmall,
+          labelLarge: AppTheme.labelLarge,
+          labelMedium: AppTheme.labelMedium,
+          labelSmall: AppTheme.labelSmall,
         ),
       ),
       home: _isLoggedIn
@@ -546,91 +580,159 @@ class _NailAppState extends State<NailApp> {
   }
 
   Widget _buildWelcomeScreen() {
-    return SingleChildScrollView(
-      child: Container(
-        padding: AppTheme.getResponsivePadding(
-          context,
-          mobile: const EdgeInsets.all(16),
-          tablet: const EdgeInsets.all(24),
-          desktop: const EdgeInsets.all(20),
-        ),
+    return Container(
+      color: AppTheme.backgroundPrimary,
+      child: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Welcome Icon with responsive sizing
-            _isLoadingSalonInfo && !_hasLoadedSalonInfo
-                ? SizedBox(
-                    width: AppTheme.isMobile(context)
-                        ? 120
-                        : AppTheme.isTablet(context)
-                            ? 150
-                            : 160,
-                    height: AppTheme.isMobile(context)
-                        ? 120
-                        : AppTheme.isTablet(context)
-                            ? 150
-                            : 160,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                  )
-                : (_salonInfo?.logo.isNotEmpty == true
-                    ? _buildSalonLogo(_salonInfo!.logo)
-                    : _buildFallbackLogo()),
-
-            SizedBox(
-                height: AppTheme.getResponsiveSpacing(context,
-                    mobile: 16, tablet: 24, desktop: 24)),
-
-            // Welcome Text with responsive styling
-            Text(
-              'Chào mừng đến với\n${_salonInfo?.salonName.isNotEmpty == true ? _salonInfo!.salonName : 'Salon'}',
-              style: TextStyle(
-                fontSize: AppTheme.getResponsiveFontSize(
-                  context,
-                  mobile: 22,
-                  tablet: 28,
-                  desktop: 32,
+            // Modern Header
+            Container(
+              padding: AppTheme.getResponsivePadding(
+                context,
+                mobile: const EdgeInsets.all(20),
+                tablet: const EdgeInsets.all(24),
+                desktop: const EdgeInsets.all(28),
+              ),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
                 ),
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 0.8,
-                shadows: const [
-                  Shadow(
-                    offset: Offset(0, 2),
-                    blurRadius: 4,
-                    color: Colors.black26,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryPink.withValues(alpha: 0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-                height: AppTheme.getResponsiveSpacing(context,
-                    mobile: 12, tablet: 16, desktop: 20)),
-            Text(
-              'Hệ thống quản lý salon nail chuyên nghiệp',
-              style: TextStyle(
-                fontSize: AppTheme.getResponsiveFontSize(
-                  context,
-                  mobile: 14,
-                  tablet: 16,
-                  desktop: 18,
-                ),
-                color: Colors.white70,
-                letterSpacing: 0.4,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-                height: AppTheme.getResponsiveSpacing(context,
-                    mobile: 24, tablet: 32, desktop: 32)),
+              child: Column(
+                children: [
+                  // Top Navigation
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Builder(
+                        builder: (context) => AppWidgets.iconButton(
+                          icon: Icons.menu,
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                          elevated: true,
+                        ),
+                      ),
+                      AppWidgets.iconButton(
+                        icon: Icons.settings,
+                        onPressed: () {
+                          setState(() {
+                            _view = _HomeView.salonInfo;
+                          });
+                        },
+                        elevated: true,
+                      ),
+                    ],
+                  ),
 
-            // Quick Stats Cards
-            _buildQuickStats(),
+                  const SizedBox(height: 24),
+
+                  // Logo and Salon Info
+                  Row(
+                    children: [
+                      // Logo Container
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusXL),
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                                  AppTheme.primaryPink.withValues(alpha: 0.2),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusXL),
+                          child: _isLoadingSalonInfo && !_hasLoadedSalonInfo
+                              ? Container(
+                                  color: AppTheme.surfaceAlt,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.primaryPink,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                )
+                              : (_salonInfo?.logo.isNotEmpty == true
+                                  ? _buildSalonLogo(_salonInfo!.logo)
+                                  : _buildFallbackLogo()),
+                        ),
+                      ),
+
+                      const SizedBox(width: 20),
+
+                      // Salon Info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Xin chào! 👋',
+                              style: AppTheme.bodyMedium.copyWith(
+                                color: AppTheme.textTertiary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _salonInfo?.salonName.isNotEmpty == true
+                                  ? _salonInfo!.salonName
+                                  : 'Nail Salon',
+                              style: AppTheme.headingMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Quản lý salon chuyên nghiệp',
+                              style: AppTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Stats Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+
+                    // Section Title
+                    Text(
+                      'Thống kê hôm nay',
+                      style: AppTheme.headingSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Quick Stats Cards
+                    _buildQuickStats(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -693,52 +795,13 @@ class _NailAppState extends State<NailApp> {
   Widget _buildQuickStats() {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 600),
       builder: (context, value, child) {
-        return Transform.scale(
-          scale: 0.8 + (0.2 * value),
+        return Transform.translate(
+          offset: Offset(0, 30 * (1 - value)),
           child: Opacity(
             opacity: value,
-            child: Container(
-              width: double.infinity,
-              padding: AppTheme.getResponsivePadding(
-                context,
-                mobile: const EdgeInsets.all(16),
-                tablet: const EdgeInsets.all(20),
-                desktop: const EdgeInsets.all(24),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Tổng quan hôm nay',
-                    style: TextStyle(
-                      fontSize: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 18,
-                        tablet: 20,
-                        desktop: 22,
-                      ),
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                      height: AppTheme.getResponsiveSpacing(context,
-                          mobile: 16, tablet: 20, desktop: 24)),
-
-                  // Responsive layout for stats cards
-                  _buildStatsLayout(),
-                ],
-              ),
-            ),
+            child: _buildStatsLayout(),
           ),
         );
       },
@@ -746,54 +809,43 @@ class _NailAppState extends State<NailApp> {
   }
 
   Widget _buildStatsLayout() {
-    // Use same layout for mobile, tablet and desktop: top row (customers + bills), bottom row (revenue full width)
     return Column(
       children: [
         // Top row: Customers and Bills
         Row(
           children: [
             Expanded(
-              child: _buildStatCard(
-                icon: Icons.people,
+              child: AppWidgets.statsCard(
                 title: 'Khách hàng',
                 value: _isLoadingStats
                     ? '...'
                     : '${_todayStats['totalCustomers'] ?? 0}',
-                color: AppTheme.primaryEnd,
-                delay: 0,
+                icon: Icons.people,
+                color: AppTheme.primaryPinkLight,
               ),
             ),
-            SizedBox(
-                width: AppTheme.getResponsiveSpacing(context,
-                    mobile: 12, tablet: 16, desktop: 20)),
+            const SizedBox(width: 12),
             Expanded(
-              child: _buildStatCard(
-                icon: Icons.receipt,
+              child: AppWidgets.statsCard(
                 title: 'Hóa đơn',
                 value: _isLoadingStats
                     ? '...'
                     : '${_todayStats['totalBills'] ?? 0}',
-                color: AppTheme.primaryStart,
-                delay: 100,
+                icon: Icons.receipt,
+                color: AppTheme.primaryPink,
               ),
             ),
           ],
         ),
-        SizedBox(
-            height: AppTheme.getResponsiveSpacing(context,
-                mobile: 12, tablet: 16, desktop: 20)),
+        const SizedBox(height: 12),
         // Bottom row: Revenue full width
-        SizedBox(
-          width: double.infinity,
-          child: _buildStatCard(
-            icon: Icons.attach_money,
-            title: 'Doanh thu',
-            value: _isLoadingStats
-                ? '...'
-                : _formatCurrencyVN(_todayStats['totalRevenue'] ?? 0.0),
-            color: Colors.green,
-            delay: 200,
-          ),
+        AppWidgets.statsCard(
+          title: 'Doanh thu',
+          value: _isLoadingStats
+              ? '...'
+              : _formatCurrencyVN(_todayStats['totalRevenue'] ?? 0.0),
+          icon: Icons.attach_money,
+          color: AppTheme.success,
         ),
       ],
     );

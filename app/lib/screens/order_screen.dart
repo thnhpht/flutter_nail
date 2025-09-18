@@ -21,15 +21,12 @@ class _OrderScreenState extends State<OrderScreen> {
   final _formKey = GlobalKey<FormState>();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
-  final _employeePhoneController = TextEditingController();
-  final _employeeNameController = TextEditingController();
   final _discountController = TextEditingController();
   final _tipController = TextEditingController();
 
   List<Category> _categories = [];
   List<Service> _services = [];
   List<Service> _selectedServices = [];
-  List<Category> _selectedCategories = [];
   List<Employee> _employees = [];
   List<Employee> _selectedEmployees = [];
   double _totalPrice = 0.0;
@@ -37,9 +34,15 @@ class _OrderScreenState extends State<OrderScreen> {
   double _tip = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
-  bool _showCategoryDropdown = false;
-  bool _showServiceDropdown = false;
-  bool _showEmployeeDropdown = false;
+
+  // Current step in the order creation process
+  int _currentStep = 0;
+  final List<String> _stepTitles = [
+    'Khách hàng',
+    'Dịch vụ',
+    'Nhân viên',
+    'Thanh toán'
+  ];
 
   @override
   void initState() {
@@ -48,10 +51,21 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadServices();
     _loadEmployees();
     _loadInformation();
-    // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
-    _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
+    _discountController.addListener(_onDiscountChanged);
+  }
+
+  @override
+  void dispose() {
+    _customerPhoneController.removeListener(_onCustomerPhoneChanged);
+    _tipController.removeListener(_onTipChanged);
+    _discountController.removeListener(_onDiscountChanged);
+    _customerPhoneController.dispose();
+    _customerNameController.dispose();
+    _discountController.dispose();
+    _tipController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadInformation() async {
@@ -70,20 +84,6 @@ class _OrderScreenState extends State<OrderScreen> {
         });
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _customerPhoneController.removeListener(_onCustomerPhoneChanged);
-    _employeePhoneController.removeListener(_onEmployeePhoneChanged);
-    _tipController.removeListener(_onTipChanged);
-    _customerPhoneController.dispose();
-    _customerNameController.dispose();
-    _employeePhoneController.dispose();
-    _employeeNameController.dispose();
-    _discountController.dispose();
-    _tipController.dispose();
-    super.dispose();
   }
 
   Future<void> _loadCategories() async {
@@ -117,99 +117,56 @@ class _OrderScreenState extends State<OrderScreen> {
         _employees = employees;
       });
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên: $e',
+      AppWidgets.showFlushbar(context, 'Lỗi tải nhân viên: $e',
           type: MessageType.error);
     }
   }
 
-  Future<void> _findCustomerByPhone() async {
+  void _onCustomerPhoneChanged() {
     final phone = _customerPhoneController.text.trim();
-    if (phone.length == 10) {
-      try {
-        final customer = await widget.api.findCustomerByPhone(phone);
-        if (customer != null) {
-          setState(() {
-            _customerNameController.text = customer.name;
-          });
-          AppWidgets.showFlushbar(
-              context, 'Đã tìm thấy khách hàng: ${customer.name}',
-              type: MessageType.success);
-        } else {
-          setState(() {
-            _customerNameController.clear();
-          });
-          AppWidgets.showFlushbar(context,
-              'Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.',
-              type: MessageType.info);
-        }
-      } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm khách hàng: $e',
-            type: MessageType.error);
-      }
-    } else {
-      setState(() {
-        _customerNameController.clear();
-      });
-    }
-  }
-
-  Future<void> _findEmployeeByPhone() async {
-    final phone = _employeePhoneController.text.trim();
     if (phone.length >= 10) {
-      try {
-        final employee = await widget.api.findEmployeeByPhone(phone);
-        if (employee != null) {
-          setState(() {
-            _employeeNameController.text = employee.name;
-          });
-          AppWidgets.showFlushbar(
-              context, 'Đã tìm thấy nhân viên: ${employee.name}',
-              type: MessageType.success);
-        } else {
-          setState(() {
-            _employeeNameController.clear();
-          });
-          AppWidgets.showFlushbar(context,
-              'Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.',
-              type: MessageType.info);
-        }
-      } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm nhân viên: $e',
-            type: MessageType.error);
-      }
-    } else {
-      setState(() {
-        _employeeNameController.clear();
-      });
+      _searchCustomer(phone);
     }
   }
 
-  void _toggleCategoryDropdown() {
+  void _onTipChanged() {
+    final tip = double.tryParse(_tipController.text.trim()) ?? 0.0;
     setState(() {
-      _showCategoryDropdown = !_showCategoryDropdown;
-      if (_showCategoryDropdown) {
-        _showServiceDropdown = false;
-      }
+      _tip = tip;
+      _calculateTotal();
     });
   }
 
-  void _toggleServiceDropdown() {
+  void _onDiscountChanged() {
+    final discount = double.tryParse(_discountController.text.trim()) ?? 0.0;
     setState(() {
-      _showServiceDropdown = !_showServiceDropdown;
-      if (_showServiceDropdown) {
-        _showCategoryDropdown = false;
-        _showEmployeeDropdown = false;
-      }
+      _discountPercent = discount;
+      _calculateTotal();
     });
   }
 
-  void _toggleEmployeeDropdown() {
-    setState(() {
-      _showEmployeeDropdown = !_showEmployeeDropdown;
-      if (_showEmployeeDropdown) {
-        _showCategoryDropdown = false;
-        _showServiceDropdown = false;
+  Future<void> _searchCustomer(String phone) async {
+    try {
+      final customers = await widget.api.getCustomers();
+      final customer = customers.where((c) => c.phone == phone).firstOrNull;
+      if (customer != null) {
+        setState(() {
+          _customerNameController.text = customer.name;
+        });
       }
+    } catch (e) {
+      // Handle error silently for auto-search
+    }
+  }
+
+  void _toggleService(Service service) {
+    setState(() {
+      if (_selectedServices.contains(service)) {
+        _selectedServices.remove(service);
+      } else {
+        _selectedServices.add(service);
+      }
+      _calculateTotal();
     });
   }
 
@@ -223,128 +180,24 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
-  void _onCustomerPhoneChanged() {
-    _findCustomerByPhone();
-  }
-
-  void _onEmployeePhoneChanged() {
-    _findEmployeeByPhone();
-  }
-
-  String _formatPrice(double price) {
-    return price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match match) => '${match[1]}.',
-        );
-  }
-
-  String _formatPhoneNumber(String phoneNumber) {
-    // Loại bỏ tất cả ký tự không phải số
-    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
-
-    // Kiểm tra nếu số điện thoại có 10 số
-    if (cleanPhone.length == 10) {
-      // Format: 0xxx xxx xxx
-      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
-    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
-      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
-      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
-    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
-      // Format cho số không có số 0 đầu: 0xxx xxx xxx
-      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
-    }
-
-    // Nếu không phù hợp với format Việt Nam, trả về số gốc
-    return phoneNumber;
-  }
-
-  void _onCategoryToggled(Category category) {
-    setState(() {
-      if (_selectedCategories.contains(category)) {
-        _selectedCategories.remove(category);
-        // Remove all services from this category
-        _selectedServices
-            .removeWhere((service) => service.categoryId == category.id);
-      } else {
-        _selectedCategories.add(category);
-      }
-      _calculateTotal();
-    });
-  }
-
-  void _onServiceToggled(Service service) {
-    setState(() {
-      if (_selectedServices.contains(service)) {
-        _selectedServices.remove(service);
-      } else {
-        _selectedServices.add(service);
-        // Add category if not already selected
-        final category =
-            _categories.firstWhere((c) => c.id == service.categoryId);
-        if (!_selectedCategories.contains(category)) {
-          _selectedCategories.add(category);
-        }
-      }
-      _calculateTotal();
-    });
-  }
-
-  void _removeSelectedCategory(Category category) {
-    setState(() {
-      _selectedCategories.remove(category);
-      // Remove all services from this category
-      _selectedServices
-          .removeWhere((service) => service.categoryId == category.id);
-      _calculateTotal();
-    });
-  }
-
-  void _removeSelectedService(Service service) {
-    setState(() {
-      _selectedServices.remove(service);
-      _calculateTotal();
-    });
-  }
-
   void _calculateTotal() {
     _totalPrice =
         _selectedServices.fold(0.0, (sum, service) => sum + service.price);
-    _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100) + _tip;
+
+    final discountAmount = (_totalPrice * _discountPercent) / 100;
+    _finalTotalPrice = _totalPrice - discountAmount + _tip;
   }
 
-  void _onDiscountChanged(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        _discountPercent = 0.0;
-      } else {
-        final discount = double.tryParse(value) ?? 0.0;
-        _discountPercent = discount.clamp(0.0, 100.0);
-        _discountController.text = _discountPercent.toStringAsFixed(0);
-        _discountController.selection = TextSelection.fromPosition(
-          TextPosition(offset: _discountController.text.length),
-        );
-      }
-      _calculateTotal();
-    });
+  String _getCategoryName(String categoryId) {
+    try {
+      return _categories.firstWhere((cat) => cat.id == categoryId).name;
+    } catch (e) {
+      return 'Không xác định';
+    }
   }
 
-  void _onTipChanged() {
-    final value = _tipController.text;
-    setState(() {
-      if (value.isEmpty) {
-        _tip = 0.0;
-      } else {
-        final tip = double.tryParse(value) ?? 0.0;
-        _tip = tip.clamp(0.0, double.infinity);
-      }
-      _calculateTotal();
-    });
-  }
-
-  String _generateOrderId() {
-    // Generate a real UUID using the uuid package
-    const uuid = Uuid();
-    return uuid.v4();
+  String _formatPrice(double price) {
+    return '${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}₫';
   }
 
   Future<void> _createOrder() async {
@@ -365,83 +218,46 @@ class _OrderScreenState extends State<OrderScreen> {
     });
 
     try {
-      // Create customer if not exists
       final customerPhone = _customerPhoneController.text.trim();
       final customerName = _customerNameController.text.trim();
 
+      // Create customer if not exists
       try {
-        await widget.api.getCustomer(customerPhone);
-      } catch (e) {
-        // Customer doesn't exist, create new one
         await widget.api
             .createCustomer(Customer(phone: customerPhone, name: customerName));
+      } catch (e) {
+        // Customer might already exist, continue
       }
 
-      // Create orders for each selected employee
-      List<Order> createdOrders = [];
-      if (_selectedCategories.isNotEmpty && _selectedServices.isNotEmpty) {
-        final order = Order(
-          id: _generateOrderId(), // Generate unique ID locally
-          customerPhone: customerPhone,
-          customerName: customerName,
-          employeeIds: _selectedEmployees.map((e) => e.id).toList(),
-          employeeNames: _selectedEmployees.map((e) => e.name).toList(),
-          serviceIds: _selectedServices.map((s) => s.id).toList(),
-          serviceNames: _selectedServices.map((s) => s.name).toList(),
-          totalPrice: _finalTotalPrice,
-          discountPercent: _discountPercent,
-          tip: _tip,
-          createdAt: DateTime.now(),
-        );
+      // Create the bill
+      final uuid = const Uuid();
+      final billId = uuid.v4();
 
-        // Validate order data
-        if (order.serviceIds.isEmpty || order.serviceNames.isEmpty) {
-          throw Exception('Dữ liệu dịch vụ không hợp lệ');
-        }
+      await widget.api.createOrder(Order(
+        id: billId,
+        customerPhone: customerPhone,
+        customerName: customerName,
+        employeeIds: _selectedEmployees.map((e) => e.id).toList(),
+        employeeNames: _selectedEmployees.map((e) => e.name).toList(),
+        serviceIds: _selectedServices.map((s) => s.id).toList(),
+        serviceNames: _selectedServices.map((s) => s.name).toList(),
+        totalPrice: _finalTotalPrice,
+        discountPercent: _discountPercent,
+        tip: _tip,
+        createdAt: DateTime.now(),
+      ));
 
-        // Create order and get the response with real ID
-        final createdOrder = await widget.api.createOrder(order);
-        createdOrders.add(createdOrder);
-      }
-
-      AppWidgets.showFlushbar(context, 'Đã tạo đơn thành công!',
+      AppWidgets.showFlushbar(context, 'Tạo đơn hàng thành công!',
           type: MessageType.success);
 
-      // Create a backup of selected services before showing bills
-      final selectedServicesBackup = List<Service>.from(_selectedServices);
-
-      // Show bill for each created order using the real order data
-      for (final createdOrder in createdOrders) {
-        // Show bill dialog with the real order data
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          // Create services list from the backup data
-          final servicesForBill = selectedServicesBackup
-              .where((service) => createdOrder.serviceIds.contains(service.id))
-              .toList();
-
-          BillHelper.showBillDialog(
-            context: context,
-            order: createdOrder,
-            services: servicesForBill,
-            api: widget.api,
-            salonName: _information?.salonName,
-            salonAddress: _information?.address,
-            salonPhone: _information?.phone,
-          );
-        });
+      if (widget.onOrderCreated != null) {
+        widget.onOrderCreated!();
       }
 
-      // Call the callback after a delay to ensure bills are shown first
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        widget.onOrderCreated?.call();
-      });
-
-      // Reset form after showing bills and calling callback
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        _resetForm();
-      });
+      // Reset form
+      _resetForm();
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tạo đơn: $e',
+      AppWidgets.showFlushbar(context, 'Lỗi tạo đơn hàng: $e',
           type: MessageType.error);
     } finally {
       setState(() {
@@ -451,954 +267,790 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void _resetForm() {
-    _formKey.currentState!.reset();
-    _customerPhoneController.clear();
-    _customerNameController.clear();
-    _employeePhoneController.clear();
-    _employeeNameController.clear();
-    _discountController.clear();
-    _tipController.clear();
     setState(() {
-      _selectedCategories.clear();
+      _customerPhoneController.clear();
+      _customerNameController.clear();
+      _discountController.clear();
+      _tipController.clear();
       _selectedServices.clear();
       _selectedEmployees.clear();
       _totalPrice = 0.0;
       _discountPercent = 0.0;
       _tip = 0.0;
       _finalTotalPrice = 0.0;
-      _showCategoryDropdown = false;
-      _showServiceDropdown = false;
-      _showEmployeeDropdown = false;
+      _currentStep = 0;
     });
+  }
+
+  void _nextStep() {
+    if (_currentStep < _stepTitles.length - 1) {
+      setState(() {
+        _currentStep++;
+      });
+    }
+  }
+
+  void _previousStep() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep--;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Close dropdowns when tapping outside
-        if (_showCategoryDropdown ||
-            _showServiceDropdown ||
-            _showEmployeeDropdown) {
-          setState(() {
-            _showCategoryDropdown = false;
-            _showServiceDropdown = false;
-            _showEmployeeDropdown = false;
-          });
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.grey[50],
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Header
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        children: [
-                          const Icon(
-                            Icons.shopping_cart,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Tạo đơn mới',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${_selectedServices.length} dịch vụ đã chọn',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Customer Information
-                    _buildSectionCard(
-                      title: 'Thông tin khách hàng',
-                      icon: Icons.person,
-                      child: Column(
-                        children: [
-                          _buildTextField(
-                            controller: _customerPhoneController,
-                            label: 'Số điện thoại',
-                            prefixIcon: Icons.phone,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          _buildTextField(
-                            controller: _customerNameController,
-                            label: 'Tên khách hàng',
-                            prefixIcon: Icons.person_outline,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập tên khách hàng';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Employee Information
-                    _buildSectionCard(
-                      title: 'Thông tin nhân viên',
-                      icon: Icons.work,
-                      child: Column(
-                        children: [
-                          // Selected Employees Chips
-                          if (_selectedEmployees.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: _selectedEmployees
-                                  .map((employee) => _buildChip(
-                                        label: employee.name,
-                                        onDeleted: () =>
-                                            _toggleEmployee(employee),
-                                        color: const Color(0xFF667eea),
-                                      ))
-                                  .toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Employee Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleEmployeeDropdown,
-                            label: _selectedEmployees.isEmpty
-                                ? 'Chọn nhân viên'
-                                : '${_selectedEmployees.length} nhân viên đã chọn',
-                            isExpanded: _showEmployeeDropdown,
-                          ),
-                          if (_showEmployeeDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _employees.length,
-                                itemBuilder: (context, index) {
-                                  final employee = _employees[index];
-                                  final isSelected =
-                                      _selectedEmployees.contains(employee);
-                                  return _buildDropdownItem(
-                                    title: employee.name,
-                                    subtitle: employee.phone != null
-                                        ? _formatPhoneNumber(employee.phone!)
-                                        : '',
-                                    isSelected: isSelected,
-                                    onTap: () => _toggleEmployee(employee),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Category Selection
-                    _buildSectionCard(
-                      title: 'Danh mục dịch vụ',
-                      icon: Icons.category,
-                      child: Column(
-                        children: [
-                          // Selected Categories Chips
-                          if (_selectedCategories.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: _selectedCategories.map((category) {
-                                return _buildChip(
-                                  label: category.name,
-                                  onDeleted: () =>
-                                      _removeSelectedCategory(category),
-                                  color: const Color(0xFF7386dd),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Category Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleCategoryDropdown,
-                            label: _selectedCategories.isEmpty
-                                ? 'Chọn danh mục'
-                                : '${_selectedCategories.length} danh mục đã chọn',
-                            isExpanded: _showCategoryDropdown,
-                          ),
-
-                          // Category Dropdown Menu
-                          if (_showCategoryDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _categories.length,
-                                itemBuilder: (context, index) {
-                                  final category = _categories[index];
-                                  final isSelected =
-                                      _selectedCategories.contains(category);
-                                  return _buildDropdownItem(
-                                    title: category.name,
-                                    isSelected: isSelected,
-                                    onTap: () => _onCategoryToggled(category),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Services Selection
-                    _buildSectionCard(
-                      title: 'Dịch vụ',
-                      icon: Icons.spa,
-                      child: Column(
-                        children: [
-                          // Selected Services Chips
-                          if (_selectedServices.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: _selectedServices.map((service) {
-                                return _buildChip(
-                                  label: service.name,
-                                  onDeleted: () =>
-                                      _removeSelectedService(service),
-                                  color: const Color(0xFF764ba2),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Service Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleServiceDropdown,
-                            label: _selectedServices.isEmpty
-                                ? 'Chọn dịch vụ'
-                                : '${_selectedServices.length} dịch vụ đã chọn',
-                            isExpanded: _showServiceDropdown,
-                          ),
-
-                          // Service Dropdown Menu
-                          if (_showServiceDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 300,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: (_selectedCategories.isEmpty
-                                        ? _categories
-                                        : _selectedCategories)
-                                    .length,
-                                itemBuilder: (context, categoryIndex) {
-                                  final visibleCategories =
-                                      _selectedCategories.isEmpty
-                                          ? _categories
-                                          : _selectedCategories;
-                                  final category =
-                                      visibleCategories[categoryIndex];
-                                  final categoryServices = _services
-                                      .where((service) =>
-                                          service.categoryId == category.id)
-                                      .toList();
-
-                                  if (categoryServices.isEmpty)
-                                    return const SizedBox.shrink();
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Category Header
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          category.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      // Services in this category
-                                      ...categoryServices.map((service) {
-                                        final isSelected =
-                                            _selectedServices.contains(service);
-                                        return _buildDropdownItem(
-                                          title: service.name,
-                                          subtitle:
-                                              '${_formatPrice(service.price)} VNĐ',
-                                          isSelected: isSelected,
-                                          onTap: () =>
-                                              _onServiceToggled(service),
-                                        );
-                                      }).toList(),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Discount Section
-                    _buildSectionCard(
-                      title: 'Giảm giá',
-                      icon: Icons.discount,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _discountController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    hintText: '0',
-                                    suffixText: '%',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey[300]!),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Color(0xFF667eea), width: 2),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey[50],
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 12,
-                                    ),
-                                  ),
-                                  onChanged: _onDiscountChanged,
-                                  validator: (value) {
-                                    if (value != null && value.isNotEmpty) {
-                                      final discount = double.tryParse(value);
-                                      if (discount == null ||
-                                          discount < 0 ||
-                                          discount > 100) {
-                                        return 'Giảm giá phải từ 0-100%';
-                                      }
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF667eea),
-                                      Color(0xFF764ba2)
-                                    ],
-                                    begin: Alignment.bottomLeft,
-                                    end: Alignment.topRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Text(
-                                  'Tiết kiệm: ${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Tip input
-                          Row(
-                            children: [
-                              const Text(
-                                'Tiền bo:',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                flex: 1,
-                                child: TextFormField(
-                                  controller: _tipController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelText: 'VNĐ',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey[300]!),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Color(0xFF667eea), width: 2),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey[50],
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 12,
-                                    ),
-                                  ),
-                                  onChanged: (value) => _onTipChanged(),
-                                  validator: (value) {
-                                    if (value != null && value.isNotEmpty) {
-                                      final tip = double.tryParse(value);
-                                      if (tip == null || tip < 0) {
-                                        return 'Tiền bo phải lớn hơn 0';
-                                      }
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              if (_tip > 0) ...[
-                                const SizedBox(width: 12),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF667eea),
-                                        Color(0xFF764ba2)
-                                      ],
-                                      begin: Alignment.bottomLeft,
-                                      end: Alignment.topRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Text(
-                                    'Tip: ${_formatPrice(_tip)} VNĐ',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Total Price
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Thành tiền:',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                '${_formatPrice(_totalPrice)} VNĐ',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (_discountPercent > 0) ...[
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Giảm giá (${_discountPercent.toStringAsFixed(0)}%):',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                          if (_tip > 0) ...[
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Tiền bo:',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  '+${_formatPrice(_tip)} VNĐ',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Tổng thanh toán:',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                '${_formatPrice(_finalTotalPrice)} VNĐ',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Action Buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildPrimaryButton(
-                            onPressed: _isLoading ? null : _createOrder,
-                            isLoading: _isLoading,
-                            label: 'Tạo đơn',
-                            icon: Icons.check,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildSecondaryButton(
-                            onPressed: _isLoading ? null : _resetForm,
-                            label: 'Làm mới',
-                            icon: Icons.refresh,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundPrimary,
+      appBar: AppBar(
+        title: Text(
+          'Tạo đơn hàng',
+          style: AppTheme.headingSmall.copyWith(
+            fontWeight: FontWeight.w700,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionCard({
-    required String title,
-    required IconData icon,
-    required Widget child,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+        backgroundColor: AppTheme.surface,
+        elevation: 0,
+        leading: AppWidgets.iconButton(
+          icon: Icons.arrow_back,
+          onPressed: () => Navigator.pop(context),
+          size: 40,
+        ),
+        actions: [
+          AppWidgets.iconButton(
+            icon: Icons.refresh,
+            onPressed: _resetForm,
+            size: 40,
           ),
+          const SizedBox(width: 16),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF667eea).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF667eea),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          child,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData prefixIcon,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(prefixIcon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
-        ),
-        filled: true,
-        fillColor: Colors.grey[50],
-      ),
-      validator: validator,
-    );
-  }
-
-  Widget _buildChip({
-    required String label,
-    required VoidCallback onDeleted,
-    required Color color,
-  }) {
-    return Chip(
-      label: Text(
-        label,
-        style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-      ),
-      deleteIcon: const Icon(Icons.close, color: Colors.white, size: 18),
-      onDeleted: onDeleted,
-      backgroundColor: color,
-      side: BorderSide.none,
-    );
-  }
-
-  Widget _buildDropdownButton({
-    required VoidCallback onTap,
-    required String label,
-    required bool isExpanded,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.grey[50],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: label.contains('Chọn') ? Colors.grey[600] : Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Icon(
-              isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: Colors.grey[600],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownMenu({
-    required double maxHeight,
-    required Widget child,
-  }) {
-    return Container(
-      constraints: BoxConstraints(maxHeight: maxHeight),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildDropdownItem({
-    required String title,
-    String? subtitle,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing:
-          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
-      tileColor:
-          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
-      onTap: onTap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-  }
-
-  Widget _buildPrimaryButton({
-    required VoidCallback? onPressed,
-    required bool isLoading,
-    required String label,
-    required IconData icon,
-  }) {
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF667eea).withValues(alpha: 0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onPressed,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          // Progress Indicator
+          Container(
+            padding: const EdgeInsets.all(20),
+            color: AppTheme.surface,
+            child: Column(
               children: [
-                if (isLoading)
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                else
-                  Icon(icon, color: Colors.white, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                // Step Progress
+                Row(
+                  children: List.generate(_stepTitles.length, (index) {
+                    final isCompleted = index < _currentStep;
+                    final isCurrent = index == _currentStep;
+                    return Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: isCompleted || isCurrent
+                                    ? AppTheme.primaryPink
+                                    : AppTheme.borderLight,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                          if (index < _stepTitles.length - 1)
+                            const SizedBox(width: 8),
+                        ],
+                      ),
+                    );
+                  }),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSecondaryButton({
-    required VoidCallback? onPressed,
-    required String label,
-    required IconData icon,
-  }) {
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onPressed,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.grey[600], size: 20),
-                const SizedBox(width: 12),
+                const SizedBox(height: 16),
+                // Step Title
                 Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 16,
+                  'Bước ${_currentStep + 1}: ${_stepTitles[_currentStep]}',
+                  style: AppTheme.headingSmall.copyWith(
+                    color: AppTheme.primaryPink,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
           ),
+
+          // Content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    if (_currentStep == 0) _buildCustomerStep(),
+                    if (_currentStep == 1) _buildServicesStep(),
+                    if (_currentStep == 2) _buildEmployeesStep(),
+                    if (_currentStep == 3) _buildPaymentStep(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Bottom Navigation
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.textPrimary.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                if (_currentStep > 0) ...[
+                  Expanded(
+                    child: AppWidgets.secondaryButton(
+                      label: 'Quay lại',
+                      onPressed: _previousStep,
+                      icon: Icons.arrow_back,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                ],
+                Expanded(
+                  flex: _currentStep > 0 ? 1 : 2,
+                  child: _currentStep < _stepTitles.length - 1
+                      ? AppWidgets.primaryButton(
+                          label: 'Tiếp tục',
+                          onPressed: _canProceedToNextStep() ? _nextStep : null,
+                          icon: Icons.arrow_forward,
+                        )
+                      : AppWidgets.primaryButton(
+                          label: _isLoading ? 'Đang tạo...' : 'Tạo đơn hàng',
+                          onPressed: _isLoading ? null : _createOrder,
+                          icon: _isLoading ? null : Icons.shopping_cart,
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool _canProceedToNextStep() {
+    switch (_currentStep) {
+      case 0: // Customer step
+        return _customerPhoneController.text.trim().isNotEmpty &&
+            _customerNameController.text.trim().isNotEmpty;
+      case 1: // Services step
+        return _selectedServices.isNotEmpty;
+      case 2: // Employees step
+        return _selectedEmployees.isNotEmpty;
+      default:
+        return true;
+    }
+  }
+
+  Widget _buildCustomerStep() {
+    return Container(
+      decoration: AppTheme.cardDecoration(elevated: true),
+      padding: const EdgeInsets.all(AppTheme.spacingL),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppTheme.spacingS),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryPink.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                ),
+                child: Icon(
+                  Icons.person,
+                  color: AppTheme.primaryPink,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: AppTheme.spacingM),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Thông tin khách hàng',
+                      style: AppTheme.headingSmall,
+                    ),
+                    Text(
+                      'Nhập số điện thoại để tự động tìm khách hàng',
+                      style: AppTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppTheme.spacingL),
+          TextFormField(
+            controller: _customerPhoneController,
+            decoration: AppTheme.inputDecoration(
+              label: 'Số điện thoại',
+              prefixIcon: Icons.phone,
+            ),
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Vui lòng nhập số điện thoại';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: AppTheme.spacingM),
+          TextFormField(
+            controller: _customerNameController,
+            decoration: AppTheme.inputDecoration(
+              label: 'Tên khách hàng',
+              prefixIcon: Icons.person_outline,
+            ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Vui lòng nhập tên khách hàng';
+              }
+              return null;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServicesStep() {
+    final servicesByCategory = <String, List<Service>>{};
+    for (final service in _services) {
+      if (!servicesByCategory.containsKey(service.categoryId)) {
+        servicesByCategory[service.categoryId] = [];
+      }
+      servicesByCategory[service.categoryId]!.add(service);
+    }
+
+    return Column(
+      children: [
+        // Selected Services Summary
+        if (_selectedServices.isNotEmpty) ...[
+          Container(
+            decoration: AppTheme.cardDecoration(),
+            padding: const EdgeInsets.all(AppTheme.spacingL),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, color: AppTheme.success, size: 20),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      'Đã chọn ${_selectedServices.length} dịch vụ',
+                      style: AppTheme.labelLarge.copyWith(
+                        color: AppTheme.success,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppTheme.spacingM),
+                Wrap(
+                  spacing: AppTheme.spacingS,
+                  runSpacing: AppTheme.spacingS,
+                  children: _selectedServices.map((service) {
+                    return Container(
+                      margin: const EdgeInsets.only(
+                          right: AppTheme.spacingS, bottom: AppTheme.spacingS),
+                      child: Chip(
+                        label: Text(
+                          '${service.name} (${_formatPrice(service.price)})',
+                          style: AppTheme.bodySmall
+                              .copyWith(color: AppTheme.success),
+                        ),
+                        backgroundColor: AppTheme.success.withOpacity(0.1),
+                        deleteIcon: Icon(Icons.close,
+                            size: 16, color: AppTheme.success),
+                        onDeleted: () => _toggleService(service),
+                        side: BorderSide(
+                            color: AppTheme.success.withOpacity(0.3)),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingM),
+        ],
+
+        // Services by Category
+        ...servicesByCategory.entries.map((entry) {
+          final categoryId = entry.key;
+          final services = entry.value;
+          final categoryName = _getCategoryName(categoryId);
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: AppTheme.spacingM),
+            decoration: AppTheme.cardDecoration(elevated: true),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Category Header
+                Container(
+                  padding: const EdgeInsets.all(AppTheme.spacingL),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryPinkLight.withOpacity(0.1),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppTheme.radiusLarge),
+                      topRight: Radius.circular(AppTheme.radiusLarge),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.category,
+                        color: AppTheme.primaryPink,
+                        size: 20,
+                      ),
+                      const SizedBox(width: AppTheme.spacingS),
+                      Text(
+                        categoryName,
+                        style: AppTheme.labelLarge.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${services.length} dịch vụ',
+                        style: AppTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Services List
+                Padding(
+                  padding: const EdgeInsets.all(AppTheme.spacingM),
+                  child: Column(
+                    children: services.map((service) {
+                      final isSelected = _selectedServices.contains(service);
+                      return Container(
+                        margin:
+                            const EdgeInsets.only(bottom: AppTheme.spacingS),
+                        decoration: AppTheme.cardDecoration(
+                          color: isSelected
+                              ? AppTheme.primaryPink.withOpacity(0.1)
+                              : null,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius:
+                                BorderRadius.circular(AppTheme.radiusLarge),
+                            onTap: () => _toggleService(service),
+                            child: Padding(
+                              padding: const EdgeInsets.all(AppTheme.spacingM),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? AppTheme.primaryPink
+                                          : AppTheme.surfaceAlt,
+                                      borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusSmall),
+                                    ),
+                                    child: Icon(
+                                      isSelected ? Icons.check : Icons.spa,
+                                      color: isSelected
+                                          ? AppTheme.textOnPrimary
+                                          : AppTheme.primaryPink,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppTheme.spacingM),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          service.name,
+                                          style: AppTheme.labelLarge,
+                                        ),
+                                        const SizedBox(
+                                            height: AppTheme.spacingXXS),
+                                        Text(
+                                          _formatPrice(service.price),
+                                          style: AppTheme.bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Widget _buildEmployeesStep() {
+    return Column(
+      children: [
+        // Selected Employees Summary
+        if (_selectedEmployees.isNotEmpty) ...[
+          Container(
+            decoration: AppTheme.cardDecoration(),
+            padding: const EdgeInsets.all(AppTheme.spacingL),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, color: AppTheme.success, size: 20),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      'Đã chọn ${_selectedEmployees.length} nhân viên',
+                      style: AppTheme.labelLarge.copyWith(
+                        color: AppTheme.success,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppTheme.spacingM),
+                Wrap(
+                  spacing: AppTheme.spacingS,
+                  runSpacing: AppTheme.spacingS,
+                  children: _selectedEmployees.map((employee) {
+                    return Container(
+                      margin: const EdgeInsets.only(
+                          right: AppTheme.spacingS, bottom: AppTheme.spacingS),
+                      child: Chip(
+                        label: Text(
+                          employee.name,
+                          style:
+                              AppTheme.bodySmall.copyWith(color: AppTheme.info),
+                        ),
+                        backgroundColor: AppTheme.info.withOpacity(0.1),
+                        deleteIcon:
+                            Icon(Icons.close, size: 16, color: AppTheme.info),
+                        onDeleted: () => _toggleEmployee(employee),
+                        side: BorderSide(color: AppTheme.info.withOpacity(0.3)),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingM),
+        ],
+
+        // Employees List
+        Container(
+          decoration: AppTheme.cardDecoration(elevated: true),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                decoration: BoxDecoration(
+                  color: AppTheme.info.withOpacity(0.1),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppTheme.radiusLarge),
+                    topRight: Radius.circular(AppTheme.radiusLarge),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.work,
+                      color: AppTheme.info,
+                      size: 20,
+                    ),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      'Chọn nhân viên phục vụ',
+                      style: AppTheme.labelLarge.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${_employees.length} nhân viên',
+                      style: AppTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Employees
+              Padding(
+                padding: const EdgeInsets.all(AppTheme.spacingM),
+                child: Column(
+                  children: _employees.map((employee) {
+                    final isSelected = _selectedEmployees.contains(employee);
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
+                      decoration: AppTheme.cardDecoration(
+                        color:
+                            isSelected ? AppTheme.info.withOpacity(0.1) : null,
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusLarge),
+                          onTap: () => _toggleEmployee(employee),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppTheme.spacingM),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? AppTheme.info
+                                        : AppTheme.surfaceAlt,
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusSmall),
+                                  ),
+                                  child: Icon(
+                                    isSelected ? Icons.check : Icons.person,
+                                    color: isSelected
+                                        ? AppTheme.textOnPrimary
+                                        : AppTheme.info,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: AppTheme.spacingM),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        employee.name,
+                                        style: AppTheme.labelLarge,
+                                      ),
+                                      const SizedBox(
+                                          height: AppTheme.spacingXXS),
+                                      Text(
+                                        employee.phone ?? 'Không có SĐT',
+                                        style: AppTheme.bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentStep() {
+    return Column(
+      children: [
+        // Order Summary
+        Container(
+          decoration: AppTheme.cardDecoration(elevated: true),
+          padding: const EdgeInsets.all(AppTheme.spacingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.receipt_long,
+                    color: AppTheme.primaryPink,
+                    size: 24,
+                  ),
+                  const SizedBox(width: AppTheme.spacingM),
+                  Text(
+                    'Tóm tắt đơn hàng',
+                    style: AppTheme.headingSmall,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTheme.spacingL),
+
+              // Customer Info
+              _buildSummaryRow('Khách hàng', _customerNameController.text),
+              _buildSummaryRow('Số điện thoại', _customerPhoneController.text),
+
+              const Divider(height: 32),
+
+              // Services
+              Text(
+                'Dịch vụ đã chọn',
+                style:
+                    AppTheme.labelLarge.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: AppTheme.spacingS),
+              ..._selectedServices.map((service) =>
+                  _buildSummaryRow(service.name, _formatPrice(service.price))),
+
+              const Divider(height: 32),
+
+              // Employees
+              Text(
+                'Nhân viên phục vụ',
+                style:
+                    AppTheme.labelLarge.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: AppTheme.spacingS),
+              Text(
+                _selectedEmployees.map((e) => e.name).join(', '),
+                style: AppTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppTheme.spacingM),
+
+        // Payment Details
+        Container(
+          decoration: AppTheme.cardDecoration(elevated: true),
+          padding: const EdgeInsets.all(AppTheme.spacingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.payment,
+                    color: AppTheme.success,
+                    size: 24,
+                  ),
+                  const SizedBox(width: AppTheme.spacingM),
+                  Text(
+                    'Chi tiết thanh toán',
+                    style: AppTheme.headingSmall,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTheme.spacingL),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _discountController,
+                      decoration: AppTheme.inputDecoration(
+                        label: 'Giảm giá (%)',
+                        prefixIcon: Icons.percent,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(width: AppTheme.spacingM),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _tipController,
+                      decoration: AppTheme.inputDecoration(
+                        label: 'Tip (VNĐ)',
+                        prefixIcon: Icons.volunteer_activism,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppTheme.spacingL),
+
+              // Totals
+              _buildTotalRow('Tổng dịch vụ', _formatPrice(_totalPrice)),
+              if (_discountPercent > 0)
+                _buildTotalRow(
+                    'Giảm giá (${_discountPercent.toStringAsFixed(0)}%)',
+                    '-${_formatPrice((_totalPrice * _discountPercent) / 100)}'),
+              if (_tip > 0) _buildTotalRow('Tip', _formatPrice(_tip)),
+              const Divider(height: 24),
+              _buildTotalRow('Tổng cộng', _formatPrice(_finalTotalPrice),
+                  isTotal: true),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppTheme.spacingS),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: AppTheme.bodyMedium.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: AppTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalRow(String label, String value, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppTheme.spacingS),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: isTotal
+                ? AppTheme.labelLarge.copyWith(fontWeight: FontWeight.w700)
+                : AppTheme.bodyMedium,
+          ),
+          Text(
+            value,
+            style: isTotal
+                ? AppTheme.labelLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.primaryPink,
+                  )
+                : AppTheme.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }

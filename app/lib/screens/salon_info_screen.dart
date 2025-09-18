@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'dart:io';
 import 'dart:convert';
 import '../api_client.dart';
 import '../models.dart';
@@ -12,13 +10,15 @@ class SalonInfoScreen extends StatefulWidget {
   final ApiClient api;
   final VoidCallback? onSalonInfoUpdated;
 
-  const SalonInfoScreen(
-      {super.key, required this.api, this.onSalonInfoUpdated});
+  const SalonInfoScreen({
+    super.key,
+    required this.api,
+    this.onSalonInfoUpdated,
+  });
 
   @override
   State<SalonInfoScreen> createState() => _SalonInfoScreenState();
 }
-
 
 class _SalonInfoScreenState extends State<SalonInfoScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -36,7 +36,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
   bool _isSaving = false;
   String _logoUrl = '';
   String _qrCodeUrl = '';
-  Uint8List? _selectedImageBytes;
+  Uint8List? _selectedLogoBytes;
   Uint8List? _selectedQRCodeBytes;
 
   @override
@@ -57,7 +57,6 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     _zaloController.dispose();
     super.dispose();
   }
-
 
   Future<void> _loadInformation() async {
     try {
@@ -85,9 +84,11 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        AppWidgets.showFlushbar(context, 
-            'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
-            type: MessageType.error);
+        AppWidgets.showFlushbar(
+          context,
+          'Không thể tải thông tin salon: $e',
+          type: MessageType.error,
+        );
       }
     }
   }
@@ -99,75 +100,48 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         source: ImageSource.gallery,
         maxWidth: 1024,
         maxHeight: 1024,
-        imageQuality: 90,
+        imageQuality: 85,
       );
 
       if (image != null) {
         final bytes = await image.readAsBytes();
-
         setState(() {
           if (isQRCode) {
             _selectedQRCodeBytes = bytes;
-            _qrCodeUrl = '';
           } else {
-            _selectedImageBytes = bytes;
-            _logoUrl = '';
+            _selectedLogoBytes = bytes;
           }
         });
       }
     } catch (e) {
-      if (mounted) {
-        AppWidgets.showFlushbar(context, 
-            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
-            type: MessageType.error);
-      }
+      AppWidgets.showFlushbar(
+        context,
+        'Lỗi chọn hình ảnh: $e',
+        type: MessageType.error,
+      );
     }
   }
 
   Future<void> _saveInformation() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isSaving = true;
+    });
 
     try {
-      setState(() {
-        _isSaving = true;
-      });
+      String? logoBase64;
+      String? qrCodeBase64;
 
-      String logoUrl = _logoUrl;
-      // Upload new images if selected
-      String qrCodeUrl = _qrCodeUrl;
-
-      if (_selectedImageBytes != null) {
-        final fileName = 'logo_${DateTime.now().millisecondsSinceEpoch}.png';
-        try {
-          logoUrl = await widget.api.uploadLogo(_selectedImageBytes!, fileName);
-        } catch (e) {
-          setState(() {
-            _isSaving = false;
-          });
-          AppWidgets.showFlushbar(context, 'Lỗi khi upload logo lên server',
-              type: MessageType.error);
-          return;
-        }
+      if (_selectedLogoBytes != null) {
+        logoBase64 = base64Encode(_selectedLogoBytes!);
       }
 
       if (_selectedQRCodeBytes != null) {
-        final fileName = 'qrcode_${DateTime.now().millisecondsSinceEpoch}.png';
-        try {
-          qrCodeUrl =
-              await widget.api.uploadQRCode(_selectedQRCodeBytes!, fileName);
-        } catch (e) {
-          setState(() {
-            _isSaving = false;
-          });
-          AppWidgets.showFlushbar(context, 'Lỗi khi upload QR code lên server',
-              type: MessageType.error);
-          return;
-        }
+        qrCodeBase64 = base64Encode(_selectedQRCodeBytes!);
       }
 
-      final information = Information(
+      final updatedInfo = Information(
         id: _information?.id ?? 0,
         salonName: _nameController.text.trim(),
         address: _addressController.text.trim(),
@@ -177,607 +151,516 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         facebook: _facebookController.text.trim(),
         instagram: _instagramController.text.trim(),
         zalo: _zaloController.text.trim(),
-        logo: logoUrl,
-        qrCode: qrCodeUrl,
+        logo: logoBase64 ?? _logoUrl,
+        qrCode: qrCodeBase64 ?? _qrCodeUrl,
         createdAt: _information?.createdAt ?? DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
-      await widget.api.updateInformation(information);
+      await widget.api.updateInformation(updatedInfo);
 
       setState(() {
-        _information = information;
-        _logoUrl = logoUrl;
-        _qrCodeUrl = qrCodeUrl;
-        _selectedImageBytes = null;
+        _information = updatedInfo;
+        _selectedLogoBytes = null;
         _selectedQRCodeBytes = null;
-        _isSaving = false;
+        if (logoBase64 != null) _logoUrl = logoBase64;
+        if (qrCodeBase64 != null) _qrCodeUrl = qrCodeBase64;
       });
 
-      if (mounted) {
-        AppWidgets.showFlushbar(context, 'Lưu thông tin salon thành công!',
-            type: MessageType.success);
-        // Call callback to refresh main screen
-        widget.onSalonInfoUpdated?.call();
+      AppWidgets.showFlushbar(
+        context,
+        'Cập nhật thông tin salon thành công!',
+        type: MessageType.success,
+      );
+
+      if (widget.onSalonInfoUpdated != null) {
+        widget.onSalonInfoUpdated!();
       }
     } catch (e) {
+      AppWidgets.showFlushbar(
+        context,
+        'Lỗi cập nhật thông tin: $e',
+        type: MessageType.error,
+      );
+    } finally {
       setState(() {
         _isSaving = false;
       });
-      if (mounted) {
-        AppWidgets.showFlushbar(context, 
-            'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
-            type: MessageType.error);
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryStart),
-        ),
-      );
-    }
-
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.spacingL),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeader(),
-              const SizedBox(height: AppTheme.spacingXL),
-
-              // Logo Section
-              _buildLogoSection(),
-              const SizedBox(height: AppTheme.spacingXL),
-
-              // QR Code Section
-              _buildQRCodeSection(),
-              const SizedBox(height: AppTheme.spacingXL),
-
-              // Basic Information
-              _buildSectionTitle('Thông tin cơ bản'),
-              const SizedBox(height: AppTheme.spacingL),
-              _buildBasicInfoFields(),
-              const SizedBox(height: AppTheme.spacingXL),
-
-              // Social Media
-              _buildSectionTitle('Mạng xã hội'),
-              const SizedBox(height: AppTheme.spacingL),
-              _buildSocialMediaFields(),
-              const SizedBox(height: AppTheme.spacingXL),
-
-              // Save Button
-              _buildSaveButton(),
-            ],
+      backgroundColor: AppTheme.backgroundPrimary,
+      appBar: AppBar(
+        title: Text(
+          'Thông tin Salon',
+          style: AppTheme.headingSmall.copyWith(
+            fontWeight: FontWeight.w700,
           ),
         ),
+        backgroundColor: AppTheme.surface,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          AppWidgets.iconButton(
+            icon: Icons.refresh,
+            onPressed: _loadInformation,
+            size: 40,
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppTheme.primaryPink,
+              ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header Section
+                    Container(
+                      padding: const EdgeInsets.all(AppTheme.spacingL),
+                      decoration: AppTheme.cardDecoration(elevated: true),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(AppTheme.spacingM),
+                            decoration: BoxDecoration(
+                              gradient: AppTheme.primaryGradient,
+                              borderRadius:
+                                  BorderRadius.circular(AppTheme.radiusMedium),
+                            ),
+                            child: const Icon(
+                              Icons.store,
+                              color: AppTheme.textOnPrimary,
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(width: AppTheme.spacingM),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Thông tin Salon',
+                                  style: AppTheme.headingSmall.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  'Cập nhật thông tin chi tiết về salon của bạn',
+                                  style: AppTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Images Section
+                    Container(
+                      decoration: AppTheme.cardDecoration(elevated: true),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            decoration: BoxDecoration(
+                              color: AppTheme.info.withOpacity(0.1),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppTheme.radiusLarge),
+                                topRight: Radius.circular(AppTheme.radiusLarge),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.image,
+                                  color: AppTheme.info,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: AppTheme.spacingS),
+                                Text(
+                                  'Logo và QR Code',
+                                  style: AppTheme.labelLarge.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _buildImageSelector(
+                                    title: 'Logo Salon',
+                                    imageBytes: _selectedLogoBytes,
+                                    imageUrl: _logoUrl,
+                                    onTap: () => _pickImage(isQRCode: false),
+                                  ),
+                                ),
+                                const SizedBox(width: AppTheme.spacingM),
+                                Expanded(
+                                  child: _buildImageSelector(
+                                    title: 'QR Code',
+                                    imageBytes: _selectedQRCodeBytes,
+                                    imageUrl: _qrCodeUrl,
+                                    onTap: () => _pickImage(isQRCode: true),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Basic Information Section
+                    Container(
+                      decoration: AppTheme.cardDecoration(elevated: true),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryPink.withOpacity(0.1),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppTheme.radiusLarge),
+                                topRight: Radius.circular(AppTheme.radiusLarge),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info,
+                                  color: AppTheme.primaryPink,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: AppTheme.spacingS),
+                                Text(
+                                  'Thông tin cơ bản',
+                                  style: AppTheme.labelLarge.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: _nameController,
+                                  decoration: AppTheme.inputDecoration(
+                                    label: 'Tên Salon',
+                                    prefixIcon: Icons.store,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập tên salon';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: AppTheme.spacingM),
+                                TextFormField(
+                                  controller: _addressController,
+                                  decoration: AppTheme.inputDecoration(
+                                    label: 'Địa chỉ',
+                                    prefixIcon: Icons.location_on,
+                                  ),
+                                  maxLines: 2,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập địa chỉ';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: AppTheme.spacingM),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _phoneController,
+                                        decoration: AppTheme.inputDecoration(
+                                          label: 'Số điện thoại',
+                                          prefixIcon: Icons.phone,
+                                        ),
+                                        keyboardType: TextInputType.phone,
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty) {
+                                            return 'Vui lòng nhập số điện thoại';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppTheme.spacingM),
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _emailController,
+                                        decoration: AppTheme.inputDecoration(
+                                          label: 'Email',
+                                          prefixIcon: Icons.email,
+                                        ),
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            if (!RegExp(
+                                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                                .hasMatch(value)) {
+                                              return 'Email không hợp lệ';
+                                            }
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Social Media Section
+                    Container(
+                      decoration: AppTheme.cardDecoration(elevated: true),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            decoration: BoxDecoration(
+                              color: AppTheme.success.withOpacity(0.1),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppTheme.radiusLarge),
+                                topRight: Radius.circular(AppTheme.radiusLarge),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.share,
+                                  color: AppTheme.success,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: AppTheme.spacingS),
+                                Text(
+                                  'Mạng xã hội & Liên hệ',
+                                  style: AppTheme.labelLarge.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppTheme.spacingL),
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: _websiteController,
+                                  decoration: AppTheme.inputDecoration(
+                                    label: 'Website',
+                                    prefixIcon: Icons.language,
+                                  ),
+                                  keyboardType: TextInputType.url,
+                                ),
+                                const SizedBox(height: AppTheme.spacingM),
+                                TextFormField(
+                                  controller: _facebookController,
+                                  decoration: AppTheme.inputDecoration(
+                                    label: 'Facebook',
+                                    prefixIcon: Icons.facebook,
+                                  ),
+                                ),
+                                const SizedBox(height: AppTheme.spacingM),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _instagramController,
+                                        decoration: AppTheme.inputDecoration(
+                                          label: 'Instagram',
+                                          prefixIcon: Icons.camera_alt,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppTheme.spacingM),
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _zaloController,
+                                        decoration: AppTheme.inputDecoration(
+                                          label: 'Zalo',
+                                          prefixIcon: Icons.chat,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Save Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: AppWidgets.primaryButton(
+                        label: _isSaving ? 'Đang lưu...' : 'Lưu thông tin',
+                        onPressed: _isSaving ? null : _saveInformation,
+                        icon: _isSaving ? null : Icons.save,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingL),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primaryStart, AppTheme.primaryEnd],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryStart.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+  Widget _buildImageSelector({
+    required String title,
+    required Uint8List? imageBytes,
+    required String imageUrl,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTheme.labelMedium.copyWith(
+            fontWeight: FontWeight.w600,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(AppTheme.spacingM),
+        ),
+        const SizedBox(height: AppTheme.spacingS),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: double.infinity,
+            height: 140,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: AppTheme.surfaceAlt,
               borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-            ),
-            child: const Icon(
-              Icons.business,
-              color: Colors.white,
-              size: 32,
-            ),
-          ),
-          const SizedBox(width: AppTheme.spacingL),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Thông tin Salon',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: AppTheme.spacingS),
-                Text(
-                  'Quản lý thông tin và liên hệ của salon',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQRCodeSection() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingL),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'QR Code',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          Center(
-            child: InkWell(
-              onTap: () => _pickImage(isQRCode: true),
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey[300]!,
-                    width: 2,
-                  ),
-                ),
-                child: _selectedQRCodeBytes != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.memory(
-                          _selectedQRCodeBytes!,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : (_qrCodeUrl.isNotEmpty)
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: _qrCodeUrl.startsWith('http')
-                                ? Image.network(
-                                    _qrCodeUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            _buildPlaceholderQRCode(),
-                                  )
-                                : _buildImageWidget(_qrCodeUrl),
-                          )
-                        : _buildPlaceholderQRCode(),
+              border: Border.all(
+                color: AppTheme.borderLight,
+                width: 2,
               ),
             ),
-          ),
-          const SizedBox(height: AppTheme.spacingM),
-          Center(
-            child: TextButton.icon(
-              onPressed: () => _pickImage(isQRCode: true),
-              icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Chọn QR Code'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlaceholderQRCode() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.qr_code,
-          size: 48,
-          color: Colors.grey[400],
-        ),
-        const SizedBox(height: AppTheme.spacingS),
-        Text(
-          'Chọn QR Code',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
+            child: imageBytes != null
+                ? ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(AppTheme.radiusMedium - 2),
+                    child: Image.memory(
+                      imageBytes,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : imageUrl.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusMedium - 2),
+                        child: _buildImageFromBase64(imageUrl),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_photo_alternate,
+                            color: AppTheme.textTertiary,
+                            size: 32,
+                          ),
+                          const SizedBox(height: AppTheme.spacingS),
+                          Text(
+                            'Chọn hình ảnh',
+                            style: AppTheme.bodySmall.copyWith(
+                              color: AppTheme.textTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLogoSection() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingL),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Logo salon',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          Center(
-            child: InkWell(
-              onTap: _pickImage,
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey[300]!,
-                    width: 2,
-                  ),
-                ),
-                child: _selectedImageBytes != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.memory(
-                          _selectedImageBytes!,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : (_logoUrl.isNotEmpty)
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: _logoUrl.startsWith('http')
-                                ? Image.network(
-                                    _logoUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            _buildPlaceholderLogo(),
-                                  )
-                                : _buildImageWidget(_logoUrl),
-                          )
-                        : _buildPlaceholderLogo(),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppTheme.spacingM),
-          Center(
-            child: TextButton.icon(
-              onPressed: _pickImage,
-              icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Thay đổi logo'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlaceholderLogo() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.qr_code,
-          size: 48,
-          color: Colors.grey[400],
-        ),
-        const SizedBox(height: AppTheme.spacingS),
-        Text(
-          'Chọn Logo',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImageWidget(String imageUrl) {
+  Widget _buildImageFromBase64(String base64String) {
     try {
-      if (imageUrl.startsWith('data:image/')) {
-        final base64String = imageUrl.split(',')[1];
-        final bytes = base64Decode(base64String);
-        return Image.memory(bytes, fit: BoxFit.cover);
-      } else if (imageUrl.startsWith('http://') ||
-          imageUrl.startsWith('https://')) {
-        return Image.network(imageUrl, fit: BoxFit.cover);
-      } else if (imageUrl.startsWith('/')) {
-        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      if (base64String.startsWith('data:image')) {
+        // Remove data:image/xxx;base64, prefix if present
+        final base64Data = base64String.split(',').last;
+        final bytes = base64Decode(base64Data);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildImagePlaceholder();
+          },
+        );
       } else {
-        return Container(
-          color: Colors.grey[300],
-          child: Center(
-            child: Icon(Icons.image, color: Colors.grey[600], size: 32),
-          ),
+        // Try to decode directly
+        final bytes = base64Decode(base64String);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildImagePlaceholder();
+          },
         );
       }
     } catch (e) {
-      return Container(
-        color: Colors.grey[300],
-        child: Center(
-          child: Icon(Icons.broken_image, color: Colors.grey[600], size: 32),
-        ),
-      );
+      return _buildImagePlaceholder();
     }
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType? keyboardType,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      validator: validator,
-      inputFormatters: inputFormatters,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: AppTheme.primaryStart),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: AppTheme.primaryStart, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
-        ),
-        filled: true,
-        fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppTheme.spacingM,
-          vertical: AppTheme.spacingM,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBasicInfoFields() {
+  Widget _buildImagePlaceholder() {
     return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingL),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+      color: AppTheme.surfaceAlt,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildTextField(
-            controller: _nameController,
-            label: 'Tên Salon',
-            icon: Icons.business,
+          Icon(
+            Icons.broken_image,
+            color: AppTheme.textTertiary,
+            size: 32,
           ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _addressController,
-            label: 'Địa chỉ',
-            icon: Icons.location_on,
-            maxLines: 2,
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _phoneController,
-            label: 'Số điện thoại',
-            icon: Icons.phone,
-            keyboardType: TextInputType.phone,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(11),
-            ],
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _emailController,
-            label: 'Email',
-            icon: Icons.email,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _websiteController,
-            label: 'Website',
-            icon: Icons.language,
-            keyboardType: TextInputType.url,
+          const SizedBox(height: AppTheme.spacingS),
+          Text(
+            'Lỗi hiển thị',
+            style: AppTheme.bodySmall.copyWith(
+              color: AppTheme.textTertiary,
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSocialMediaFields() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingL),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildTextField(
-            controller: _facebookController,
-            label: 'Facebook',
-            icon: Icons.facebook,
-            keyboardType: TextInputType.url,
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _instagramController,
-            label: 'Instagram',
-            icon: Icons.camera_alt,
-            keyboardType: TextInputType.url,
-          ),
-          const SizedBox(height: AppTheme.spacingL),
-          _buildTextField(
-            controller: _zaloController,
-            label: 'Zalo',
-            icon: Icons.chat,
-            keyboardType: TextInputType.url,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: AppTheme.textPrimary,
-      ),
-    );
-  }
-
-  Widget _buildSaveButton() {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primaryStart, AppTheme.primaryEnd],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryStart.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-          onTap: _isSaving ? null : _saveInformation,
-          child: Center(
-            child: _isSaving
-                ? const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      ),
-                      SizedBox(width: AppTheme.spacingM),
-                      Text(
-                        'Đang lưu...',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  )
-                : const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.save,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      SizedBox(width: AppTheme.spacingS),
-                      Text(
-                        'Lưu thông tin',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-        ),
       ),
     );
   }

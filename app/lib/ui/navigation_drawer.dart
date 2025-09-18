@@ -18,18 +18,73 @@ class AppNavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.surface,
       child: Column(
         children: [
+          // Modern Header
+          Container(
+            height: 160,
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppTheme.textOnPrimary,
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.radiusLarge),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.spa,
+                        color: AppTheme.primaryPink,
+                        size: 32,
+                      ),
+                    ),
+                    const SizedBox(height: AppTheme.spacingS),
+                    Text(
+                      'Nail Manager',
+                      style: AppTheme.headingSmall.copyWith(
+                        color: AppTheme.textOnPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      userRole == 'shop_owner' ? 'Chủ salon' : 'Nhân viên',
+                      style: AppTheme.bodySmall.copyWith(
+                        color: AppTheme.textOnPrimary.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           // Navigation items
           Expanded(
             child: ListView(
-              padding: AppTheme.getResponsivePadding(
-                context,
-                mobile: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
-                tablet: const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
-                desktop:
-                    const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTheme.spacingM,
+                vertical: AppTheme.spacingL,
               ),
               children: _buildNavigationItems(),
             ),
@@ -37,18 +92,11 @@ class AppNavigationDrawer extends StatelessWidget {
 
           // Logout button
           Container(
-            padding: AppTheme.getResponsivePadding(
-              context,
-              mobile: const EdgeInsets.all(AppTheme.spacingM),
-              tablet: const EdgeInsets.all(AppTheme.spacingL),
-              desktop: const EdgeInsets.all(AppTheme.spacingXL),
-            ),
+            padding: const EdgeInsets.all(AppTheme.spacingL),
             child: Column(
               children: [
-                const Divider(),
-                SizedBox(
-                    height: AppTheme.getResponsiveSpacing(context,
-                        mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
+                const Divider(color: AppTheme.borderLight),
+                const SizedBox(height: AppTheme.spacingM),
                 _buildLogoutButton(),
               ],
             ),
@@ -205,7 +253,7 @@ class AppNavigationDrawer extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppTheme.primaryStart.withValues(alpha: 0.1)
+                ? AppTheme.primaryPink.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(100),
           ),
@@ -229,7 +277,7 @@ class AppNavigationDrawer extends StatelessWidget {
                         icon,
                         key: ValueKey('$icon-$isSelected'),
                         color: isSelected
-                            ? AppTheme.primaryStart
+                            ? AppTheme.primaryPink
                             : Colors.grey[600],
                         size: AppTheme.getResponsiveFontSize(
                           context,
@@ -256,7 +304,7 @@ class AppNavigationDrawer extends StatelessWidget {
                           fontWeight:
                               isSelected ? FontWeight.w600 : FontWeight.w500,
                           color: isSelected
-                              ? AppTheme.primaryStart
+                              ? AppTheme.primaryPink
                               : Colors.grey[800],
                           letterSpacing: 0.2,
                         ),
@@ -443,7 +491,7 @@ class AppNavigationRail extends StatelessWidget {
                   desktop: 12,
                 ),
                 fontWeight: FontWeight.bold,
-                color: AppTheme.primaryStart,
+                color: AppTheme.primaryPink,
               ),
             ),
             SizedBox(
@@ -487,7 +535,7 @@ class AppNavigationRail extends StatelessWidget {
       ),
       selectedIcon: Icon(
         icon,
-        color: AppTheme.primaryStart,
+        color: AppTheme.primaryPink,
         size: 20,
       ),
       label: Text(
