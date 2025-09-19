@@ -1,7 +1,7 @@
 name: nail_app
 description: A simple nail management Flutter app
 publish_to: "none"
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -22,6 +22,7 @@ dependencies:
   share_plus: ^7.2.2
   url_launcher: ^6.2.2
   qr_flutter: ^4.1.0
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

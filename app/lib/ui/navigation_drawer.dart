@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'design_system.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   final int selectedIndex;
@@ -35,7 +37,7 @@ class AppNavigationDrawer extends StatelessWidget {
             ),
           ),
 
-          // Logout button
+          // Version info and Logout button
           Container(
             padding: AppTheme.getResponsivePadding(
               context,
@@ -46,6 +48,10 @@ class AppNavigationDrawer extends StatelessWidget {
             child: Column(
               children: [
                 const Divider(),
+                SizedBox(
+                    height: AppTheme.getResponsiveSpacing(context,
+                        mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
+                _buildVersionInfo(),
                 SizedBox(
                     height: AppTheme.getResponsiveSpacing(context,
                         mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
@@ -273,6 +279,179 @@ class AppNavigationDrawer extends StatelessWidget {
     );
   }
 
+  Widget _buildVersionInfo() {
+    return Builder(
+      builder: (context) {
+        return FutureBuilder<PackageInfo>(
+          future: PackageInfo.fromPlatform(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final packageInfo = snapshot.data!;
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Colors.grey[600],
+                          size: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 14,
+                            tablet: 16,
+                            desktop: 18,
+                          ),
+                        ),
+                        SizedBox(
+                            width: AppTheme.getResponsiveSpacing(context,
+                                mobile: AppTheme.spacingXS,
+                                tablet: AppTheme.spacingS)),
+                        Text(
+                          'Phiên bản',
+                          style: TextStyle(
+                            fontSize: AppTheme.getResponsiveFontSize(
+                              context,
+                              mobile: 12,
+                              tablet: 14,
+                              desktop: 16,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                        height: AppTheme.getResponsiveSpacing(context,
+                            mobile: AppTheme.spacingXS,
+                            tablet: AppTheme.spacingS)),
+                    Text(
+                      'v${packageInfo.version}',
+                      style: TextStyle(
+                        fontSize: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 14,
+                          tablet: 16,
+                          desktop: 18,
+                        ),
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primaryStart,
+                      ),
+                    ),
+                    if (packageInfo.buildNumber.isNotEmpty)
+                      Text(
+                        'Build ${packageInfo.buildNumber}',
+                        style: TextStyle(
+                          fontSize: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 10,
+                            tablet: 12,
+                            desktop: 14,
+                          ),
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
+                    mobile: AppTheme.spacingM, tablet: AppTheme.spacingL)),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.red[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  'Không thể tải thông tin phiên bản',
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 12,
+                      tablet: 14,
+                      desktop: 16,
+                    ),
+                    color: Colors.red[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else {
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
+                    mobile: AppTheme.spacingM, tablet: AppTheme.spacingL)),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: AppTheme.getResponsiveFontSize(context,
+                          mobile: 12, tablet: 14, desktop: 16),
+                      height: AppTheme.getResponsiveFontSize(context,
+                          mobile: 12, tablet: 14, desktop: 16),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppTheme.primaryStart,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                        width: AppTheme.getResponsiveSpacing(context,
+                            mobile: AppTheme.spacingS,
+                            tablet: AppTheme.spacingM)),
+                    Text(
+                      'Đang tải...',
+                      style: TextStyle(
+                        fontSize: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 12,
+                          tablet: 14,
+                          desktop: 16,
+                        ),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildLogoutButton() {
     return Builder(
       builder: (context) {
@@ -448,6 +627,10 @@ class AppNavigationRail extends StatelessWidget {
             ),
             SizedBox(
                 height: AppTheme.getResponsiveSpacing(context,
+                    mobile: 8, tablet: 10, desktop: 12)),
+            _buildVersionInfoRail(),
+            SizedBox(
+                height: AppTheme.getResponsiveSpacing(context,
                     mobile: 12, tablet: 16, desktop: 20)),
           ],
         ),
@@ -497,6 +680,132 @@ class AppNavigationRail extends StatelessWidget {
           color: Colors.grey,
         ),
       ),
+    );
+  }
+
+  Widget _buildVersionInfoRail() {
+    return Builder(
+      builder: (context) {
+        return FutureBuilder<PackageInfo>(
+          future: PackageInfo.fromPlatform(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final packageInfo = snapshot.data!;
+              return Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      tablet: 4, desktop: 6),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      tablet: 6, desktop: 8),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      tablet: 4, desktop: 6),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'v${packageInfo.version}',
+                      style: TextStyle(
+                        fontSize: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 8,
+                          tablet: 9,
+                          desktop: 10,
+                        ),
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primaryStart,
+                      ),
+                    ),
+                    if (packageInfo.buildNumber.isNotEmpty)
+                      Text(
+                        'Build ${packageInfo.buildNumber}',
+                        style: TextStyle(
+                          fontSize: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 6,
+                            tablet: 7,
+                            desktop: 8,
+                          ),
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      tablet: 4, desktop: 6),
+                ),
+                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
+                    tablet: 4, desktop: 6)),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Colors.red[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  'Error',
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 6,
+                      tablet: 7,
+                      desktop: 8,
+                    ),
+                    color: Colors.red[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else {
+              return Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      tablet: 4, desktop: 6),
+                ),
+                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
+                    tablet: 4, desktop: 6)),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+                child: SizedBox(
+                  width: AppTheme.getResponsiveFontSize(context,
+                      mobile: 8, tablet: 9, desktop: 10),
+                  height: AppTheme.getResponsiveFontSize(context,
+                      mobile: 8, tablet: 9, desktop: 10),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppTheme.primaryStart,
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
 }
