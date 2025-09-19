@@ -6,6 +6,7 @@ import '../ui/design_system.dart';
 import '../config/salon_config.dart';
 import 'dart:convert'; // Added for jsonDecode
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'update_order_screen.dart';
 
 class BillsScreen extends StatefulWidget {
@@ -24,6 +25,8 @@ class _BillsScreenState extends State<BillsScreen> {
   bool _isLoading = true;
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
+  String? _currentEmployeeId;
+  String? _currentUserRole;
 
   @override
   void initState() {
@@ -33,8 +36,19 @@ class _BillsScreenState extends State<BillsScreen> {
       start: DateTime.now(),
       end: DateTime.now(),
     );
+    _loadCurrentUserInfo();
     _loadData();
     _loadInformation();
+  }
+
+  Future<void> _loadCurrentUserInfo() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _currentUserRole = prefs.getString('user_role');
+      _currentEmployeeId = prefs.getString('employee_id');
+    } catch (e) {
+      // Handle error silently
+    }
   }
 
   Future<void> _loadInformation() async {
@@ -80,6 +94,13 @@ class _BillsScreenState extends State<BillsScreen> {
 
   List<Order> get _filteredOrders {
     List<Order> filtered = _orders;
+
+    // Lọc theo nhân viên hiện tại nếu là employee
+    if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
+      filtered = filtered.where((order) {
+        return order.employeeIds.contains(_currentEmployeeId!);
+      }).toList();
+    }
 
     // Áp dụng tìm kiếm
     if (_searchQuery.isNotEmpty) {
@@ -576,6 +597,16 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   String _getEmptyStateTitle() {
+    if (_currentUserRole == 'employee') {
+      if (_selectedDateRange != null) {
+        return 'Không có hóa đơn của bạn trong khoảng thời gian này';
+      }
+      if (_searchQuery.isNotEmpty) {
+        return 'Không tìm thấy hóa đơn của bạn';
+      }
+      return 'Bạn chưa có hóa đơn nào';
+    }
+
     if (_selectedDateRange != null) {
       return 'Không có hóa đơn trong khoảng thời gian này';
     }
@@ -586,6 +617,16 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   String _getEmptyStateMessage() {
+    if (_currentUserRole == 'employee') {
+      if (_selectedDateRange != null) {
+        return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
+      }
+      if (_searchQuery.isNotEmpty) {
+        return 'Thử tìm kiếm với từ khóa khác';
+      }
+      return 'Tạo đơn hàng đầu tiên để xem hóa đơn của bạn ở đây';
+    }
+
     if (_selectedDateRange != null) {
       return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
     }
@@ -593,6 +634,13 @@ class _BillsScreenState extends State<BillsScreen> {
       return 'Thử tìm kiếm với từ khóa khác';
     }
     return 'Tạo đơn hàng đầu tiên để xem hóa đơn ở đây';
+  }
+
+  String _getStatsTitle(String baseTitle) {
+    if (_selectedDateRange != null) {
+      return '$baseTitle đã lọc';
+    }
+    return 'Tổng $baseTitle';
   }
 
   Widget _buildPresetButtonsGrid() {
@@ -869,9 +917,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     children: [
                       Expanded(
                         child: _buildStatCard(
-                          title: _selectedDateRange != null
-                              ? 'Hóa đơn đã lọc'
-                              : 'Tổng hóa đơn',
+                          title: _getStatsTitle('Hóa đơn'),
                           value: _filteredOrders.length.toString(),
                           icon: Icons.receipt,
                           color: Colors.blue,
@@ -880,9 +926,7 @@ class _BillsScreenState extends State<BillsScreen> {
                       const SizedBox(width: AppTheme.spacingS),
                       Expanded(
                         child: _buildStatCard(
-                          title: _selectedDateRange != null
-                              ? 'Doanh thu đã lọc'
-                              : 'Tổng doanh thu',
+                          title: _getStatsTitle('Doanh thu'),
                           value:
                               '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
                           icon: Icons.attach_money,
