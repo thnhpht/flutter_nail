@@ -19,6 +19,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
   Employee? _selectedEmployee;
+  String? _selectedPaymentStatus;
   String _searchQuery = '';
 
   // Thống kê
@@ -109,6 +110,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (_selectedEmployee != null) {
       filtered = filtered.where((order) {
         return order.employeeIds.contains(_selectedEmployee!.id);
+      }).toList();
+    }
+
+    // Áp dụng lọc theo trạng thái thanh toán
+    if (_selectedPaymentStatus != null) {
+      filtered = filtered.where((order) {
+        if (_selectedPaymentStatus == 'paid') {
+          return order.isPaid;
+        } else if (_selectedPaymentStatus == 'unpaid') {
+          return !order.isPaid;
+        }
+        return true; // 'all' - hiển thị tất cả
       }).toList();
     }
 
@@ -678,6 +691,57 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ),
                   ),
 
+                  const SizedBox(height: AppTheme.spacingL),
+
+                  // Payment Status Filter
+                  Container(
+                    decoration: AppTheme.cardDecoration(),
+                    child: DropdownButtonFormField<String>(
+                      decoration: AppTheme.inputDecoration(
+                        label: 'Trạng thái thanh toán',
+                        prefixIcon: Icons.payment,
+                      ).copyWith(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                      ),
+                      initialValue: _selectedPaymentStatus,
+                      items: const [
+                        DropdownMenuItem<String>(
+                          value: null,
+                          child: Text('Tất cả trạng thái'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: 'paid',
+                          child: Row(
+                            children: [
+                              Icon(Icons.check_circle,
+                                  size: 16, color: Colors.green),
+                              SizedBox(width: 8),
+                              Text('Đã thanh toán'),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: 'unpaid',
+                          child: Row(
+                            children: [
+                              Icon(Icons.cancel, size: 16, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text('Chưa thanh toán'),
+                            ],
+                          ),
+                        ),
+                      ],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedPaymentStatus = value;
+                        });
+                        _updateFilters();
+                      },
+                    ),
+                  ),
+
                   // Date Range Info Display (only show when date range is selected)
                   if (_selectedDateRange != null) ...[
                     const SizedBox(height: AppTheme.spacingL),
@@ -876,21 +940,52 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            order.customerName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.textPrimary,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                order.customerName,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.textPrimary,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            _formatPhoneNumber(order.customerPhone),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                _formatPhoneNumber(order.customerPhone),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: order.isPaid
+                                      ? Colors.green.withValues(alpha: 0.1)
+                                      : Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  order.isPaid
+                                      ? 'Đã thanh toán'
+                                      : 'Chưa thanh toán',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: order.isPaid
+                                        ? Colors.green[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

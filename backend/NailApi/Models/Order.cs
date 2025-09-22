@@ -19,5 +19,6 @@ namespace NailApi.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Tip { get; set; } = 0.0M;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public bool IsPaid { get; set; } = false;
     }
 }

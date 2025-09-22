@@ -1057,25 +1057,52 @@ class _BillsScreenState extends State<BillsScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(2),
                                   decoration: BoxDecoration(
-                                    color: Colors.green.withValues(alpha: 0.1),
+                                    color: Colors.blue.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Icon(
                                     Icons.edit,
                                     size: 12,
-                                    color: Colors.green[600],
+                                    color: Colors.blue[600],
                                   ),
                                 ),
                               ],
                             ],
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            _formatPhoneNumber(order.customerPhone),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                _formatPhoneNumber(order.customerPhone),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: order.isPaid
+                                      ? Colors.green.withValues(alpha: 0.1)
+                                      : Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  order.isPaid
+                                      ? 'Đã thanh toán'
+                                      : 'Chưa thanh toán',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: order.isPaid
+                                        ? Colors.green[700]
+                                        : Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

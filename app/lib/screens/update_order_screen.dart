@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../api_client.dart';
 import '../models.dart';
-import '../ui/bill_helper.dart';
 import '../ui/design_system.dart';
 
 class UpdateOrderScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class UpdateOrderScreen extends StatefulWidget {
 }
 
 class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
-  Information? _information;
   final _formKey = GlobalKey<FormState>();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
@@ -44,6 +42,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   bool _showCategoryDropdown = false;
   bool _showServiceDropdown = false;
   bool _showEmployeeDropdown = false;
+  bool _isPaid = false;
 
   @override
   void initState() {
@@ -51,7 +50,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _loadCategories();
     _loadServices();
     _loadEmployees();
-    _loadInformation();
     _initializeFormData();
     // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
@@ -65,6 +63,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _customerNameController.text = widget.order.customerName;
     _discountController.text = widget.order.discountPercent.toStringAsFixed(0);
     _tipController.text = widget.order.tip.toStringAsFixed(0);
+    _isPaid = widget.order.isPaid;
 
     _discountPercent = widget.order.discountPercent;
     _tip = widget.order.tip;
@@ -85,19 +84,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         .toList();
 
     _calculateTotal();
-  }
-
-  Future<void> _loadInformation() async {
-    try {
-      final info = await widget.api.getInformation();
-      if (mounted) {
-        setState(() {
-          _information = info;
-        });
-      }
-    } catch (e) {
-      // Handle error silently
-    }
   }
 
   @override
@@ -437,6 +423,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         discountPercent: _discountPercent,
         tip: _tip,
         createdAt: widget.order.createdAt, // Keep original creation date
+        isPaid: _isPaid,
       );
 
       // Validate order data
@@ -715,6 +702,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                                     title: category.name,
                                     isSelected: isSelected,
                                     onTap: () => _onCategoryToggled(category),
+                                    image: category.image,
                                   );
                                 },
                               ),
@@ -818,6 +806,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                                           isSelected: isSelected,
                                           onTap: () =>
                                               _onServiceToggled(service),
+                                          image: service.image,
                                         );
                                       }).toList(),
                                     ],
@@ -974,6 +963,78 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Payment Status Section
+                    _buildSectionCard(
+                      title: 'Trạng thái thanh toán',
+                      icon: Icons.payment,
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: _isPaid ? Colors.green[50] : Colors.red[50],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color:
+                                _isPaid ? Colors.green[300]! : Colors.red[300]!,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _isPaid ? Icons.check_circle : Icons.pending,
+                              color:
+                                  _isPaid ? Colors.green[600] : Colors.red[600],
+                              size: 24,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _isPaid
+                                        ? 'Đã thanh toán'
+                                        : 'Chưa thanh toán',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: _isPaid
+                                          ? Colors.green[700]
+                                          : Colors.red[700],
+                                    ),
+                                  ),
+                                  Text(
+                                    _isPaid
+                                        ? 'Khách hàng đã thanh toán đầy đủ'
+                                        : 'Khách hàng chưa thanh toán',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: _isPaid
+                                          ? Colors.green[600]
+                                          : Colors.red[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Switch(
+                              value: _isPaid,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPaid = value;
+                                });
+                              },
+                              activeThumbColor: Colors.green,
+                              inactiveThumbColor: Colors.red,
+                              inactiveTrackColor: Colors.red[200],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -1286,8 +1347,62 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     String? subtitle,
     required bool isSelected,
     required VoidCallback onTap,
+    String? image,
   }) {
     return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: Icon(
+                        Icons.image,
+                        color: Colors.grey[400],
+                        size: 20,
+                      ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.category,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
       title: Text(
         title,
         style: TextStyle(

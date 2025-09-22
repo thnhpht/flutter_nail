@@ -232,6 +232,7 @@ class Order {
   final double discountPercent;
   final double tip;
   final DateTime createdAt;
+  final bool isPaid;
 
   Order({
     required this.id,
@@ -245,6 +246,7 @@ class Order {
     this.discountPercent = 0.0,
     this.tip = 0.0,
     required this.createdAt,
+    this.isPaid = false,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -313,6 +315,7 @@ class Order {
       discountPercent: (json['discountPercent'] as num?)?.toDouble() ?? 0.0,
       tip: (json['tip'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      isPaid: json['isPaid'] as bool? ?? false,
     );
   }
 
@@ -328,6 +331,7 @@ class Order {
         'discountPercent': discountPercent,
         'tip': tip,
         'createdAt': createdAt.toIso8601String(),
+        'isPaid': isPaid,
       };
 }
 

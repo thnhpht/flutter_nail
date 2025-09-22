@@ -17,7 +17,6 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   Information? _information;
-  bool _isInfoLoading = true;
   final _formKey = GlobalKey<FormState>();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
@@ -60,15 +59,10 @@ class _OrderScreenState extends State<OrderScreen> {
       if (mounted) {
         setState(() {
           _information = info;
-          _isInfoLoading = false;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isInfoLoading = false;
-        });
-      }
+      // Handle error silently
     }
   }
 
@@ -392,6 +386,7 @@ class _OrderScreenState extends State<OrderScreen> {
           discountPercent: _discountPercent,
           tip: _tip,
           createdAt: DateTime.now(),
+          isPaid: false, // Mặc định chưa thanh toán
         );
 
         // Validate order data
@@ -700,6 +695,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     title: category.name,
                                     isSelected: isSelected,
                                     onTap: () => _onCategoryToggled(category),
+                                    image: category.image,
                                   );
                                 },
                               ),
@@ -803,6 +799,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                           isSelected: isSelected,
                                           onTap: () =>
                                               _onServiceToggled(service),
+                                          image: service.image,
                                         );
                                       }).toList(),
                                     ],
@@ -1267,8 +1264,62 @@ class _OrderScreenState extends State<OrderScreen> {
     String? subtitle,
     required bool isSelected,
     required VoidCallback onTap,
+    String? image,
   }) {
     return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[200],
+                      child: Icon(
+                        Icons.image,
+                        color: Colors.grey[400],
+                        size: 20,
+                      ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.category,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
       title: Text(
         title,
         style: TextStyle(
