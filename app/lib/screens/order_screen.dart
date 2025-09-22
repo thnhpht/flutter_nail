@@ -691,7 +691,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   final employee = _employees[index];
                                   final isSelected =
                                       _selectedEmployees.contains(employee);
-                                  return _buildDropdownItem(
+                                  return _buildDropdownEmployeeItem(
                                     title: employee.name,
                                     subtitle: employee.phone != null
                                         ? _formatPhoneNumber(employee.phone!)
@@ -753,7 +753,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   final category = _categories[index];
                                   final isSelected =
                                       _selectedCategories.contains(category);
-                                  return _buildDropdownItem(
+                                  return _buildDropdownCategoryItem(
                                     title: category.name,
                                     isSelected: isSelected,
                                     onTap: () => _onCategoryToggled(category),
@@ -854,7 +854,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                       ...categoryServices.map((service) {
                                         final isSelected =
                                             _selectedServices.contains(service);
-                                        return _buildDropdownItem(
+                                        return _buildDropdownServiceItem(
                                           title: service.name,
                                           subtitle:
                                               '${_formatPrice(service.price)} VNĐ',
@@ -1321,7 +1321,113 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  Widget _buildDropdownItem({
+  Widget _buildDropdownCategoryItem({
+    required String title,
+    String? subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+    String? image,
+  }) {
+    return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: _buildImageWidget(image),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.category,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      subtitle: subtitle != null ? Text(subtitle) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
+      tileColor:
+          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
+  Widget _buildDropdownServiceItem({
+    required String title,
+    String? subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+    String? image,
+  }) {
+    return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: _buildImageWidget(image),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.spa,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      subtitle: subtitle != null ? Text(subtitle) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
+      tileColor:
+          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
+  Widget _buildDropdownEmployeeItem({
     required String title,
     String? subtitle,
     required bool isSelected,
