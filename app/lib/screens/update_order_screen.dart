@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
@@ -248,13 +250,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _findEmployeeByPhone();
   }
 
-  String _formatPrice(double price) {
-    return price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match match) => '${match[1]}.',
-        );
-  }
-
   String _formatPhoneNumber(String phoneNumber) {
     // Loại bỏ tất cả ký tự không phải số
     String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
@@ -273,6 +268,73 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
     // Nếu không phù hợp với format Việt Nam, trả về số gốc
     return phoneNumber;
+  }
+
+  String _formatPrice(double price) {
+    return price.toStringAsFixed(0).replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match match) => '${match[1]}.',
+        );
+  }
+
+  Widget _buildImageWidget(String imageUrl) {
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        // Xử lý data URL (base64)
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
+        return Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.grey[200],
+              child: Icon(
+                Icons.image,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              color: Colors.grey[200],
+              child: const Center(
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          },
+        );
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[200],
+          child: Icon(
+            Icons.image,
+            color: Colors.grey[400],
+            size: 20,
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[200],
+        child: Icon(
+          Icons.image,
+          color: Colors.grey[400],
+          size: 20,
+        ),
+      );
+    }
   }
 
   void _onCategoryToggled(Category category) {
@@ -1360,33 +1422,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[200],
-                      child: Icon(
-                        Icons.image,
-                        color: Colors.grey[400],
-                        size: 20,
-                      ),
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: _buildImageWidget(image),
               ),
             )
           : Container(

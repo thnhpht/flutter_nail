@@ -269,12 +269,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
       try {
         // Check if phone exists
         try {
-          final existing = await widget.api.getCustomer(phone);
-          if (existing != null) {
-            AppWidgets.showFlushbar(context, 'SĐT của khách hàng đã được tạo',
-                type: MessageType.warning);
-            return;
-          }
+          await widget.api.getCustomer(phone);
+          AppWidgets.showFlushbar(context, 'SĐT của khách hàng đã được tạo',
+              type: MessageType.warning);
+          return;
         } catch (e) {
           // If not found, continue
         }
@@ -534,6 +532,38 @@ class _CustomersScreenState extends State<CustomersScreen> {
     }
   }
 
+  Future<void> _showActionDialog(Customer c) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          c.name.isEmpty ? c.phone : c.name,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Chọn hành động cho khách hàng này'),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _showEditDialog(c);
+            },
+            icon: const Icon(Icons.edit, color: Colors.green),
+            label: const Text('Sửa'),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _delete(c);
+            },
+            icon: const Icon(Icons.delete, color: Colors.red),
+            label: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -683,8 +713,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             return AppWidgets.animatedItem(
                               index: i,
                               child: InkWell(
-                                onTap: () => _showEditDialog(c),
+                                onLongPress: () => _showActionDialog(c),
                                 borderRadius: BorderRadius.circular(16),
+                                splashColor: Colors.blue.withValues(alpha: 0.2),
+                                highlightColor:
+                                    Colors.blue.withValues(alpha: 0.1),
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 8),
@@ -694,17 +727,35 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                         horizontal: 16, vertical: 12),
                                     child: Row(
                                       children: [
-                                        CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor: Colors.blue.shade100,
-                                          child: Text(
-                                            c.name.isNotEmpty
-                                                ? c.name[0].toUpperCase()
-                                                : c.phone[0],
-                                            style: const TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blue),
+                                        Container(
+                                          width: 48,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.blue.shade100,
+                                                Colors.blue.shade200,
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(24),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.blue
+                                                    .withValues(alpha: 0.2),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.person,
+                                              size: 24,
+                                              color: Colors.blue.shade700,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 16),
@@ -713,81 +764,67 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                c.name.isEmpty
-                                                    ? c.phone
-                                                    : c.name,
-                                                style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.blue.shade200),
+                                                ),
+                                                child: Text(
+                                                  c.name.isEmpty
+                                                      ? c.phone
+                                                      : c.name,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.blue.shade800,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
                                               ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                c.phone,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF9800),
-                                                Color(0xFFFF5722)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.orange
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Sửa',
-                                            onPressed: () => _showEditDialog(c),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE91E63),
-                                                Color(0xFFC2185B)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.red
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
+                                              const SizedBox(height: 6),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.phone,
+                                                      size: 12,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      c.phone,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.delete,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Xóa',
-                                            onPressed: () => _delete(c),
                                           ),
                                         ),
                                       ],

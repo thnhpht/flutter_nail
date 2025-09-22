@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
+import 'dart:io';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
@@ -250,6 +252,66 @@ class _OrderScreenState extends State<OrderScreen> {
 
     // Nếu không phù hợp với format Việt Nam, trả về số gốc
     return phoneNumber;
+  }
+
+  Widget _buildImageWidget(String imageUrl) {
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        // Xử lý data URL (base64)
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
+        return Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.grey[200],
+              child: Icon(
+                Icons.image,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              color: Colors.grey[200],
+              child: const Center(
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          },
+        );
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[200],
+          child: Icon(
+            Icons.image,
+            color: Colors.grey[400],
+            size: 20,
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[200],
+        child: Icon(
+          Icons.image,
+          color: Colors.grey[400],
+          size: 20,
+        ),
+      );
+    }
   }
 
   void _onCategoryToggled(Category category) {
@@ -1277,49 +1339,10 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[200],
-                      child: Icon(
-                        Icons.image,
-                        color: Colors.grey[400],
-                        size: 20,
-                      ),
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: _buildImageWidget(image),
               ),
             )
-          : Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: Icon(
-                Icons.category,
-                color: Colors.grey[400],
-                size: 20,
-              ),
-            ),
+          : null,
       title: Text(
         title,
         style: TextStyle(

@@ -13,7 +13,6 @@ class EmployeesScreen extends StatefulWidget {
   State<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-
 class _EmployeesScreenState extends State<EmployeesScreen> {
   late Future<List<Employee>> _future = widget.api.getEmployees();
   String _search = '';
@@ -25,7 +24,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       _future = widget.api.getEmployees();
     });
   }
-
 
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
@@ -316,9 +314,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         await widget.api.createEmployee(name,
             phone: phone, password: passwordCtrl.text.trim());
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công', type: MessageType.success);
+        AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công',
+            type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm nhân viên', type: MessageType.error);
+        AppWidgets.showFlushbar(context, 'Lỗi khi thêm nhân viên',
+            type: MessageType.error);
       }
     }
   }
@@ -618,7 +618,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           password: password.isEmpty ? null : password,
         ));
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thay đổi thông tin nhân viên thành công',
+        AppWidgets.showFlushbar(
+            context, 'Thay đổi thông tin nhân viên thành công',
             type: MessageType.success);
       } catch (e) {
         AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin nhân viên',
@@ -631,10 +632,44 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     try {
       await widget.api.deleteEmployee(e.id);
       await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công', type: MessageType.success);
+      AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công',
+          type: MessageType.success);
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa nhân viên', type: MessageType.error);
+      AppWidgets.showFlushbar(context, 'Lỗi khi xóa nhân viên',
+          type: MessageType.error);
     }
+  }
+
+  Future<void> _showActionDialog(Employee e) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          e.name.isEmpty ? (e.phone ?? '') : e.name,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Chọn hành động cho nhân viên này'),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _showEditDialog(e);
+            },
+            icon: const Icon(Icons.edit, color: Colors.green),
+            label: const Text('Sửa'),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _delete(e);
+            },
+            icon: const Icon(Icons.delete, color: Colors.red),
+            label: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -718,7 +753,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên',
+                        AppWidgets.showFlushbar(
+                            context, 'Lỗi tải danh sách nhân viên',
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -785,8 +821,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             return AppWidgets.animatedItem(
                               index: i,
                               child: InkWell(
-                                onTap: () => _showEditDialog(e),
+                                onLongPress: () => _showActionDialog(e),
                                 borderRadius: BorderRadius.circular(16),
+                                splashColor:
+                                    Colors.green.withValues(alpha: 0.2),
+                                highlightColor:
+                                    Colors.green.withValues(alpha: 0.1),
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 8),
@@ -796,21 +836,35 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                         horizontal: 16, vertical: 12),
                                     child: Row(
                                       children: [
-                                        CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor:
-                                              Colors.green.shade100,
-                                          child: Text(
-                                            e.name.isNotEmpty
-                                                ? e.name[0].toUpperCase()
-                                                : (e.phone != null &&
-                                                        e.phone!.isNotEmpty
-                                                    ? e.phone![0]
-                                                    : '?'),
-                                            style: const TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green),
+                                        Container(
+                                          width: 48,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.green.shade100,
+                                                Colors.green.shade200,
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(24),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.green
+                                                    .withValues(alpha: 0.2),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.person,
+                                              size: 24,
+                                              color: Colors.green.shade700,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 16),
@@ -819,81 +873,69 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                e.name.isEmpty
-                                                    ? (e.phone ?? '')
-                                                    : e.name,
-                                                style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                      color: Colors
+                                                          .green.shade200),
+                                                ),
+                                                child: Text(
+                                                  e.name.isEmpty
+                                                      ? (e.phone ?? '')
+                                                      : e.name,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color:
+                                                        Colors.green.shade800,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
                                               ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                e.phone ?? '',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF9800),
-                                                Color(0xFFFF5722)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.orange
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Sửa',
-                                            onPressed: () => _showEditDialog(e),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFE91E63),
-                                                Color(0xFFC2185B)
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.red
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
+                                              const SizedBox(height: 6),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100
+                                                      .withValues(alpha: 0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.phone,
+                                                      size: 12,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      e.phone ?? '',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.delete,
-                                                color: Colors.white, size: 20),
-                                            tooltip: 'Xóa',
-                                            onPressed: () => _delete(e),
                                           ),
                                         ),
                                       ],

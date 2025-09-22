@@ -1245,6 +1245,38 @@ class _ServicesScreenState extends State<ServicesScreen> {
     }
   }
 
+  Future<void> _showActionDialog(Service s) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          s.name,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Chọn hành động cho dịch vụ này'),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _showEditDialog(s);
+            },
+            icon: const Icon(Icons.edit, color: Colors.green),
+            label: const Text('Sửa'),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _delete(s);
+            },
+            icon: const Icon(Icons.delete, color: Colors.red),
+            label: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildImageWidget(String imageUrl) {
     try {
       if (imageUrl.startsWith('data:image/')) {
@@ -1500,161 +1532,168 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             maxCrossAxisExtent: 200,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
-                            childAspectRatio: 0.75,
+                            childAspectRatio: 0.8,
                           ),
                           itemCount: filtered.length,
                           itemBuilder: (context, i) {
                             final s = filtered[i];
-                            final cat = _categories.firstWhere(
-                              (c) => c.id == s.categoryId,
-                              orElse: () => Category(id: '', name: ''),
-                            );
                             return AppWidgets.animatedItem(
                               index: i,
-                              child: GestureDetector(
-                                onTap: () => _showEditDialog(s),
+                              child: InkWell(
+                                onLongPress: () => _showActionDialog(s),
+                                borderRadius: BorderRadius.circular(16),
+                                splashColor:
+                                    Colors.purple.withValues(alpha: 0.2),
+                                highlightColor:
+                                    Colors.purple.withValues(alpha: 0.1),
                                 child: Container(
-                                  decoration: AppTheme.cardDecoration(),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Expanded(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                  top: Radius.circular(16)),
-                                          child: s.image != null &&
-                                                  s.image!.isNotEmpty
-                                              ? _buildImageWidget(s.image!)
-                                              : Container(
-                                                  color: Colors.purple.shade100,
-                                                  child: Center(
-                                                    child: Text(
-                                                      s.name.isNotEmpty
-                                                          ? s.name[0]
-                                                              .toUpperCase()
-                                                          : '?',
-                                                      style: const TextStyle(
-                                                        fontSize: 32,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.purple,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              s.name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            ),
-                                            Text(
-                                              'Giá: ${_formatPrice(s.price)} VNĐ',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontStyle: FontStyle.italic,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Danh mục: ${cat.name}',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontStyle: FontStyle.italic,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    gradient:
-                                                        const LinearGradient(
-                                                      colors: [
-                                                        Color(0xFFFF9800),
-                                                        Color(0xFFFF5722)
-                                                      ],
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.orange
-                                                            .withValues(
-                                                                alpha: 0.3),
-                                                        blurRadius: 4,
-                                                        offset:
-                                                            const Offset(0, 2),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: IconButton(
-                                                    icon: const Icon(Icons.edit,
-                                                        color: Colors.white,
-                                                        size: 18),
-                                                    onPressed: () =>
-                                                        _showEditDialog(s),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    gradient:
-                                                        const LinearGradient(
-                                                      colors: [
-                                                        Color(0xFFE91E63),
-                                                        Color(0xFFC2185B)
-                                                      ],
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.red
-                                                            .withValues(
-                                                                alpha: 0.3),
-                                                        blurRadius: 4,
-                                                        offset:
-                                                            const Offset(0, 2),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: IconButton(
-                                                    icon: const Icon(
-                                                        Icons.delete,
-                                                        color: Colors.white,
-                                                        size: 18),
-                                                    onPressed: () => _delete(s),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            Colors.black.withValues(alpha: 0.1),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        // Background Image or Gradient
+                                        s.image != null && s.image!.isNotEmpty
+                                            ? _buildImageWidget(s.image!)
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Colors.purple.shade300,
+                                                      Colors.purple.shade500,
+                                                    ],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.spa,
+                                                    size: 60,
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.8),
+                                                  ),
+                                                ),
+                                              ),
+                                        // Gradient Overlay for better text readability
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.black
+                                                    .withValues(alpha: 0.7),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // Content
+                                        Positioned(
+                                          left: 12,
+                                          right: 12,
+                                          bottom: 12,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Service Name
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withValues(
+                                                              alpha: 0.1),
+                                                      blurRadius: 4,
+                                                      offset:
+                                                          const Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Text(
+                                                  s.name,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color:
+                                                        Colors.purple.shade800,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                              // Price
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 3),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green.shade100
+                                                      .withValues(alpha: 0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  border: Border.all(
+                                                    color:
+                                                        Colors.green.shade300,
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.attach_money,
+                                                      size: 12,
+                                                      color:
+                                                          Colors.green.shade700,
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      '${_formatPrice(s.price)} VNĐ',
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors
+                                                            .green.shade700,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
