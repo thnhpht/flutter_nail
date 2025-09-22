@@ -142,14 +142,21 @@ class Employee {
   final String name;
   final String? phone;
   final String? password;
+  final String? image;
 
-  Employee({required this.id, required this.name, this.phone, this.password});
+  Employee(
+      {required this.id,
+      required this.name,
+      this.phone,
+      this.password,
+      this.image});
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
         id: json['id'] as String,
         name: json['name'] as String,
         phone: json['phone'] as String?,
         password: json['password'] as String?,
+        image: json['image'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -157,6 +164,7 @@ class Employee {
         'name': name,
         'phone': phone,
         'password': password,
+        'image': image,
       };
 }
 

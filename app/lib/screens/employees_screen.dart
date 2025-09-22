@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import '../api_client.dart';
 import '../models.dart';
 import 'package:flutter/services.dart';
 import '../ui/design_system.dart';
+import 'dart:convert';
 
 class EmployeesScreen extends StatefulWidget {
   const EmployeesScreen({super.key, required this.api});
@@ -25,273 +29,411 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     });
   }
 
+  Future<void> _pickImage(Function(XFile?, Uint8List?) onImageSelected) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 90,
+      );
+
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        onImageSelected(image, bytes);
+      }
+    } catch (e) {
+      if (mounted) {
+        AppWidgets.showFlushbar(context,
+            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+            type: MessageType.error);
+      }
+    }
+  }
+
+  Widget _buildEmployeeImagePlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.add_a_photo,
+          size: 32,
+          color: AppTheme.primaryStart,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Thêm ảnh',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppTheme.primaryStart,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageSelector(
+      String? imageUrl, Uint8List? selectedImageBytes, Function() onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        height: 120,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(
+            color: Colors.grey[300]!,
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: selectedImageBytes != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.memory(
+                  selectedImageBytes,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : (imageUrl != null && imageUrl.isNotEmpty)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: imageUrl.startsWith('http')
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildEmployeeImagePlaceholder();
+                            },
+                          )
+                        : _buildImageWidget(imageUrl),
+                  )
+                : _buildEmployeeImagePlaceholder(),
+      ),
+    );
+  }
+
+  Widget _buildImageWidget(String imageUrl) {
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        // Xử lý data URL (base64)
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
+        return Image.network(imageUrl, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[300],
+          child: Center(
+            child: Icon(Icons.image, color: Colors.grey[600], size: 32),
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[300],
+        child: Center(
+          child: Icon(Icons.broken_image, color: Colors.grey[600], size: 32),
+        ),
+      );
+    }
+  }
+
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
     final phoneCtrl = TextEditingController();
     final passwordCtrl = TextEditingController();
+    String? imageUrl;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
+
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.person_add,
+                            color: Colors.white, size: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Thêm nhân viên',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Nhập thông tin nhân viên mới',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.person_add,
-                          color: Colors.white, size: 24),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Thêm nhân viên',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Nhập thông tin nhân viên mới',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _formKey,
+                // Content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                        _buildImageSelector(
+                            imageUrl,
+                            selectedImageBytes,
+                            () => _pickImage((image, bytes) {
+                                  setState(() {
+                                    pickedImage = image;
+                                    selectedImageBytes = bytes;
+                                    imageUrl = '';
+                                  });
+                                })),
+                        const SizedBox(height: 20),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Họ và tên',
+                                    prefixIcon: Icon(Icons.person,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập họ và tên';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: phoneCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Số điện thoại',
+                                    prefixIcon: Icon(Icons.phone,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập số điện thoại';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: phoneCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              prefixIcon: Icon(Icons.phone,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: passwordCtrl,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Mật khẩu',
+                                    prefixIcon: Icon(Icons.lock,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập mật khẩu';
+                                    }
+                                    if (value.length < 6) {
+                                      return 'Mật khẩu phải có ít nhất 6 ký tự';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
                             ],
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: passwordCtrl,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Mật khẩu',
-                              prefixIcon: Icon(Icons.lock,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập mật khẩu';
-                              }
-                              if (value.length < 6) {
-                                return 'Mật khẩu phải có ít nhất 6 ký tự';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
+                // Actions
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            side: BorderSide(color: Colors.grey[300]!),
                           ),
                           child: const Text(
-                            'Lưu',
+                            'Huỷ',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.primaryGradient,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.pop(context, true);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Lưu',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -311,8 +453,30 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         // If not found, continue
       }
       try {
+        String? imageUrlToSave;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName =
+              'employee_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api
+                .uploadEmployeeImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            AppWidgets.showFlushbar(
+                context, 'Lỗi khi upload ảnh lên server: $e',
+                type: MessageType.error);
+            return;
+          }
+        }
         await widget.api.createEmployee(name,
-            phone: phone, password: passwordCtrl.text.trim());
+            phone: phone,
+            password: passwordCtrl.text.trim(),
+            image: imageUrlToSave);
         await _reload();
         AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công',
             type: MessageType.success);
@@ -327,269 +491,290 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     final nameCtrl = TextEditingController(text: e.name);
     final phoneCtrl = TextEditingController(text: e.phone ?? '');
     final passwordCtrl = TextEditingController();
+    String? imageUrl = e.image;
+    XFile? pickedImage;
+    Uint8List? selectedImageBytes;
+
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
-            maxWidth: MediaQuery.of(context).size.width * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.edit,
+                            color: Colors.white, size: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Chỉnh sửa nhân viên',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Cập nhật thông tin nhân viên',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child:
-                          const Icon(Icons.edit, color: Colors.white, size: 24),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Chỉnh sửa nhân viên',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Cập nhật thông tin nhân viên',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _editFormKey,
+                // Content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: nameCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Họ và tên',
-                              prefixIcon: Icon(Icons.person,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                        _buildImageSelector(
+                            imageUrl,
+                            selectedImageBytes,
+                            () => _pickImage((image, bytes) {
+                                  setState(() {
+                                    pickedImage = image;
+                                    selectedImageBytes = bytes;
+                                    imageUrl = '';
+                                  });
+                                })),
+                        const SizedBox(height: 20),
+                        Form(
+                          key: _editFormKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: nameCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Họ và tên',
+                                    prefixIcon: Icon(Icons.person,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập họ và tên';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: phoneCtrl,
+                                  decoration: InputDecoration(
+                                    labelText: 'Số điện thoại',
+                                    prefixIcon: Icon(Icons.phone,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.phone,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Vui lòng nhập số điện thoại';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: phoneCtrl,
-                            decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              prefixIcon: Icon(Icons.phone,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: passwordCtrl,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    labelText:
+                                        'Mật khẩu mới (để trống nếu không đổi)',
+                                    prefixIcon: Icon(Icons.lock,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value != null &&
+                                        value.isNotEmpty &&
+                                        value.length < 6) {
+                                      return 'Mật khẩu phải có ít nhất 6 ký tự';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
                             ],
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[50],
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey[200]!),
-                          ),
-                          child: TextFormField(
-                            controller: passwordCtrl,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText:
-                                  'Mật khẩu mới (để trống nếu không đổi)',
-                              prefixIcon: Icon(Icons.lock,
-                                  color: AppTheme.primaryStart),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                    color: Colors.red, width: 2),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value != null &&
-                                  value.isNotEmpty &&
-                                  value.length < 6) {
-                                return 'Mật khẩu phải có ít nhất 6 ký tự';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: const Text(
-                          'Huỷ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_editFormKey.currentState!.validate()) {
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
+                // Actions
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            side: BorderSide(color: Colors.grey[300]!),
                           ),
                           child: const Text(
-                            'Lưu',
+                            'Huỷ',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.primaryGradient,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_editFormKey.currentState!.validate()) {
+                                Navigator.pop(context, true);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Lưu',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -610,12 +795,33 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       }
 
       try {
+        String? imageUrlToSave = imageUrl;
+        if (selectedImageBytes != null) {
+          // Lấy extension hợp lệ, nếu không thì mặc định là .png
+          String ext = pickedImage?.path != null
+              ? path.extension(pickedImage!.path).toLowerCase()
+              : '.png';
+          const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+          if (!allowed.contains(ext)) ext = '.png';
+          final fileName =
+              'employee_${DateTime.now().millisecondsSinceEpoch}$ext';
+          try {
+            imageUrlToSave = await widget.api
+                .uploadEmployeeImage(selectedImageBytes!, fileName);
+          } catch (e) {
+            AppWidgets.showFlushbar(
+                context, 'Lỗi khi upload ảnh lên server: $e',
+                type: MessageType.error);
+            return;
+          }
+        }
         final password = passwordCtrl.text.trim();
         await widget.api.updateEmployee(Employee(
           id: e.id,
           name: name,
           phone: phone.isEmpty ? null : phone,
           password: password.isEmpty ? null : password,
+          image: imageUrlToSave,
         ));
         await _reload();
         AppWidgets.showFlushbar(
@@ -840,14 +1046,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                           width: 48,
                                           height: 48,
                                           decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Colors.green.shade100,
-                                                Colors.green.shade200,
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
                                             borderRadius:
                                                 BorderRadius.circular(24),
                                             boxShadow: [
@@ -859,12 +1057,34 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                               ),
                                             ],
                                           ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.person,
-                                              size: 24,
-                                              color: Colors.green.shade700,
-                                            ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(24),
+                                            child: e.image != null &&
+                                                    e.image!.isNotEmpty
+                                                ? _buildImageWidget(e.image!)
+                                                : Container(
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          Colors.green.shade100,
+                                                          Colors.green.shade200,
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.person,
+                                                        size: 24,
+                                                        color: Colors
+                                                            .green.shade700,
+                                                      ),
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                         const SizedBox(width: 16),

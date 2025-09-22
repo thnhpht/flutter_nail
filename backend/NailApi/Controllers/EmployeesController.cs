@@ -143,6 +143,7 @@ namespace NailApi.Controllers
                 // Cập nhật các trường thông tin cơ bản
                 exists.Name = input.Name.Trim();
                 exists.Phone = string.IsNullOrWhiteSpace(input.Phone) ? null : input.Phone.Trim();
+                exists.Image = input.Image;
 
                 // Chỉ cập nhật mật khẩu nếu được cung cấp
                 if (!string.IsNullOrWhiteSpace(input.Password))
@@ -180,6 +181,49 @@ namespace NailApi.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
+        // POST: api/employees/upload-image
+        [HttpPost("upload-image")]
+        public async Task<ActionResult<string>> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            // Kiểm tra kích thước file (max 5MB)
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File size too large. Maximum 5MB allowed.");
+            }
+
+            // Kiểm tra loại file
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.");
+            }
+
+            try
+            {
+                // Đọc file thành byte array
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                var fileBytes = memoryStream.ToArray();
+
+                // Convert thành base64 string
+                var base64String = Convert.ToBase64String(fileBytes);
+                var dataUrl = $"data:image/{fileExtension.Substring(1)};base64,{base64String}";
+
+                return Ok(new { imageUrl = dataUrl });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error uploading image: {ex.Message}");
             }
         }
     }

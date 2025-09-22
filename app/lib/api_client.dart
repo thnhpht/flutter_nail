@@ -162,7 +162,7 @@ class ApiClient {
   }
 
   Future<void> createEmployee(String name,
-      {String? phone, String? password}) async {
+      {String? phone, String? password, String? image}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
 
@@ -171,8 +171,12 @@ class ApiClient {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode(
-            {'name': name, 'phone': phone, 'password': password ?? ''}));
+        body: jsonEncode({
+          'name': name,
+          'phone': phone,
+          'password': password ?? '',
+          'image': image
+        }));
     _check(r, expect201: true);
   }
 
@@ -204,6 +208,30 @@ class ApiClient {
       'Content-Type': 'application/json',
     });
     _check(r, expect204: true);
+  }
+
+  Future<String> uploadEmployeeImage(
+      List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    var request = http.MultipartRequest('POST', _u('/employees/upload-image'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+
+    final responseData = jsonDecode(response.body);
+    return responseData['imageUrl'] as String;
   }
 
   // Categories

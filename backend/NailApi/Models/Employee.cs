@@ -15,5 +15,7 @@ namespace NailApi.Models
         
         // Password không bắt buộc - có thể null khi update mà không đổi password
         public string? Password { get; set; }
+        
+        public string? Image { get; set; }
     }
 }

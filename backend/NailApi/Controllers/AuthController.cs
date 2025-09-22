@@ -440,6 +440,7 @@ namespace NailApi.Controllers
                             [Name] nvarchar(max) NULL,
                             [Phone] nvarchar(max) NULL,
                             [Password] nvarchar(max) NULL,
+                            [Image] nvarchar(max) NULL,
                             CONSTRAINT [PK_Employees] PRIMARY KEY ([Id])
                         );",
 
