@@ -16,6 +16,7 @@ class AppTheme {
   static const double radiusMedium = 12;
   static const double radiusLarge = 16;
 
+  static const double spacingXXS = 4;
   static const double spacingXS = 8;
   static const double spacingS = 12;
   static const double spacingM = 16;

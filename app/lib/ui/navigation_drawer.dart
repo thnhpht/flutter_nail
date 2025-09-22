@@ -21,45 +21,61 @@ class AppNavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
-      child: Column(
-        children: [
-          // Navigation items
-          Expanded(
-            child: ListView(
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Add extra spacing at the top
+            // SizedBox(
+            //   height: AppTheme.getResponsiveSpacing(
+            //     context,
+            //     mobile: AppTheme.spacingXXS,
+            //     tablet: AppTheme.spacingXXS,
+            //     desktop: AppTheme.spacingXXS,
+            //   ),
+            // ),
+
+            // Navigation items
+            Expanded(
+              child: ListView(
+                padding: AppTheme.getResponsivePadding(
+                  context,
+                  mobile:
+                      const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
+                  tablet:
+                      const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
+                  desktop:
+                      const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
+                ),
+                children: _buildNavigationItems(),
+              ),
+            ),
+
+            // Version info and Logout button
+            Container(
               padding: AppTheme.getResponsivePadding(
                 context,
-                mobile: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
-                tablet: const EdgeInsets.symmetric(vertical: AppTheme.spacingL),
-                desktop:
-                    const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
+                mobile: const EdgeInsets.all(AppTheme.spacingM),
+                tablet: const EdgeInsets.all(AppTheme.spacingL),
+                desktop: const EdgeInsets.all(AppTheme.spacingXL),
               ),
-              children: _buildNavigationItems(),
+              child: Column(
+                children: [
+                  const Divider(),
+                  SizedBox(
+                      height: AppTheme.getResponsiveSpacing(context,
+                          mobile: AppTheme.spacingS,
+                          tablet: AppTheme.spacingM)),
+                  _buildVersionInfo(),
+                  SizedBox(
+                      height: AppTheme.getResponsiveSpacing(context,
+                          mobile: AppTheme.spacingS,
+                          tablet: AppTheme.spacingM)),
+                  _buildLogoutButton(),
+                ],
+              ),
             ),
-          ),
-
-          // Version info and Logout button
-          Container(
-            padding: AppTheme.getResponsivePadding(
-              context,
-              mobile: const EdgeInsets.all(AppTheme.spacingM),
-              tablet: const EdgeInsets.all(AppTheme.spacingL),
-              desktop: const EdgeInsets.all(AppTheme.spacingXL),
-            ),
-            child: Column(
-              children: [
-                const Divider(),
-                SizedBox(
-                    height: AppTheme.getResponsiveSpacing(context,
-                        mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
-                _buildVersionInfo(),
-                SizedBox(
-                    height: AppTheme.getResponsiveSpacing(context,
-                        mobile: AppTheme.spacingS, tablet: AppTheme.spacingM)),
-                _buildLogoutButton(),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -67,6 +67,10 @@ class _NailAppState extends State<NailApp> {
   bool _isLoadingSalonInfo = true;
   bool _hasLoadedSalonInfo = false;
 
+  // Employee information
+  String? _employeeName;
+  bool _isLoadingEmployeeName = true;
+
   // Update order
   Order? _orderToUpdate;
 
@@ -88,10 +92,13 @@ class _NailAppState extends State<NailApp> {
       });
       _loadTodayStats();
       _loadSalonInfo(); // Load salon info when checking login status
+      _loadEmployeeName(); // Load employee name if user is employee
     } else {
       setState(() {
         _isLoggedIn = isLoggedIn;
         _userRole = 'shop_owner'; // Reset to default
+        _employeeName = null; // Reset employee name
+        _isLoadingEmployeeName = true; // Reset loading state
       });
     }
   }
@@ -130,6 +137,46 @@ class _NailAppState extends State<NailApp> {
       });
       // Salon info loading failed, but don't show error to user
       // The app will use fallback values
+    }
+  }
+
+  Future<void> _loadEmployeeName() async {
+    if (_userRole != 'employee') {
+      setState(() {
+        _isLoadingEmployeeName = false;
+      });
+      return;
+    }
+
+    try {
+      setState(() {
+        _isLoadingEmployeeName = true;
+      });
+
+      final prefs = await SharedPreferences.getInstance();
+      final employeeId = prefs.getString('employee_id');
+
+      if (employeeId != null && employeeId.isNotEmpty) {
+        final employees = await api.getEmployees();
+        final employee = employees.firstWhere(
+          (e) => e.id == employeeId,
+          orElse: () => throw Exception('Employee not found'),
+        );
+        setState(() {
+          _employeeName = employee.name;
+          _isLoadingEmployeeName = false;
+        });
+      } else {
+        setState(() {
+          _employeeName = null;
+          _isLoadingEmployeeName = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _employeeName = null;
+        _isLoadingEmployeeName = false;
+      });
     }
   }
 
@@ -180,6 +227,7 @@ class _NailAppState extends State<NailApp> {
     });
     _loadTodayStats();
     _loadSalonInfo();
+    _loadEmployeeName();
   }
 
   void _refreshBills() {
@@ -347,21 +395,41 @@ class _NailAppState extends State<NailApp> {
                                   ),
                                 ),
                               )
-                            : Text(
-                                _salonInfo?.salonName.isNotEmpty == true
-                                    ? _salonInfo!.salonName
-                                    : 'Salon',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: AppTheme.getResponsiveFontSize(
-                                    context,
-                                    mobile: 24,
-                                    tablet: 28,
-                                    desktop: 32,
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    _salonInfo?.salonName.isNotEmpty == true
+                                        ? _salonInfo!.salonName
+                                        : 'Salon',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: AppTheme.getResponsiveFontSize(
+                                        context,
+                                        mobile: 24,
+                                        tablet: 28,
+                                        desktop: 32,
+                                      ),
+                                      letterSpacing: 0.5,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  letterSpacing: 0.5,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    _getWelcomeText(),
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: AppTheme.getResponsiveFontSize(
+                                        context,
+                                        mobile: 12,
+                                        tablet: 14,
+                                        desktop: 16,
+                                      ),
+                                      letterSpacing: 0.3,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
                               ),
                       ),
                     ),
@@ -514,6 +582,20 @@ class _NailAppState extends State<NailApp> {
     // Format số tiền theo định dạng Việt Nam: 150.000 VNĐ
     final formatter = NumberFormat('#,###', 'vi_VN');
     return '${formatter.format(amount)} VNĐ';
+  }
+
+  String _getWelcomeText() {
+    if (_userRole == 'employee') {
+      if (_isLoadingEmployeeName) {
+        return '...';
+      } else if (_employeeName != null && _employeeName!.isNotEmpty) {
+        return '$_employeeName';
+      } else {
+        return 'Employee';
+      }
+    } else {
+      return 'Boss';
+    }
   }
 
   Widget _getCurrentScreen() {
