@@ -7,12 +7,13 @@ import '../config/salon_config.dart';
 import 'dart:convert'; // Added for jsonDecode
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'update_order_screen.dart';
 
 class BillsScreen extends StatefulWidget {
-  const BillsScreen({super.key, required this.api});
+  const BillsScreen(
+      {super.key, required this.api, this.onNavigateToUpdateOrder});
 
   final ApiClient api;
+  final Function(Order)? onNavigateToUpdateOrder;
 
   @override
   State<BillsScreen> createState() => _BillsScreenState();
@@ -209,19 +210,9 @@ class _BillsScreenState extends State<BillsScreen> {
       return;
     }
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => UpdateOrderScreen(
-        api: widget.api,
-        order: order,
-        onOrderUpdated: () {
-          // Refresh data after update
-          refreshData();
-        },
-      ),
-    );
+    if (widget.onNavigateToUpdateOrder != null) {
+      widget.onNavigateToUpdateOrder!(order);
+    }
   }
 
   String _formatPrice(double price) {

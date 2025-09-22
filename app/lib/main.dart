@@ -15,6 +15,7 @@ import 'screens/services_screen.dart';
 import 'screens/bills_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/salon_info_screen.dart';
+import 'screens/update_order_screen.dart';
 import 'ui/navigation_drawer.dart';
 import 'ui/design_system.dart';
 
@@ -27,7 +28,8 @@ enum _HomeView {
   orders,
   bills,
   reports,
-  salonInfo
+  salonInfo,
+  updateOrder
 }
 
 void main() {
@@ -64,6 +66,9 @@ class _NailAppState extends State<NailApp> {
   Information? _salonInfo;
   bool _isLoadingSalonInfo = true;
   bool _hasLoadedSalonInfo = false;
+
+  // Update order
+  Order? _orderToUpdate;
 
   @override
   void initState() {
@@ -197,6 +202,13 @@ class _NailAppState extends State<NailApp> {
   void _refreshSalonInfo() {
     // Refresh salon info when updated from salon info screen
     _loadSalonInfo();
+  }
+
+  void _navigateToUpdateOrder(Order order) {
+    setState(() {
+      _orderToUpdate = order;
+      _view = _HomeView.updateOrder;
+    });
   }
 
   @override
@@ -398,6 +410,8 @@ class _NailAppState extends State<NailApp> {
           return 1; // Second item in employee nav
         case _HomeView.bills:
           return 2; // Third item in employee nav
+        case _HomeView.updateOrder:
+          return -1; // No selection for update order screen
         default:
           return -1; // No selection for restricted screens
       }
@@ -422,6 +436,8 @@ class _NailAppState extends State<NailApp> {
           return 7; // Eighth item in shop owner nav drawer
         case _HomeView.salonInfo:
           return 8; // Ninth item in shop owner nav drawer
+        case _HomeView.updateOrder:
+          return -1; // No selection for update order screen
       }
     }
   }
@@ -515,7 +531,24 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.orders:
           return OrderScreen(api: api, onOrderCreated: _refreshBills);
         case _HomeView.bills:
-          return BillsScreen(api: api);
+          return BillsScreen(
+              api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
+        case _HomeView.updateOrder:
+          if (_orderToUpdate != null) {
+            return UpdateOrderScreen(
+              api: api,
+              order: _orderToUpdate!,
+              onOrderUpdated: () {
+                _refreshBills();
+                setState(() {
+                  _view = _HomeView.bills;
+                  _orderToUpdate = null; // Reset order after update
+                });
+              },
+            );
+          }
+          return BillsScreen(
+              api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
         default:
           return _buildWelcomeScreen();
       }
@@ -533,12 +566,30 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.orders:
           return OrderScreen(api: api, onOrderCreated: _refreshBills);
         case _HomeView.bills:
-          return BillsScreen(api: api);
+          return BillsScreen(
+              api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
         case _HomeView.reports:
           return ReportsScreen(api: api);
         case _HomeView.salonInfo:
           return SalonInfoScreen(
               api: api, onSalonInfoUpdated: _refreshSalonInfo);
+        case _HomeView.updateOrder:
+          if (_orderToUpdate != null) {
+            return UpdateOrderScreen(
+              api: api,
+              order: _orderToUpdate!,
+              onOrderUpdated: () {
+                _refreshBills();
+                setState(() {
+                  _view = _HomeView.bills;
+                  _orderToUpdate = null; // Reset order after update
+                });
+              },
+            );
+          }
+          // If no order to update, redirect to bills screen
+          return BillsScreen(
+              api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
         default:
           return _buildWelcomeScreen();
       }

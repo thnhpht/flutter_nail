@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../api_client.dart';
@@ -41,10 +42,13 @@ class _OrderScreenState extends State<OrderScreen> {
   bool _showCategoryDropdown = false;
   bool _showServiceDropdown = false;
   bool _showEmployeeDropdown = false;
+  String? _currentUserRole;
+  String? _currentEmployeeId;
 
   @override
   void initState() {
     super.initState();
+    _loadCurrentUserInfo();
     _loadCategories();
     _loadServices();
     _loadEmployees();
@@ -53,6 +57,21 @@ class _OrderScreenState extends State<OrderScreen> {
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
+  }
+
+  Future<void> _loadCurrentUserInfo() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userRole = prefs.getString('user_role');
+      final employeeId = prefs.getString('employee_id');
+
+      setState(() {
+        _currentUserRole = userRole;
+        _currentEmployeeId = employeeId;
+      });
+    } catch (e) {
+      // Handle error silently
+    }
   }
 
   Future<void> _loadInformation() async {
@@ -111,6 +130,16 @@ class _OrderScreenState extends State<OrderScreen> {
       final employees = await widget.api.getEmployees();
       setState(() {
         _employees = employees;
+
+        // Tự động chọn nhân viên đăng nhập nếu là employee
+        if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
+          final currentEmployee = employees.firstWhere(
+            (employee) => employee.id == _currentEmployeeId,
+            orElse: () =>
+                employees.first, // Fallback to first employee if not found
+          );
+          _selectedEmployees = [currentEmployee];
+        }
       });
     } catch (e) {
       AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên: $e',
@@ -649,64 +678,121 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Employee Information
-                    _buildSectionCard(
-                      title: 'Thông tin nhân viên',
-                      icon: Icons.work,
-                      child: Column(
-                        children: [
-                          // Selected Employees Chips
-                          if (_selectedEmployees.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: _selectedEmployees
-                                  .map((employee) => _buildChip(
-                                        label: employee.name,
-                                        onDeleted: () =>
-                                            _toggleEmployee(employee),
-                                        color: const Color(0xFF667eea),
-                                      ))
-                                  .toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Employee Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleEmployeeDropdown,
-                            label: _selectedEmployees.isEmpty
-                                ? 'Chọn nhân viên'
-                                : '${_selectedEmployees.length} nhân viên đã chọn',
-                            isExpanded: _showEmployeeDropdown,
-                          ),
-                          if (_showEmployeeDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _employees.length,
-                                itemBuilder: (context, index) {
-                                  final employee = _employees[index];
-                                  final isSelected =
-                                      _selectedEmployees.contains(employee);
-                                  return _buildDropdownEmployeeItem(
-                                    title: employee.name,
-                                    subtitle: employee.phone != null
-                                        ? _formatPhoneNumber(employee.phone!)
-                                        : '',
-                                    isSelected: isSelected,
-                                    onTap: () => _toggleEmployee(employee),
-                                    image: employee.image,
-                                  );
-                                },
+                    // Employee Information - chỉ hiển thị khi không phải nhân viên đăng nhập
+                    if (_currentUserRole != 'employee')
+                      _buildSectionCard(
+                        title: 'Thông tin nhân viên',
+                        icon: Icons.work,
+                        child: Column(
+                          children: [
+                            // Selected Employees Chips
+                            if (_selectedEmployees.isNotEmpty) ...[
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: _selectedEmployees
+                                    .map((employee) => _buildChip(
+                                          label: employee.name,
+                                          onDeleted: () =>
+                                              _toggleEmployee(employee),
+                                          color: const Color(0xFF667eea),
+                                        ))
+                                    .toList(),
                               ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // Employee Dropdown
+                            _buildDropdownButton(
+                              onTap: _toggleEmployeeDropdown,
+                              label: _selectedEmployees.isEmpty
+                                  ? 'Chọn nhân viên'
+                                  : '${_selectedEmployees.length} nhân viên đã chọn',
+                              isExpanded: _showEmployeeDropdown,
                             ),
+                            if (_showEmployeeDropdown) ...[
+                              const SizedBox(height: 8),
+                              _buildDropdownMenu(
+                                maxHeight: 200,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _employees.length,
+                                  itemBuilder: (context, index) {
+                                    final employee = _employees[index];
+                                    final isSelected =
+                                        _selectedEmployees.contains(employee);
+                                    return _buildDropdownEmployeeItem(
+                                      title: employee.name,
+                                      subtitle: employee.phone != null
+                                          ? _formatPhoneNumber(employee.phone!)
+                                          : '',
+                                      isSelected: isSelected,
+                                      onTap: () => _toggleEmployee(employee),
+                                      image: employee.image,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
+                      )
+                    else
+                      // Hiển thị thông tin nhân viên đăng nhập
+                      _buildSectionCard(
+                        title: 'Nhân viên thực hiện',
+                        icon: Icons.person,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color:
+                                const Color(0xFF667eea).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xFF667eea)
+                                  .withValues(alpha: 0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: const Color(0xFF667eea),
+                                size: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _selectedEmployees.isNotEmpty
+                                          ? _selectedEmployees.first.name
+                                          : 'Nhân viên đăng nhập',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF667eea),
+                                      ),
+                                    ),
+                                    if (_selectedEmployees.isNotEmpty &&
+                                        _selectedEmployees.first.phone != null)
+                                      Text(
+                                        _formatPhoneNumber(
+                                            _selectedEmployees.first.phone!),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
 
                     const SizedBox(height: 16),
 
