@@ -698,6 +698,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                         : '',
                                     isSelected: isSelected,
                                     onTap: () => _toggleEmployee(employee),
+                                    image: employee.image,
                                   );
                                 },
                               ),
@@ -1440,15 +1441,28 @@ class _OrderScreenState extends State<OrderScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(100),
                 border: Border.all(color: Colors.grey[300]!, width: 1),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(100),
                 child: _buildImageWidget(image),
               ),
             )
-          : null,
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.person,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
       title: Text(
         title,
         style: TextStyle(
