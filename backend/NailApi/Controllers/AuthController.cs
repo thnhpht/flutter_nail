@@ -164,7 +164,7 @@ namespace NailApi.Controllers
                         Success = true,
                         Message = "Đăng nhập thành công",
                         DatabaseName = request.Email, // Sử dụng email gốc
-                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin),
+                        Token = _jwtService.GenerateToken(request.Email, request.UserLogin, "shop_owner"),
                         UserRole = "shop_owner"
                     });
                 }
@@ -235,15 +235,12 @@ namespace NailApi.Controllers
                             {
                                 Console.WriteLine("Employee password verified successfully");
 
-                                // Tạo token cho nhân viên
-                                var token = _jwtService.GenerateToken(request.ShopEmail, shopOwner.UserLogin);
-
                                 return Ok(new LoginResponse
                                 {
                                     Success = true,
                                     Message = $"Đăng nhập thành công! Chào mừng {employeeName}",
                                     DatabaseName = databaseName,
-                                    Token = token,
+                                    Token = _jwtService.GenerateToken(request.ShopEmail, shopOwner.UserLogin, "employee", employeeId),
                                     UserRole = "employee",
                                     EmployeeId = employeeId
                                 });

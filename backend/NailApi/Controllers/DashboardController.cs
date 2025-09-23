@@ -26,6 +26,8 @@ namespace NailApi.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                var userRole = User.FindFirst("user_role")?.Value;
+                var employeeId = User.FindFirst("employee_id")?.Value;
                 
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
                     return Unauthorized("Thông tin xác thực không hợp lệ");
@@ -36,21 +38,28 @@ namespace NailApi.Controllers
                 var today = DateTime.Today;
                 var tomorrow = today.AddDays(1);
                 
+                // Base query cho orders hôm nay
+                var todayOrdersQuery = dbContext.Orders
+                    .Where(o => o.CreatedAt >= today && o.CreatedAt < tomorrow);
+                
+                // Nếu là nhân viên và có employeeId, lọc theo nhân viên đó
+                if (userRole == "employee" && !string.IsNullOrEmpty(employeeId))
+                {
+                    // EmployeeIds được lưu dưới dạng JSON string, sử dụng Contains để tìm kiếm
+                    todayOrdersQuery = todayOrdersQuery.Where(o => o.EmployeeIds.Contains($"\"{employeeId}\""));
+                }
+                
                 // Đếm số hóa đơn hôm nay
-                var totalBills = await dbContext.Orders
-                    .Where(o => o.CreatedAt >= today && o.CreatedAt < tomorrow)
-                    .CountAsync();
+                var totalBills = await todayOrdersQuery.CountAsync();
                 
                 // Đếm số khách hàng duy nhất hôm nay (khách hàng có ít nhất 1 hóa đơn trong ngày)
-                var todayCustomers = await dbContext.Orders
-                    .Where(o => o.CreatedAt >= today && o.CreatedAt < tomorrow)
+                var todayCustomers = await todayOrdersQuery
                     .Select(o => o.CustomerPhone)
                     .Distinct()
                     .CountAsync();
                 
                 // Tính tổng doanh thu hôm nay
-                var totalRevenue = await dbContext.Orders
-                    .Where(o => o.CreatedAt >= today && o.CreatedAt < tomorrow)
+                var totalRevenue = await todayOrdersQuery
                     .SumAsync(o => o.TotalPrice);
                 
                 return Ok(new

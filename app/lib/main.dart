@@ -108,6 +108,7 @@ class _NailAppState extends State<NailApp> {
       setState(() {
         _isLoadingStats = true;
       });
+
       final stats = await api.getTodayStats();
       setState(() {
         _todayStats = stats;
@@ -185,12 +186,23 @@ class _NailAppState extends State<NailApp> {
       final orders = await api.getOrders();
 
       final today = DateTime.now();
-      final todayOrders = orders.where((order) {
+      var todayOrders = orders.where((order) {
         final orderDate = order.createdAt;
         return orderDate.year == today.year &&
             orderDate.month == today.month &&
             orderDate.day == today.day;
       }).toList();
+
+      // Nếu là nhân viên, lọc theo nhân viên đó
+      if (_userRole == 'employee') {
+        final prefs = await SharedPreferences.getInstance();
+        final employeeId = prefs.getString('employee_id');
+        if (employeeId != null && employeeId.isNotEmpty) {
+          todayOrders = todayOrders.where((order) {
+            return order.employeeIds.contains(employeeId);
+          }).toList();
+        }
+      }
 
       // Đếm số khách hàng duy nhất hôm nay (khách hàng có ít nhất 1 hóa đơn trong ngày)
       final todayCustomers =
