@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../api_client.dart';
@@ -502,12 +504,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 child: category.image != null && category.image!.isNotEmpty
-                    ? Image.network(
-                        category.image!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            _buildCategoryImagePlaceholder(),
-                      )
+                    ? _buildImageWidget(category.image!)
                     : _buildCategoryImagePlaceholder(),
               ),
 
@@ -913,12 +910,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               color: Colors.grey[100],
             ),
             child: service.image != null && service.image!.isNotEmpty
-                ? Image.network(
-                    service.image!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        _buildServiceImagePlaceholder(),
-                  )
+                ? _buildImageWidget(service.image!)
                 : _buildServiceImagePlaceholder(),
           ),
 
@@ -999,6 +991,36 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Widget _buildImageWidget(String imageUrl) {
+    try {
+      if (imageUrl.startsWith('data:image/')) {
+        // Xử lý data URL (base64)
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(bytes, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('http://') ||
+          imageUrl.startsWith('https://')) {
+        return Image.network(imageUrl, fit: BoxFit.cover);
+      } else if (imageUrl.startsWith('/')) {
+        return Image.file(File(imageUrl), fit: BoxFit.cover);
+      } else {
+        return Container(
+          color: Colors.grey[300],
+          child: Center(
+            child: Icon(Icons.image, color: Colors.grey[600], size: 32),
+          ),
+        );
+      }
+    } catch (e) {
+      return Container(
+        color: Colors.grey[300],
+        child: Center(
+          child: Icon(Icons.broken_image, color: Colors.grey[600], size: 32),
+        ),
+      );
+    }
   }
 
   Widget _buildServiceImagePlaceholder() {
