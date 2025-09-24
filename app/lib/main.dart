@@ -12,6 +12,7 @@ import 'screens/customers_screen.dart';
 import 'screens/employees_screen.dart';
 import 'screens/categories_screen.dart';
 import 'screens/services_screen.dart';
+import 'screens/menu_screen.dart';
 import 'screens/bills_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/salon_info_screen.dart';
@@ -27,6 +28,7 @@ enum _HomeView {
   employees,
   categories,
   services,
+  menu,
   orders,
   bills,
   reports,
@@ -519,12 +521,14 @@ class _NailAppState extends State<NailApp> {
       switch (_view) {
         case _HomeView.welcome:
           return -1; // No selection for welcome screen
-        case _HomeView.services:
+        case _HomeView.menu:
           return 0; // First item in employee nav
-        case _HomeView.orders:
+        case _HomeView.services:
           return 1; // Second item in employee nav
-        case _HomeView.bills:
+        case _HomeView.orders:
           return 2; // Third item in employee nav
+        case _HomeView.bills:
+          return 3; // Fourth item in employee nav
         case _HomeView.updateOrder:
           return -1; // No selection for update order screen
         default:
@@ -543,6 +547,8 @@ class _NailAppState extends State<NailApp> {
           return 3; // Fourth item in shop owner nav drawer
         case _HomeView.services:
           return 4; // Fifth item in shop owner nav drawer
+        case _HomeView.menu:
+          return 9; // Menu item in shop owner nav drawer
         case _HomeView.orders:
           return 5; // Sixth item in shop owner nav drawer
         case _HomeView.bills:
@@ -562,13 +568,16 @@ class _NailAppState extends State<NailApp> {
       if (_userRole == 'employee') {
         // Employee navigation mapping
         switch (index) {
-          case 0: // Services (first item in employee nav)
+          case 0: // Menu (first item in employee nav)
+            _view = _HomeView.menu;
+            break;
+          case 1: // Services (second item in employee nav)
             _view = _HomeView.services;
             break;
-          case 1: // Orders (second item in employee nav)
+          case 2: // Orders (third item in employee nav)
             _view = _HomeView.orders;
             break;
-          case 2: // Bills (third item in employee nav)
+          case 3: // Bills (fourth item in employee nav)
             _view = _HomeView.bills;
             break;
           default:
@@ -604,6 +613,9 @@ class _NailAppState extends State<NailApp> {
             break;
           case 8:
             _view = _HomeView.salonInfo;
+            break;
+          case 9:
+            _view = _HomeView.menu;
             break;
           default:
             _view = _HomeView.welcome;
@@ -664,6 +676,8 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.reports:
           // Redirect employees to welcome screen if they try to access restricted screens
           return _buildWelcomeScreen();
+        case _HomeView.menu:
+          return MenuScreen(api: api);
         case _HomeView.services:
           return ServicesScreen(api: api);
         case _HomeView.orders:
@@ -701,6 +715,8 @@ class _NailAppState extends State<NailApp> {
           return CategoriesScreen(api: api);
         case _HomeView.services:
           return ServicesScreen(api: api);
+        case _HomeView.menu:
+          return MenuScreen(api: api);
         case _HomeView.orders:
           return OrderScreen(api: api, onOrderCreated: _refreshBills);
         case _HomeView.bills:

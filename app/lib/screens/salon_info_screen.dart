@@ -19,7 +19,6 @@ class SalonInfoScreen extends StatefulWidget {
   State<SalonInfoScreen> createState() => _SalonInfoScreenState();
 }
 
-
 class _SalonInfoScreenState extends State<SalonInfoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -58,7 +57,6 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     super.dispose();
   }
 
-
   Future<void> _loadInformation() async {
     try {
       setState(() {
@@ -85,7 +83,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        AppWidgets.showFlushbar(context, 
+        AppWidgets.showFlushbar(context,
             'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
             type: MessageType.error);
       }
@@ -117,7 +115,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       }
     } catch (e) {
       if (mounted) {
-        AppWidgets.showFlushbar(context, 
+        AppWidgets.showFlushbar(context,
             'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
             type: MessageType.error);
       }
@@ -205,7 +203,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isSaving = false;
       });
       if (mounted) {
-        AppWidgets.showFlushbar(context, 
+        AppWidgets.showFlushbar(context,
             'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
             type: MessageType.error);
       }
@@ -222,42 +220,64 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.spacingL),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeader(),
-              const SizedBox(height: AppTheme.spacingXL),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.grey[50],
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppTheme.spacingL),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  _buildHeader(),
+                  const SizedBox(height: AppTheme.spacingXL),
 
-              // Logo Section
-              _buildLogoSection(),
-              const SizedBox(height: AppTheme.spacingXL),
+                  // Logo Section
+                  _buildLogoSection(),
+                  const SizedBox(height: AppTheme.spacingXL),
 
-              // QR Code Section
-              _buildQRCodeSection(),
-              const SizedBox(height: AppTheme.spacingXL),
+                  // QR Code Section
+                  _buildQRCodeSection(),
+                  const SizedBox(height: AppTheme.spacingXL),
 
-              // Basic Information
-              _buildSectionTitle('Thông tin cơ bản'),
-              const SizedBox(height: AppTheme.spacingL),
-              _buildBasicInfoFields(),
-              const SizedBox(height: AppTheme.spacingXL),
+                  // Basic Information
+                  _buildSectionTitle('Thông tin cơ bản'),
+                  const SizedBox(height: AppTheme.spacingL),
+                  _buildBasicInfoFields(),
+                  const SizedBox(height: AppTheme.spacingXL),
 
-              // Social Media
-              _buildSectionTitle('Mạng xã hội'),
-              const SizedBox(height: AppTheme.spacingL),
-              _buildSocialMediaFields(),
-              const SizedBox(height: AppTheme.spacingXL),
+                  // Social Media
+                  _buildSectionTitle('Mạng xã hội'),
+                  const SizedBox(height: AppTheme.spacingL),
+                  _buildSocialMediaFields(),
+                  const SizedBox(height: AppTheme.spacingXL),
 
-              // Save Button
-              _buildSaveButton(),
-            ],
+                  // Save Button
+                  _buildSaveButton(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

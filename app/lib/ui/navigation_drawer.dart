@@ -85,12 +85,20 @@ class AppNavigationDrawer extends StatelessWidget {
       // Employee navigation - limited features
       return [
         // Dịch vụ section
-        _buildSectionHeader('Dịch vụ'),
+        _buildSectionHeader('Menu'),
+        _buildNavItem(
+          icon: Icons.menu_book,
+          title: 'Menu',
+          index: 0,
+          isSelected: selectedIndex == 0,
+        ),
+
+        _buildSectionHeader('Quản lý'),
         _buildNavItem(
           icon: Icons.spa,
           title: 'Dịch vụ',
-          index: 0,
-          isSelected: selectedIndex == 0,
+          index: 1,
+          isSelected: selectedIndex == 1,
         ),
 
         // Tạo đơn section
@@ -98,8 +106,8 @@ class AppNavigationDrawer extends StatelessWidget {
         _buildNavItem(
           icon: Icons.add_shopping_cart,
           title: 'Tạo đơn',
-          index: 1,
-          isSelected: selectedIndex == 1,
+          index: 2,
+          isSelected: selectedIndex == 2,
         ),
 
         // Hóa đơn section
@@ -107,8 +115,8 @@ class AppNavigationDrawer extends StatelessWidget {
         _buildNavItem(
           icon: Icons.receipt,
           title: 'Hóa đơn',
-          index: 2,
-          isSelected: selectedIndex == 2,
+          index: 3,
+          isSelected: selectedIndex == 3,
         ),
       ];
     } else {
@@ -121,6 +129,15 @@ class AppNavigationDrawer extends StatelessWidget {
           title: 'Thông tin Salon',
           index: 8,
           isSelected: selectedIndex == 8,
+        ),
+
+        // Menu section
+        _buildSectionHeader('Menu'),
+        _buildNavItem(
+          icon: Icons.menu_book,
+          title: 'Menu',
+          index: 9,
+          isSelected: selectedIndex == 9,
         ),
 
         // Quản lý section
@@ -658,6 +675,7 @@ class AppNavigationRail extends StatelessWidget {
     if (userRole == 'employee') {
       // Employee navigation - limited features
       return [
+        _buildRailDestination(Icons.menu_book, 'Menu'),
         _buildRailDestination(Icons.spa, 'Dịch vụ'),
         _buildRailDestination(Icons.add_shopping_cart, 'Tạo đơn'),
         _buildRailDestination(Icons.receipt, 'Hóa đơn'),
@@ -669,6 +687,7 @@ class AppNavigationRail extends StatelessWidget {
         _buildRailDestination(Icons.work, 'Nhân viên'),
         _buildRailDestination(Icons.category, 'Danh mục'),
         _buildRailDestination(Icons.spa, 'Dịch vụ'),
+        _buildRailDestination(Icons.menu_book, 'Menu'),
         _buildRailDestination(Icons.add_shopping_cart, 'Tạo đơn'),
         _buildRailDestination(Icons.receipt, 'Hóa đơn'),
         _buildRailDestination(Icons.analytics, 'Báo cáo'),
