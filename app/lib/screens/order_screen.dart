@@ -7,6 +7,7 @@ import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
 import '../ui/design_system.dart';
+import '../services/notification_service.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key, required this.api, this.onOrderCreated});
@@ -44,6 +45,7 @@ class _OrderScreenState extends State<OrderScreen> {
   bool _showEmployeeDropdown = false;
   String? _currentUserRole;
   String? _currentEmployeeId;
+  final NotificationService _notificationService = NotificationService();
 
   @override
   void initState() {
@@ -493,6 +495,23 @@ class _OrderScreenState extends State<OrderScreen> {
       AppWidgets.showFlushbar(context, 'Đã tạo đơn thành công!',
           type: MessageType.success);
 
+      // Send notification to shop owner if employee created the order
+      if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
+        try {
+          await _notificationService.createOrderCreatedNotification(
+            orderId: createdOrders.first.id,
+            customerName: customerName,
+            customerPhone: customerPhone,
+            employeeName: _selectedEmployees.first.name,
+            totalPrice: _finalTotalPrice,
+            context: context,
+            currentUserRole: _currentUserRole,
+          );
+        } catch (e) {
+          // Handle notification error silently
+        }
+      }
+
       // Create a backup of selected services before showing bills
       final selectedServicesBackup = List<Service>.from(_selectedServices);
 
@@ -524,7 +543,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
       // Reset form after showing bills and calling callback
       Future.delayed(const Duration(milliseconds: 1500), () {
-        _resetForm();
+        if (mounted) {
+          _resetForm();
+        }
       });
     } catch (e) {
       AppWidgets.showFlushbar(context, 'Lỗi tạo đơn: $e',
@@ -537,7 +558,7 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void _resetForm() {
-    _formKey.currentState!.reset();
+    _formKey.currentState?.reset();
     _customerPhoneController.clear();
     _customerNameController.clear();
     _employeePhoneController.clear();

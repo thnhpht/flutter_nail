@@ -702,3 +702,9 @@ C:/flutter_app/backend/NailApi/bin/Debug/net8.0/publish/NailApi.staticwebassets.
 /Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/obj/Debug/net8.0/NailApi.pdb
 /Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/obj/Debug/net8.0/NailApi.genruntimeconfig.cache
 /Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/obj/Debug/net8.0/ref/NailApi.dll
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/web.config
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/appsettings.json
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/appsettings.Production.json
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/NailApi.deps.json
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/NailApi.runtimeconfig.json
+/Users/thnhpht/Documents/Workspace/LMS/flutter_nail/backend/NailApi/bin/Debug/net8.0/publish/NailApi.staticwebassets.endpoints.json

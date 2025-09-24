@@ -438,3 +438,130 @@ class Information {
     );
   }
 }
+
+class Notification {
+  final String id;
+  final String title;
+  final String message;
+  final String type; // 'order_created', 'order_updated', 'order_paid', etc.
+  final DateTime createdAt;
+  final bool isRead;
+  final Map<String, dynamic>?
+      data; // Additional data like orderId, employeeId, etc.
+
+  Notification({
+    required this.id,
+    required this.title,
+    required this.message,
+    required this.type,
+    required this.createdAt,
+    this.isRead = false,
+    this.data,
+  });
+
+  factory Notification.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic>? data;
+    if (json['data'] != null) {
+      if (json['data'] is String) {
+        try {
+          data = jsonDecode(json['data'] as String) as Map<String, dynamic>;
+        } catch (e) {
+          data = null;
+        }
+      } else if (json['data'] is Map<String, dynamic>) {
+        data = json['data'] as Map<String, dynamic>;
+      }
+    }
+
+    // Parse date with multiple format support
+    DateTime createdAt;
+    try {
+      final dateString = json['createdAt'] as String;
+      // Try different date formats
+      if (dateString.contains('/')) {
+        // Format: 9/23/2025 5:02:24 PM
+        final parts = dateString.split(' ');
+        if (parts.length >= 2) {
+          final datePart = parts[0]; // 9/23/2025
+          final timePart = parts[1]; // 5:02:24
+          final ampm = parts.length > 2 ? parts[2] : ''; // PM
+
+          final dateParts = datePart.split('/');
+          if (dateParts.length == 3) {
+            final month = int.parse(dateParts[0]);
+            final day = int.parse(dateParts[1]);
+            final year = int.parse(dateParts[2]);
+
+            final timeParts = timePart.split(':');
+            if (timeParts.length >= 2) {
+              int hour = int.parse(timeParts[0]);
+              final minute = int.parse(timeParts[1]);
+              final second = timeParts.length > 2 ? int.parse(timeParts[2]) : 0;
+
+              // Convert to 24-hour format
+              if (ampm.toUpperCase() == 'PM' && hour != 12) {
+                hour += 12;
+              } else if (ampm.toUpperCase() == 'AM' && hour == 12) {
+                hour = 0;
+              }
+
+              createdAt = DateTime(year, month, day, hour, minute, second);
+            } else {
+              createdAt = DateTime.parse(dateString);
+            }
+          } else {
+            createdAt = DateTime.parse(dateString);
+          }
+        } else {
+          createdAt = DateTime.parse(dateString);
+        }
+      } else {
+        // Try standard ISO format
+        createdAt = DateTime.parse(dateString);
+      }
+    } catch (e) {
+      // Fallback to current time if parsing fails
+      createdAt = DateTime.now();
+    }
+
+    return Notification(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      message: json['message'] as String,
+      type: json['type'] as String,
+      createdAt: createdAt,
+      isRead: json['isRead'] as bool? ?? false,
+      data: data,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'message': message,
+        'type': type,
+        'createdAt': createdAt.toIso8601String(),
+        'isRead': isRead,
+        'data': data,
+      };
+
+  Notification copyWith({
+    String? id,
+    String? title,
+    String? message,
+    String? type,
+    DateTime? createdAt,
+    bool? isRead,
+    Map<String, dynamic>? data,
+  }) {
+    return Notification(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      type: type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      isRead: isRead ?? this.isRead,
+      data: data ?? this.data,
+    );
+  }
+}

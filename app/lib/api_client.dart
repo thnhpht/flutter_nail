@@ -35,6 +35,9 @@ class ApiClient {
     final response = LoginResponse.fromJson(jsonDecode(r.body));
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', response.token);
+    await prefs.setString('user_role', response.userRole ?? 'shop_owner');
+    await prefs.setString(
+        'user_email', request.email); // Lưu user email cho shop owner
 
     return response;
   }
@@ -50,6 +53,10 @@ class ApiClient {
     final response = LoginResponse.fromJson(jsonDecode(r.body));
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', response.token);
+    await prefs.setString('user_role', response.userRole ?? 'employee');
+    await prefs.setString('employee_id', response.employeeId ?? '');
+    await prefs.setString(
+        'shop_email', request.shopEmail); // Lưu shop email để gửi thông báo
 
     return response;
   }
@@ -65,6 +72,99 @@ class ApiClient {
     await prefs.remove('user_role');
     await prefs.remove('employee_id');
     await prefs.remove('shop_email');
+  }
+
+  // Notification methods
+  Future<Map<String, dynamic>> sendNotification({
+    required String shopEmail,
+    required String title,
+    required String message,
+    required String type,
+    required String orderId,
+    required String customerName,
+    required String customerPhone,
+    required String employeeName,
+    required double totalPrice,
+  }) async {
+    final requestBody = {
+      'shopEmail': shopEmail,
+      'title': title,
+      'message': message,
+      'type': type,
+      'orderId': orderId,
+      'customerName': customerName,
+      'customerPhone': customerPhone,
+      'employeeName': employeeName,
+      'totalPrice': totalPrice,
+    };
+
+    final r = await _client
+        .post(_u('/auth/send-notification'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(requestBody))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
+  }
+
+  Future<Map<String, dynamic>> getNotifications(String shopEmail) async {
+    final r = await _client
+        .get(_u('/auth/get-notifications?shopEmail=$shopEmail'))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
+  }
+
+  Future<Map<String, dynamic>> markNotificationRead({
+    required String shopEmail,
+    required String notificationId,
+  }) async {
+    final requestBody = {
+      'shopEmail': shopEmail,
+      'notificationId': notificationId,
+    };
+
+    final r = await _client
+        .post(_u('/auth/mark-notification-read'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(requestBody))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
+  }
+
+  Future<Map<String, dynamic>> deleteNotification({
+    required String shopEmail,
+    required String notificationId,
+  }) async {
+    final requestBody = {
+      'shopEmail': shopEmail,
+      'notificationId': notificationId,
+    };
+
+    final r = await _client
+        .post(_u('/auth/delete-notification'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(requestBody))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
+  }
+
+  Future<Map<String, dynamic>> clearAllNotifications({
+    required String shopEmail,
+  }) async {
+    final requestBody = {
+      'shopEmail': shopEmail,
+    };
+
+    final r = await _client
+        .post(_u('/auth/clear-all-notifications'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(requestBody))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
   }
 
   Future<bool> isLoggedIn() async {
@@ -406,6 +506,19 @@ class ApiClient {
     _check(r);
     final list = jsonDecode(r.body) as List<dynamic>;
     return list.map((e) => Order.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<Order?> getOrderById(String orderId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r = await http.get(_u('/orders/$orderId'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final orderJson = jsonDecode(r.body) as Map<String, dynamic>;
+    return Order.fromJson(orderJson);
   }
 
   Future<Order> createOrder(Order order) async {

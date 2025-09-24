@@ -20,6 +20,7 @@ class ApiConfig {
 
     // Trả về URL cố định
     return _ApiServer;
+    // return _ApiLocal;
   }
 
   static String get swaggerUrl {

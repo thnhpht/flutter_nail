@@ -18,6 +18,8 @@ import 'screens/salon_info_screen.dart';
 import 'screens/update_order_screen.dart';
 import 'ui/navigation_drawer.dart';
 import 'ui/design_system.dart';
+import 'ui/notification_button.dart';
+import 'services/notification_service.dart';
 
 enum _HomeView {
   welcome,
@@ -53,6 +55,7 @@ class _NailAppState extends State<NailApp> {
   bool _isLoggedIn = false;
   String _userRole = 'shop_owner'; // Default to shop owner
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final NotificationService _notificationService = NotificationService();
 
   // Dashboard stats
   Map<String, dynamic> _todayStats = {
@@ -78,6 +81,11 @@ class _NailAppState extends State<NailApp> {
   void initState() {
     super.initState();
     _checkLoginStatus();
+    _notificationService.initialize(apiClient: api);
+
+    // Listen for new notifications
+    _notificationService.newNotificationNotifier
+        .addListener(_onNewNotification);
   }
 
   Future<void> _checkLoginStatus() async {
@@ -237,6 +245,14 @@ class _NailAppState extends State<NailApp> {
       _view = _HomeView
           .welcome; // Luôn luôn trả về màn hình chính sau khi đăng nhập
     });
+
+    // Re-initialize NotificationService with current API client
+    _notificationService.initialize(apiClient: api);
+
+    // Re-add listener after login
+    _notificationService.newNotificationNotifier
+        .addListener(_onNewNotification);
+
     _loadTodayStats();
     _loadSalonInfo();
     _loadEmployeeName();
@@ -269,6 +285,13 @@ class _NailAppState extends State<NailApp> {
       _orderToUpdate = order;
       _view = _HomeView.updateOrder;
     });
+  }
+
+  @override
+  void dispose() {
+    _notificationService.newNotificationNotifier
+        .removeListener(_onNewNotification);
+    super.dispose();
   }
 
   @override
@@ -348,31 +371,43 @@ class _NailAppState extends State<NailApp> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Menu Button (all devices)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          child: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 20,
+                  // Menu Button and Notification Button (all devices)
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () =>
+                                _scaffoldKey.currentState?.openDrawer(),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              child: const Icon(
+                                Icons.menu,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+
+                      // Notification Button (only for shop owners)
+                      if (_userRole == 'shop_owner')
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: NotificationButton(apiClient: api),
+                        ),
+                    ],
                   ),
 
                   // Spacer to push salon name to the right
@@ -588,6 +623,15 @@ class _NailAppState extends State<NailApp> {
     setState(() {
       _isLoggedIn = false;
     });
+  }
+
+  void _onNewNotification() {
+    final newNotification = _notificationService.newNotificationNotifier.value;
+
+    if (newNotification != null && _userRole == 'shop_owner' && mounted) {
+      // Just clear the notification - no Flushbar needed
+      _notificationService.clearNewNotification();
+    }
   }
 
   String _formatCurrencyVN(double amount) {

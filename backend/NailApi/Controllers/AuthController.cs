@@ -5,6 +5,7 @@ using NailApi.Data;
 using NailApi.Models;
 using NailApi.Services;
 using System.Data;
+using System.Text.Json;
 
 namespace NailApi.Controllers
 {
@@ -491,7 +492,18 @@ namespace NailApi.Controllers
                             CONSTRAINT [PK_Information] PRIMARY KEY ([Id])
                         );
                         
-                        INSERT INTO [Information] DEFAULT VALUES;"
+                        INSERT INTO [Information] DEFAULT VALUES;",
+
+                        @"CREATE TABLE [Notifications] (
+                            [Id] nvarchar(450) NOT NULL,
+                            [Title] nvarchar(max) NOT NULL,
+                            [Message] nvarchar(max) NOT NULL,
+                            [Type] nvarchar(max) NOT NULL,
+                            [CreatedAt] datetime2 NOT NULL,
+                            [IsRead] bit NOT NULL DEFAULT 0,
+                            [Data] nvarchar(max) NULL,
+                            CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id])
+                        );"
                     };
 
                     int successCount = 0;
@@ -531,6 +543,339 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Error in CreateTablesInDynamicDatabase: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return false;
+            }
+        }
+
+        [HttpPost("send-notification")]
+        public async Task<ActionResult<object>> SendNotification([FromBody] NotificationRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Sending notification for shop: {request.ShopEmail}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+
+                if (shopOwner == null)
+                {
+                    Console.WriteLine("Shop owner not found");
+                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = request.ShopEmail;
+                Console.WriteLine($"Connecting to shop database: {databaseName}");
+
+                // Kết nối đến database của chủ shop để lưu thông báo
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+                    Console.WriteLine("Connected to shop database successfully");
+
+                    // Tạo bảng Notifications nếu chưa tồn tại
+                    var createTableCommand = new SqlCommand(@"
+                        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Notifications' AND xtype='U')
+                        CREATE TABLE [Notifications] (
+                            [Id] nvarchar(450) NOT NULL,
+                            [Title] nvarchar(max) NOT NULL,
+                            [Message] nvarchar(max) NOT NULL,
+                            [Type] nvarchar(max) NOT NULL,
+                            [CreatedAt] datetime2 NOT NULL,
+                            [IsRead] bit NOT NULL DEFAULT 0,
+                            [Data] nvarchar(max) NULL,
+                            CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id])
+                        );", connection);
+                    await createTableCommand.ExecuteNonQueryAsync();
+
+                    // Tạo thông báo mới
+                    var notificationId = Guid.NewGuid().ToString();
+                    var notificationData = JsonSerializer.Serialize(new
+                    {
+                        orderId = request.OrderId,
+                        customerName = request.CustomerName,
+                        customerPhone = request.CustomerPhone,
+                        employeeName = request.EmployeeName,
+                        totalPrice = request.TotalPrice
+                    });
+
+                    var insertCommand = new SqlCommand(@"
+                        INSERT INTO [Notifications] (Id, Title, Message, Type, CreatedAt, IsRead, Data)
+                        VALUES (@id, @title, @message, @type, @createdAt, @isRead, @data)", connection);
+
+                    insertCommand.Parameters.AddWithValue("@id", notificationId);
+                    insertCommand.Parameters.AddWithValue("@title", request.Title);
+                    insertCommand.Parameters.AddWithValue("@message", request.Message);
+                    insertCommand.Parameters.AddWithValue("@type", request.Type);
+                    insertCommand.Parameters.AddWithValue("@createdAt", DateTime.Now);
+                    insertCommand.Parameters.AddWithValue("@isRead", false);
+                    insertCommand.Parameters.AddWithValue("@data", notificationData);
+
+                    await insertCommand.ExecuteNonQueryAsync();
+                    Console.WriteLine($"Notification saved successfully with ID: {notificationId}");
+
+                    return Ok(new { success = true, message = "Thông báo đã được gửi thành công", notificationId = notificationId });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Send notification error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi gửi thông báo." });
+            }
+        }
+
+        [HttpGet("get-notifications")]
+        public async Task<ActionResult<object>> GetNotifications([FromQuery] string shopEmail)
+        {
+            try
+            {
+                Console.WriteLine($"Getting notifications for shop: {shopEmail}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == shopEmail);
+
+                if (shopOwner == null)
+                {
+                    Console.WriteLine("Shop owner not found");
+                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = shopEmail;
+                Console.WriteLine($"Connecting to shop database: {databaseName}");
+
+                // Kết nối đến database của chủ shop để lấy thông báo
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+                    Console.WriteLine("Connected to shop database successfully");
+
+                    // Kiểm tra bảng Notifications có tồn tại không
+                    var checkTableCommand = new SqlCommand(@"
+                        SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
+                    var tableExists = (int)(await checkTableCommand.ExecuteScalarAsync() ?? 0);
+
+                    if (tableExists == 0)
+                    {
+                        return Ok(new { success = true, notifications = new List<object>() });
+                    }
+
+                    // Lấy tất cả thông báo, sắp xếp theo thời gian tạo (mới nhất trước)
+                    var getNotificationsCommand = new SqlCommand(@"
+                        SELECT Id, Title, Message, Type, CreatedAt, IsRead, Data
+                        FROM [Notifications]
+                        ORDER BY CreatedAt DESC", connection);
+
+                    var notifications = new List<object>();
+
+                    using (var reader = await getNotificationsCommand.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var notification = new
+                            {
+                                id = reader["Id"].ToString(),
+                                title = reader["Title"].ToString(),
+                                message = reader["Message"].ToString(),
+                                type = reader["Type"].ToString(),
+                                createdAt = reader["CreatedAt"].ToString(),
+                                isRead = (bool)reader["IsRead"],
+                                data = reader["Data"]?.ToString()
+                            };
+                            notifications.Add(notification);
+                        }
+                    }
+
+                    Console.WriteLine($"Retrieved {notifications.Count} notifications");
+                    return Ok(new { success = true, notifications = notifications });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Get notifications error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi lấy thông báo." });
+            }
+        }
+
+        [HttpPost("mark-notification-read")]
+        public async Task<ActionResult<object>> MarkNotificationRead([FromBody] MarkNotificationReadRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Marking notification as read: {request.NotificationId} for shop: {request.ShopEmail}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+
+                if (shopOwner == null)
+                {
+                    Console.WriteLine("Shop owner not found");
+                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = request.ShopEmail;
+                Console.WriteLine($"Connecting to shop database: {databaseName}");
+
+                // Kết nối đến database của chủ shop
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+                    Console.WriteLine("Connected to shop database successfully");
+
+                    // Đánh dấu thông báo là đã đọc
+                    var updateCommand = new SqlCommand(@"
+                        UPDATE [Notifications] 
+                        SET IsRead = 1 
+                        WHERE Id = @id AND IsRead = 0", connection);
+
+                    updateCommand.Parameters.AddWithValue("@id", request.NotificationId);
+
+                    var rowsAffected = await updateCommand.ExecuteNonQueryAsync();
+
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine($"Notification {request.NotificationId} marked as read");
+                        return Ok(new { success = true, message = "Đã đánh dấu thông báo là đã đọc" });
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Notification {request.NotificationId} not found or already read");
+                        return Ok(new { success = true, message = "Thông báo không tồn tại hoặc đã được đánh dấu đã đọc" });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Mark notification read error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi đánh dấu thông báo." });
+            }
+        }
+
+        [HttpPost("delete-notification")]
+        public async Task<ActionResult<object>> DeleteNotification([FromBody] MarkNotificationReadRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Deleting notification: {request.NotificationId} for shop: {request.ShopEmail}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+
+                if (shopOwner == null)
+                {
+                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = request.ShopEmail;
+
+                // Kết nối đến database của chủ shop
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Kiểm tra bảng Notifications có tồn tại không
+                    var checkTableCommand = new SqlCommand(@"
+                        SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
+                    var tableExists = (int)await checkTableCommand.ExecuteScalarAsync();
+
+                    if (tableExists == 0)
+                    {
+                        return Ok(new { success = true, message = "Không có thông báo nào để xóa" });
+                    }
+
+                    // Xóa notification
+                    var deleteCommand = new SqlCommand(@"
+                        DELETE FROM [Notifications] 
+                        WHERE Id = @id", connection);
+
+                    deleteCommand.Parameters.AddWithValue("@id", request.NotificationId);
+
+                    var rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+
+                    if (rowsAffected > 0)
+                    {
+                        return Ok(new { success = true, message = "Thông báo đã được xóa thành công" });
+                    }
+                    else
+                    {
+                        return Ok(new { success = true, message = "Thông báo không tồn tại" });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Delete notification error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi xóa thông báo." });
+            }
+        }
+
+        [HttpPost("clear-all-notifications")]
+        public async Task<ActionResult<object>> ClearAllNotifications([FromBody] MarkNotificationReadRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Clearing all notifications for shop: {request.ShopEmail}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+
+                if (shopOwner == null)
+                {
+                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = request.ShopEmail;
+
+                // Kết nối đến database của chủ shop
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Kiểm tra bảng Notifications có tồn tại không
+                    var checkTableCommand = new SqlCommand(@"
+                        SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
+                    var tableExists = (int)await checkTableCommand.ExecuteScalarAsync();
+
+                    if (tableExists == 0)
+                    {
+                        return Ok(new { success = true, message = "Không có thông báo nào để xóa" });
+                    }
+
+                    // Xóa tất cả notifications
+                    var deleteAllCommand = new SqlCommand(@"
+                        DELETE FROM [Notifications]", connection);
+
+                    var rowsAffected = await deleteAllCommand.ExecuteNonQueryAsync();
+
+                    return Ok(new { success = true, message = $"Đã xóa {rowsAffected} thông báo thành công" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Clear all notifications error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi xóa tất cả thông báo." });
             }
         }
     }
