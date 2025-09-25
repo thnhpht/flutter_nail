@@ -17,7 +17,6 @@ namespace NailApi.Data
             {
                 entity.HasKey(e => e.Email);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
-                entity.Property(e => e.Password).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.UserLogin).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.PasswordLogin).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");

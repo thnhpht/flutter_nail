@@ -88,6 +88,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get username => 'Tên đăng nhập';
 
   @override
+  String get pleaseEnterUsername => 'Vui lòng nhập tên đăng nhập';
+
+  @override
   String get password => 'Mật khẩu';
 
   @override

@@ -25,6 +25,7 @@
   "cannotLoadVersionInfo": "Cannot load version information",
   "login": "Login",
   "username": "Username",
+  "pleaseEnterUsername": "Please enter username",
   "password": "Password",
   "loginButton": "Login",
   "loginError": "Login Error",

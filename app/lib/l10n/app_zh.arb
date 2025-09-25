@@ -25,6 +25,7 @@
   "cannotLoadVersionInfo": "无法加载版本信息",
   "login": "登录",
   "username": "用户名",
+  "pleaseEnterUsername": "请输入用户名",
   "password": "密码",
   "loginButton": "登录",
   "loginError": "登录错误",

@@ -25,6 +25,7 @@
   "cannotLoadVersionInfo": "버전 정보를 로드할 수 없습니다",
   "login": "로그인",
   "username": "사용자명",
+  "pleaseEnterUsername": "사용자명을 입력해주세요",
   "password": "비밀번호",
   "loginButton": "로그인",
   "loginError": "로그인 오류",

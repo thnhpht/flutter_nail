@@ -73,11 +73,10 @@ namespace NailApi.Controllers
                 if (existingUser == null)
                 {
                     Console.WriteLine("User not found, creating new user...");
-                    // Tạo user mới với password đã hash và PasswordLogin đã mã hóa
+                    // Tạo user mới với PasswordLogin đã mã hóa (bỏ password đầu tiên)
                     var newUser = new User
                     {
                         Email = request.Email,
-                        Password = _passwordService.HashPassword(request.Password),
                         UserLogin = request.UserLogin,
                         PasswordLogin = _passwordService.EncryptPasswordLogin(request.PasswordLogin) // Mã hóa PasswordLogin
                     };
@@ -118,17 +117,8 @@ namespace NailApi.Controllers
                 else
                 {
                     Console.WriteLine("User exists, verifying credentials...");
-                    // Kiểm tra password đã hash
-                    if (!_passwordService.VerifyPassword(request.Password, existingUser.Password))
-                    {
-                        Console.WriteLine("Password verification failed");
-                        return BadRequest(new LoginResponse
-                        {
-                            Success = false,
-                            Message = "Mật khẩu không chính xác. Vui lòng kiểm tra lại."
-                        });
-                    }
-
+                    // Bỏ kiểm tra password đầu tiên, chỉ kiểm tra thông tin database
+                    
                     // Kiểm tra thông tin database
                     var userLoginMatch = existingUser.UserLogin == request.UserLogin;
                     var passwordLoginMatch = request.PasswordLogin == _passwordService.DecryptPasswordLogin(existingUser.PasswordLogin); // Giải mã PasswordLogin để so sánh
@@ -140,15 +130,15 @@ namespace NailApi.Controllers
                         string errorMessage = "";
                         if (!userLoginMatch && !passwordLoginMatch)
                         {
-                            errorMessage = "Tên đăng nhập database và mật khẩu database không chính xác.";
+                            errorMessage = "Tên đăng nhập và mật khẩu không chính xác.";
                         }
                         else if (!userLoginMatch)
                         {
-                            errorMessage = "Tên đăng nhập database không chính xác.";
+                            errorMessage = "Tên đăng nhập không chính xác.";
                         }
                         else
                         {
-                            errorMessage = "Mật khẩu database không chính xác.";
+                            errorMessage = "Mật khẩu không chính xác.";
                         }
 
                         Console.WriteLine($"Database credentials mismatch: {errorMessage}");
@@ -326,7 +316,7 @@ namespace NailApi.Controllers
 
                         if (!isPasswordStrong)
                         {
-                            Console.WriteLine("Database password is not strong enough");
+                            Console.WriteLine("Password is not strong enough");
                             return false;
                         }
 

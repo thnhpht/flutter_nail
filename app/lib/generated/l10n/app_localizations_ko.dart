@@ -87,6 +87,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get username => '사용자명';
 
   @override
+  String get pleaseEnterUsername => '사용자명을 입력해주세요';
+
+  @override
   String get password => '비밀번호';
 
   @override

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'design_system.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/language_service.dart';
 import '../generated/l10n/app_localizations.dart';
+import '../config/salon_config.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   final int selectedIndex;
@@ -70,6 +72,11 @@ class AppNavigationDrawer extends StatelessWidget {
                           mobile: AppTheme.spacingS,
                           tablet: AppTheme.spacingM)),
                   _buildLanguageSelector(),
+                  SizedBox(
+                      height: AppTheme.getResponsiveSpacing(context,
+                          mobile: AppTheme.spacingS,
+                          tablet: AppTheme.spacingM)),
+                  _buildAdminContactInfo(),
                   SizedBox(
                       height: AppTheme.getResponsiveSpacing(context,
                           mobile: AppTheme.spacingS,
@@ -433,7 +440,6 @@ class AppNavigationDrawer extends StatelessWidget {
   Widget _buildVersionInfo() {
     return Builder(
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return FutureBuilder<PackageInfo>(
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
@@ -445,107 +451,19 @@ class AppNavigationDrawer extends StatelessWidget {
                   horizontal: AppTheme.getResponsiveSpacing(context,
                       mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
                   vertical: AppTheme.getResponsiveSpacing(context,
-                      mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.grey[200]!,
-                    width: 1,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: Colors.grey[600],
-                          size: AppTheme.getResponsiveFontSize(
-                            context,
-                            mobile: 14,
-                            tablet: 16,
-                            desktop: 18,
-                          ),
-                        ),
-                        SizedBox(
-                            width: AppTheme.getResponsiveSpacing(context,
-                                mobile: AppTheme.spacingXS,
-                                tablet: AppTheme.spacingS)),
-                        Text(
-                          l10n.version,
-                          style: TextStyle(
-                            fontSize: AppTheme.getResponsiveFontSize(
-                              context,
-                              mobile: 12,
-                              tablet: 14,
-                              desktop: 16,
-                            ),
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                        height: AppTheme.getResponsiveSpacing(context,
-                            mobile: AppTheme.spacingXS,
-                            tablet: AppTheme.spacingS)),
-                    Text(
-                      'v${packageInfo.version}',
-                      style: TextStyle(
-                        fontSize: AppTheme.getResponsiveFontSize(
-                          context,
-                          mobile: 14,
-                          tablet: 16,
-                          desktop: 18,
-                        ),
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.primaryStart,
-                      ),
-                    ),
-                    if (packageInfo.buildNumber.isNotEmpty)
-                      Text(
-                        'Build ${packageInfo.buildNumber}',
-                        style: TextStyle(
-                          fontSize: AppTheme.getResponsiveFontSize(
-                            context,
-                            mobile: 10,
-                            tablet: 12,
-                            desktop: 14,
-                          ),
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
-                    mobile: AppTheme.spacingM, tablet: AppTheme.spacingL)),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.red[200]!,
-                    width: 1,
-                  ),
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
                 ),
                 child: Text(
-                  l10n.cannotLoadVersionInfo,
+                  'v${packageInfo.version}',
                   style: TextStyle(
                     fontSize: AppTheme.getResponsiveFontSize(
                       context,
-                      mobile: 12,
-                      tablet: 14,
-                      desktop: 16,
+                      mobile: 11,
+                      tablet: 12,
+                      desktop: 13,
                     ),
-                    color: Colors.red[600],
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[500],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -553,54 +471,132 @@ class AppNavigationDrawer extends StatelessWidget {
             } else {
               return Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
-                    mobile: AppTheme.spacingM, tablet: AppTheme.spacingL)),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.grey[200]!,
-                    width: 1,
-                  ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: AppTheme.getResponsiveFontSize(context,
-                          mobile: 12, tablet: 14, desktop: 16),
-                      height: AppTheme.getResponsiveFontSize(context,
-                          mobile: 12, tablet: 14, desktop: 16),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.primaryStart,
-                        ),
-                      ),
+                child: Text(
+                  'v1.0.0',
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 11,
+                      tablet: 12,
+                      desktop: 13,
                     ),
-                    SizedBox(
-                        width: AppTheme.getResponsiveSpacing(context,
-                            mobile: AppTheme.spacingS,
-                            tablet: AppTheme.spacingM)),
-                    Text(
-                      l10n.loading,
-                      style: TextStyle(
-                        fontSize: AppTheme.getResponsiveFontSize(
-                          context,
-                          mobile: 12,
-                          tablet: 14,
-                          desktop: 16,
-                        ),
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[500],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               );
             }
           },
         );
       },
+    );
+  }
+
+  Widget _buildAdminContactInfo() {
+    return Builder(
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            vertical: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                  height: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS)),
+              _buildSimpleContactItem(
+                context,
+                Icons.location_on,
+                SalonConfig.adminAddress,
+                () {},
+              ),
+              _buildSimpleContactItem(
+                context,
+                Icons.phone,
+                SalonConfig.adminPhone,
+                () async {
+                  final Uri phoneUri =
+                      Uri(scheme: 'tel', path: SalonConfig.adminPhone);
+                  if (await canLaunchUrl(phoneUri)) {
+                    await launchUrl(phoneUri);
+                  }
+                },
+              ),
+              _buildSimpleContactItem(
+                context,
+                Icons.web,
+                SalonConfig.adminWebsite,
+                () async {
+                  final Uri websiteUri = Uri.parse(SalonConfig.adminWebsite);
+                  if (await canLaunchUrl(websiteUri)) {
+                    await launchUrl(websiteUri,
+                        mode: LaunchMode.externalApplication);
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSimpleContactItem(
+      BuildContext context, IconData icon, String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: AppTheme.getResponsiveSpacing(context,
+              mobile: 2, tablet: 3, desktop: 4),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.grey[600],
+              size: AppTheme.getResponsiveFontSize(
+                context,
+                mobile: 14,
+                tablet: 16,
+                desktop: 18,
+              ),
+            ),
+            SizedBox(
+                width: AppTheme.getResponsiveSpacing(context,
+                    mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS)),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: AppTheme.getResponsiveFontSize(
+                    context,
+                    mobile: 12,
+                    tablet: 13,
+                    desktop: 14,
+                  ),
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey[700],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -788,6 +784,10 @@ class AppNavigationRail extends StatelessWidget {
             SizedBox(
                 height: AppTheme.getResponsiveSpacing(context,
                     mobile: 8, tablet: 10, desktop: 12)),
+            _buildAdminContactInfoRail(),
+            SizedBox(
+                height: AppTheme.getResponsiveSpacing(context,
+                    mobile: 8, tablet: 10, desktop: 12)),
             _buildVersionInfoRail(),
             SizedBox(
                 height: AppTheme.getResponsiveSpacing(context,
@@ -864,75 +864,19 @@ class AppNavigationRail extends StatelessWidget {
                   horizontal: AppTheme.getResponsiveSpacing(context,
                       tablet: 6, desktop: 8),
                   vertical: AppTheme.getResponsiveSpacing(context,
-                      tablet: 4, desktop: 6),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: Colors.grey[200]!,
-                    width: 1,
-                  ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'v${packageInfo.version}',
-                      style: TextStyle(
-                        fontSize: AppTheme.getResponsiveFontSize(
-                          context,
-                          mobile: 8,
-                          tablet: 9,
-                          desktop: 10,
-                        ),
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.primaryStart,
-                      ),
-                    ),
-                    if (packageInfo.buildNumber.isNotEmpty)
-                      Text(
-                        'Build ${packageInfo.buildNumber}',
-                        style: TextStyle(
-                          fontSize: AppTheme.getResponsiveFontSize(
-                            context,
-                            mobile: 6,
-                            tablet: 7,
-                            desktop: 8,
-                          ),
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: AppTheme.getResponsiveSpacing(context,
-                      tablet: 4, desktop: 6),
-                ),
-                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
-                    tablet: 4, desktop: 6)),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: Colors.red[200]!,
-                    width: 1,
-                  ),
+                      tablet: 2, desktop: 3),
                 ),
                 child: Text(
-                  'Error',
+                  'v${packageInfo.version}',
                   style: TextStyle(
                     fontSize: AppTheme.getResponsiveFontSize(
                       context,
-                      mobile: 6,
-                      tablet: 7,
-                      desktop: 8,
+                      mobile: 8,
+                      tablet: 9,
+                      desktop: 10,
                     ),
-                    color: Colors.red[600],
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[500],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -943,33 +887,142 @@ class AppNavigationRail extends StatelessWidget {
                   horizontal: AppTheme.getResponsiveSpacing(context,
                       tablet: 4, desktop: 6),
                 ),
-                padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
-                    tablet: 4, desktop: 6)),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: Colors.grey[200]!,
-                    width: 1,
-                  ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      tablet: 6, desktop: 8),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      tablet: 2, desktop: 3),
                 ),
-                child: SizedBox(
-                  width: AppTheme.getResponsiveFontSize(context,
-                      mobile: 8, tablet: 9, desktop: 10),
-                  height: AppTheme.getResponsiveFontSize(context,
-                      mobile: 8, tablet: 9, desktop: 10),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppTheme.primaryStart,
+                child: Text(
+                  'v1.0.0',
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 8,
+                      tablet: 9,
+                      desktop: 10,
                     ),
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[500],
                   ),
+                  textAlign: TextAlign.center,
                 ),
               );
             }
           },
         );
       },
+    );
+  }
+
+  Widget _buildAdminContactInfoRail() {
+    return Builder(
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal:
+                AppTheme.getResponsiveSpacing(context, tablet: 4, desktop: 6),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                AppTheme.getResponsiveSpacing(context, tablet: 6, desktop: 8),
+            vertical:
+                AppTheme.getResponsiveSpacing(context, tablet: 2, desktop: 3),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.admin_panel_settings,
+                    color: Colors.grey[600],
+                    size: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 8,
+                      tablet: 9,
+                      desktop: 10,
+                    ),
+                  ),
+                  SizedBox(
+                      width: AppTheme.getResponsiveSpacing(context,
+                          mobile: 2, tablet: 3, desktop: 4)),
+                  Expanded(
+                    child: Text(
+                      'Admin',
+                      style: TextStyle(
+                        fontSize: AppTheme.getResponsiveFontSize(
+                          context,
+                          mobile: 6,
+                          tablet: 7,
+                          desktop: 8,
+                        ),
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                  height: AppTheme.getResponsiveSpacing(context,
+                      mobile: 1, tablet: 2, desktop: 3)),
+              _buildSimpleContactItemRail(
+                context,
+                Icons.location_on,
+                () {},
+              ),
+              _buildSimpleContactItemRail(
+                context,
+                Icons.phone,
+                () async {
+                  final Uri phoneUri =
+                      Uri(scheme: 'tel', path: SalonConfig.adminPhone);
+                  if (await canLaunchUrl(phoneUri)) {
+                    await launchUrl(phoneUri);
+                  }
+                },
+              ),
+              _buildSimpleContactItemRail(
+                context,
+                Icons.web,
+                () async {
+                  final Uri websiteUri = Uri.parse(SalonConfig.adminWebsite);
+                  if (await canLaunchUrl(websiteUri)) {
+                    await launchUrl(websiteUri,
+                        mode: LaunchMode.externalApplication);
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSimpleContactItemRail(
+      BuildContext context, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: AppTheme.getResponsiveSpacing(context,
+              mobile: 1, tablet: 1, desktop: 2),
+        ),
+        child: Icon(
+          icon,
+          color: Colors.grey[600],
+          size: AppTheme.getResponsiveFontSize(
+            context,
+            mobile: 8,
+            tablet: 9,
+            desktop: 10,
+          ),
+        ),
+      ),
     );
   }
 }

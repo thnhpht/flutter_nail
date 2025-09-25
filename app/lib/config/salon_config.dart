@@ -33,4 +33,10 @@ class SalonConfig {
   static const String facebook = 'Facebook Salon';
   static const String instagram = 'Instagram Salon';
   static const String zalo = 'Zalo Salon';
+
+  // Admin contact information
+  static const String adminAddress =
+      '10 Nguyễn Văn Tráng, P. Bến Thành, Quận 1, TP.HCM, Việt Nam';
+  static const String adminPhone = '0908 349 945';
+  static const String adminWebsite = 'http://logisticssoftware.vn/';
 }

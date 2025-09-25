@@ -87,6 +87,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get username => '用户名';
 
   @override
+  String get pleaseEnterUsername => '请输入用户名';
+
+  @override
   String get password => '密码';
 
   @override

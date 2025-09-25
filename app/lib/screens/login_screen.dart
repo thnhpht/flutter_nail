@@ -22,7 +22,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _userLoginController = TextEditingController();
   final _passwordLoginController = TextEditingController();
   final _shopEmailController = TextEditingController();
@@ -34,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _emailExists = false;
   String _databaseName = '';
   String _currentStep =
-      'role_selection'; // 'role_selection', 'email', 'password', 'create_account', 'employee_login'
+      'role_selection'; // 'role_selection', 'email', 'login', 'create_account', 'employee_login'
   String _selectedRole = 'shop_owner'; // 'shop_owner' or 'employee'
 
   @override
@@ -57,7 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     _userLoginController.dispose();
     _passwordLoginController.dispose();
     _shopEmailController.dispose();
@@ -93,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailChecked = true;
         _emailExists = response.exists;
         if (response.exists) {
-          _currentStep = 'password';
+          _currentStep = 'login';
         } else {
           _currentStep = 'create_account';
         }
@@ -135,7 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final request = LoginRequest(
         email: _emailController.text.trim(),
-        password: _passwordController.text,
         userLogin: _userLoginController.text.trim(),
         passwordLogin: _passwordLoginController.text,
       );
@@ -194,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _goBack() {
     setState(() {
       if (_currentStep == 'email' ||
-          _currentStep == 'password' ||
+          _currentStep == 'login' ||
           _currentStep == 'create_account') {
         _currentStep = 'role_selection';
       } else if (_currentStep == 'employee_login') {
@@ -204,7 +201,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       _emailChecked = false;
       _emailExists = false;
-      _passwordController.clear();
       _userLoginController.clear();
       _passwordLoginController.clear();
       _shopEmailController.clear();
@@ -306,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null; // No action button for role selection
       case 'email':
         return _checkEmail;
-      case 'password':
+      case 'login':
       case 'create_account':
         return _handleLogin;
       case 'employee_login':
@@ -323,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return l10n.continueText;
       case 'email':
         return l10n.connect;
-      case 'password':
+      case 'login':
         return l10n.loginButton;
       case 'create_account':
         return l10n.createAccount;
@@ -514,7 +510,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? l10n.roleSelection
                         : _currentStep == 'email'
                             ? l10n.connect
-                            : _currentStep == 'password'
+                            : _currentStep == 'login'
                                 ? l10n.login
                                 : _currentStep == 'create_account'
                                     ? l10n.createAccount
@@ -532,7 +528,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? l10n.selectAccountTypeToContinue
                         : _currentStep == 'email'
                             ? l10n.enterEmailToCheckAccount
-                            : _currentStep == 'password'
+                            : _currentStep == 'login'
                                 ? l10n.enterPasswordToLogin
                                 : _currentStep == 'create_account'
                                     ? _emailChecked && !_emailExists
@@ -766,66 +762,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
 
-                          // Password field (visible after email check for shop owner)
-                          if (_currentStep == 'password' ||
-                              _currentStep == 'create_account')
-                            Column(
-                              children: [
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  controller: _passwordController,
-                                  obscureText: true,
-                                  style: const TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    labelText: l10n.password,
-                                    labelStyle:
-                                        const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(Icons.lock,
-                                        color: Colors.white70),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Colors.white30),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Colors.white30),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return l10n.pleaseEnterPasswordValidation;
-                                    }
-                                    if (value.length < 8) {
-                                      return l10n.passwordMinLength;
-                                    }
-                                    if (!value.contains(RegExp(r'[A-Z]'))) {
-                                      return l10n.passwordMustHaveUppercase;
-                                    }
-                                    if (!value.contains(RegExp(r'[a-z]'))) {
-                                      return l10n.passwordMustHaveLowercase;
-                                    }
-                                    if (!value.contains(RegExp(r'[0-9]'))) {
-                                      return l10n.passwordMustHaveNumber;
-                                    }
-                                    if (!value.contains(RegExp(
-                                        r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
-                                      return l10n.passwordMustHaveSpecialChar;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-
                           // Database login fields (visible for shop owner login steps)
-                          if (_currentStep == 'password' ||
+                          if (_currentStep == 'login' ||
                               _currentStep == 'create_account')
                             Column(
                               children: [
@@ -834,7 +772,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller: _userLoginController,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: l10n.databaseLoginUsername,
+                                    labelText: l10n.username,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.person,
@@ -857,7 +795,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return l10n.pleaseEnterDatabaseUsername;
+                                      return l10n.pleaseEnterUsername;
                                     }
                                     return null;
                                   },
@@ -868,7 +806,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   obscureText: true,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: l10n.databasePassword,
+                                    labelText: l10n.password,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.key,
@@ -891,27 +829,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return l10n.pleaseEnterDatabasePassword;
+                                      return l10n.pleaseEnterPassword;
                                     }
                                     if (value.length < 8) {
-                                      return l10n.databasePasswordMinLength;
+                                      return l10n.passwordMinLength;
                                     }
                                     if (!value.contains(RegExp(r'[A-Z]'))) {
-                                      return l10n
-                                          .databasePasswordMustHaveUppercase;
+                                      return l10n.passwordMustHaveUppercase;
                                     }
                                     if (!value.contains(RegExp(r'[a-z]'))) {
-                                      return l10n
-                                          .databasePasswordMustHaveLowercase;
+                                      return l10n.passwordMustHaveLowercase;
                                     }
                                     if (!value.contains(RegExp(r'[0-9]'))) {
-                                      return l10n
-                                          .databasePasswordMustHaveNumber;
+                                      return l10n.passwordMustHaveNumber;
                                     }
                                     if (!value.contains(RegExp(
                                         r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
-                                      return l10n
-                                          .databasePasswordMustHaveSpecialChar;
+                                      return l10n.passwordMustHaveSpecialChar;
                                     }
                                     return null;
                                   },

@@ -258,6 +258,12 @@ abstract class AppLocalizations {
   /// **'Tên đăng nhập'**
   String get username;
 
+  /// No description provided for @pleaseEnterUsername.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập tên đăng nhập'**
+  String get pleaseEnterUsername;
+
   /// Password field label
   ///
   /// In vi, this message translates to:
