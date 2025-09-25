@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
@@ -8,6 +7,7 @@ import '../models.dart';
 import 'package:flutter/services.dart';
 import '../ui/design_system.dart';
 import 'dart:convert';
+import '../generated/l10n/app_localizations.dart';
 
 class EmployeesScreen extends StatefulWidget {
   const EmployeesScreen({super.key, required this.api});
@@ -45,14 +45,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+        final l10n = AppLocalizations.of(context)!;
+        AppWidgets.showFlushbar(context, l10n.cannotSelectImage,
             type: MessageType.error);
       }
     }
   }
 
   Widget _buildEmployeeImagePlaceholder() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -63,7 +64,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
         const SizedBox(height: 4),
         Text(
-          'Thêm ảnh',
+          l10n.selectImage,
           style: TextStyle(
             fontSize: 12,
             color: AppTheme.primaryStart,
@@ -147,6 +148,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 
   Future<void> _showAddDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController();
     final phoneCtrl = TextEditingController();
     final passwordCtrl = TextEditingController();
@@ -201,12 +203,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Thêm nhân viên',
+                              l10n.addEmployee,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -215,7 +217,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Nhập thông tin nhân viên mới',
+                              l10n.enterNewEmployeeInfo,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -257,7 +259,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Họ và tên',
+                                    labelText:
+                                        AppLocalizations.of(context)!.fullName,
                                     prefixIcon: Icon(Icons.person,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -275,7 +278,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập họ và tên';
+                                      return l10n.pleaseEnterFullName;
                                     }
                                     return null;
                                   },
@@ -291,7 +294,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 child: TextFormField(
                                   controller: phoneCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Số điện thoại',
+                                    labelText:
+                                        AppLocalizations.of(context)!.phone,
                                     prefixIcon: Icon(Icons.phone,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -313,7 +317,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   ],
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập số điện thoại';
+                                      return l10n.pleaseEnterPhoneNumber;
                                     }
                                     return null;
                                   },
@@ -330,7 +334,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   controller: passwordCtrl,
                                   obscureText: true,
                                   decoration: InputDecoration(
-                                    labelText: 'Mật khẩu',
+                                    labelText:
+                                        AppLocalizations.of(context)!.password,
                                     prefixIcon: Icon(Icons.lock,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -348,10 +353,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập mật khẩu';
+                                      return l10n.pleaseEnterPassword;
                                     }
                                     if (value.length < 6) {
-                                      return 'Mật khẩu phải có ít nhất 6 ký tự';
+                                      return l10n.passwordTooShort;
                                     }
                                     return null;
                                   },
@@ -379,8 +384,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
+                          child: Text(
+                            l10n.cancel,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -418,8 +423,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
+                            child: Text(
+                              l10n.save,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -445,7 +450,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
         if (existing != null) {
-          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
+          AppWidgets.showFlushbar(
+              context, AppLocalizations.of(context)!.employeePhoneExists,
               type: MessageType.warning);
           return;
         }
@@ -468,7 +474,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 .uploadEmployeeImage(selectedImageBytes!, fileName);
           } catch (e) {
             AppWidgets.showFlushbar(
-                context, 'Lỗi khi upload ảnh lên server: $e',
+                context, l10n.errorUploadingImageToServer(e.toString()),
                 type: MessageType.error);
             return;
           }
@@ -478,16 +484,17 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
             password: passwordCtrl.text.trim(),
             image: imageUrlToSave);
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm nhân viên thành công',
+        AppWidgets.showFlushbar(context, l10n.employeeAddedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm nhân viên',
+        AppWidgets.showFlushbar(context, l10n.errorAddingEmployee,
             type: MessageType.error);
       }
     }
   }
 
   Future<void> _showEditDialog(Employee e) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: e.name);
     final phoneCtrl = TextEditingController(text: e.phone ?? '');
     final passwordCtrl = TextEditingController();
@@ -542,12 +549,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Chỉnh sửa nhân viên',
+                              l10n.editEmployee,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -556,7 +563,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Cập nhật thông tin nhân viên',
+                              l10n.updateEmployeeInfo,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -598,7 +605,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Họ và tên',
+                                    labelText:
+                                        AppLocalizations.of(context)!.fullName,
                                     prefixIcon: Icon(Icons.person,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -616,7 +624,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập họ và tên';
+                                      return l10n.pleaseEnterFullName;
                                     }
                                     return null;
                                   },
@@ -632,7 +640,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 child: TextFormField(
                                   controller: phoneCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Số điện thoại',
+                                    labelText:
+                                        AppLocalizations.of(context)!.phone,
                                     prefixIcon: Icon(Icons.phone,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -654,7 +663,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   ],
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập số điện thoại';
+                                      return l10n.pleaseEnterPhoneNumber;
                                     }
                                     return null;
                                   },
@@ -671,8 +680,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   controller: passwordCtrl,
                                   obscureText: true,
                                   decoration: InputDecoration(
-                                    labelText:
-                                        'Mật khẩu mới (để trống nếu không đổi)',
+                                    labelText: l10n.newPasswordOptional,
                                     prefixIcon: Icon(Icons.lock,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -692,7 +700,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                     if (value != null &&
                                         value.isNotEmpty &&
                                         value.length < 6) {
-                                      return 'Mật khẩu phải có ít nhất 6 ký tự';
+                                      return l10n.passwordTooShort;
                                     }
                                     return null;
                                   },
@@ -720,8 +728,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
+                          child: Text(
+                            l10n.cancel,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -759,8 +767,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
+                            child: Text(
+                              l10n.save,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -786,7 +794,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       try {
         final existing = await widget.api.findEmployeeByPhone(phone);
         if (existing != null && existing.id != e.id) {
-          AppWidgets.showFlushbar(context, 'SĐT của nhân viên đã được tạo',
+          AppWidgets.showFlushbar(
+              context, AppLocalizations.of(context)!.employeePhoneExists,
               type: MessageType.warning);
           return;
         }
@@ -810,7 +819,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 .uploadEmployeeImage(selectedImageBytes!, fileName);
           } catch (e) {
             AppWidgets.showFlushbar(
-                context, 'Lỗi khi upload ảnh lên server: $e',
+                context, l10n.errorUploadingImageToServer(e.toString()),
                 type: MessageType.error);
             return;
           }
@@ -824,11 +833,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        AppWidgets.showFlushbar(
-            context, 'Thay đổi thông tin nhân viên thành công',
+        AppWidgets.showFlushbar(context, l10n.employeeInfoUpdatedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin nhân viên',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.errorUpdatingEmployee,
             type: MessageType.error);
       }
     }
@@ -838,10 +847,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     try {
       await widget.api.deleteEmployee(e.id);
       await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa nhân viên thành công',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.employeeDeletedSuccessfully,
           type: MessageType.success);
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa nhân viên',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.errorDeletingEmployee,
           type: MessageType.error);
     }
   }
@@ -855,7 +866,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           e.name.isEmpty ? (e.phone ?? '') : e.name,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Chọn hành động cho nhân viên này'),
+        content: Text(AppLocalizations.of(context)!
+            .chooseAction(AppLocalizations.of(context)!.employee)),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -863,7 +875,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               _showEditDialog(e);
             },
             icon: const Icon(Icons.edit, color: Colors.green),
-            label: const Text('Sửa'),
+            label: Text(AppLocalizations.of(context)!.edit),
           ),
           TextButton.icon(
             onPressed: () {
@@ -871,7 +883,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               _delete(e);
             },
             icon: const Icon(Icons.delete, color: Colors.red),
-            label: const Text('Xóa'),
+            label: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -880,6 +892,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -932,8 +945,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               children: [
                 AppWidgets.gradientHeader(
                   icon: Icons.work,
-                  title: 'Nhân viên',
-                  subtitle: 'Quản lý nhân viên salon',
+                  title: l10n.employees,
+                  subtitle: l10n.manageSalonEmployees,
                   fullWidth: true,
                 ),
                 const SizedBox(height: 24),
@@ -942,7 +955,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                   child: TextField(
                     textAlignVertical: TextAlignVertical.center,
                     decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm nhân viên...',
+                      label: l10n.searchEmployees,
                       prefixIcon: Icons.search,
                     ),
                     onChanged: (v) => setState(() => _search = v.trim()),
@@ -960,7 +973,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       }
                       if (snapshot.hasError) {
                         AppWidgets.showFlushbar(
-                            context, 'Lỗi tải danh sách nhân viên',
+                            context, l10n.errorLoadingEmployeeList,
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -973,22 +986,23 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                     const Icon(Icons.error_outline,
                                         size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách nhân viên',
+                                    Text(
+                                      l10n.cannotLoadEmployeeList,
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
+                                    Text(
+                                      l10n.checkNetworkOrTryAgain,
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
                                       onPressed: _reload,
-                                      child: const Text('Thử lại'),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .tryAgain),
                                     ),
                                   ],
                                 ),
@@ -1011,9 +1025,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       if (filtered.isEmpty) {
                         return RefreshIndicator(
                           onRefresh: _reload,
-                          child: ListView(children: const [
-                            SizedBox(height: 200),
-                            Center(child: Text('Không tìm thấy nhân viên'))
+                          child: ListView(children: [
+                            const SizedBox(height: 200),
+                            Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .noItemsFound(AppLocalizations.of(context)!
+                                        .employee)))
                           ]),
                         );
                       }
@@ -1026,139 +1043,187 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             final e = filtered[i];
                             return AppWidgets.animatedItem(
                               index: i,
-                              child: InkWell(
-                                onLongPress: () => _showActionDialog(e),
-                                borderRadius: BorderRadius.circular(16),
-                                splashColor:
-                                    Colors.green.withValues(alpha: 0.2),
-                                highlightColor:
-                                    Colors.green.withValues(alpha: 0.1),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: AppTheme.cardDecoration(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 48,
-                                          height: 48,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.green
-                                                    .withValues(alpha: 0.2),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ],
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            child: e.image != null &&
-                                                    e.image!.isNotEmpty
-                                                ? _buildImageWidget(e.image!)
-                                                : Container(
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          Colors.green.shade100,
-                                                          Colors.green.shade200,
-                                                        ],
-                                                        begin:
-                                                            Alignment.topLeft,
-                                                        end: Alignment
-                                                            .bottomRight,
-                                                      ),
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.person,
-                                                        size: 24,
-                                                        color: Colors
-                                                            .green.shade700,
-                                                      ),
-                                                    ),
-                                                  ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green.shade50,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  border: Border.all(
-                                                      color: Colors
-                                                          .green.shade200),
-                                                ),
-                                                child: Text(
-                                                  e.name.isEmpty
-                                                      ? (e.phone ?? '')
-                                                      : e.name,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                    color:
-                                                        Colors.green.shade800,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 6),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 6,
-                                                        vertical: 2),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100
-                                                      .withValues(alpha: 0.9),
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.phone,
-                                                      size: 12,
-                                                      color:
-                                                          Colors.grey.shade600,
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    Text(
-                                                      e.phone ?? '',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors
-                                                            .grey.shade600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _showActionDialog(e),
+                                  borderRadius: BorderRadius.circular(16),
+                                  splashColor: AppTheme.primaryStart
+                                      .withValues(alpha: 0.2),
+                                  highlightColor: AppTheme.primaryEnd
+                                      .withValues(alpha: 0.1),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          AppTheme.primaryStart
+                                              .withValues(alpha: 0.05),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: AppTheme.primaryStart
+                                            .withValues(alpha: 0.1),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppTheme.primaryStart
+                                              .withValues(alpha: 0.1),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 2),
                                         ),
                                       ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppTheme.primaryStart
+                                                      .withValues(alpha: 0.3),
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                              child: e.image != null &&
+                                                      e.image!.isNotEmpty
+                                                  ? _buildImageWidget(e.image!)
+                                                  : Container(
+                                                      decoration: BoxDecoration(
+                                                        gradient: AppTheme
+                                                            .primaryGradient,
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.person,
+                                                          size: 24,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppTheme.primaryStart
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                        AppTheme.primaryEnd
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    border: Border.all(
+                                                        color: AppTheme
+                                                            .primaryStart
+                                                            .withValues(
+                                                                alpha: 0.2)),
+                                                  ),
+                                                  child: Text(
+                                                    e.name.isEmpty
+                                                        ? (e.phone ?? '')
+                                                        : e.name,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color:
+                                                          AppTheme.primaryStart,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppTheme.primaryStart
+                                                            .withValues(
+                                                                alpha: 0.05),
+                                                        AppTheme.primaryEnd
+                                                            .withValues(
+                                                                alpha: 0.05),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.phone,
+                                                        size: 12,
+                                                        color:
+                                                            AppTheme.primaryEnd,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        e.phone ?? '',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: AppTheme
+                                                              .primaryEnd,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

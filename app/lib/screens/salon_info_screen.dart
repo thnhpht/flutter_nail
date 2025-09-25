@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,8 +84,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.cannotLoadSalonInfo,
             type: MessageType.error);
       }
     }
@@ -115,8 +116,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       }
     } catch (e) {
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.cannotSelectImage,
             type: MessageType.error);
       }
     }
@@ -144,7 +145,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           setState(() {
             _isSaving = false;
           });
-          AppWidgets.showFlushbar(context, 'Lỗi khi upload logo lên server',
+          AppWidgets.showFlushbar(
+              context, AppLocalizations.of(context)!.errorUploadingLogo,
               type: MessageType.error);
           return;
         }
@@ -159,7 +161,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           setState(() {
             _isSaving = false;
           });
-          AppWidgets.showFlushbar(context, 'Lỗi khi upload QR code lên server',
+          AppWidgets.showFlushbar(
+              context, AppLocalizations.of(context)!.errorUploadingQRCode,
               type: MessageType.error);
           return;
         }
@@ -193,7 +196,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       });
 
       if (mounted) {
-        AppWidgets.showFlushbar(context, 'Lưu thông tin salon thành công!',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.salonInfoSavedSuccessfully,
             type: MessageType.success);
         // Call callback to refresh main screen
         widget.onSalonInfoUpdated?.call();
@@ -203,8 +207,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _isSaving = false;
       });
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.cannotSaveSalonInfo,
             type: MessageType.error);
       }
     }
@@ -262,13 +266,14 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                   const SizedBox(height: AppTheme.spacingXL),
 
                   // Basic Information
-                  _buildSectionTitle('Thông tin cơ bản'),
+                  _buildSectionTitle(
+                      AppLocalizations.of(context)!.basicInformation),
                   const SizedBox(height: AppTheme.spacingL),
                   _buildBasicInfoFields(),
                   const SizedBox(height: AppTheme.spacingXL),
 
                   // Social Media
-                  _buildSectionTitle('Mạng xã hội'),
+                  _buildSectionTitle(AppLocalizations.of(context)!.socialMedia),
                   const SizedBox(height: AppTheme.spacingL),
                   _buildSocialMediaFields(),
                   const SizedBox(height: AppTheme.spacingXL),
@@ -321,8 +326,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Thông tin Salon',
+                Text(
+                  AppLocalizations.of(context)!.salonInformation,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -331,7 +336,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacingS),
                 Text(
-                  'Quản lý thông tin và liên hệ của salon',
+                  AppLocalizations.of(context)!.manageSalonInfoAndContact,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white.withValues(alpha: 0.9),
@@ -362,8 +367,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'QR Code',
+          Text(
+            AppLocalizations.of(context)!.qrCode,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -414,7 +419,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
             child: TextButton.icon(
               onPressed: () => _pickImage(isQRCode: true),
               icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Chọn QR Code'),
+              label: Text(AppLocalizations.of(context)!.selectQRCode),
             ),
           ),
         ],
@@ -433,7 +438,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         ),
         const SizedBox(height: AppTheme.spacingS),
         Text(
-          'Chọn QR Code',
+          AppLocalizations.of(context)!.selectQRCode,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -460,8 +465,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Logo salon',
+          Text(
+            AppLocalizations.of(context)!.salonLogo,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -512,7 +517,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
             child: TextButton.icon(
               onPressed: _pickImage,
               icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Thay đổi logo'),
+              label: Text(AppLocalizations.of(context)!.changeLogo),
             ),
           ),
         ],
@@ -531,7 +536,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         ),
         const SizedBox(height: AppTheme.spacingS),
         Text(
-          'Chọn Logo',
+          AppLocalizations.of(context)!.selectLogo,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -636,20 +641,20 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         children: [
           _buildTextField(
             controller: _nameController,
-            label: 'Tên Salon',
+            label: AppLocalizations.of(context)!.salonNameLabel,
             icon: Icons.business,
           ),
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _addressController,
-            label: 'Địa chỉ',
+            label: AppLocalizations.of(context)!.addressLabel,
             icon: Icons.location_on,
             maxLines: 2,
           ),
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _phoneController,
-            label: 'Số điện thoại',
+            label: AppLocalizations.of(context)!.phoneNumberLabel,
             icon: Icons.phone,
             keyboardType: TextInputType.phone,
             inputFormatters: [
@@ -660,14 +665,14 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _emailController,
-            label: 'Email',
+            label: AppLocalizations.of(context)!.emailLabel,
             icon: Icons.email,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _websiteController,
-            label: 'Website',
+            label: AppLocalizations.of(context)!.websiteLabel,
             icon: Icons.language,
             keyboardType: TextInputType.url,
           ),
@@ -694,21 +699,21 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         children: [
           _buildTextField(
             controller: _facebookController,
-            label: 'Facebook',
+            label: AppLocalizations.of(context)!.facebookLabel,
             icon: Icons.facebook,
             keyboardType: TextInputType.url,
           ),
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _instagramController,
-            label: 'Instagram',
+            label: AppLocalizations.of(context)!.instagramLabel,
             icon: Icons.camera_alt,
             keyboardType: TextInputType.url,
           ),
           const SizedBox(height: AppTheme.spacingL),
           _buildTextField(
             controller: _zaloController,
-            label: 'Zalo',
+            label: AppLocalizations.of(context)!.zaloLabel,
             icon: Icons.chat,
             keyboardType: TextInputType.url,
           ),
@@ -754,7 +759,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
           onTap: _isSaving ? null : _saveInformation,
           child: Center(
             child: _isSaving
-                ? const Row(
+                ? Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
@@ -768,7 +773,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                       ),
                       SizedBox(width: AppTheme.spacingM),
                       Text(
-                        'Đang lưu...',
+                        AppLocalizations.of(context)!.saving,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -777,7 +782,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                       ),
                     ],
                   )
-                : const Row(
+                : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -787,7 +792,7 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                       ),
                       SizedBox(width: AppTheme.spacingS),
                       Text(
-                        'Lưu thông tin',
+                        AppLocalizations.of(context)!.saveInformation,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

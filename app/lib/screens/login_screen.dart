@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   final ApiClient api;
@@ -66,15 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _checkEmail() async {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_emailController.text.trim().isEmpty) {
-      AppWidgets.showFlushbar(context, 'Vui lòng nhập email của bạn',
+      AppWidgets.showFlushbar(context, l10n.pleaseEnterEmail,
           type: MessageType.warning);
       return;
     }
 
     if (!_emailController.text.contains('@')) {
-      AppWidgets.showFlushbar(context,
-          'Vui lòng nhập email có định dạng hợp lệ (ví dụ: example@email.com)',
+      AppWidgets.showFlushbar(context, l10n.invalidEmail,
           type: MessageType.warning);
       return;
     }
@@ -101,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.exists) {
           AppWidgets.showFlushbar(
             context,
-            'Chào mừng quay trở lại: ${_emailController.text.trim()}!',
+            '${l10n.welcomeBack}: ${_emailController.text.trim()}!',
             type: MessageType.success,
           );
         } else {
@@ -266,35 +268,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _getUserFriendlyErrorMessage(String error) {
+    final l10n = AppLocalizations.of(context)!;
     // Chuyển đổi lỗi API thành thông báo thân thiện với người dùng
     if (error.contains('HTTP 400')) {
       if (error.contains('Mật khẩu không chính xác')) {
-        return 'Mật khẩu không chính xác. Vui lòng kiểm tra lại.';
+        return l10n.passwordIncorrect;
       } else if (error.contains('Thông tin đăng nhập database')) {
-        return 'Thông tin đăng nhập database không chính xác. Vui lòng kiểm tra lại.';
+        return l10n.databaseLoginInfoIncorrect;
       } else if (error.contains('Tên đăng nhập database')) {
-        return 'Tên đăng nhập database không chính xác.';
+        return l10n.databaseUsernameIncorrect;
       } else if (error.contains('Mật khẩu database')) {
-        return 'Mật khẩu database không chính xác.';
+        return l10n.databasePasswordIncorrect;
       } else if (error.contains('Tạo tài khoản thành công')) {
-        return 'Tạo tài khoản thành công nhưng không thể tạo database. Vui lòng liên hệ admin.';
+        return l10n.accountCreatedButDatabaseError;
       } else if (error.contains('Mật khẩu database không đủ mạnh')) {
-        return 'Mật khẩu database không đủ mạnh. Vui lòng kiểm tra yêu cầu bên dưới.';
+        return l10n.databasePasswordNotStrongEnough;
       }
-      return 'Thông tin đăng nhập không chính xác. Vui lòng kiểm tra lại.';
+      return l10n.loginInfoIncorrect;
     } else if (error.contains('HTTP 500')) {
-      return 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
+      return l10n.systemErrorOccurred;
     } else if (error.contains('Connection refused') ||
         error.contains('Failed host lookup')) {
-      return 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.';
+      return l10n.cannotConnectToServer;
     } else if (error.contains('Timeout')) {
-      return 'Kết nối bị timeout. Vui lòng thử lại.';
+      return l10n.connectionTimeout;
     } else if (error.contains('SocketException')) {
-      return 'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.';
+      return l10n.networkConnectionError;
     }
 
     // Nếu không nhận diện được lỗi cụ thể, trả về thông báo chung
-    return 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
+    return l10n.errorOccurredPleaseTryAgain;
   }
 
   VoidCallback? _getActionButtonHandler() {
@@ -314,23 +317,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _getActionButtonText() {
+    final l10n = AppLocalizations.of(context)!;
     switch (_currentStep) {
       case 'role_selection':
-        return 'Tiếp tục';
+        return l10n.continueText;
       case 'email':
-        return 'Kết nối';
+        return l10n.connect;
       case 'password':
-        return 'Đăng nhập';
+        return l10n.loginButton;
       case 'create_account':
-        return 'Đăng ký';
+        return l10n.createAccount;
       case 'employee_login':
-        return 'Đăng nhập';
+        return l10n.loginButton;
       default:
-        return 'Tiếp tục';
+        return l10n.continueText;
     }
   }
 
   Widget _buildRoleSelection() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         // Shop Owner Option
@@ -371,7 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chủ shop',
+                            l10n.shopOwner,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -382,7 +387,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Quản lý toàn bộ hệ thống',
+                            l10n.manageEntireSystem,
                             style: TextStyle(
                               fontSize: 14,
                               color: _selectedRole == 'shop_owner'
@@ -441,7 +446,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Nhân viên',
+                            l10n.employee,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -452,7 +457,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Truy cập dịch vụ, tạo đơn và hóa đơn',
+                            l10n.accessServicesCreateOrdersAndBills,
                             style: TextStyle(
                               fontSize: 14,
                               color: _selectedRole == 'employee'
@@ -478,6 +483,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -504,14 +511,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Title
                   Text(
                     _currentStep == 'role_selection'
-                        ? 'Chọn loại tài khoản'
+                        ? l10n.roleSelection
                         : _currentStep == 'email'
-                            ? 'Kết nối'
+                            ? l10n.connect
                             : _currentStep == 'password'
-                                ? 'Đăng nhập'
+                                ? l10n.login
                                 : _currentStep == 'create_account'
-                                    ? 'Đăng ký'
-                                    : 'Đăng nhập nhân viên',
+                                    ? l10n.createAccount
+                                    : l10n.employeeLogin,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -522,14 +529,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   Text(
                     _currentStep == 'role_selection'
-                        ? 'Chọn loại tài khoản để tiếp tục'
+                        ? l10n.selectAccountTypeToContinue
                         : _currentStep == 'email'
-                            ? 'Nhập email để kiểm tra tài khoản'
+                            ? l10n.enterEmailToCheckAccount
                             : _currentStep == 'password'
-                                ? 'Nhập mật khẩu để đăng nhập'
+                                ? l10n.enterPasswordToLogin
                                 : _currentStep == 'create_account'
-                                    ? 'Tạo tài khoản mới'
-                                    : 'Nhập thông tin đăng nhập nhân viên',
+                                    ? _emailChecked && !_emailExists
+                                        ? '${l10n.createNewAccountFor} $_databaseName'
+                                        : l10n.createNewAccount
+                                    : l10n.enterEmployeeLoginInfo,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -546,8 +555,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: _goBack,
                         icon:
                             const Icon(Icons.arrow_back, color: Colors.white70),
-                        label: const Text('Quay lại',
-                            style: TextStyle(color: Colors.white70)),
+                        label: Text(l10n.cancel,
+                            style: const TextStyle(color: Colors.white70)),
                       ),
                     ),
 
@@ -578,7 +587,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               keyboardType: TextInputType.emailAddress,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                labelText: 'Email chủ shop',
+                                labelText: l10n.shopEmail,
                                 labelStyle:
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.business,
@@ -601,10 +610,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập email chủ shop';
+                                  return l10n.pleaseEnterEmail;
                                 }
                                 if (!value.contains('@')) {
-                                  return 'Email không hợp lệ';
+                                  return l10n.invalidEmail;
                                 }
                                 return null;
                               },
@@ -615,7 +624,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               keyboardType: TextInputType.phone,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                labelText: 'Số điện thoại nhân viên',
+                                labelText: l10n.employeePhone,
                                 labelStyle:
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.phone,
@@ -638,7 +647,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập số điện thoại';
+                                  return l10n.pleaseEnterPhone;
                                 }
                                 return null;
                               },
@@ -649,7 +658,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: true,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                labelText: 'Mật khẩu nhân viên',
+                                labelText: l10n.employeePassword,
                                 labelStyle:
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.lock,
@@ -672,7 +681,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập mật khẩu';
+                                  return l10n.pleaseEnterPassword;
                                 }
                                 return null;
                               },
@@ -681,44 +690,80 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           // Shop owner email field
                           if (_currentStep == 'email')
-                            TextFormField(
-                              controller: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                labelStyle:
-                                    const TextStyle(color: Colors.white70),
-                                prefixIcon: const Icon(Icons.email,
-                                    color: Colors.white70),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white30),
+                            Column(
+                              children: [
+                                TextFormField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.email,
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white70),
+                                    prefixIcon: const Icon(Icons.email,
+                                        color: Colors.white70),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white30),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide:
+                                          const BorderSide(color: Colors.white),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.pleaseEnterYourEmail;
+                                    }
+                                    if (!value.contains('@')) {
+                                      return l10n.invalidEmailExample;
+                                    }
+                                    if (!value.contains('.')) {
+                                      return l10n.invalidEmailMissingDomain;
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white30),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide:
-                                      const BorderSide(color: Colors.white),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập email của bạn';
-                                }
-                                if (!value.contains('@')) {
-                                  return 'Email không hợp lệ (ví dụ: example@email.com)';
-                                }
-                                if (!value.contains('.')) {
-                                  return 'Email không hợp lệ (thiếu domain)';
-                                }
-                                return null;
-                              },
+                                // Show email check status
+                                if (_emailChecked) ...[
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        _emailExists
+                                            ? Icons.check_circle
+                                            : Icons.info,
+                                        color: _emailExists
+                                            ? Colors.green
+                                            : Colors.blue,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          _emailExists
+                                              ? l10n.emailExistsInSystem
+                                              : l10n
+                                                  .emailNotExistsWillCreateNew,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: _emailExists
+                                                ? Colors.green
+                                                : Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
                             ),
 
                           // Password field (visible after email check for shop owner)
@@ -732,7 +777,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   obscureText: true,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: 'Mật khẩu',
+                                    labelText: l10n.password,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.lock,
@@ -755,23 +800,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Vui lòng nhập mật khẩu';
+                                      return l10n.pleaseEnterPasswordValidation;
                                     }
                                     if (value.length < 8) {
-                                      return 'Mật khẩu phải có ít nhất 8 ký tự';
+                                      return l10n.passwordMinLength;
                                     }
                                     if (!value.contains(RegExp(r'[A-Z]'))) {
-                                      return 'Mật khẩu phải có ít nhất 1 chữ hoa (A-Z)';
+                                      return l10n.passwordMustHaveUppercase;
                                     }
                                     if (!value.contains(RegExp(r'[a-z]'))) {
-                                      return 'Mật khẩu phải có ít nhất 1 chữ thường (a-z)';
+                                      return l10n.passwordMustHaveLowercase;
                                     }
                                     if (!value.contains(RegExp(r'[0-9]'))) {
-                                      return 'Mật khẩu phải có ít nhất 1 số (0-9)';
+                                      return l10n.passwordMustHaveNumber;
                                     }
                                     if (!value.contains(RegExp(
                                         r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
-                                      return 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt';
+                                      return l10n.passwordMustHaveSpecialChar;
                                     }
                                     return null;
                                   },
@@ -789,7 +834,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller: _userLoginController,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: 'Tên đăng nhập Database',
+                                    labelText: l10n.databaseLoginUsername,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.person,
@@ -812,7 +857,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Vui lòng nhập tên đăng nhập database';
+                                      return l10n.pleaseEnterDatabaseUsername;
                                     }
                                     return null;
                                   },
@@ -823,7 +868,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   obscureText: true,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: 'Mật khẩu Database',
+                                    labelText: l10n.databasePassword,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.key,
@@ -846,23 +891,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Vui lòng nhập mật khẩu database';
+                                      return l10n.pleaseEnterDatabasePassword;
                                     }
                                     if (value.length < 8) {
-                                      return 'Mật khẩu database phải có ít nhất 8 ký tự';
+                                      return l10n.databasePasswordMinLength;
                                     }
                                     if (!value.contains(RegExp(r'[A-Z]'))) {
-                                      return 'Mật khẩu database phải có ít nhất 1 chữ hoa (A-Z)';
+                                      return l10n
+                                          .databasePasswordMustHaveUppercase;
                                     }
                                     if (!value.contains(RegExp(r'[a-z]'))) {
-                                      return 'Mật khẩu database phải có ít nhất 1 chữ thường (a-z)';
+                                      return l10n
+                                          .databasePasswordMustHaveLowercase;
                                     }
                                     if (!value.contains(RegExp(r'[0-9]'))) {
-                                      return 'Mật khẩu database phải có ít nhất 1 số (0-9)';
+                                      return l10n
+                                          .databasePasswordMustHaveNumber;
                                     }
                                     if (!value.contains(RegExp(
                                         r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]'))) {
-                                      return 'Mật khẩu database phải có ít nhất 1 ký tự đặc biệt';
+                                      return l10n
+                                          .databasePasswordMustHaveSpecialChar;
                                     }
                                     return null;
                                   },

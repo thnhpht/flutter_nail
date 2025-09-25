@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -25,8 +26,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   // Filter state
   List<Category> _selectedCategories = [];
+  List<Category> _appliedCategories = [];
   bool _showCategoryFilter = false;
-  bool _isFilterExpanded = false;
 
   @override
   void initState() {
@@ -51,8 +52,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.cannotSelectImage,
             type: MessageType.error);
       }
     }
@@ -70,7 +71,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ),
         const SizedBox(height: 4),
         Text(
-          'Thêm ảnh',
+          AppLocalizations.of(context)!.addImage,
           style: TextStyle(
             fontSize: 12,
             color: AppTheme.primaryStart,
@@ -152,12 +153,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
     });
   }
 
-  void _toggleFilterExpansion() {
-    setState(() {
-      _isFilterExpanded = !_isFilterExpanded;
-    });
-  }
-
   void _onCategoryToggled(Category category) {
     HapticFeedback.lightImpact();
     setState(() {
@@ -172,7 +167,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
   void _clearAllFilters() {
     setState(() {
       _selectedCategories.clear();
+      _appliedCategories.clear();
       _search = '';
+    });
+  }
+
+  void _applyFilters() {
+    setState(() {
+      _appliedCategories = List.from(_selectedCategories);
+      _showCategoryFilter = false;
     });
   }
 
@@ -186,402 +189,165 @@ class _ServicesScreenState extends State<ServicesScreen> {
           .toList();
     }
 
-    // Filter by selected categories
-    if (_selectedCategories.isNotEmpty) {
+    // Filter by applied categories
+    if (_appliedCategories.isNotEmpty) {
       filtered = filtered
-          .where(
-              (s) => _selectedCategories.any((cat) => cat.id == s.categoryId))
+          .where((s) => _appliedCategories.any((cat) => cat.id == s.categoryId))
           .toList();
     }
 
     return filtered;
   }
 
-  Widget _buildCategoryFilter() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      margin: const EdgeInsets.only(bottom: 16),
+  Widget _buildCompactCategoryFilter() {
+    return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Filter Header
-          InkWell(
-            onTap: _toggleCategoryFilter,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.purple.shade50, Colors.blue.shade50],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.vertical(
-                  top: const Radius.circular(16),
-                  bottom: Radius.circular(_showCategoryFilter ? 0 : 16),
-                ),
+          // Header
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Row(
-                children: [
-                  Stack(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.filter_list,
+                      color: Colors.white, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.purple.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.filter_list,
-                          color: Colors.purple.shade700,
-                          size: 20,
+                      Text(
+                        AppLocalizations.of(context)!.categoryFilter,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (_selectedCategories.isNotEmpty)
-                        Positioned(
-                          right: -2,
-                          top: -2,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade500,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 20,
-                              minHeight: 20,
-                            ),
-                            child: Text(
-                              '${_selectedCategories.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                      const SizedBox(height: 4),
+                      Text(
+                        AppLocalizations.of(context)!.selectCategoriesToFilter,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
                         ),
+                      ),
                     ],
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Bộ lọc danh mục',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _selectedCategories.isEmpty
-                              ? 'Chọn danh mục để lọc dịch vụ'
-                              : '${_selectedCategories.length} danh mục đã chọn',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AnimatedRotation(
-                    turns: _showCategoryFilter ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
 
-          // Filter Content
-          AnimatedCrossFade(
-            firstChild: const SizedBox.shrink(),
-            secondChild: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // Selected Categories Chips
-                  if (_selectedCategories.isNotEmpty) ...[
-                    Row(
-                      children: [
-                        Icon(Icons.check_circle,
-                            color: Colors.green.shade600, size: 16),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Danh mục đã chọn:',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: _clearAllFilters,
-                          child: Text(
-                            'Xóa tất cả',
-                            style: TextStyle(
-                              color: Colors.red.shade600,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: _selectedCategories.map((category) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.purple.shade100,
-                                Colors.blue.shade100
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.purple.shade200),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.category,
-                                size: 14,
-                                color: Colors.purple.shade700,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                category.name,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.purple.shade700,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              GestureDetector(
-                                onTap: () => _onCategoryToggled(category),
-                                child: Icon(
-                                  Icons.close,
-                                  size: 14,
-                                  color: Colors.purple.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-
-                  // Category List
-                  Container(
-                    constraints: BoxConstraints(
-                      maxHeight: _isFilterExpanded ? 300 : 200,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Column(
-                      children: [
-                        // Expandable Header
-                        if (_categories.length > 6) ...[
-                          InkWell(
-                            onTap: _toggleFilterExpansion,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(12)),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.category,
-                                    size: 16,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Tất cả danh mục (${_categories.length})',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade700,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    _isFilterExpanded
-                                        ? Icons.expand_less
-                                        : Icons.expand_more,
-                                    size: 16,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-
-                        // Category Items
-                        Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _isFilterExpanded
-                                ? _categories.length
-                                : (_categories.length > 6
-                                    ? 6
-                                    : _categories.length),
-                            itemBuilder: (context, index) {
-                              final category = _categories[index];
-                              final isSelected =
-                                  _selectedCategories.contains(category);
-
-                              return InkWell(
-                                onTap: () => _onCategoryToggled(category),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? Colors.purple.shade50
-                                        : Colors.transparent,
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey.shade200,
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? Colors.purple.shade100
-                                              : Colors.grey.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          border: Border.all(
-                                            color: isSelected
-                                                ? Colors.purple.shade300
-                                                : Colors.grey.shade300,
-                                          ),
-                                        ),
-                                        child: isSelected
-                                            ? Icon(
-                                                Icons.check,
-                                                size: 14,
-                                                color: Colors.purple.shade700,
-                                              )
-                                            : null,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          category.name,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: isSelected
-                                                ? FontWeight.w600
-                                                : FontWeight.normal,
-                                            color: isSelected
-                                                ? Colors.purple.shade700
-                                                : Colors.grey.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                      if (isSelected)
-                                        Icon(
-                                          Icons.check_circle,
-                                          size: 16,
-                                          color: Colors.purple.shade600,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                // Selected Categories Chips
+                if (_selectedCategories.isNotEmpty) ...[
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _selectedCategories.map((category) {
+                      return _buildChip(
+                        label: category.name,
+                        onDeleted: () => _onCategoryToggled(category),
+                        color: const Color(0xFF7386dd),
+                      );
+                    }).toList(),
                   ),
-
-                  // Filter Actions
                   const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _clearAllFilters,
-                          icon: const Icon(Icons.clear, size: 16),
-                          label: const Text('Xóa bộ lọc'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.grey.shade600,
-                            side: BorderSide(color: Colors.grey.shade300),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _toggleCategoryFilter,
-                          icon: const Icon(Icons.check, size: 16),
-                          label: const Text('Áp dụng'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple.shade600,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                        ),
-                      ),
-                    ],
+                ],
+
+                // Category Dropdown Button
+                _buildDropdownButton(
+                  onTap: _toggleCategoryFilter,
+                  label: _appliedCategories.isEmpty
+                      ? AppLocalizations.of(context)!.selectCategory
+                      : AppLocalizations.of(context)!
+                          .categoriesSelected(_appliedCategories.length),
+                  isExpanded: _showCategoryFilter,
+                  selectText: AppLocalizations.of(context)!.select,
+                ),
+
+                // Category Dropdown Menu
+                if (_showCategoryFilter) ...[
+                  const SizedBox(height: 8),
+                  _buildDropdownMenu(
+                    maxHeight: 200,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _categories.length,
+                      itemBuilder: (context, index) {
+                        final category = _categories[index];
+                        final isSelected =
+                            _selectedCategories.contains(category);
+                        return _buildDropdownCategoryItem(
+                          title: category.name,
+                          isSelected: isSelected,
+                          onTap: () => _onCategoryToggled(category),
+                          image: category.image,
+                        );
+                      },
+                    ),
                   ),
                 ],
-              ),
+
+                const SizedBox(height: 16),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSecondaryButton(
+                        onPressed: _clearAllFilters,
+                        label: AppLocalizations.of(context)!.clearFilter,
+                        icon: Icons.clear,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildPrimaryButton(
+                        onPressed: _applyFilters,
+                        isLoading: false,
+                        label: AppLocalizations.of(context)!.apply,
+                        icon: Icons.check,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            crossFadeState: _showCategoryFilter
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: const Duration(milliseconds: 300),
           ),
         ],
       ),
@@ -644,13 +410,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Thêm dịch vụ',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.addService,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -658,7 +424,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Tạo dịch vụ nail mới',
+                              AppLocalizations.of(context)!.createNewService,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -702,12 +468,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     value: c.id, child: Text(c.name)))
                                 .toList(),
                             onChanged: (v) => selectedCatId = v,
-                            decoration: const InputDecoration(
-                              labelText: 'Danh mục',
-                              prefixIcon: Icon(Icons.category,
+                            decoration: InputDecoration(
+                              labelText:
+                                  AppLocalizations.of(context)!.categories,
+                              prefixIcon: const Icon(Icons.category,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16),
+                              contentPadding: const EdgeInsets.all(16),
                             ),
                           ),
                         ),
@@ -725,7 +492,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Tên dịch vụ',
+                                    labelText: AppLocalizations.of(context)!
+                                        .serviceName,
                                     prefixIcon: const Icon(Icons.spa,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -743,7 +511,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập tên dịch vụ';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterServiceName;
                                     }
                                     return null;
                                   },
@@ -759,7 +528,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: TextFormField(
                                   controller: priceCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Giá (VNĐ)',
+                                    labelText:
+                                        '${AppLocalizations.of(context)!.price} (${AppLocalizations.of(context)!.vnd})',
                                     prefixIcon: const Icon(Icons.attach_money,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -781,10 +551,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ],
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập giá';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterPrice;
                                     }
                                     if (double.tryParse(value.trim()) == null) {
-                                      return 'Vui lòng nhập giá hợp lệ';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterValidPrice;
                                     }
                                     return null;
                                   },
@@ -812,9 +584,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.grey,
@@ -851,9 +623,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -891,7 +663,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
             imageUrlToSave = await widget.api
                 .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            AppWidgets.showFlushbar(context, 'Lỗi khi upload ảnh lên server',
+            AppWidgets.showFlushbar(
+                context, AppLocalizations.of(context)!.errorUploadingImage,
                 type: MessageType.error);
             return;
           }
@@ -899,10 +672,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
         await widget.api
             .createService(selectedCatId!, name, price, image: imageUrlToSave);
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm dịch vụ thành công',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.serviceAddedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm dịch vụ',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.errorAddingService,
             type: MessageType.error);
       }
     }
@@ -963,13 +738,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Chỉnh sửa dịch vụ',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.editService,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -977,7 +752,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Cập nhật thông tin dịch vụ',
+                              AppLocalizations.of(context)!.updateServiceInfo,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -1021,12 +796,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     value: c.id, child: Text(c.name)))
                                 .toList(),
                             onChanged: (v) => selectedCatId = v,
-                            decoration: const InputDecoration(
-                              labelText: 'Danh mục',
-                              prefixIcon: Icon(Icons.category,
+                            decoration: InputDecoration(
+                              labelText:
+                                  AppLocalizations.of(context)!.categories,
+                              prefixIcon: const Icon(Icons.category,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16),
+                              contentPadding: const EdgeInsets.all(16),
                             ),
                           ),
                         ),
@@ -1044,7 +820,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Tên dịch vụ',
+                                    labelText: AppLocalizations.of(context)!
+                                        .serviceName,
                                     prefixIcon: const Icon(Icons.spa,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -1062,7 +839,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập tên dịch vụ';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterServiceName;
                                     }
                                     return null;
                                   },
@@ -1078,7 +856,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 child: TextFormField(
                                   controller: priceCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Giá (VNĐ)',
+                                    labelText:
+                                        '${AppLocalizations.of(context)!.price} (${AppLocalizations.of(context)!.vnd})',
                                     prefixIcon: const Icon(Icons.attach_money,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -1100,10 +879,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   ],
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập giá';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterPrice;
                                     }
                                     if (double.tryParse(value.trim()) == null) {
-                                      return 'Vui lòng nhập giá hợp lệ';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterValidPrice;
                                     }
                                     return null;
                                   },
@@ -1131,9 +912,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.grey,
@@ -1170,9 +951,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -1210,7 +991,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
             imageUrlToSave = await widget.api
                 .uploadServiceImage(selectedImageBytes!, fileName);
           } catch (e) {
-            AppWidgets.showFlushbar(context, 'Lỗi khi upload ảnh lên server',
+            AppWidgets.showFlushbar(
+                context, AppLocalizations.of(context)!.errorUploadingImage,
                 type: MessageType.error);
             return;
           }
@@ -1224,10 +1006,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ));
         await _reload();
         AppWidgets.showFlushbar(
-            context, 'Thay đổi thông tin dịch vụ thành công',
+            context, AppLocalizations.of(context)!.serviceUpdatedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thay đổi thông tin dịch vụ',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.errorUpdatingService,
             type: MessageType.error);
       }
     }
@@ -1237,10 +1020,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
     try {
       await widget.api.deleteService(s.categoryId, s.id);
       await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa dịch vụ thành công',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.serviceDeletedSuccessfully,
           type: MessageType.success);
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa dịch vụ',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.errorDeletingService,
           type: MessageType.error);
     }
   }
@@ -1254,7 +1039,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           s.name,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Chọn hành động cho dịch vụ này'),
+        content: Text(AppLocalizations.of(context)!
+            .chooseAction(AppLocalizations.of(context)!.service)),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -1262,7 +1048,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               _showEditDialog(s);
             },
             icon: const Icon(Icons.edit, color: Colors.green),
-            label: const Text('Sửa'),
+            label: Text(AppLocalizations.of(context)!.edit),
           ),
           TextButton.icon(
             onPressed: () {
@@ -1270,7 +1056,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               _delete(s);
             },
             icon: const Icon(Icons.delete, color: Colors.red),
-            label: const Text('Xóa'),
+            label: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -1305,6 +1091,239 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ),
       );
     }
+  }
+
+  Widget _buildChip({
+    required String label,
+    required VoidCallback onDeleted,
+    required Color color,
+  }) {
+    return Chip(
+      label: Text(
+        label,
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+      ),
+      deleteIcon: const Icon(Icons.close, color: Colors.white, size: 18),
+      onDeleted: onDeleted,
+      backgroundColor: color,
+      side: BorderSide.none,
+    );
+  }
+
+  Widget _buildDropdownButton({
+    required VoidCallback onTap,
+    required String label,
+    required bool isExpanded,
+    required String selectText,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: AppTheme.controlHeight,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[50],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: label.contains(selectText)
+                      ? Colors.grey[600]
+                      : Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(
+              isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              color: Colors.grey[600],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownMenu({
+    required double maxHeight,
+    required Widget child,
+  }) {
+    return Container(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  Widget _buildDropdownCategoryItem({
+    required String title,
+    String? subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+    String? image,
+  }) {
+    return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: _buildImageWidget(image),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.category,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      subtitle: subtitle != null ? Text(subtitle) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
+      tileColor:
+          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
+  Widget _buildPrimaryButton({
+    required VoidCallback? onPressed,
+    required bool isLoading,
+    required String label,
+    required IconData icon,
+  }) {
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF667eea).withValues(alpha: 0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onPressed,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isLoading)
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                else
+                  Icon(icon, color: Colors.white, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSecondaryButton({
+    required VoidCallback? onPressed,
+    required String label,
+    required IconData icon,
+  }) {
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onPressed,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: Colors.grey[600], size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -1354,273 +1373,113 @@ class _ServicesScreenState extends State<ServicesScreen> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppWidgets.gradientHeader(
-                  icon: Icons.spa,
-                  title: 'Dịch vụ',
-                  subtitle: 'Quản lý dịch vụ theo danh mục',
-                  fullWidth: true,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  height: AppTheme.controlHeight,
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm dịch vụ...',
-                      prefixIcon: Icons.search,
-                    ),
-                    onChanged: (v) => setState(() => _search = v.trim()),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildCategoryFilter(),
-
-                // Results counter
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        size: 16,
-                        color: Colors.blue.shade700,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: FutureBuilder<List<Service>>(
-                          future: _future,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return const Text(
-                                'Đang tải...',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            }
-                            final data = snapshot.data ?? [];
-                            final filtered = _filterServices(data);
-                            final total = data.length;
-                            final shown = filtered.length;
-
-                            String message;
-                            if (_selectedCategories.isEmpty &&
-                                _search.isEmpty) {
-                              message = 'Hiển thị tất cả $total dịch vụ';
-                            } else if (_selectedCategories.isNotEmpty &&
-                                _search.isNotEmpty) {
-                              message =
-                                  'Tìm thấy $shown/$total dịch vụ (lọc theo danh mục và tìm kiếm)';
-                            } else if (_selectedCategories.isNotEmpty) {
-                              message =
-                                  'Tìm thấy $shown/$total dịch vụ (lọc theo ${_selectedCategories.length} danh mục)';
-                            } else {
-                              message =
-                                  'Tìm thấy $shown/$total dịch vụ (tìm kiếm: "$_search")';
-                            }
-
-                            return Text(
-                              message,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blue.shade700,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      if (_selectedCategories.isNotEmpty || _search.isNotEmpty)
-                        TextButton(
-                          onPressed: _clearAllFilters,
-                          child: Text(
-                            'Xóa bộ lọc',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
+          body: Stack(
+            children: [
+              RefreshIndicator(
+                onRefresh: _reload,
+                child: CustomScrollView(
+                  slivers: [
+                    // Header Section
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AppWidgets.gradientHeader(
+                              icon: Icons.spa,
+                              title:
+                                  AppLocalizations.of(context)!.servicesTitle,
+                              subtitle: AppLocalizations.of(context)!
+                                  .servicesSubtitle,
+                              fullWidth: true,
                             ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      500, // Điều chỉnh chiều cao để phù hợp với bộ lọc và counter
-                  child: FutureBuilder<List<Service>>(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        AppWidgets.showFlushbar(
-                            context, 'Lỗi tải danh sách dịch vụ',
-                            type: MessageType.error);
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(
-                            children: [
-                              const SizedBox(height: 200),
-                              Center(
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.error_outline,
-                                        size: 64, color: Colors.red),
-                                    const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách dịch vụ',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
+                            const SizedBox(height: 24),
+                            // Search bar with filter button
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: AppTheme.controlHeight,
+                                    child: TextField(
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      decoration: AppTheme.inputDecoration(
+                                        label: AppLocalizations.of(context)!
+                                            .searchServices,
+                                        prefixIcon: Icons.search,
+                                      ),
+                                      onChanged: (v) =>
+                                          setState(() => _search = v.trim()),
                                     ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    ElevatedButton(
-                                      onPressed: _reload,
-                                      child: const Text('Thử lại'),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      final data = snapshot.data ?? [];
-                      final filtered = _filterServices(data);
-
-                      if (filtered.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(children: const [
-                            SizedBox(height: 200),
-                            Center(child: Text('Không tìm thấy dịch vụ'))
-                          ]),
-                        );
-                      }
-
-                      return RefreshIndicator(
-                        onRefresh: _reload,
-                        child: GridView.builder(
-                          key: const ValueKey('grid'),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: filtered.length,
-                          itemBuilder: (context, i) {
-                            final s = filtered[i];
-                            return AppWidgets.animatedItem(
-                              index: i,
-                              child: InkWell(
-                                onLongPress: () => _showActionDialog(s),
-                                borderRadius: BorderRadius.circular(16),
-                                splashColor:
-                                    Colors.purple.withValues(alpha: 0.2),
-                                highlightColor:
-                                    Colors.purple.withValues(alpha: 0.1),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
+                                const SizedBox(width: 12),
+                                // Filter button
+                                Container(
+                                  height: AppTheme.controlHeight,
+                                  width: AppTheme.controlHeight,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: _appliedCategories.isNotEmpty
+                                        ? AppTheme.primaryGradient
+                                        : LinearGradient(
+                                            colors: [
+                                              AppTheme.primaryStart
+                                                  .withValues(alpha: 0.1),
+                                              AppTheme.primaryEnd
+                                                  .withValues(alpha: 0.1)
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: _appliedCategories.isNotEmpty
+                                          ? AppTheme.primaryStart
+                                              .withValues(alpha: 0.3)
+                                          : AppTheme.primaryStart
+                                              .withValues(alpha: 0.2),
+                                      width: 1.5,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color:
-                                            Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                                        color: (_appliedCategories.isNotEmpty
+                                                ? AppTheme.primaryStart
+                                                : AppTheme.primaryStart
+                                                    .withValues(alpha: 0.3))
+                                            .withValues(alpha: 0.2),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
                                       ),
                                     ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        // Background Image or Gradient
-                                        s.image != null && s.image!.isNotEmpty
-                                            ? _buildImageWidget(s.image!)
-                                            : Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      Colors.purple.shade300,
-                                                      Colors.purple.shade500,
-                                                    ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.spa,
-                                                    size: 60,
-                                                    color: Colors.white
-                                                        .withValues(alpha: 0.8),
-                                                  ),
-                                                ),
-                                              ),
-                                        // Gradient Overlay for better text readability
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.transparent,
-                                                Colors.black
-                                                    .withValues(alpha: 0.7),
-                                              ],
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: _toggleCategoryFilter,
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Stack(
+                                        children: [
+                                          Center(
+                                            child: Icon(
+                                              Icons.filter_list,
+                                              color: _appliedCategories
+                                                      .isNotEmpty
+                                                  ? Colors.white
+                                                  : AppTheme.primaryStart
+                                                      .withValues(alpha: 0.7),
+                                              size: 20,
                                             ),
                                           ),
-                                        ),
-                                        // Content
-                                        Positioned(
-                                          left: 12,
-                                          right: 12,
-                                          bottom: 12,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Service Name
-                                              Container(
+                                          if (_appliedCategories.isNotEmpty)
+                                            Positioned(
+                                              right: 6,
+                                              top: 6,
+                                              child: Container(
                                                 padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
+                                                    const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.9),
+                                                  color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   boxShadow: [
@@ -1628,62 +1487,314 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                       color: Colors.black
                                                           .withValues(
                                                               alpha: 0.1),
-                                                      blurRadius: 4,
+                                                      blurRadius: 2,
                                                       offset:
-                                                          const Offset(0, 2),
+                                                          const Offset(0, 1),
                                                     ),
                                                   ],
                                                 ),
+                                                constraints:
+                                                    const BoxConstraints(
+                                                  minWidth: 16,
+                                                  minHeight: 16,
+                                                ),
                                                 child: Text(
-                                                  s.name,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
+                                                  '${_appliedCategories.length}',
+                                                  style: const TextStyle(
                                                     color:
-                                                        Colors.purple.shade800,
+                                                        AppTheme.primaryStart,
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ),
-                                              const SizedBox(height: 6),
-                                              // Price
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 6,
-                                                        vertical: 3),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green.shade100
-                                                      .withValues(alpha: 0.9),
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                  border: Border.all(
-                                                    color:
-                                                        Colors.green.shade300,
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                child: Row(
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Services Grid
+                    FutureBuilder<List<Service>>(
+                      future: _future,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return const SliverToBoxAdapter(
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(50),
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          AppWidgets.showFlushbar(
+                              context,
+                              AppLocalizations.of(context)!
+                                  .errorLoadingServicesList,
+                              type: MessageType.error);
+                          return SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 200),
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        const Icon(Icons.error_outline,
+                                            size: 64, color: Colors.red),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .cannotLoadServicesList,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .checkNetworkOrTryAgainServices,
+                                          style: const TextStyle(
+                                              fontSize: 14, color: Colors.grey),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ElevatedButton(
+                                          onPressed: _reload,
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .tryAgain),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        final data = snapshot.data ?? [];
+                        final filtered = _filterServices(data);
+
+                        if (filtered.isEmpty) {
+                          return SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 200),
+                                  Center(
+                                      child: Text(AppLocalizations.of(context)!
+                                          .noItemsFound(
+                                              AppLocalizations.of(context)!
+                                                  .service)))
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        return SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          sliver: SliverGrid(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: 0.8,
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (context, i) {
+                                final s = filtered[i];
+                                return AppWidgets.animatedItem(
+                                  index: i,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () => _showActionDialog(s),
+                                      borderRadius: BorderRadius.circular(16),
+                                      splashColor: AppTheme.primaryStart
+                                          .withValues(alpha: 0.2),
+                                      highlightColor: AppTheme.primaryEnd
+                                          .withValues(alpha: 0.1),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: AppTheme.primaryStart
+                                                .withValues(alpha: 0.1),
+                                            width: 1,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppTheme.primaryStart
+                                                  .withValues(alpha: 0.1),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          child: Stack(
+                                            fit: StackFit.expand,
+                                            children: [
+                                              // Background Image or Gradient
+                                              s.image != null &&
+                                                      s.image!.isNotEmpty
+                                                  ? _buildImageWidget(s.image!)
+                                                  : Container(
+                                                      decoration: BoxDecoration(
+                                                        gradient: AppTheme
+                                                            .primaryGradient,
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.spa,
+                                                          size: 60,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                              // Content
+                                              Positioned(
+                                                left: 12,
+                                                right: 12,
+                                                bottom: 12,
+                                                child: Column(
                                                   mainAxisSize:
                                                       MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Icon(
-                                                      Icons.attach_money,
-                                                      size: 12,
-                                                      color:
-                                                          Colors.green.shade700,
+                                                    // Service Name
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8,
+                                                          vertical: 4),
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: [
+                                                            AppTheme
+                                                                .primaryStart
+                                                                .withValues(
+                                                                    alpha: 0.9),
+                                                            AppTheme.primaryEnd
+                                                                .withValues(
+                                                                    alpha: 0.9),
+                                                          ],
+                                                          begin:
+                                                              Alignment.topLeft,
+                                                          end: Alignment
+                                                              .bottomRight,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: AppTheme
+                                                                .primaryStart
+                                                                .withValues(
+                                                                    alpha: 0.3),
+                                                            blurRadius: 4,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 2),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Text(
+                                                        s.name,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
                                                     ),
-                                                    const SizedBox(width: 4),
-                                                    Text(
-                                                      '${_formatPrice(s.price)} VNĐ',
-                                                      style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors
-                                                            .green.shade700,
+                                                    const SizedBox(height: 6),
+                                                    // Price
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8,
+                                                          vertical: 4),
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: [
+                                                            AppTheme
+                                                                .primaryStart
+                                                                .withValues(
+                                                                    alpha: 0.9),
+                                                            AppTheme.primaryEnd
+                                                                .withValues(
+                                                                    alpha: 0.9),
+                                                          ],
+                                                          begin:
+                                                              Alignment.topLeft,
+                                                          end: Alignment
+                                                              .bottomRight,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: AppTheme
+                                                                .primaryStart
+                                                                .withValues(
+                                                                    alpha: 0.3),
+                                                            blurRadius: 4,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 2),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.attach_money,
+                                                            size: 12,
+                                                            color: Colors.white,
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 4),
+                                                          Text(
+                                                            '${_formatPrice(s.price)} ${AppLocalizations.of(context)!.vnd}',
+                                                            style: TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
@@ -1692,20 +1803,56 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                             ],
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
+                                );
+                              },
+                              childCount: filtered.length,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    // Bottom padding for FAB
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: 100),
+                    ),
+                  ],
+                ),
+              ),
+              // Floating filter overlay with backdrop
+              if (_showCategoryFilter)
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: _toggleCategoryFilter,
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      child: Center(
+                        child: GestureDetector(
+                          onTap:
+                              () {}, // Prevent closing when tapping on filter
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.7,
+                              maxWidth: MediaQuery.of(context).size.width * 0.9,
+                            ),
+                            child: Material(
+                              elevation: 20,
+                              borderRadius: BorderRadius.circular(20),
+                              shadowColor: Colors.black.withValues(alpha: 0.3),
+                              child: _buildCompactCategoryFilter(),
+                            ),
+                          ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

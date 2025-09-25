@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'design_system.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../services/language_service.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemSelected;
   final VoidCallback onLogout;
   final String userRole; // 'shop_owner' or 'employee'
+  final LanguageService languageService;
 
   const AppNavigationDrawer({
     super.key,
@@ -15,6 +18,7 @@ class AppNavigationDrawer extends StatelessWidget {
     required this.onItemSelected,
     required this.onLogout,
     required this.userRole,
+    required this.languageService,
   });
 
   @override
@@ -46,11 +50,11 @@ class AppNavigationDrawer extends StatelessWidget {
                   desktop:
                       const EdgeInsets.symmetric(vertical: AppTheme.spacingXL),
                 ),
-                children: _buildNavigationItems(),
+                children: _buildNavigationItems(context),
               ),
             ),
 
-            // Version info and Logout button
+            // Language selector, Version info and Logout button
             Container(
               padding: AppTheme.getResponsivePadding(
                 context,
@@ -61,6 +65,11 @@ class AppNavigationDrawer extends StatelessWidget {
               child: Column(
                 children: [
                   const Divider(),
+                  SizedBox(
+                      height: AppTheme.getResponsiveSpacing(context,
+                          mobile: AppTheme.spacingS,
+                          tablet: AppTheme.spacingM)),
+                  _buildLanguageSelector(),
                   SizedBox(
                       height: AppTheme.getResponsiveSpacing(context,
                           mobile: AppTheme.spacingS,
@@ -80,41 +89,43 @@ class AppNavigationDrawer extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildNavigationItems() {
+  List<Widget> _buildNavigationItems(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (userRole == 'employee') {
       // Employee navigation - limited features
       return [
-        // Dịch vụ section
-        _buildSectionHeader('Menu'),
+        // Menu section
+        _buildSectionHeader(l10n.menu),
         _buildNavItem(
           icon: Icons.menu_book,
-          title: 'Menu',
+          title: l10n.menu,
           index: 0,
           isSelected: selectedIndex == 0,
         ),
 
-        _buildSectionHeader('Quản lý'),
+        _buildSectionHeader(l10n.management),
         _buildNavItem(
           icon: Icons.spa,
-          title: 'Dịch vụ',
+          title: l10n.services,
           index: 1,
           isSelected: selectedIndex == 1,
         ),
 
-        // Tạo đơn section
-        _buildSectionHeader('Tạo đơn'),
+        // Create order section
+        _buildSectionHeader(l10n.createOrder),
         _buildNavItem(
           icon: Icons.add_shopping_cart,
-          title: 'Tạo đơn',
+          title: l10n.createOrder,
           index: 2,
           isSelected: selectedIndex == 2,
         ),
 
-        // Hóa đơn section
-        _buildSectionHeader('Hóa đơn'),
+        // Bills section
+        _buildSectionHeader(l10n.bills),
         _buildNavItem(
           icon: Icons.receipt,
-          title: 'Hóa đơn',
+          title: l10n.bills,
           index: 3,
           isSelected: selectedIndex == 3,
         ),
@@ -122,71 +133,71 @@ class AppNavigationDrawer extends StatelessWidget {
     } else {
       // Shop owner navigation - full features
       return [
-        // Thông tin section
-        _buildSectionHeader('Thông tin'),
+        // Information section
+        _buildSectionHeader(l10n.information),
         _buildNavItem(
           icon: Icons.business,
-          title: 'Thông tin Salon',
+          title: l10n.salonInfo,
           index: 8,
           isSelected: selectedIndex == 8,
         ),
 
         // Menu section
-        _buildSectionHeader('Menu'),
+        _buildSectionHeader(l10n.menu),
         _buildNavItem(
           icon: Icons.menu_book,
-          title: 'Menu',
+          title: l10n.menu,
           index: 9,
           isSelected: selectedIndex == 9,
         ),
 
-        // Quản lý section
-        _buildSectionHeader('Quản lý'),
+        // Management section
+        _buildSectionHeader(l10n.management),
         _buildNavItem(
           icon: Icons.people,
-          title: 'Khách hàng',
+          title: l10n.customers,
           index: 1,
           isSelected: selectedIndex == 1,
         ),
         _buildNavItem(
           icon: Icons.work,
-          title: 'Nhân viên',
+          title: l10n.employees,
           index: 2,
           isSelected: selectedIndex == 2,
         ),
         _buildNavItem(
           icon: Icons.category,
-          title: 'Danh mục',
+          title: l10n.categories,
           index: 3,
           isSelected: selectedIndex == 3,
         ),
         _buildNavItem(
           icon: Icons.spa,
-          title: 'Dịch vụ',
+          title: l10n.services,
           index: 4,
           isSelected: selectedIndex == 4,
         ),
 
-        // Tạo đơn section
-        _buildSectionHeader('Tạo đơn'),
+        // Create order section
+        _buildSectionHeader(l10n.createOrder),
         _buildNavItem(
           icon: Icons.add_shopping_cart,
-          title: 'Tạo đơn',
+          title: l10n.createOrder,
           index: 5,
           isSelected: selectedIndex == 5,
         ),
 
-        // Hóa đơn & Báo cáo section
-        _buildSectionHeader('Hóa đơn & Báo cáo'),
+        // Bills & Reports section
+        _buildSectionHeader(l10n.billsReports),
         _buildNavItem(
           icon: Icons.receipt,
-          title: 'Hóa đơn',
+          title: l10n.bills,
           index: 6,
           isSelected: selectedIndex == 6,
         ),
         _buildNavItem(
           icon: Icons.analytics,
-          title: 'Báo cáo',
+          title: l10n.reports,
           index: 7,
           isSelected: selectedIndex == 7,
         ),
@@ -312,9 +323,117 @@ class AppNavigationDrawer extends StatelessWidget {
     );
   }
 
+  Widget _buildLanguageSelector() {
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
+            vertical: AppTheme.getResponsiveSpacing(context,
+                mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+          ),
+          decoration: BoxDecoration(
+            color: Colors.blue[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.blue[200]!,
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.language,
+                    color: Colors.blue[600],
+                    size: AppTheme.getResponsiveFontSize(
+                      context,
+                      mobile: 14,
+                      tablet: 16,
+                      desktop: 18,
+                    ),
+                  ),
+                  SizedBox(
+                      width: AppTheme.getResponsiveSpacing(context,
+                          mobile: AppTheme.spacingXS,
+                          tablet: AppTheme.spacingS)),
+                  Text(
+                    l10n.language,
+                    style: TextStyle(
+                      fontSize: AppTheme.getResponsiveFontSize(
+                        context,
+                        mobile: 12,
+                        tablet: 14,
+                        desktop: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blue[600],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                  height: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS)),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: LanguageService.supportedLocales.map((locale) {
+                  final isSelected =
+                      languageService.isCurrentLanguage(locale.languageCode);
+                  return GestureDetector(
+                    onTap: () =>
+                        languageService.setLanguage(locale.languageCode),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppTheme.getResponsiveSpacing(context,
+                            mobile: AppTheme.spacingS,
+                            tablet: AppTheme.spacingM),
+                        vertical: AppTheme.getResponsiveSpacing(context,
+                            mobile: AppTheme.spacingXS,
+                            tablet: AppTheme.spacingS),
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.blue[600] : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.blue[600]!,
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        languageService.getLanguageName(locale.languageCode),
+                        style: TextStyle(
+                          fontSize: AppTheme.getResponsiveFontSize(
+                            context,
+                            mobile: 10,
+                            tablet: 11,
+                            desktop: 12,
+                          ),
+                          fontWeight: FontWeight.w500,
+                          color: isSelected ? Colors.white : Colors.blue[600],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildVersionInfo() {
     return Builder(
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return FutureBuilder<PackageInfo>(
           future: PackageInfo.fromPlatform(),
           builder: (context, snapshot) {
@@ -356,7 +475,7 @@ class AppNavigationDrawer extends StatelessWidget {
                                 mobile: AppTheme.spacingXS,
                                 tablet: AppTheme.spacingS)),
                         Text(
-                          'Phiên bản',
+                          l10n.version,
                           style: TextStyle(
                             fontSize: AppTheme.getResponsiveFontSize(
                               context,
@@ -418,7 +537,7 @@ class AppNavigationDrawer extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Không thể tải thông tin phiên bản',
+                  l10n.cannotLoadVersionInfo,
                   style: TextStyle(
                     fontSize: AppTheme.getResponsiveFontSize(
                       context,
@@ -464,7 +583,7 @@ class AppNavigationDrawer extends StatelessWidget {
                             mobile: AppTheme.spacingS,
                             tablet: AppTheme.spacingM)),
                     Text(
-                      'Đang tải...',
+                      l10n.loading,
                       style: TextStyle(
                         fontSize: AppTheme.getResponsiveFontSize(
                           context,
@@ -488,6 +607,7 @@ class AppNavigationDrawer extends StatelessWidget {
   Widget _buildLogoutButton() {
     return Builder(
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -523,7 +643,7 @@ class AppNavigationDrawer extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  'Đăng xuất',
+                  l10n.logout,
                   style: TextStyle(
                     fontSize: AppTheme.getResponsiveFontSize(
                       context,
@@ -553,6 +673,7 @@ class AppNavigationRail extends StatelessWidget {
   final Function(int) onItemSelected;
   final VoidCallback onLogout;
   final String userRole; // 'shop_owner' or 'employee'
+  final LanguageService languageService;
 
   const AppNavigationRail({
     super.key,
@@ -560,6 +681,7 @@ class AppNavigationRail extends StatelessWidget {
     required this.onItemSelected,
     required this.onLogout,
     required this.userRole,
+    required this.languageService,
   });
 
   @override
@@ -569,7 +691,7 @@ class AppNavigationRail extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onItemSelected,
       labelType: NavigationRailLabelType.all,
-      destinations: _buildRailDestinations(),
+      destinations: _buildRailDestinations(context),
       leading: Column(
         children: [
           SizedBox(
@@ -609,18 +731,23 @@ class AppNavigationRail extends StatelessWidget {
                       SizedBox(
                           height: AppTheme.getResponsiveSpacing(context,
                               mobile: 2, tablet: 2, desktop: 4)),
-                      Text(
-                        'Đăng xuất',
-                        style: TextStyle(
-                          fontSize: AppTheme.getResponsiveFontSize(
-                            context,
-                            mobile: 8,
-                            tablet: 9,
-                            desktop: 10,
-                          ),
-                          color: Colors.red[400],
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final l10n = AppLocalizations.of(context)!;
+                          return Text(
+                            l10n.logout,
+                            style: TextStyle(
+                              fontSize: AppTheme.getResponsiveFontSize(
+                                context,
+                                mobile: 8,
+                                tablet: 9,
+                                desktop: 10,
+                              ),
+                              color: Colors.red[400],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -671,27 +798,29 @@ class AppNavigationRail extends StatelessWidget {
     );
   }
 
-  List<NavigationRailDestination> _buildRailDestinations() {
+  List<NavigationRailDestination> _buildRailDestinations(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (userRole == 'employee') {
       // Employee navigation - limited features
       return [
-        _buildRailDestination(Icons.menu_book, 'Menu'),
-        _buildRailDestination(Icons.spa, 'Dịch vụ'),
-        _buildRailDestination(Icons.add_shopping_cart, 'Tạo đơn'),
-        _buildRailDestination(Icons.receipt, 'Hóa đơn'),
+        _buildRailDestination(Icons.menu_book, l10n.menu),
+        _buildRailDestination(Icons.spa, l10n.services),
+        _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
+        _buildRailDestination(Icons.receipt, l10n.bills),
       ];
     } else {
       // Shop owner navigation - full features
       return [
-        _buildRailDestination(Icons.people, 'Khách hàng'),
-        _buildRailDestination(Icons.work, 'Nhân viên'),
-        _buildRailDestination(Icons.category, 'Danh mục'),
-        _buildRailDestination(Icons.spa, 'Dịch vụ'),
-        _buildRailDestination(Icons.menu_book, 'Menu'),
-        _buildRailDestination(Icons.add_shopping_cart, 'Tạo đơn'),
-        _buildRailDestination(Icons.receipt, 'Hóa đơn'),
-        _buildRailDestination(Icons.analytics, 'Báo cáo'),
-        _buildRailDestination(Icons.business, 'Thông tin Salon'),
+        _buildRailDestination(Icons.people, l10n.customers),
+        _buildRailDestination(Icons.work, l10n.employees),
+        _buildRailDestination(Icons.category, l10n.categories),
+        _buildRailDestination(Icons.spa, l10n.services),
+        _buildRailDestination(Icons.menu_book, l10n.menu),
+        _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
+        _buildRailDestination(Icons.receipt, l10n.bills),
+        _buildRailDestination(Icons.analytics, l10n.reports),
+        _buildRailDestination(Icons.business, l10n.salonInfo),
       ];
     }
   }

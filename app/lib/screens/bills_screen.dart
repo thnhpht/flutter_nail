@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../api_client.dart';
 import '../models.dart';
@@ -167,10 +168,10 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   void _showBill(Order order) {
+    final l10n = AppLocalizations.of(context)!;
     final services = _getServicesForOrder(order);
     if (services.isEmpty) {
-      AppWidgets.showFlushbar(
-          context, 'Không tìm thấy thông tin dịch vụ cho đơn hàng này',
+      AppWidgets.showFlushbar(context, l10n.serviceInfoNotFound,
           type: MessageType.error);
       return;
     }
@@ -201,10 +202,11 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   void _showUpdateOrderDialog(Order order) {
+    final l10n = AppLocalizations.of(context)!;
     if (!_canUpdateOrder(order)) {
       AppWidgets.showFlushbar(
         context,
-        'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay',
+        l10n.cannotUpdateOrderTodayOnly,
         type: MessageType.warning,
       );
       return;
@@ -231,9 +233,10 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   String _formatBillId(String orderId) {
+    final l10n = AppLocalizations.of(context)!;
     // Kiểm tra nếu ID rỗng
     if (orderId.isEmpty) {
-      return "TẠM THỜI";
+      return l10n.temporary;
     }
 
     // Nếu ID có format GUID, lấy 8 ký tự đầu
@@ -311,6 +314,7 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   Future<void> _showDateFilterDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     await showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -353,12 +357,12 @@ class _BillsScreenState extends State<BillsScreen> {
                           color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Lọc theo thời gian',
+                            l10n.filterByTime,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -367,7 +371,7 @@ class _BillsScreenState extends State<BillsScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Chọn khoảng thời gian để xem hóa đơn',
+                            l10n.selectTimeRangeToViewBills,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -435,7 +439,7 @@ class _BillsScreenState extends State<BillsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chọn khoảng thời gian tùy chỉnh',
+                                      l10n.selectCustomTimeRange,
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -443,7 +447,7 @@ class _BillsScreenState extends State<BillsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      'Chọn ngày bắt đầu và kết thúc',
+                                      l10n.selectStartAndEndDate,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -467,7 +471,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
                     // Preset Buttons
                     Text(
-                      'Chọn nhanh',
+                      l10n.quickSelect,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -497,8 +501,8 @@ class _BillsScreenState extends State<BillsScreen> {
                           ),
                           side: BorderSide(color: Colors.grey[300]!),
                         ),
-                        child: const Text(
-                          'Đóng',
+                        child: Text(
+                          l10n.close,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -588,80 +592,84 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   String _getEmptyStateTitle() {
+    final l10n = AppLocalizations.of(context)!;
     if (_currentUserRole == 'employee') {
       if (_selectedDateRange != null) {
-        return 'Không có hóa đơn của bạn trong khoảng thời gian này';
+        return l10n.noYourBillsInTimeRange;
       }
       if (_searchQuery.isNotEmpty) {
-        return 'Không tìm thấy hóa đơn của bạn';
+        return l10n.noYourBillsFound;
       }
-      return 'Bạn chưa có hóa đơn nào';
+      return l10n.noYourBillsYet;
     }
 
     if (_selectedDateRange != null) {
-      return 'Không có hóa đơn trong khoảng thời gian này';
+      return l10n.noBillsInTimeRange;
     }
     if (_searchQuery.isNotEmpty) {
-      return 'Không tìm thấy hóa đơn';
+      return l10n.noBillsFound;
     }
-    return 'Chưa có hóa đơn nào';
+    return l10n.noBillsYet;
   }
 
   String _getEmptyStateMessage() {
+    final l10n = AppLocalizations.of(context)!;
     if (_currentUserRole == 'employee') {
       if (_selectedDateRange != null) {
-        return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
+        return l10n.tryDifferentTimeRange;
       }
       if (_searchQuery.isNotEmpty) {
-        return 'Thử tìm kiếm với từ khóa khác';
+        return l10n.tryDifferentSearch;
       }
-      return 'Tạo đơn hàng đầu tiên để xem hóa đơn của bạn ở đây';
+      return l10n.createFirstOrderToViewYourBills;
     }
 
     if (_selectedDateRange != null) {
-      return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
+      return l10n.tryDifferentTimeRange;
     }
     if (_searchQuery.isNotEmpty) {
-      return 'Thử tìm kiếm với từ khóa khác';
+      return l10n.tryDifferentSearch;
     }
-    return 'Tạo đơn hàng đầu tiên để xem hóa đơn ở đây';
+    return l10n.createFirstOrderToViewBills;
   }
 
   String _getStatsTitle(String baseTitle) {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedDateRange != null) {
-      return '$baseTitle đã lọc';
+      return '$baseTitle ${l10n.filtered}';
     }
-    return 'Tổng $baseTitle';
+    return '${l10n.total} $baseTitle';
   }
 
   Widget _buildPresetButtonsGrid() {
+    final l10n = AppLocalizations.of(context)!;
     final presets = [
       {
-        'label': 'Hôm nay',
+        'label': l10n.today,
         'preset': 'today',
         'icon': Icons.today,
         'color': Colors.green
       },
       {
-        'label': 'Hôm qua',
+        'label': l10n.yesterday,
         'preset': 'yesterday',
         'icon': Icons.history,
         'color': Colors.orange
       },
       {
-        'label': 'Tuần này',
+        'label': l10n.thisWeek,
         'preset': 'week',
         'icon': Icons.view_week,
         'color': Colors.blue
       },
       {
-        'label': 'Tháng này',
+        'label': l10n.thisMonth,
         'preset': 'month',
         'icon': Icons.calendar_view_month,
         'color': Colors.purple
       },
       {
-        'label': '30 ngày qua',
+        'label': l10n.last30Days,
         'preset': 'last30days',
         'icon': Icons.trending_up,
         'color': Colors.teal
@@ -740,6 +748,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -795,8 +804,8 @@ class _BillsScreenState extends State<BillsScreen> {
                 children: [
                   AppWidgets.gradientHeader(
                     icon: Icons.receipt,
-                    title: 'Hóa đơn',
-                    subtitle: 'Quản lý hóa đơn',
+                    title: l10n.bills,
+                    subtitle: l10n.billsManagement,
                     fullWidth: true,
                   ),
 
@@ -812,7 +821,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: 'Tìm kiếm hóa đơn...',
+                        hintText: l10n.searchBills,
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -908,7 +917,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     children: [
                       Expanded(
                         child: _buildStatCard(
-                          title: _getStatsTitle('Hóa đơn'),
+                          title: _getStatsTitle(l10n.bills),
                           value: _filteredOrders.length.toString(),
                           icon: Icons.receipt,
                           color: Colors.blue,
@@ -917,7 +926,7 @@ class _BillsScreenState extends State<BillsScreen> {
                       const SizedBox(width: AppTheme.spacingS),
                       Expanded(
                         child: _buildStatCard(
-                          title: _getStatsTitle('Doanh thu'),
+                          title: _getStatsTitle(l10n.revenue),
                           value:
                               '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
                           icon: Icons.attach_money,
@@ -1009,6 +1018,7 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   Widget _buildOrderCard(Order order) {
+    final l10n = AppLocalizations.of(context)!;
     final canUpdate = _canUpdateOrder(order);
 
     return Container(
@@ -1081,9 +1091,7 @@ class _BillsScreenState extends State<BillsScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  order.isPaid
-                                      ? 'Đã thanh toán'
-                                      : 'Chưa thanh toán',
+                                  order.isPaid ? l10n.paid : l10n.unpaid,
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
@@ -1206,7 +1214,7 @@ class _BillsScreenState extends State<BillsScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Giảm ${order.discountPercent.toStringAsFixed(0)}%:',
+                              '${l10n.discount} ${order.discountPercent.toStringAsFixed(0)}%:',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -1228,8 +1236,8 @@ class _BillsScreenState extends State<BillsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Tổng tiền:',
+                          Text(
+                            l10n.totalAmount,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -1258,6 +1266,7 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   Widget _buildServicesDisplay(Order order) {
+    final l10n = AppLocalizations.of(context)!;
     // First try to get services from the loaded services list
     final services = _getServicesForOrder(order);
 
@@ -1304,7 +1313,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
     // If no service names available, show a placeholder
     return Text(
-      'Không có dịch vụ',
+      l10n.noServices,
       style: TextStyle(
         fontSize: 14,
         color: Colors.grey[600],

@@ -1,0 +1,1952 @@
+{
+  "appTitle": "美甲管理",
+  "welcome": "欢迎来到",
+  "salon": "沙龙",
+  "professionalNailSalonManagement": "专业美甲沙龙管理系统",
+  "todayOverview": "今日概览",
+  "customers": "客户",
+  "bills": "账单",
+  "revenue": "收入",
+  "boss": "老板",
+  "employee": "员工",
+  "information": "信息",
+  "salonInfo": "沙龙信息",
+  "menu": "菜单",
+  "management": "管理",
+  "employees": "员工",
+  "categories": "分类",
+  "services": "服务",
+  "createOrder": "创建订单",
+  "billsReports": "账单和报告",
+  "reports": "报告",
+  "version": "版本",
+  "logout": "退出登录",
+  "loading": "加载中...",
+  "cannotLoadVersionInfo": "无法加载版本信息",
+  "login": "登录",
+  "username": "用户名",
+  "password": "密码",
+  "loginButton": "登录",
+  "loginError": "登录错误",
+  "invalidCredentials": "用户名或密码不正确",
+  "add": "添加",
+  "edit": "编辑",
+  "delete": "删除",
+  "save": "保存",
+  "cancel": "取消",
+  "confirm": "确认",
+  "search": "搜索",
+  "name": "姓名",
+  "phone": "电话",
+  "address": "地址",
+  "price": "价格",
+  "description": "描述",
+  "status": "状态",
+  "date": "日期",
+  "time": "时间",
+  "total": "总计",
+  "quantity": "数量",
+  "language": "语言",
+  "settings": "设置",
+  "vietnamese": "越南语",
+  "english": "英语",
+  "chinese": "中文",
+  "korean": "韩语",
+  "roleSelection": "选择角色",
+  "shopOwner": "店主",
+  "employee": "员工",
+  "email": "邮箱",
+  "checkEmail": "检查邮箱",
+  "emailExists": "邮箱已存在",
+  "emailNotExists": "邮箱不存在",
+  "createAccount": "创建账户",
+  "employeeLogin": "员工登录",
+  "databaseName": "数据库名称",
+  "phoneNumber": "电话号码",
+  "employeePhone": "员工电话",
+  "employeePassword": "员工密码",
+  "shopEmail": "店铺邮箱",
+  "pleaseEnterEmail": "请输入邮箱",
+  "pleaseEnterPassword": "请输入密码",
+  "pleaseEnterPhone": "请输入电话号码",
+  "pleaseEnterName": "请输入姓名",
+  "pleaseEnterDatabaseName": "请输入数据库名称",
+  "invalidEmail": "邮箱格式无效",
+  "passwordTooShort": "密码至少6个字符",
+  "phoneTooShort": "电话号码至少10位",
+  "databaseNameTooShort": "数据库名称至少3个字符",
+  "checkingEmail": "正在检查邮箱...",
+  "creatingAccount": "正在创建账户...",
+  "loggingIn": "正在登录...",
+  "errorCheckingEmail": "检查邮箱时出错",
+  "errorCreatingAccount": "创建账户时出错",
+  "errorLoggingIn": "登录时出错",
+  "accountCreatedSuccessfully": "账户创建成功",
+  "loginSuccessful": "登录成功",
+  "customerName": "客户姓名",
+  "customerPhone": "客户电话",
+  "customerAddress": "客户地址",
+  "addCustomer": "添加客户",
+  "editCustomer": "编辑客户",
+  "deleteCustomer": "删除客户",
+  "customerAddedSuccessfully": "客户添加成功",
+  "customerUpdatedSuccessfully": "客户更新成功",
+  "customerDeletedSuccessfully": "客户删除成功",
+  "errorAddingCustomer": "添加客户时出错",
+  "errorUpdatingCustomer": "更新客户时出错",
+  "errorDeletingCustomer": "删除客户时出错",
+  "confirmDeleteCustomer": "确定要删除此客户吗？",
+  "employeeName": "员工姓名",
+  "employeePhone": "员工电话",
+  "employeeAddress": "员工地址",
+  "employeePosition": "职位",
+  "employeeSalary": "工资",
+  "addEmployee": "添加员工",
+  "editEmployee": "编辑员工",
+  "deleteEmployee": "删除员工",
+  "employeeAddedSuccessfully": "员工添加成功",
+  "employeeUpdatedSuccessfully": "员工更新成功",
+  "employeeDeletedSuccessfully": "员工删除成功",
+  "errorAddingEmployee": "添加员工时出错",
+  "errorUpdatingEmployee": "更新员工时出错",
+  "errorDeletingEmployee": "删除员工时出错",
+  "confirmDeleteEmployee": "确定要删除此员工吗？",
+  "selectImage": "选择图片",
+  "cannotSelectImage": "无法选择图片。请检查照片库访问权限并重试。",
+  "categoryName": "分类名称",
+  "addCategory": "添加分类",
+  "editCategory": "编辑分类",
+  "deleteCategory": "删除分类",
+  "categoryAddedSuccessfully": "分类添加成功",
+  "categoryUpdatedSuccessfully": "分类更新成功",
+  "categoryDeletedSuccessfully": "分类删除成功",
+  "errorAddingCategory": "添加分类时出错",
+  "errorUpdatingCategory": "更新分类时出错",
+  "errorDeletingCategory": "删除分类时出错",
+  "confirmDeleteCategory": "确定要删除此分类吗？",
+  "serviceName": "服务名称",
+  "servicePrice": "服务价格",
+  "serviceDuration": "服务时长",
+  "addService": "添加服务",
+  "editService": "编辑服务",
+  "deleteService": "删除服务",
+  "serviceAddedSuccessfully": "服务添加成功",
+  "serviceUpdatedSuccessfully": "服务更新成功",
+  "serviceDeletedSuccessfully": "服务删除成功",
+  "errorAddingService": "添加服务时出错",
+  "errorUpdatingService": "更新服务时出错",
+  "errorDeletingService": "删除服务时出错",
+  "confirmDeleteService": "确定要删除此服务吗？",
+  "order": "订单",
+  "orders": "订单",
+  "createOrder": "创建订单",
+  "updateOrder": "更新订单",
+  "orderCreatedSuccessfully": "订单创建成功",
+  "orderUpdatedSuccessfully": "订单更新成功",
+  "orderDeletedSuccessfully": "订单删除成功",
+  "errorCreatingOrder": "创建订单时出错",
+  "errorUpdatingOrder": "更新订单时出错",
+  "errorDeletingOrder": "删除订单时出错",
+  "confirmDeleteOrder": "确定要删除此订单吗？",
+  "selectServices": "选择服务",
+  "selectEmployees": "选择员工",
+  "selectedServices": "个服务已选择",
+  "selectedEmployees": "个员工已选择",
+  "pleaseSelectAtLeastOneService": "请至少选择一个服务",
+  "pleaseSelectAtLeastOneEmployee": "请至少选择一个员工",
+  "canOnlyUpdateOrderToday": "只能更新今天的订单",
+  "customerInformation": "客户信息",
+  "employeeInformation": "员工信息",
+  "serviceCategories": "服务分类",
+  "performingEmployee": "执行员工",
+  "loggedInEmployee": "登录员工",
+  "foundCustomer": "找到客户",
+  "customerNotFound": "未找到此电话号码的客户。请输入姓名创建新客户。",
+  "foundEmployee": "找到员工",
+  "employeeNotFound": "未找到此电话号码的员工。请输入姓名创建新员工。",
+  "errorLoadingCategories": "加载分类时出错",
+  "errorLoadingServices": "加载服务时出错",
+  "errorLoadingEmployees": "加载员工列表时出错",
+  "errorSearchingCustomer": "搜索客户时出错",
+  "errorSearchingEmployee": "搜索员工时出错",
+  "invalidServiceData": "服务数据无效",
+  "bill": "账单",
+  "bills": "账单",
+  "billNumber": "账单号",
+  "billDate": "账单日期",
+  "billTotal": "账单总额",
+  "billStatus": "账单状态",
+  "paid": "已支付",
+  "unpaid": "未支付",
+  "pending": "待处理",
+  "completed": "已完成",
+  "cancelled": "已取消",
+  "report": "报告",
+  "reports": "报告",
+  "dailyReport": "日报",
+  "weeklyReport": "周报",
+  "monthlyReport": "月报",
+  "yearlyReport": "年报",
+  "totalRevenue": "总收入",
+  "totalOrders": "总订单数",
+  "totalCustomers": "总客户数",
+  "averageOrderValue": "平均订单价值",
+  "salonName": "沙龙名称",
+  "salonAddress": "沙龙地址",
+  "salonPhone": "沙龙电话",
+  "salonEmail": "沙龙邮箱",
+  "salonDescription": "沙龙描述",
+  "salonHours": "营业时间",
+  "updateSalonInfo": "更新沙龙信息",
+  "salonInfoUpdatedSuccessfully": "沙龙信息更新成功",
+  "errorUpdatingSalonInfo": "更新沙龙信息时出错",
+  "notifications": "通知",
+  "noNotifications": "无通知",
+  "markAsRead": "标记为已读",
+  "markAllAsRead": "全部标记为已读",
+  "clearAll": "清除全部",
+  "minutes": "分钟",
+  "hours": "小时",
+  "days": "天",
+  "weeks": "周",
+  "months": "月",
+  "years": "年",
+  "ago": "前",
+  "now": "现在",
+  "today": "今天",
+  "yesterday": "昨天",
+  "tomorrow": "明天",
+  "clearFilter": "清除筛选",
+  "apply": "应用",
+  "chooseAction": "选择此{item}的操作",
+  "tryAgain": "重试",
+  "noItemsFound": "未找到{item}",
+  "deleteAllNotifications": "删除所有通知",
+  "confirmDeleteAllNotifications": "您确定要删除所有通知吗？",
+  "selectQRCode": "选择二维码",
+  "changeLogo": "更改标志",
+  "allEmployees": "所有员工",
+  "allStatuses": "所有状态",
+  "errorLoadingData": "加载数据错误：{error}",
+  "addImage": "添加图片",
+  "categoryFilter": "分类筛选",
+  "selectCategoriesToFilter": "选择分类以筛选服务",
+  "categoriesSelected": "已选择{count}个分类",
+  "selectedCategories": "已选择的分类：",
+  "removeAll": "移除全部",
+  "allCategories": "所有分类（{count}）",
+  "createNewService": "创建新的美甲服务",
+  "pleaseEnterServiceName": "请输入服务名称",
+  "pleaseEnterPrice": "请输入价格",
+  "pleaseEnterValidPrice": "请输入有效价格",
+  "errorUploadingImage": "上传图片到服务器时出错",
+  "serviceAddedSuccessfully": "服务添加成功",
+  "errorAddingService": "添加服务时出错",
+  "editService": "编辑服务",
+  "updateServiceInfo": "更新服务信息",
+  "errorUpdatingService": "更新服务信息时出错",
+  "serviceDeletedSuccessfully": "服务删除成功",
+  "errorDeletingService": "删除服务时出错",
+  "categoryNameRequired": "分类名称不能为空",
+  "errorUpdatingCategory": "更新分类信息时出错",
+  "categoryDeletedSuccessfully": "分类删除成功",
+  "errorDeletingCategory": "删除分类时出错",
+  "employeePhoneExists": "员工电话号码已存在",
+  "errorUpdatingEmployee": "更新员工信息时出错",
+  "employeeDeletedSuccessfully": "员工删除成功",
+  "errorDeletingEmployee": "删除员工时出错",
+  "customerPhoneExists": "客户电话号码已存在",
+  "customerDeletedSuccessfully": "客户删除成功",
+  "errorDeletingCustomer": "删除客户时出错",
+  "errorLoadingCategories": "加载分类时出错：{error}",
+  "errorLoadingServices": "加载服务时出错：{error}",
+  "errorLoadingEmployees": "加载员工列表时出错：{error}",
+  "errorSearchingCustomer": "搜索客户时出错：{error}",
+  "errorSearchingEmployee": "搜索员工时出错：{error}",
+  "orderUpdatedSuccessfully": "订单更新成功！",
+  "errorUpdatingOrder": "更新订单时出错：{error}",
+  "orderCreatedSuccessfully": "订单创建成功！",
+  "errorCreatingOrder": "创建订单时出错：{error}",
+  "errorUploadingLogo": "上传标志到服务器时出错",
+  "errorUploadingQRCode": "上传二维码到服务器时出错",
+  "salonInfoSavedSuccessfully": "沙龙信息保存成功！",
+  "fullName": "全名",
+  "databaseUsername": "数据库用户名",
+  "databasePassword": "数据库密码",
+  "vnd": "越南盾",
+  "hoursAgo": "{hours}小时前",
+  "minutesAgo": "{minutes}分钟前",
+  "justNow": "刚刚",
+  "enterNewCustomerInfo": "输入新客户信息",
+  "@enterNewCustomerInfo": {
+    "description": "Enter new customer information"
+  },
+  "updateCustomerInfo": "更新客户信息",
+  "@updateCustomerInfo": {
+    "description": "Update customer information"
+  },
+  "phoneLabel": "电话: {phone}",
+  "@phoneLabel": {
+    "description": "Phone label",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "customer": "客户",
+  "@customer": {
+    "description": "Customer"
+  },
+  "customersTitle": "客户",
+  "@customersTitle": {
+    "description": "Customers title"
+  },
+  "manageCustomerInfo": "管理客户信息",
+  "@manageCustomerInfo": {
+    "description": "Manage customer information"
+  },
+  "searchCustomers": "搜索客户...",
+  "@searchCustomers": {
+    "description": "Search customers"
+  },
+  "errorLoadingCustomerList": "加载客户列表时出错",
+  "@errorLoadingCustomerList": {
+    "description": "Error loading customer list"
+  },
+  "cannotLoadCustomerList": "无法加载客户列表",
+  "@cannotLoadCustomerList": {
+    "description": "Cannot load customer list"
+  },
+  "checkNetworkOrTryAgain": "请检查网络连接或重试",
+  "@checkNetworkOrTryAgain": {
+    "description": "Please check network connection or try again"
+  },
+  "enterNewEmployeeInfo": "输入新员工信息",
+  "@enterNewEmployeeInfo": {
+    "description": "Enter new employee information"
+  },
+  "pleaseEnterFullName": "请输入全名",
+  "@pleaseEnterFullName": {
+    "description": "Please enter full name"
+  },
+  "pleaseEnterPhoneNumber": "请输入电话号码",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Please enter phone number"
+  },
+  "errorUploadingImageToServer": "上传图片到服务器时出错",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server"
+  },
+  "updateEmployeeInfo": "更新员工信息",
+  "@updateEmployeeInfo": {
+    "description": "Update employee information"
+  },
+  "newPasswordOptional": "新密码（不更改请留空）",
+  "@newPasswordOptional": {
+    "description": "New password optional"
+  },
+  "employeeInfoUpdatedSuccessfully": "员工信息更新成功",
+  "@employeeInfoUpdatedSuccessfully": {
+    "description": "Employee information updated successfully"
+  },
+  "manageSalonEmployees": "管理沙龙员工",
+  "@manageSalonEmployees": {
+    "description": "Manage salon employees"
+  },
+  "searchEmployees": "搜索员工...",
+  "@searchEmployees": {
+    "description": "Search employees"
+  },
+  "errorLoadingEmployeeList": "加载员工列表时出错",
+  "@errorLoadingEmployeeList": {
+    "description": "Error loading employee list"
+  },
+  "cannotLoadEmployeeList": "无法加载员工列表",
+  "@cannotLoadEmployeeList": {
+    "description": "Cannot load employee list"
+  },
+  "errorUploadingImageToServer": "上传图片到服务器时出错：{error}",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCategoryInfo": "更新分类信息",
+  "@updateCategoryInfo": {
+    "description": "Update category information"
+  },
+  "categoryInfoUpdatedSuccessfully": "分类信息更新成功",
+  "@categoryInfoUpdatedSuccessfully": {
+    "description": "Category information updated successfully"
+  },
+  "category": "分类",
+  "@category": {
+    "description": "Category"
+  },
+  "categoriesTitle": "分类",
+  "@categoriesTitle": {
+    "description": "Categories title"
+  },
+  "categoriesListDescription": "服务分类列表",
+  "@categoriesListDescription": {
+    "description": "Categories list description"
+  },
+  "searchCategories": "搜索分类...",
+  "@searchCategories": {
+    "description": "Search categories"
+  },
+  "errorLoadingCategoriesList": "加载分类列表时出错",
+  "@errorLoadingCategoriesList": {
+    "description": "Error loading categories list"
+  },
+  "cannotLoadCategoriesList": "无法加载分类列表",
+  "@cannotLoadCategoriesList": {
+    "description": "Cannot load categories list"
+  },
+  "checkNetworkOrTryAgainCategories": "请检查网络连接或重试",
+  "@checkNetworkOrTryAgainCategories": {
+    "description": "Please check network connection or try again"
+  },
+  "servicesTitle": "服务",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "按分类管理服务",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "searchServices": "搜索服务...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "showingAllServices": "显示全部 {total} 个服务",
+  "@showingAllServices": {
+    "description": "Showing all services message",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategoryAndSearch": "找到 {shown}/{total} 个服务（按分类和搜索筛选）",
+  "@foundServicesWithCategoryAndSearch": {
+    "description": "Found services with category and search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategory": "找到 {shown}/{total} 个服务（按 {count} 个分类筛选）",
+  "@foundServicesWithCategory": {
+    "description": "Found services with category filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithSearch": "找到 {shown}/{total} 个服务（搜索：\"{search}\"）",
+  "@foundServicesWithSearch": {
+    "description": "Found services with search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "clearFilters": "清除筛选",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+  "errorLoadingServicesList": "加载服务列表时出错",
+  "@errorLoadingServicesList": {
+    "description": "Error loading services list"
+  },
+  "cannotLoadServicesList": "无法加载服务列表",
+  "@cannotLoadServicesList": {
+    "description": "Cannot load services list"
+  },
+  "checkNetworkOrTryAgainServices": "请检查网络连接或重试",
+  "@checkNetworkOrTryAgainServices": {
+    "description": "Please check network connection or try again"
+  },
+  "serviceUpdatedSuccessfully": "服务信息更新成功",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service information updated successfully"
+  },
+  "service": "服务",
+  "@service": {
+    "description": "Service"
+  },
+  "vnd": "越南盾",
+  "@vnd": {
+    "description": "Vietnamese Dong currency"
+  },
+  "customerFound": "找到客户：{customerName}",
+  "@customerFound": {
+    "description": "Message when customer is found",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "未找到此电话号码的客户。请输入姓名以创建新客户。",
+  "@customerNotFound": {
+    "description": "Message when customer is not found"
+  },
+  "employeeFound": "找到员工：{employeeName}",
+  "@employeeFound": {
+    "description": "Message when employee is found",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "未找到此电话号码的员工。请输入姓名以创建新员工。",
+  "@employeeNotFound": {
+    "description": "Message when employee is not found"
+  },
+  "invalidServiceData": "服务数据无效",
+  "@invalidServiceData": {
+    "description": "Error message for invalid service data"
+  },
+  "createNewOrder": "创建新订单",
+  "@createNewOrder": {
+    "description": "Title for creating new order"
+  },
+  "servicesSelected": "已选择 {count} 个服务",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInformation": "客户信息",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "电话号码",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "pleaseEnterPhoneNumber": "请输入电话号码",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Validation message for phone number"
+  },
+  "customerName": "客户姓名",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+  "pleaseEnterCustomerName": "请输入客户姓名",
+  "@pleaseEnterCustomerName": {
+    "description": "Validation message for customer name"
+  },
+  "employeeInformation": "员工信息",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "选择员工",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "已选择 {count} 个员工",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "执行员工",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "已登录员工",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "服务分类",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "选择分类",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "已选择 {count} 个分类",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "服务",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "选择服务",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "已选择 {count} 个服务",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "折扣",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "折扣必须在 0-100% 之间",
+  "@discountMustBe0To100": {
+    "description": "Validation message for discount percentage"
+  },
+  "discountAmount": "折扣：{amount} 越南盾",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "小费",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "小费必须大于 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Validation message for tip amount"
+  },
+  "tipAmount": "小费：{amount} 越南盾",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotal": "小计：",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "subtotalAmount": "{amount} 越南盾",
+  "@subtotalAmount": {
+    "description": "Subtotal amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "discountPercentage": "折扣（{percentage}%）：",
+  "@discountPercentage": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "discountAmountNegative": "-{amount} 越南盾",
+  "@discountAmountNegative": {
+    "description": "Negative discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "小费：",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "tipAmountPositive": "+{amount} 越南盾",
+  "@tipAmountPositive": {
+    "description": "Positive tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "totalPayment": "总付款：",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "totalPaymentAmount": "{amount} 越南盾",
+  "@totalPaymentAmount": {
+    "description": "Total payment amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "createOrder": "创建订单",
+  "@createOrder": {
+    "description": "Create order button label"
+  },
+  "refresh": "刷新",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "select": "选择",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "cannotLoadSalonInfo": "无法加载沙龙信息。请检查网络连接并重试。",
+  "@cannotLoadSalonInfo": {
+    "description": "Error message when cannot load salon information"
+  },
+  "cannotSelectImage": "无法选择图片。请检查照片库访问权限并重试。",
+  "@cannotSelectImage": {
+    "description": "Error message when cannot select image"
+  },
+  "cannotSaveSalonInfo": "无法保存沙龙信息。请检查网络连接并重试。",
+  "@cannotSaveSalonInfo": {
+    "description": "Error message when cannot save salon information"
+  },
+  "basicInformation": "基本信息",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "socialMedia": "社交媒体",
+  "@socialMedia": {
+    "description": "Social media section title"
+  },
+  "salonInformation": "沙龙信息",
+  "@salonInformation": {
+    "description": "Salon information title"
+  },
+  "manageSalonInfoAndContact": "管理沙龙信息和联系方式",
+  "@manageSalonInfoAndContact": {
+    "description": "Description for salon information management"
+  },
+  "qrCode": "二维码",
+  "@qrCode": {
+    "description": "QR Code section title"
+  },
+  "salonLogo": "沙龙标志",
+  "@salonLogo": {
+    "description": "Salon logo section title"
+  },
+  "selectQRCode": "选择二维码",
+  "@selectQRCode": {
+    "description": "Select QR Code button text"
+  },
+  "selectLogo": "选择标志",
+  "@selectLogo": {
+    "description": "Select Logo button text"
+  },
+  "salonNameLabel": "沙龙名称",
+  "@salonNameLabel": {
+    "description": "Salon name field label"
+  },
+  "addressLabel": "地址",
+  "@addressLabel": {
+    "description": "Address field label"
+  },
+  "phoneNumberLabel": "电话号码",
+  "@phoneNumberLabel": {
+    "description": "Phone number field label"
+  },
+  "emailLabel": "邮箱",
+  "@emailLabel": {
+    "description": "Email field label"
+  },
+  "websiteLabel": "网站",
+  "@websiteLabel": {
+    "description": "Website field label"
+  },
+  "facebookLabel": "脸书",
+  "@facebookLabel": {
+    "description": "Facebook field label"
+  },
+  "instagramLabel": "Instagram",
+  "@instagramLabel": {
+    "description": "Instagram field label"
+  },
+  "zaloLabel": "Zalo",
+  "@zaloLabel": {
+    "description": "Zalo field label"
+  },
+  "saving": "保存中...",
+  "@saving": {
+    "description": "Saving status text"
+  },
+  "saveInformation": "保存信息",
+  "@saveInformation": {
+    "description": "Save information button text"
+  },
+  "menuTitle": "菜单",
+  "@menuTitle": {
+    "description": "Menu screen title"
+  },
+  "menuSubtitle": "菜单分类和服务",
+  "@menuSubtitle": {
+    "description": "Menu screen subtitle"
+  },
+  "searchServicesPlaceholder": "搜索服务...",
+  "@searchServicesPlaceholder": {
+    "description": "Search services placeholder"
+  },
+  "noCategoriesYet": "暂无分类",
+  "@noCategoriesYet": {
+    "description": "No categories available message"
+  },
+  "categoriesSection": "分类",
+  "@categoriesSection": {
+    "description": "Categories section title"
+  },
+  "servicesCount": "{count}个服务",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearFilter": "清除筛选",
+  "@clearFilter": {
+    "description": "Clear filter button text"
+  },
+  "categoriesCount": "{count}个分类",
+  "@categoriesCount": {
+    "description": "Categories count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "服务",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "viewAllServices": "查看所有服务",
+  "@viewAllServices": {
+    "description": "View all services button text"
+  },
+  "noServicesFoundWithSearchAndCategory": "在{category}中未找到\"{search}\"",
+  "@noServicesFoundWithSearchAndCategory": {
+    "description": "No services found with search and category filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesFoundWithSearch": "未找到\"{search}\"",
+  "@noServicesFoundWithSearch": {
+    "description": "No services found with search filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesInCategory": "\"{category}\"分类暂无服务",
+  "@noServicesInCategory": {
+    "description": "No services in category message",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesYet": "暂无服务",
+  "@noServicesYet": {
+    "description": "No services available message"
+  },
+  "unknownCategory": "未知",
+  "@unknownCategory": {
+    "description": "Unknown category name"
+  },
+  "billsManagement": "账单管理",
+  "@billsManagement": {
+    "description": "Bills management subtitle"
+  },
+  "searchBills": "搜索账单...",
+  "@searchBills": {
+    "description": "Search bills placeholder text"
+  },
+  "filterByTime": "按时间筛选",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewBills": "选择时间范围查看账单",
+  "@selectTimeRangeToViewBills": {
+    "description": "Select time range to view bills description"
+  },
+  "selectCustomTimeRange": "选择自定义时间范围",
+  "@selectCustomTimeRange": {
+    "description": "Select custom time range button text"
+  },
+  "selectStartAndEndDate": "选择开始和结束日期",
+  "@selectStartAndEndDate": {
+    "description": "Select start and end date description"
+  },
+  "quickSelect": "快速选择",
+  "@quickSelect": {
+    "description": "Quick select label"
+  },
+  "close": "关闭",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "今天",
+  "@today": {
+    "description": "Today preset"
+  },
+  "yesterday": "昨天",
+  "@yesterday": {
+    "description": "Yesterday preset"
+  },
+  "thisWeek": "本周",
+  "@thisWeek": {
+    "description": "This week preset"
+  },
+  "thisMonth": "本月",
+  "@thisMonth": {
+    "description": "This month preset"
+  },
+  "last30Days": "过去30天",
+  "@last30Days": {
+    "description": "Last 30 days preset"
+  },
+  "noBillsInTimeRange": "此时间范围内没有账单",
+  "@noBillsInTimeRange": {
+    "description": "No bills in time range message"
+  },
+  "noBillsFound": "未找到账单",
+  "@noBillsFound": {
+    "description": "No bills found message"
+  },
+  "noBillsYet": "暂无账单",
+  "@noBillsYet": {
+    "description": "No bills yet message"
+  },
+  "noYourBillsInTimeRange": "此时间范围内没有您的账单",
+  "@noYourBillsInTimeRange": {
+    "description": "No your bills in time range message"
+  },
+  "noYourBillsFound": "未找到您的账单",
+  "@noYourBillsFound": {
+    "description": "No your bills found message"
+  },
+  "noYourBillsYet": "您还没有任何账单",
+  "@noYourBillsYet": {
+    "description": "No your bills yet message"
+  },
+  "tryDifferentTimeRange": "尝试选择不同的时间范围或清除时间筛选",
+  "@tryDifferentTimeRange": {
+    "description": "Try different time range message"
+  },
+  "tryDifferentSearch": "尝试使用不同的关键词搜索",
+  "@tryDifferentSearch": {
+    "description": "Try different search message"
+  },
+  "createFirstOrderToViewBills": "创建第一个订单以在此处查看账单",
+  "@createFirstOrderToViewBills": {
+    "description": "Create first order to view bills message"
+  },
+  "createFirstOrderToViewYourBills": "创建第一个订单以在此处查看您的账单",
+  "@createFirstOrderToViewYourBills": {
+    "description": "Create first order to view your bills message"
+  },
+  "filtered": "已筛选",
+  "@filtered": {
+    "description": "Filtered suffix"
+  },
+  "total": "总计",
+  "@total": {
+    "description": "Total prefix"
+  },
+  "bills": "账单",
+  "@bills": {
+    "description": "Bills label"
+  },
+  "revenue": "收入",
+  "@revenue": {
+    "description": "Revenue label"
+  },
+  "paid": "已支付",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "未支付",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "discount": "折扣",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "totalAmount": "总金额：",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noServices": "无服务",
+  "@noServices": {
+    "description": "No services message"
+  },
+  "temporary": "临时",
+  "@temporary": {
+    "description": "Temporary bill ID"
+  },
+  "cannotUpdateOrderTodayOnly": "只能更新今天的订单",
+  "@cannotUpdateOrderTodayOnly": {
+    "description": "Cannot update order today only message"
+  },
+  "serviceInfoNotFound": "未找到此订单的服务信息",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "filterByTime": "按时间筛选",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewReports": "选择时间范围查看报告",
+  "@selectTimeRangeToViewReports": {
+    "description": "Filter by time dialog subtitle"
+  },
+  "selectCustomTimeRange": "选择自定义时间范围",
+  "@selectCustomTimeRange": {
+    "description": "Custom time range button text"
+  },
+  "selectStartAndEndDate": "选择开始和结束日期",
+  "@selectStartAndEndDate": {
+    "description": "Custom time range button subtitle"
+  },
+  "quickSelect": "快速选择",
+  "@quickSelect": {
+    "description": "Quick select section title"
+  },
+  "close": "关闭",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "今天",
+  "@today": {
+    "description": "Today preset button"
+  },
+  "yesterday": "昨天",
+  "@yesterday": {
+    "description": "Yesterday preset button"
+  },
+  "thisWeek": "本周",
+  "@thisWeek": {
+    "description": "This week preset button"
+  },
+  "thisMonth": "本月",
+  "@thisMonth": {
+    "description": "This month preset button"
+  },
+  "last30Days": "过去30天",
+  "@last30Days": {
+    "description": "Last 30 days preset button"
+  },
+  "revenueReports": "收入报告",
+  "@revenueReports": {
+    "description": "Revenue reports screen title"
+  },
+  "statisticsAndRevenueReports": "统计和收入报告",
+  "@statisticsAndRevenueReports": {
+    "description": "Revenue reports screen subtitle"
+  },
+  "searchHint": "搜索...",
+  "@searchHint": {
+    "description": "Search field hint text"
+  },
+  "selectEmployee": "选择员工",
+  "@selectEmployee": {
+    "description": "Employee filter label"
+  },
+  "paymentStatus": "支付状态",
+  "@paymentStatus": {
+    "description": "Payment status filter label"
+  },
+  "bills": "账单",
+  "@bills": {
+    "description": "Bills summary card title"
+  },
+  "revenue": "收入",
+  "@revenue": {
+    "description": "Revenue summary card title"
+  },
+  "discountPercent": "折扣 {percent}%：",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "总金额：",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noOrdersInTimeRange": "此时间范围内没有订单",
+  "@noOrdersInTimeRange": {
+    "description": "Empty state when no orders in selected time range"
+  },
+  "noOrdersFound": "未找到订单",
+  "@noOrdersFound": {
+    "description": "Empty state when search returns no results"
+  },
+  "noOrdersYet": "暂无订单",
+  "@noOrdersYet": {
+    "description": "Empty state when no orders exist"
+  },
+  "tryDifferentTimeRange": "尝试选择不同的时间范围或清除时间筛选器",
+  "@tryDifferentTimeRange": {
+    "description": "Empty state message for time range filter"
+  },
+  "tryDifferentSearch": "尝试使用不同的关键词搜索",
+  "@tryDifferentSearch": {
+    "description": "Empty state message for search"
+  },
+  "createFirstOrderToViewReports": "创建第一个订单以在此处查看报告",
+  "@createFirstOrderToViewReports": {
+    "description": "Empty state message for no orders"
+  },
+  "noServices": "无服务",
+  "@noServices": {
+    "description": "No services available message"
+  },
+  "billPaymentReceipt": "付款收据",
+  "@billPaymentReceipt": {
+    "description": "Bill payment receipt title"
+  },
+  "print": "打印",
+  "@print": {
+    "description": "Print button label"
+  },
+  "phoneNumber": "电话：",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "billCode": "账单编号：",
+  "@billCode": {
+    "description": "Bill code label"
+  },
+  "createdDate": "创建日期：",
+  "@createdDate": {
+    "description": "Created date label"
+  },
+  "customerInformation": "客户信息",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "customerName": "客户姓名：",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "servingStaff": "服务员工：",
+  "@servingStaff": {
+    "description": "Serving staff label"
+  },
+  "serviceDetails": "服务详情",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "subtotal": "小计：",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discount": "折扣",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "tip": "小费：",
+  "@tip": {
+    "description": "Tip label"
+  },
+  "totalPayment": "总付款：",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "qrCodePayment": "二维码付款",
+  "@qrCodePayment": {
+    "description": "QR Code payment section title"
+  },
+  "noQrCode": "暂无二维码",
+  "@noQrCode": {
+    "description": "No QR code message"
+  },
+  "qrCodeDisplayError": "二维码显示错误",
+  "@qrCodeDisplayError": {
+    "description": "QR Code display error message"
+  },
+  "scanQrToPay": "扫描二维码付款",
+  "@scanQrToPay": {
+    "description": "Scan QR code to pay instruction"
+  },
+  "temporary": "临时",
+  "@temporary": {
+    "description": "Temporary placeholder text"
+  },
+  "serviceNotFoundError": "未找到此订单的服务信息",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  },
+  "billFooter": "感谢您使用我们的服务！",
+  "@billFooter": {
+    "description": "Bill footer message"
+  },
+  "billFooter2": "期待再次为您服务！",
+  "@billFooter2": {
+    "description": "Bill footer second message"
+  },
+  "updateOrder": "更新订单",
+  "@updateOrder": {
+    "description": "Update order screen title"
+  },
+  "servicesSelected": "已选择 {count} 个服务",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "canOnlyUpdateTodayOrders": "只能更新今天的订单",
+  "@canOnlyUpdateTodayOrders": {
+    "description": "Warning message for updating orders"
+  },
+  "customerFound": "找到客户：{name}",
+  "@customerFound": {
+    "description": "Customer found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "未找到此电话号码的客户。请输入姓名以创建新客户。",
+  "@customerNotFound": {
+    "description": "Customer not found message"
+  },
+  "employeeFound": "找到员工：{name}",
+  "@employeeFound": {
+    "description": "Employee found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "未找到此电话号码的员工。请输入姓名以创建新员工。",
+  "@employeeNotFound": {
+    "description": "Employee not found message"
+  },
+  "invalidServiceData": "无效的服务数据",
+  "@invalidServiceData": {
+    "description": "Invalid service data error"
+  },
+  "customerInformation": "客户信息",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "电话号码",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "pleaseEnterPhoneNumber": "请输入电话号码",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Phone number validation message"
+  },
+  "customerName": "客户姓名",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "pleaseEnterCustomerName": "请输入客户姓名",
+  "@pleaseEnterCustomerName": {
+    "description": "Customer name validation message"
+  },
+  "employeeInformation": "员工信息",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "选择员工",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "已选择 {count} 名员工",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "执行员工",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "已登录员工",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "服务类别",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "选择类别",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "已选择 {count} 个类别",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "服务",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "选择服务",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "已选择 {count} 个服务",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "折扣",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "折扣必须在 0-100% 之间",
+  "@discountMustBe0To100": {
+    "description": "Discount validation message"
+  },
+  "discountAmount": "折扣：{amount} 元",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "小费",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "小费必须大于 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Tip validation message"
+  },
+  "tipAmount": "小费：{amount} 元",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatus": "付款状态",
+  "@paymentStatus": {
+    "description": "Payment status section title"
+  },
+  "paid": "已付款",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "未付款",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "customerPaidFully": "客户已全额付款",
+  "@customerPaidFully": {
+    "description": "Customer paid fully message"
+  },
+  "customerNotPaid": "客户尚未付款",
+  "@customerNotPaid": {
+    "description": "Customer not paid message"
+  },
+  "subtotal": "小计：",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discountPercent": "折扣（{percent}%）：",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "小费：",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "totalPaymentLabel": "总付款：",
+  "@totalPaymentLabel": {
+    "description": "Total payment label"
+  },
+  "save": "保存",
+  "@save": {
+    "description": "Save button"
+  },
+  "cancel": "取消",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "select": "选择",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "orderNotFound": "找不到订单信息",
+  "@orderNotFound": {
+    "description": "Error message when order is not found"
+  },
+  "errorLoadingOrder": "加载订单信息时出错: {error}",
+  "@errorLoadingOrder": {
+    "description": "Error message when loading order fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cannotConnectToServer": "无法连接到服务器",
+  "@cannotConnectToServer": {
+    "description": "Error message when server connection fails"
+  },
+  "notificationNoOrderInfo": "通知不包含订单信息",
+  "@notificationNoOrderInfo": {
+    "description": "Warning message when notification lacks order data"
+  },
+  "allNotificationsMarkedAsRead": "所有通知已标记为已读",
+  "@allNotificationsMarkedAsRead": {
+    "description": "Success message when marking all notifications as read"
+  },
+  "notificationDeleted": "通知已删除",
+  "@notificationDeleted": {
+    "description": "Success message when notification is deleted"
+  },
+  "errorDeletingNotification": "删除通知时出错: {error}",
+  "@errorDeletingNotification": {
+    "description": "Error message when deleting notification fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allNotificationsDeleted": "所有通知已删除",
+  "@allNotificationsDeleted": {
+    "description": "Success message when all notifications are deleted"
+  },
+  "errorDeletingAllNotifications": "删除所有通知时出错: {error}",
+  "@errorDeletingAllNotifications": {
+    "description": "Error message when deleting all notifications fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "markAllAsReadTooltip": "全部标记为已读",
+  "@markAllAsReadTooltip": {
+    "description": "Tooltip for mark all as read button"
+  },
+  "clearAllTooltip": "清除全部",
+  "@clearAllTooltip": {
+    "description": "Tooltip for clear all button"
+  },
+  "noNotificationsYet": "暂无通知",
+  "@noNotificationsYet": {
+    "description": "Empty state message when no notifications exist"
+  },
+  "newNotificationsWillAppearHere": "新通知将在此处显示",
+  "@newNotificationsWillAppearHere": {
+    "description": "Empty state description for notifications"
+  },
+  "deleteAction": "删除",
+  "@deleteAction": {
+    "description": "Delete action in popup menu"
+  },
+  "pdfErrorCreating": "创建PDF时出错：{error}",
+  "@pdfErrorCreating": {
+    "description": "Error message when creating PDF fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorPluginNotSupported": "错误：此平台不支持插件。请在Android/iOS上运行或为macOS安装CocoaPods。",
+  "@pdfErrorPluginNotSupported": {
+    "description": "Error message when plugin is not supported on platform"
+  },
+  "pdfErrorSharingZalo": "分享到Zalo时出错：{error}",
+  "@pdfErrorSharingZalo": {
+    "description": "Error message when sharing to Zalo fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorSharingFile": "分享文件时出错：{error}",
+  "@pdfErrorSharingFile": {
+    "description": "Error message when sharing file fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorCannotShare": "无法分享文件：{error}",
+  "@pdfErrorCannotShare": {
+    "description": "Error message when file cannot be shared",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorNoFileData": "没有可分享的PDF文件或数据",
+  "@pdfErrorNoFileData": {
+    "description": "Error message when no PDF file or data available for sharing"
+  },
+  "pdfErrorNoFileToShare": "没有可分享的PDF文件",
+  "@pdfErrorNoFileToShare": {
+    "description": "Error message when no PDF file available for sharing"
+  },
+  "pdfZaloOpened": "Zalo已打开！请在分享菜单中选择Zalo来发送账单。",
+  "@pdfZaloOpened": {
+    "description": "Message when Zalo is opened for sharing"
+  },
+  "pdfBillFrom": "来自{salonName}的账单",
+  "@pdfBillFrom": {
+    "description": "Bill sharing text with salon name",
+    "placeholders": {
+      "salonName": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfFileCreatedManualShare": "PDF文件已创建。请手动分享。",
+  "@pdfFileCreatedManualShare": {
+    "description": "Message when PDF file is created and needs manual sharing"
+  },
+  "pdfPhoneNumber": "电话：{phoneNumber}",
+  "@pdfPhoneNumber": {
+    "description": "Phone number label in PDF",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfBillInfoTitle": "账单信息",
+  "@pdfBillInfoTitle": {
+    "description": "Bill information section title in PDF"
+  },
+  "pdfBillCode": "账单编号：",
+  "@pdfBillCode": {
+    "description": "Bill code label in PDF"
+  },
+  "pdfCreatedDate": "创建日期：",
+  "@pdfCreatedDate": {
+    "description": "Created date label in PDF"
+  },
+  "pdfCustomerInfoTitle": "客户信息",
+  "@pdfCustomerInfoTitle": {
+    "description": "Customer information section title in PDF"
+  },
+  "pdfCustomerName": "客户姓名：",
+  "@pdfCustomerName": {
+    "description": "Customer name label in PDF"
+  },
+  "pdfCustomerPhone": "电话号码：",
+  "@pdfCustomerPhone": {
+    "description": "Customer phone label in PDF"
+  },
+  "pdfEmployeeServed": "服务员工：",
+  "@pdfEmployeeServed": {
+    "description": "Employee served label in PDF"
+  },
+  "pdfServicesDetailTitle": "服务详情",
+  "@pdfServicesDetailTitle": {
+    "description": "Services detail section title in PDF"
+  },
+  "pdfPaymentInfoTitle": "付款信息",
+  "@pdfPaymentInfoTitle": {
+    "description": "Payment information section title in PDF"
+  },
+  "pdfSubtotal": "小计：",
+  "@pdfSubtotal": {
+    "description": "Subtotal label in PDF"
+  },
+  "pdfDiscount": "折扣（{percent}%）：",
+  "@pdfDiscount": {
+    "description": "Discount label in PDF with percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTip": "小费：",
+  "@pdfTip": {
+    "description": "Tip label in PDF"
+  },
+  "pdfTotalPayment": "总付款：",
+  "@pdfTotalPayment": {
+    "description": "Total payment label in PDF"
+  },
+  "pdfThankYouMessage": "感谢您使用我们的服务！",
+  "@pdfThankYouMessage": {
+    "description": "Thank you message in PDF footer"
+  },
+  "pdfSeeYouAgainMessage": "期待再次为您服务！",
+  "@pdfSeeYouAgainMessage": {
+    "description": "See you again message in PDF footer"
+  },
+  "pdfShareBillTitle": "分享账单",
+  "@pdfShareBillTitle": {
+    "description": "Share bill dialog title"
+  },
+  "pdfShareBillMessage": "选择分享账单的方式：",
+  "@pdfShareBillMessage": {
+    "description": "Share bill dialog message"
+  },
+  "pdfShareZalo": "Zalo",
+  "@pdfShareZalo": {
+    "description": "Zalo sharing option"
+  },
+  "pdfShareOther": "其他",
+  "@pdfShareOther": {
+    "description": "Other sharing option"
+  },
+  "pdfCancel": "取消",
+  "@pdfCancel": {
+    "description": "Cancel button text"
+  },
+  "pdfFileCreatedTitle": "PDF文件已创建",
+  "@pdfFileCreatedTitle": {
+    "description": "PDF file created dialog title"
+  },
+  "pdfFileCreatedSuccess": "PDF文件创建成功！",
+  "@pdfFileCreatedSuccess": {
+    "description": "PDF file created success message"
+  },
+  "pdfFilePath": "路径：{filePath}",
+  "@pdfFilePath": {
+    "description": "PDF file path label",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfYouCanDo": "您可以：",
+  "@pdfYouCanDo": {
+    "description": "What you can do label"
+  },
+  "pdfOpenWithApp": "• 使用PDF应用打开文件",
+  "@pdfOpenWithApp": {
+    "description": "Open file with PDF app option"
+  },
+  "pdfShareManually": "• 手动分享文件",
+  "@pdfShareManually": {
+    "description": "Share file manually option"
+  },
+  "pdfSendViaEmail": "• 通过邮件发送",
+  "@pdfSendViaEmail": {
+    "description": "Send via email option"
+  },
+  "pdfClose": "关闭",
+  "@pdfClose": {
+    "description": "Close button text"
+  },
+  "pdfOpenFile": "打开文件",
+  "@pdfOpenFile": {
+    "description": "Open file button text"
+  },
+  "pdfPathCopiedToClipboard": "文件路径已复制到剪贴板：{filePath}",
+  "@pdfPathCopiedToClipboard": {
+    "description": "File path copied to clipboard message",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTemporaryBillId": "临时",
+  "@pdfTemporaryBillId": {
+    "description": "Temporary bill ID when order ID is empty"
+  },
+  "roleSelection": "选择角色",
+  "@roleSelection": {
+    "description": "Role selection title"
+  },
+  "selectAccountTypeToContinue": "选择账户类型以继续",
+  "@selectAccountTypeToContinue": {
+    "description": "Role selection subtitle"
+  },
+  "connect": "连接",
+  "@connect": {
+    "description": "Connect button text"
+  },
+  "enterEmailToCheckAccount": "输入邮箱以检查账户",
+  "@enterEmailToCheckAccount": {
+    "description": "Email check subtitle"
+  },
+  "enterPasswordToLogin": "输入密码以登录",
+  "@enterPasswordToLogin": {
+    "description": "Password login subtitle"
+  },
+  "createNewAccountFor": "为新账户创建",
+  "@createNewAccountFor": {
+    "description": "Create account subtitle"
+  },
+  "createNewAccount": "创建新账户",
+  "@createNewAccount": {
+    "description": "Create new account text"
+  },
+  "enterEmployeeLoginInfo": "输入员工登录信息",
+  "@enterEmployeeLoginInfo": {
+    "description": "Employee login subtitle"
+  },
+  "continueText": "继续",
+  "@continueText": {
+    "description": "Continue button text"
+  },
+  "manageEntireSystem": "管理整个系统",
+  "@manageEntireSystem": {
+    "description": "Shop owner description"
+  },
+  "accessServicesCreateOrdersAndBills": "访问服务，创建订单和账单",
+  "@accessServicesCreateOrdersAndBills": {
+    "description": "Employee description"
+  },
+  "shopEmail": "店铺邮箱",
+  "@shopEmail": {
+    "description": "Shop email field label"
+  },
+  "employeePhone": "员工电话",
+  "@employeePhone": {
+    "description": "Employee phone field label"
+  },
+  "employeePassword": "员工密码",
+  "@employeePassword": {
+    "description": "Employee password field label"
+  },
+  "pleaseEnterPhone": "请输入电话号码",
+  "@pleaseEnterPhone": {
+    "description": "Please enter phone validation message"
+  },
+  "pleaseEnterPassword": "请输入密码",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password validation message"
+  },
+  "pleaseEnterEmail": "请输入邮箱",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email validation message"
+  },
+  "invalidEmail": "无效邮箱",
+  "@invalidEmail": {
+    "description": "Invalid email validation message"
+  },
+  "email": "邮箱",
+  "@email": {
+    "description": "Email field label"
+  },
+  "pleaseEnterYourEmail": "请输入您的邮箱",
+  "@pleaseEnterYourEmail": {
+    "description": "Please enter your email validation message"
+  },
+  "invalidEmailExample": "无效邮箱（例如：example@email.com）",
+  "@invalidEmailExample": {
+    "description": "Invalid email example validation message"
+  },
+  "invalidEmailMissingDomain": "无效邮箱（缺少域名）",
+  "@invalidEmailMissingDomain": {
+    "description": "Invalid email missing domain validation message"
+  },
+  "emailExistsInSystem": "邮箱在系统中已存在",
+  "@emailExistsInSystem": {
+    "description": "Email exists in system message"
+  },
+  "emailNotExistsWillCreateNew": "邮箱不存在，将创建新账户",
+  "@emailNotExistsWillCreateNew": {
+    "description": "Email not exists will create new account message"
+  },
+  "password": "密码",
+  "@password": {
+    "description": "Password field label"
+  },
+  "pleaseEnterPasswordValidation": "请输入密码",
+  "@pleaseEnterPasswordValidation": {
+    "description": "Please enter password validation message"
+  },
+  "passwordMinLength": "密码必须至少8个字符",
+  "@passwordMinLength": {
+    "description": "Password minimum length validation message"
+  },
+  "passwordMustHaveUppercase": "密码必须至少包含1个大写字母（A-Z）",
+  "@passwordMustHaveUppercase": {
+    "description": "Password must have uppercase validation message"
+  },
+  "passwordMustHaveLowercase": "密码必须至少包含1个小写字母（a-z）",
+  "@passwordMustHaveLowercase": {
+    "description": "Password must have lowercase validation message"
+  },
+  "passwordMustHaveNumber": "密码必须至少包含1个数字（0-9）",
+  "@passwordMustHaveNumber": {
+    "description": "Password must have number validation message"
+  },
+  "passwordMustHaveSpecialChar": "密码必须至少包含1个特殊字符",
+  "@passwordMustHaveSpecialChar": {
+    "description": "Password must have special character validation message"
+  },
+  "database": "数据库",
+  "@database": {
+    "description": "Database label"
+  },
+  "databaseLoginUsername": "数据库登录用户名",
+  "@databaseLoginUsername": {
+    "description": "Database login username field label"
+  },
+  "databasePassword": "数据库密码",
+  "@databasePassword": {
+    "description": "Database password field label"
+  },
+  "pleaseEnterDatabaseUsername": "请输入数据库用户名",
+  "@pleaseEnterDatabaseUsername": {
+    "description": "Please enter database username validation message"
+  },
+  "pleaseEnterDatabasePassword": "请输入数据库密码",
+  "@pleaseEnterDatabasePassword": {
+    "description": "Please enter database password validation message"
+  },
+  "databasePasswordMinLength": "数据库密码必须至少8个字符",
+  "@databasePasswordMinLength": {
+    "description": "Database password minimum length validation message"
+  },
+  "databasePasswordMustHaveUppercase": "数据库密码必须至少包含1个大写字母（A-Z）",
+  "@databasePasswordMustHaveUppercase": {
+    "description": "Database password must have uppercase validation message"
+  },
+  "databasePasswordMustHaveLowercase": "数据库密码必须至少包含1个小写字母（a-z）",
+  "@databasePasswordMustHaveLowercase": {
+    "description": "Database password must have lowercase validation message"
+  },
+  "databasePasswordMustHaveNumber": "数据库密码必须至少包含1个数字（0-9）",
+  "@databasePasswordMustHaveNumber": {
+    "description": "Database password must have number validation message"
+  },
+  "databasePasswordMustHaveSpecialChar": "数据库密码必须至少包含1个特殊字符",
+  "@databasePasswordMustHaveSpecialChar": {
+    "description": "Database password must have special character validation message"
+  },
+  "welcomeBack": "欢迎回来",
+  "@welcomeBack": {
+    "description": "Welcome back message"
+  },
+  "passwordIncorrect": "密码不正确。请重新检查。",
+  "@passwordIncorrect": {
+    "description": "Password incorrect error message"
+  },
+  "databaseLoginInfoIncorrect": "数据库登录信息不正确。请重新检查。",
+  "@databaseLoginInfoIncorrect": {
+    "description": "Database login info incorrect error message"
+  },
+  "databaseUsernameIncorrect": "数据库用户名不正确。",
+  "@databaseUsernameIncorrect": {
+    "description": "Database username incorrect error message"
+  },
+  "databasePasswordIncorrect": "数据库密码不正确。",
+  "@databasePasswordIncorrect": {
+    "description": "Database password incorrect error message"
+  },
+  "accountCreatedButDatabaseError": "账户创建成功但无法创建数据库。请联系管理员。",
+  "@accountCreatedButDatabaseError": {
+    "description": "Account created but database error message"
+  },
+  "databasePasswordNotStrongEnough": "数据库密码强度不够。请检查下面的要求。",
+  "@databasePasswordNotStrongEnough": {
+    "description": "Database password not strong enough error message"
+  },
+  "loginInfoIncorrect": "登录信息不正确。请重新检查。",
+  "@loginInfoIncorrect": {
+    "description": "Login info incorrect error message"
+  },
+  "systemErrorOccurred": "发生系统错误。请稍后重试。",
+  "@systemErrorOccurred": {
+    "description": "System error occurred message"
+  },
+  "cannotConnectToServer": "无法连接到服务器。请检查网络连接。",
+  "@cannotConnectToServer": {
+    "description": "Cannot connect to server error message"
+  },
+  "connectionTimeout": "连接超时。请重试。",
+  "@connectionTimeout": {
+    "description": "Connection timeout error message"
+  },
+  "networkConnectionError": "网络连接错误。请检查互联网连接。",
+  "@networkConnectionError": {
+    "description": "Network connection error message"
+  },
+  "errorOccurredPleaseTryAgain": "发生错误。请稍后重试。",
+  "@errorOccurredPleaseTryAgain": {
+    "description": "Error occurred please try again message"
+  }
+}

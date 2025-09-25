@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class MenuScreen extends StatefulWidget {
   final ApiClient api;
@@ -74,7 +75,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi tải dữ liệu: $e'),
+            content: Text(
+                AppLocalizations.of(context)!.errorLoadingData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -173,19 +175,23 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     if (_searchQuery.isNotEmpty && _selectedCategoryId != null) {
       final category = _categories.firstWhere(
         (cat) => cat.id == _selectedCategoryId,
-        orElse: () => Category(id: '', name: 'danh mục này'),
+        orElse: () => Category(
+            id: '', name: AppLocalizations.of(context)!.unknownCategory),
       );
-      return 'Không tìm thấy dịch vụ "$_searchQuery" trong ${category.name}';
+      return AppLocalizations.of(context)!
+          .noServicesFoundWithSearchAndCategory(_searchQuery, category.name);
     } else if (_searchQuery.isNotEmpty) {
-      return 'Không tìm thấy dịch vụ "$_searchQuery"';
+      return AppLocalizations.of(context)!
+          .noServicesFoundWithSearch(_searchQuery);
     } else if (_selectedCategoryId != null) {
       final category = _categories.firstWhere(
         (cat) => cat.id == _selectedCategoryId,
-        orElse: () => Category(id: '', name: 'danh mục này'),
+        orElse: () => Category(
+            id: '', name: AppLocalizations.of(context)!.unknownCategory),
       );
-      return 'Danh mục "${category.name}" chưa có dịch vụ nào';
+      return AppLocalizations.of(context)!.noServicesInCategory(category.name);
     } else {
-      return 'Chưa có dịch vụ nào';
+      return AppLocalizations.of(context)!.noServicesYet;
     }
   }
 
@@ -259,7 +265,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
             Icon(Icons.menu_book, color: Colors.white, size: 32),
             const SizedBox(height: AppTheme.spacingS),
             Text(
-              'Menu',
+              AppLocalizations.of(context)!.menuTitle,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -268,7 +274,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 4),
             Text(
-              'Menu danh mục và dịch vụ',
+              AppLocalizations.of(context)!.menuSubtitle,
               style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
           ],
@@ -285,7 +291,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         textAlignVertical: TextAlignVertical.center,
         onChanged: _onSearchChanged,
         decoration: AppTheme.inputDecoration(
-          label: 'Tìm kiếm dịch vụ...',
+          label: AppLocalizations.of(context)!.searchServicesPlaceholder,
           prefixIcon: Icons.search,
         ).copyWith(
           suffixIcon: _searchQuery.isNotEmpty
@@ -317,7 +323,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Center(
           child: Text(
-            'Chưa có danh mục nào',
+            AppLocalizations.of(context)!.noCategoriesYet,
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: AppTheme.getResponsiveFontSize(
@@ -354,7 +360,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Danh mục',
+                      AppLocalizations.of(context)!.categoriesSection,
                       style: TextStyle(
                         fontSize: AppTheme.getResponsiveFontSize(
                           context,
@@ -368,7 +374,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                     ),
                     if (_selectedCategoryId != null)
                       Text(
-                        '${_filteredServices.length} dịch vụ',
+                        AppLocalizations.of(context)!
+                            .servicesCount(_filteredServices.length),
                         style: TextStyle(
                           fontSize: AppTheme.getResponsiveFontSize(
                             context,
@@ -388,7 +395,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                       TextButton(
                         onPressed: _clearCategoryFilter,
                         child: Text(
-                          'Xóa bộ lọc',
+                          AppLocalizations.of(context)!.clearFilter,
                           style: TextStyle(
                             color: AppTheme.primaryStart,
                             fontSize: AppTheme.getResponsiveFontSize(
@@ -409,7 +416,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                       ),
                     ),
                     Text(
-                      '${_categories.length} danh mục',
+                      AppLocalizations.of(context)!
+                          .categoriesCount(_categories.length),
                       style: TextStyle(
                         fontSize: AppTheme.getResponsiveFontSize(
                           context,
@@ -645,7 +653,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                     _clearCategoryFilter();
                   },
                   child: Text(
-                    'Xem tất cả dịch vụ',
+                    AppLocalizations.of(context)!.viewAllServices,
                     style: TextStyle(
                       color: AppTheme.primaryStart,
                       fontSize: AppTheme.getResponsiveFontSize(
@@ -682,7 +690,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Dịch vụ',
+                  AppLocalizations.of(context)!.servicesSection,
                   style: TextStyle(
                     fontSize: AppTheme.getResponsiveFontSize(
                       context,
@@ -698,7 +706,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                   Row(
                     children: [
                       Text(
-                        '${_filteredServices.length} dịch vụ',
+                        AppLocalizations.of(context)!
+                            .servicesCount(_filteredServices.length),
                         style: TextStyle(
                           fontSize: AppTheme.getResponsiveFontSize(
                             context,
@@ -762,7 +771,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         final services = groupedServices[categoryId]!;
         final category = _categories.firstWhere(
           (cat) => cat.id == categoryId,
-          orElse: () => Category(id: '', name: 'Không xác định'),
+          orElse: () => Category(
+              id: '', name: AppLocalizations.of(context)!.unknownCategory),
         );
 
         return Column(
@@ -888,7 +898,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   Widget _buildServiceCard(Service service) {
     final category = _categories.firstWhere(
       (cat) => cat.id == service.categoryId,
-      orElse: () => Category(id: '', name: 'Không xác định'),
+      orElse: () =>
+          Category(id: '', name: AppLocalizations.of(context)!.unknownCategory),
     );
 
     return Container(

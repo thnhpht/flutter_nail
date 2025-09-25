@@ -1,0 +1,1952 @@
+{
+  "appTitle": "네일 관리",
+  "welcome": "환영합니다",
+  "salon": "살롱",
+  "professionalNailSalonManagement": "전문 네일 살롱 관리 시스템",
+  "todayOverview": "오늘의 개요",
+  "customers": "고객",
+  "bills": "청구서",
+  "revenue": "수익",
+  "boss": "사장",
+  "employee": "직원",
+  "information": "정보",
+  "salonInfo": "살롱 정보",
+  "menu": "메뉴",
+  "management": "관리",
+  "employees": "직원",
+  "categories": "카테고리",
+  "services": "서비스",
+  "createOrder": "주문 생성",
+  "billsReports": "청구서 및 보고서",
+  "reports": "보고서",
+  "version": "버전",
+  "logout": "로그아웃",
+  "loading": "로딩 중...",
+  "cannotLoadVersionInfo": "버전 정보를 로드할 수 없습니다",
+  "login": "로그인",
+  "username": "사용자명",
+  "password": "비밀번호",
+  "loginButton": "로그인",
+  "loginError": "로그인 오류",
+  "invalidCredentials": "사용자명 또는 비밀번호가 올바르지 않습니다",
+  "add": "추가",
+  "edit": "편집",
+  "delete": "삭제",
+  "save": "저장",
+  "cancel": "취소",
+  "confirm": "확인",
+  "search": "검색",
+  "name": "이름",
+  "phone": "전화번호",
+  "address": "주소",
+  "price": "가격",
+  "description": "설명",
+  "status": "상태",
+  "date": "날짜",
+  "time": "시간",
+  "total": "총계",
+  "quantity": "수량",
+  "language": "언어",
+  "settings": "설정",
+  "vietnamese": "베트남어",
+  "english": "영어",
+  "chinese": "중국어",
+  "korean": "한국어",
+  "roleSelection": "역할 선택",
+  "shopOwner": "샵 오너",
+  "employee": "직원",
+  "email": "이메일",
+  "checkEmail": "이메일 확인",
+  "emailExists": "이메일이 존재합니다",
+  "emailNotExists": "이메일이 존재하지 않습니다",
+  "createAccount": "계정 생성",
+  "employeeLogin": "직원 로그인",
+  "databaseName": "데이터베이스 이름",
+  "phoneNumber": "전화번호",
+  "employeePhone": "직원 전화번호",
+  "employeePassword": "직원 비밀번호",
+  "shopEmail": "샵 이메일",
+  "pleaseEnterEmail": "이메일을 입력하세요",
+  "pleaseEnterPassword": "비밀번호를 입력하세요",
+  "pleaseEnterPhone": "전화번호를 입력하세요",
+  "pleaseEnterName": "이름을 입력하세요",
+  "pleaseEnterDatabaseName": "데이터베이스 이름을 입력하세요",
+  "invalidEmail": "유효하지 않은 이메일",
+  "passwordTooShort": "비밀번호는 최소 6자 이상이어야 합니다",
+  "phoneTooShort": "전화번호는 최소 10자리 이상이어야 합니다",
+  "databaseNameTooShort": "데이터베이스 이름은 최소 3자 이상이어야 합니다",
+  "checkingEmail": "이메일 확인 중...",
+  "creatingAccount": "계정 생성 중...",
+  "loggingIn": "로그인 중...",
+  "errorCheckingEmail": "이메일 확인 오류",
+  "errorCreatingAccount": "계정 생성 오류",
+  "errorLoggingIn": "로그인 오류",
+  "accountCreatedSuccessfully": "계정이 성공적으로 생성되었습니다",
+  "loginSuccessful": "로그인 성공",
+  "customerName": "고객 이름",
+  "customerPhone": "고객 전화번호",
+  "customerAddress": "고객 주소",
+  "addCustomer": "고객 추가",
+  "editCustomer": "고객 편집",
+  "deleteCustomer": "고객 삭제",
+  "customerAddedSuccessfully": "고객이 성공적으로 추가되었습니다",
+  "customerUpdatedSuccessfully": "고객이 성공적으로 업데이트되었습니다",
+  "customerDeletedSuccessfully": "고객이 성공적으로 삭제되었습니다",
+  "errorAddingCustomer": "고객 추가 오류",
+  "errorUpdatingCustomer": "고객 업데이트 오류",
+  "errorDeletingCustomer": "고객 삭제 오류",
+  "confirmDeleteCustomer": "이 고객을 삭제하시겠습니까?",
+  "employeeName": "직원 이름",
+  "employeePhone": "직원 전화번호",
+  "employeeAddress": "직원 주소",
+  "employeePosition": "직책",
+  "employeeSalary": "급여",
+  "addEmployee": "직원 추가",
+  "editEmployee": "직원 편집",
+  "deleteEmployee": "직원 삭제",
+  "employeeAddedSuccessfully": "직원이 성공적으로 추가되었습니다",
+  "employeeUpdatedSuccessfully": "직원이 성공적으로 업데이트되었습니다",
+  "employeeDeletedSuccessfully": "직원이 성공적으로 삭제되었습니다",
+  "errorAddingEmployee": "직원 추가 오류",
+  "errorUpdatingEmployee": "직원 업데이트 오류",
+  "errorDeletingEmployee": "직원 삭제 오류",
+  "confirmDeleteEmployee": "이 직원을 삭제하시겠습니까?",
+  "selectImage": "이미지 선택",
+  "cannotSelectImage": "이미지를 선택할 수 없습니다. 사진 라이브러리 접근 권한을 확인하고 다시 시도하세요.",
+  "categoryName": "카테고리 이름",
+  "addCategory": "카테고리 추가",
+  "editCategory": "카테고리 편집",
+  "deleteCategory": "카테고리 삭제",
+  "categoryAddedSuccessfully": "카테고리가 성공적으로 추가되었습니다",
+  "categoryUpdatedSuccessfully": "카테고리가 성공적으로 업데이트되었습니다",
+  "categoryDeletedSuccessfully": "카테고리가 성공적으로 삭제되었습니다",
+  "errorAddingCategory": "카테고리 추가 오류",
+  "errorUpdatingCategory": "카테고리 업데이트 오류",
+  "errorDeletingCategory": "카테고리 삭제 오류",
+  "confirmDeleteCategory": "이 카테고리를 삭제하시겠습니까?",
+  "serviceName": "서비스 이름",
+  "servicePrice": "서비스 가격",
+  "serviceDuration": "서비스 소요 시간",
+  "addService": "서비스 추가",
+  "editService": "서비스 편집",
+  "deleteService": "서비스 삭제",
+  "serviceAddedSuccessfully": "서비스가 성공적으로 추가되었습니다",
+  "serviceUpdatedSuccessfully": "서비스가 성공적으로 업데이트되었습니다",
+  "serviceDeletedSuccessfully": "서비스가 성공적으로 삭제되었습니다",
+  "errorAddingService": "서비스 추가 오류",
+  "errorUpdatingService": "서비스 업데이트 오류",
+  "errorDeletingService": "서비스 삭제 오류",
+  "confirmDeleteService": "이 서비스를 삭제하시겠습니까?",
+  "order": "주문",
+  "orders": "주문",
+  "createOrder": "주문 생성",
+  "updateOrder": "주문 업데이트",
+  "orderCreatedSuccessfully": "주문이 성공적으로 생성되었습니다",
+  "orderUpdatedSuccessfully": "주문이 성공적으로 업데이트되었습니다",
+  "orderDeletedSuccessfully": "주문이 성공적으로 삭제되었습니다",
+  "errorCreatingOrder": "주문 생성 오류",
+  "errorUpdatingOrder": "주문 업데이트 오류",
+  "errorDeletingOrder": "주문 삭제 오류",
+  "confirmDeleteOrder": "이 주문을 삭제하시겠습니까?",
+  "selectServices": "서비스 선택",
+  "selectEmployees": "직원 선택",
+  "selectedServices": "개 서비스 선택됨",
+  "selectedEmployees": "명 직원 선택됨",
+  "pleaseSelectAtLeastOneService": "최소 하나의 서비스를 선택하세요",
+  "pleaseSelectAtLeastOneEmployee": "최소 한 명의 직원을 선택하세요",
+  "canOnlyUpdateOrderToday": "오늘의 주문만 업데이트할 수 있습니다",
+  "customerInformation": "고객 정보",
+  "employeeInformation": "직원 정보",
+  "serviceCategories": "서비스 카테고리",
+  "performingEmployee": "담당 직원",
+  "loggedInEmployee": "로그인한 직원",
+  "foundCustomer": "고객을 찾았습니다",
+  "customerNotFound": "이 전화번호로 고객을 찾을 수 없습니다. 새로 생성하려면 이름을 입력하세요.",
+  "foundEmployee": "직원을 찾았습니다",
+  "employeeNotFound": "이 전화번호로 직원을 찾을 수 없습니다. 새로 생성하려면 이름을 입력하세요.",
+  "errorLoadingCategories": "카테고리 로딩 오류",
+  "errorLoadingServices": "서비스 로딩 오류",
+  "errorLoadingEmployees": "직원 목록 로딩 오류",
+  "errorSearchingCustomer": "고객 검색 오류",
+  "errorSearchingEmployee": "직원 검색 오류",
+  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "bill": "청구서",
+  "bills": "청구서",
+  "billNumber": "청구서 번호",
+  "billDate": "청구서 날짜",
+  "billTotal": "청구서 총액",
+  "billStatus": "청구서 상태",
+  "paid": "결제 완료",
+  "unpaid": "미결제",
+  "pending": "대기 중",
+  "completed": "완료",
+  "cancelled": "취소됨",
+  "report": "보고서",
+  "reports": "보고서",
+  "dailyReport": "일일 보고서",
+  "weeklyReport": "주간 보고서",
+  "monthlyReport": "월간 보고서",
+  "yearlyReport": "연간 보고서",
+  "totalRevenue": "총 수익",
+  "totalOrders": "총 주문 수",
+  "totalCustomers": "총 고객 수",
+  "averageOrderValue": "평균 주문 가치",
+  "salonName": "살롱 이름",
+  "salonAddress": "살롱 주소",
+  "salonPhone": "살롱 전화번호",
+  "salonEmail": "살롱 이메일",
+  "salonDescription": "살롱 설명",
+  "salonHours": "영업 시간",
+  "updateSalonInfo": "살롱 정보 업데이트",
+  "salonInfoUpdatedSuccessfully": "살롱 정보가 성공적으로 업데이트되었습니다",
+  "errorUpdatingSalonInfo": "살롱 정보 업데이트 오류",
+  "notifications": "알림",
+  "noNotifications": "알림 없음",
+  "markAsRead": "읽음으로 표시",
+  "markAllAsRead": "모두 읽음으로 표시",
+  "clearAll": "모두 지우기",
+  "minutes": "분",
+  "hours": "시간",
+  "days": "일",
+  "weeks": "주",
+  "months": "월",
+  "years": "년",
+  "ago": "전",
+  "now": "지금",
+  "today": "오늘",
+  "yesterday": "어제",
+  "tomorrow": "내일",
+  "clearFilter": "필터 지우기",
+  "apply": "적용",
+  "chooseAction": "이 {item}에 대한 작업 선택",
+  "tryAgain": "다시 시도",
+  "noItemsFound": "{item}을(를) 찾을 수 없습니다",
+  "deleteAllNotifications": "모든 알림 삭제",
+  "confirmDeleteAllNotifications": "모든 알림을 삭제하시겠습니까?",
+  "selectQRCode": "QR 코드 선택",
+  "changeLogo": "로고 변경",
+  "allEmployees": "모든 직원",
+  "allStatuses": "모든 상태",
+  "errorLoadingData": "데이터 로딩 오류: {error}",
+  "addImage": "이미지 추가",
+  "categoryFilter": "카테고리 필터",
+  "selectCategoriesToFilter": "서비스를 필터링할 카테고리 선택",
+  "categoriesSelected": "{count}개 카테고리 선택됨",
+  "selectedCategories": "선택된 카테고리:",
+  "removeAll": "모두 제거",
+  "allCategories": "모든 카테고리 ({count})",
+  "createNewService": "새 네일 서비스 만들기",
+  "pleaseEnterServiceName": "서비스 이름을 입력하세요",
+  "pleaseEnterPrice": "가격을 입력하세요",
+  "pleaseEnterValidPrice": "유효한 가격을 입력하세요",
+  "errorUploadingImage": "서버에 이미지 업로드 중 오류",
+  "serviceAddedSuccessfully": "서비스가 성공적으로 추가되었습니다",
+  "errorAddingService": "서비스 추가 중 오류",
+  "editService": "서비스 편집",
+  "updateServiceInfo": "서비스 정보 업데이트",
+  "errorUpdatingService": "서비스 정보 업데이트 중 오류",
+  "serviceDeletedSuccessfully": "서비스가 성공적으로 삭제되었습니다",
+  "errorDeletingService": "서비스 삭제 중 오류",
+  "categoryNameRequired": "카테고리 이름은 필수입니다",
+  "errorUpdatingCategory": "카테고리 정보 업데이트 중 오류",
+  "categoryDeletedSuccessfully": "카테고리가 성공적으로 삭제되었습니다",
+  "errorDeletingCategory": "카테고리 삭제 중 오류",
+  "employeePhoneExists": "직원 전화번호가 이미 존재합니다",
+  "errorUpdatingEmployee": "직원 정보 업데이트 중 오류",
+  "employeeDeletedSuccessfully": "직원이 성공적으로 삭제되었습니다",
+  "errorDeletingEmployee": "직원 삭제 중 오류",
+  "customerPhoneExists": "고객 전화번호가 이미 존재합니다",
+  "customerDeletedSuccessfully": "고객이 성공적으로 삭제되었습니다",
+  "errorDeletingCustomer": "고객 삭제 중 오류",
+  "errorLoadingCategories": "카테고리 로딩 중 오류: {error}",
+  "errorLoadingServices": "서비스 로딩 중 오류: {error}",
+  "errorLoadingEmployees": "직원 목록 로딩 중 오류: {error}",
+  "errorSearchingCustomer": "고객 검색 중 오류: {error}",
+  "errorSearchingEmployee": "직원 검색 중 오류: {error}",
+  "orderUpdatedSuccessfully": "주문이 성공적으로 업데이트되었습니다!",
+  "errorUpdatingOrder": "주문 업데이트 중 오류: {error}",
+  "orderCreatedSuccessfully": "주문이 성공적으로 생성되었습니다!",
+  "errorCreatingOrder": "주문 생성 중 오류: {error}",
+  "errorUploadingLogo": "서버에 로고 업로드 중 오류",
+  "errorUploadingQRCode": "서버에 QR 코드 업로드 중 오류",
+  "salonInfoSavedSuccessfully": "살롱 정보가 성공적으로 저장되었습니다!",
+  "fullName": "전체 이름",
+  "databaseUsername": "데이터베이스 사용자명",
+  "databasePassword": "데이터베이스 비밀번호",
+  "vnd": "베트남 동",
+  "hoursAgo": "{hours}시간 전",
+  "minutesAgo": "{minutes}분 전",
+  "justNow": "방금 전",
+  "enterNewCustomerInfo": "새 고객 정보 입력",
+  "@enterNewCustomerInfo": {
+    "description": "Enter new customer information"
+  },
+  "updateCustomerInfo": "고객 정보 업데이트",
+  "@updateCustomerInfo": {
+    "description": "Update customer information"
+  },
+  "phoneLabel": "전화번호: {phone}",
+  "@phoneLabel": {
+    "description": "Phone label",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "customer": "고객",
+  "@customer": {
+    "description": "Customer"
+  },
+  "customersTitle": "고객",
+  "@customersTitle": {
+    "description": "Customers title"
+  },
+  "manageCustomerInfo": "고객 정보 관리",
+  "@manageCustomerInfo": {
+    "description": "Manage customer information"
+  },
+  "searchCustomers": "고객 검색...",
+  "@searchCustomers": {
+    "description": "Search customers"
+  },
+  "errorLoadingCustomerList": "고객 목록 로딩 오류",
+  "@errorLoadingCustomerList": {
+    "description": "Error loading customer list"
+  },
+  "cannotLoadCustomerList": "고객 목록을 불러올 수 없습니다",
+  "@cannotLoadCustomerList": {
+    "description": "Cannot load customer list"
+  },
+  "checkNetworkOrTryAgain": "네트워크 연결을 확인하거나 다시 시도해주세요",
+  "@checkNetworkOrTryAgain": {
+    "description": "Please check network connection or try again"
+  },
+  "enterNewEmployeeInfo": "새 직원 정보 입력",
+  "@enterNewEmployeeInfo": {
+    "description": "Enter new employee information"
+  },
+  "pleaseEnterFullName": "전체 이름을 입력해주세요",
+  "@pleaseEnterFullName": {
+    "description": "Please enter full name"
+  },
+  "pleaseEnterPhoneNumber": "전화번호를 입력해주세요",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Please enter phone number"
+  },
+  "errorUploadingImageToServer": "서버에 이미지 업로드 중 오류 발생",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server"
+  },
+  "updateEmployeeInfo": "직원 정보 업데이트",
+  "@updateEmployeeInfo": {
+    "description": "Update employee information"
+  },
+  "newPasswordOptional": "새 비밀번호 (변경하지 않으려면 비워두세요)",
+  "@newPasswordOptional": {
+    "description": "New password optional"
+  },
+  "employeeInfoUpdatedSuccessfully": "직원 정보가 성공적으로 업데이트되었습니다",
+  "@employeeInfoUpdatedSuccessfully": {
+    "description": "Employee information updated successfully"
+  },
+  "manageSalonEmployees": "살롱 직원 관리",
+  "@manageSalonEmployees": {
+    "description": "Manage salon employees"
+  },
+  "searchEmployees": "직원 검색...",
+  "@searchEmployees": {
+    "description": "Search employees"
+  },
+  "errorLoadingEmployeeList": "직원 목록 로드 중 오류 발생",
+  "@errorLoadingEmployeeList": {
+    "description": "Error loading employee list"
+  },
+  "cannotLoadEmployeeList": "직원 목록을 로드할 수 없습니다",
+  "@cannotLoadEmployeeList": {
+    "description": "Cannot load employee list"
+  },
+  "errorUploadingImageToServer": "서버에 이미지 업로드 중 오류 발생: {error}",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCategoryInfo": "카테고리 정보 업데이트",
+  "@updateCategoryInfo": {
+    "description": "Update category information"
+  },
+  "categoryInfoUpdatedSuccessfully": "카테고리 정보가 성공적으로 업데이트되었습니다",
+  "@categoryInfoUpdatedSuccessfully": {
+    "description": "Category information updated successfully"
+  },
+  "category": "카테고리",
+  "@category": {
+    "description": "Category"
+  },
+  "categoriesTitle": "카테고리",
+  "@categoriesTitle": {
+    "description": "Categories title"
+  },
+  "categoriesListDescription": "서비스 카테고리 목록",
+  "@categoriesListDescription": {
+    "description": "Categories list description"
+  },
+  "searchCategories": "카테고리 검색...",
+  "@searchCategories": {
+    "description": "Search categories"
+  },
+  "errorLoadingCategoriesList": "카테고리 목록 로딩 중 오류 발생",
+  "@errorLoadingCategoriesList": {
+    "description": "Error loading categories list"
+  },
+  "cannotLoadCategoriesList": "카테고리 목록을 로드할 수 없습니다",
+  "@cannotLoadCategoriesList": {
+    "description": "Cannot load categories list"
+  },
+  "checkNetworkOrTryAgainCategories": "네트워크 연결을 확인하거나 다시 시도해주세요",
+  "@checkNetworkOrTryAgainCategories": {
+    "description": "Please check network connection or try again"
+  },
+  "servicesTitle": "서비스",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "카테고리별 서비스 관리",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "searchServices": "서비스 검색...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "showingAllServices": "전체 {total}개 서비스 표시",
+  "@showingAllServices": {
+    "description": "Showing all services message",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategoryAndSearch": "{shown}/{total}개 서비스 발견 (카테고리 및 검색으로 필터링됨)",
+  "@foundServicesWithCategoryAndSearch": {
+    "description": "Found services with category and search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategory": "{shown}/{total}개 서비스 발견 ({count}개 카테고리로 필터링됨)",
+  "@foundServicesWithCategory": {
+    "description": "Found services with category filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithSearch": "{shown}/{total}개 서비스 발견 (검색: \"{search}\")",
+  "@foundServicesWithSearch": {
+    "description": "Found services with search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "clearFilters": "필터 지우기",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+  "errorLoadingServicesList": "서비스 목록 로딩 오류",
+  "@errorLoadingServicesList": {
+    "description": "Error loading services list"
+  },
+  "cannotLoadServicesList": "서비스 목록을 불러올 수 없습니다",
+  "@cannotLoadServicesList": {
+    "description": "Cannot load services list"
+  },
+  "checkNetworkOrTryAgainServices": "네트워크 연결을 확인하거나 다시 시도해주세요",
+  "@checkNetworkOrTryAgainServices": {
+    "description": "Please check network connection or try again"
+  },
+  "serviceUpdatedSuccessfully": "서비스 정보가 성공적으로 업데이트되었습니다",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service information updated successfully"
+  },
+  "service": "서비스",
+  "@service": {
+    "description": "Service"
+  },
+  "vnd": "베트남 동",
+  "@vnd": {
+    "description": "Vietnamese Dong currency"
+  },
+  "customerFound": "고객을 찾았습니다: {customerName}",
+  "@customerFound": {
+    "description": "Message when customer is found",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "이 전화번호로 고객을 찾을 수 없습니다. 새로 만들려면 이름을 입력해주세요.",
+  "@customerNotFound": {
+    "description": "Message when customer is not found"
+  },
+  "employeeFound": "직원을 찾았습니다: {employeeName}",
+  "@employeeFound": {
+    "description": "Message when employee is found",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "이 전화번호로 직원을 찾을 수 없습니다. 새로 만들려면 이름을 입력해주세요.",
+  "@employeeNotFound": {
+    "description": "Message when employee is not found"
+  },
+  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "@invalidServiceData": {
+    "description": "Error message for invalid service data"
+  },
+  "createNewOrder": "새 주문 만들기",
+  "@createNewOrder": {
+    "description": "Title for creating new order"
+  },
+  "servicesSelected": "{count}개 서비스 선택됨",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInformation": "고객 정보",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "전화번호",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "pleaseEnterPhoneNumber": "전화번호를 입력해주세요",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Validation message for phone number"
+  },
+  "customerName": "고객 이름",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+  "pleaseEnterCustomerName": "고객 이름을 입력해주세요",
+  "@pleaseEnterCustomerName": {
+    "description": "Validation message for customer name"
+  },
+  "employeeInformation": "직원 정보",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "직원 선택",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count}명 직원 선택됨",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "담당 직원",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "로그인한 직원",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "서비스 카테고리",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "카테고리 선택",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count}개 카테고리 선택됨",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "서비스",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "서비스 선택",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count}개 서비스 선택됨",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "할인",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "할인은 0-100% 사이여야 합니다",
+  "@discountMustBe0To100": {
+    "description": "Validation message for discount percentage"
+  },
+  "discountAmount": "할인: {amount} 베트남 동",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "팁",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "팁은 0보다 커야 합니다",
+  "@tipMustBeGreaterThan0": {
+    "description": "Validation message for tip amount"
+  },
+  "tipAmount": "팁: {amount} 베트남 동",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotal": "소계:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "subtotalAmount": "{amount} 베트남 동",
+  "@subtotalAmount": {
+    "description": "Subtotal amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "discountPercentage": "할인 ({percentage}%):",
+  "@discountPercentage": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "discountAmountNegative": "-{amount} 베트남 동",
+  "@discountAmountNegative": {
+    "description": "Negative discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "팁:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "tipAmountPositive": "+{amount} 베트남 동",
+  "@tipAmountPositive": {
+    "description": "Positive tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "totalPayment": "총 결제금액:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "totalPaymentAmount": "{amount} 베트남 동",
+  "@totalPaymentAmount": {
+    "description": "Total payment amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "createOrder": "주문 만들기",
+  "@createOrder": {
+    "description": "Create order button label"
+  },
+  "refresh": "새로고침",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "select": "선택",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "cannotLoadSalonInfo": "살롱 정보를 불러올 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
+  "@cannotLoadSalonInfo": {
+    "description": "Error message when cannot load salon information"
+  },
+  "cannotSelectImage": "이미지를 선택할 수 없습니다. 사진 라이브러리 접근 권한을 확인하고 다시 시도하세요.",
+  "@cannotSelectImage": {
+    "description": "Error message when cannot select image"
+  },
+  "cannotSaveSalonInfo": "살롱 정보를 저장할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
+  "@cannotSaveSalonInfo": {
+    "description": "Error message when cannot save salon information"
+  },
+  "basicInformation": "기본 정보",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "socialMedia": "소셜 미디어",
+  "@socialMedia": {
+    "description": "Social media section title"
+  },
+  "salonInformation": "살롱 정보",
+  "@salonInformation": {
+    "description": "Salon information title"
+  },
+  "manageSalonInfoAndContact": "살롱 정보 및 연락처 관리",
+  "@manageSalonInfoAndContact": {
+    "description": "Description for salon information management"
+  },
+  "qrCode": "QR 코드",
+  "@qrCode": {
+    "description": "QR Code section title"
+  },
+  "salonLogo": "살롱 로고",
+  "@salonLogo": {
+    "description": "Salon logo section title"
+  },
+  "selectQRCode": "QR 코드 선택",
+  "@selectQRCode": {
+    "description": "Select QR Code button text"
+  },
+  "selectLogo": "로고 선택",
+  "@selectLogo": {
+    "description": "Select Logo button text"
+  },
+  "salonNameLabel": "살롱 이름",
+  "@salonNameLabel": {
+    "description": "Salon name field label"
+  },
+  "addressLabel": "주소",
+  "@addressLabel": {
+    "description": "Address field label"
+  },
+  "phoneNumberLabel": "전화번호",
+  "@phoneNumberLabel": {
+    "description": "Phone number field label"
+  },
+  "emailLabel": "이메일",
+  "@emailLabel": {
+    "description": "Email field label"
+  },
+  "websiteLabel": "웹사이트",
+  "@websiteLabel": {
+    "description": "Website field label"
+  },
+  "facebookLabel": "페이스북",
+  "@facebookLabel": {
+    "description": "Facebook field label"
+  },
+  "instagramLabel": "인스타그램",
+  "@instagramLabel": {
+    "description": "Instagram field label"
+  },
+  "zaloLabel": "자로",
+  "@zaloLabel": {
+    "description": "Zalo field label"
+  },
+  "saving": "저장 중...",
+  "@saving": {
+    "description": "Saving status text"
+  },
+  "saveInformation": "정보 저장",
+  "@saveInformation": {
+    "description": "Save information button text"
+  },
+  "menuTitle": "메뉴",
+  "@menuTitle": {
+    "description": "Menu screen title"
+  },
+  "menuSubtitle": "메뉴 카테고리 및 서비스",
+  "@menuSubtitle": {
+    "description": "Menu screen subtitle"
+  },
+  "searchServicesPlaceholder": "서비스 검색...",
+  "@searchServicesPlaceholder": {
+    "description": "Search services placeholder"
+  },
+  "noCategoriesYet": "아직 카테고리가 없습니다",
+  "@noCategoriesYet": {
+    "description": "No categories available message"
+  },
+  "categoriesSection": "카테고리",
+  "@categoriesSection": {
+    "description": "Categories section title"
+  },
+  "servicesCount": "{count}개 서비스",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearFilter": "필터 지우기",
+  "@clearFilter": {
+    "description": "Clear filter button text"
+  },
+  "categoriesCount": "{count}개 카테고리",
+  "@categoriesCount": {
+    "description": "Categories count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "서비스",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "viewAllServices": "모든 서비스 보기",
+  "@viewAllServices": {
+    "description": "View all services button text"
+  },
+  "noServicesFoundWithSearchAndCategory": "\"{search}\"를 {category}에서 찾을 수 없습니다",
+  "@noServicesFoundWithSearchAndCategory": {
+    "description": "No services found with search and category filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesFoundWithSearch": "\"{search}\"를 찾을 수 없습니다",
+  "@noServicesFoundWithSearch": {
+    "description": "No services found with search filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesInCategory": "\"{category}\" 카테고리에 아직 서비스가 없습니다",
+  "@noServicesInCategory": {
+    "description": "No services in category message",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesYet": "아직 서비스가 없습니다",
+  "@noServicesYet": {
+    "description": "No services available message"
+  },
+  "unknownCategory": "알 수 없음",
+  "@unknownCategory": {
+    "description": "Unknown category name"
+  },
+  "billsManagement": "청구서 관리",
+  "@billsManagement": {
+    "description": "Bills management subtitle"
+  },
+  "searchBills": "청구서 검색...",
+  "@searchBills": {
+    "description": "Search bills placeholder text"
+  },
+  "filterByTime": "시간별 필터",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewBills": "청구서를 보기 위한 시간 범위 선택",
+  "@selectTimeRangeToViewBills": {
+    "description": "Select time range to view bills description"
+  },
+  "selectCustomTimeRange": "사용자 정의 시간 범위 선택",
+  "@selectCustomTimeRange": {
+    "description": "Select custom time range button text"
+  },
+  "selectStartAndEndDate": "시작일과 종료일 선택",
+  "@selectStartAndEndDate": {
+    "description": "Select start and end date description"
+  },
+  "quickSelect": "빠른 선택",
+  "@quickSelect": {
+    "description": "Quick select label"
+  },
+  "close": "닫기",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "오늘",
+  "@today": {
+    "description": "Today preset"
+  },
+  "yesterday": "어제",
+  "@yesterday": {
+    "description": "Yesterday preset"
+  },
+  "thisWeek": "이번 주",
+  "@thisWeek": {
+    "description": "This week preset"
+  },
+  "thisMonth": "이번 달",
+  "@thisMonth": {
+    "description": "This month preset"
+  },
+  "last30Days": "지난 30일",
+  "@last30Days": {
+    "description": "Last 30 days preset"
+  },
+  "noBillsInTimeRange": "이 시간 범위에 청구서가 없습니다",
+  "@noBillsInTimeRange": {
+    "description": "No bills in time range message"
+  },
+  "noBillsFound": "청구서를 찾을 수 없습니다",
+  "@noBillsFound": {
+    "description": "No bills found message"
+  },
+  "noBillsYet": "아직 청구서가 없습니다",
+  "@noBillsYet": {
+    "description": "No bills yet message"
+  },
+  "noYourBillsInTimeRange": "이 시간 범위에 귀하의 청구서가 없습니다",
+  "@noYourBillsInTimeRange": {
+    "description": "No your bills in time range message"
+  },
+  "noYourBillsFound": "귀하의 청구서를 찾을 수 없습니다",
+  "@noYourBillsFound": {
+    "description": "No your bills found message"
+  },
+  "noYourBillsYet": "아직 청구서가 없습니다",
+  "@noYourBillsYet": {
+    "description": "No your bills yet message"
+  },
+  "tryDifferentTimeRange": "다른 시간 범위를 선택하거나 시간 필터를 지워보세요",
+  "@tryDifferentTimeRange": {
+    "description": "Try different time range message"
+  },
+  "tryDifferentSearch": "다른 키워드로 검색해보세요",
+  "@tryDifferentSearch": {
+    "description": "Try different search message"
+  },
+  "createFirstOrderToViewBills": "첫 번째 주문을 생성하여 여기서 청구서를 보세요",
+  "@createFirstOrderToViewBills": {
+    "description": "Create first order to view bills message"
+  },
+  "createFirstOrderToViewYourBills": "첫 번째 주문을 생성하여 여기서 귀하의 청구서를 보세요",
+  "@createFirstOrderToViewYourBills": {
+    "description": "Create first order to view your bills message"
+  },
+  "filtered": "필터됨",
+  "@filtered": {
+    "description": "Filtered suffix"
+  },
+  "total": "총계",
+  "@total": {
+    "description": "Total prefix"
+  },
+  "bills": "청구서",
+  "@bills": {
+    "description": "Bills label"
+  },
+  "revenue": "수익",
+  "@revenue": {
+    "description": "Revenue label"
+  },
+  "paid": "결제됨",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "미결제",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "discount": "할인",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "totalAmount": "총 금액:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noServices": "서비스 없음",
+  "@noServices": {
+    "description": "No services message"
+  },
+  "temporary": "임시",
+  "@temporary": {
+    "description": "Temporary bill ID"
+  },
+  "cannotUpdateOrderTodayOnly": "오늘의 주문만 업데이트할 수 있습니다",
+  "@cannotUpdateOrderTodayOnly": {
+    "description": "Cannot update order today only message"
+  },
+  "serviceInfoNotFound": "이 주문에 대한 서비스 정보를 찾을 수 없습니다",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "filterByTime": "시간별 필터",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewReports": "보고서를 보기 위한 시간 범위 선택",
+  "@selectTimeRangeToViewReports": {
+    "description": "Filter by time dialog subtitle"
+  },
+  "selectCustomTimeRange": "사용자 정의 시간 범위 선택",
+  "@selectCustomTimeRange": {
+    "description": "Custom time range button text"
+  },
+  "selectStartAndEndDate": "시작 및 종료 날짜 선택",
+  "@selectStartAndEndDate": {
+    "description": "Custom time range button subtitle"
+  },
+  "quickSelect": "빠른 선택",
+  "@quickSelect": {
+    "description": "Quick select section title"
+  },
+  "close": "닫기",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "오늘",
+  "@today": {
+    "description": "Today preset button"
+  },
+  "yesterday": "어제",
+  "@yesterday": {
+    "description": "Yesterday preset button"
+  },
+  "thisWeek": "이번 주",
+  "@thisWeek": {
+    "description": "This week preset button"
+  },
+  "thisMonth": "이번 달",
+  "@thisMonth": {
+    "description": "This month preset button"
+  },
+  "last30Days": "지난 30일",
+  "@last30Days": {
+    "description": "Last 30 days preset button"
+  },
+  "revenueReports": "수익 보고서",
+  "@revenueReports": {
+    "description": "Revenue reports screen title"
+  },
+  "statisticsAndRevenueReports": "통계 및 수익 보고서",
+  "@statisticsAndRevenueReports": {
+    "description": "Revenue reports screen subtitle"
+  },
+  "searchHint": "검색...",
+  "@searchHint": {
+    "description": "Search field hint text"
+  },
+  "selectEmployee": "직원 선택",
+  "@selectEmployee": {
+    "description": "Employee filter label"
+  },
+  "paymentStatus": "결제 상태",
+  "@paymentStatus": {
+    "description": "Payment status filter label"
+  },
+  "bills": "청구서",
+  "@bills": {
+    "description": "Bills summary card title"
+  },
+  "revenue": "수익",
+  "@revenue": {
+    "description": "Revenue summary card title"
+  },
+  "discountPercent": "할인 {percent}%:",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "총 금액:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noOrdersInTimeRange": "이 시간 범위에 주문이 없습니다",
+  "@noOrdersInTimeRange": {
+    "description": "Empty state when no orders in selected time range"
+  },
+  "noOrdersFound": "주문을 찾을 수 없습니다",
+  "@noOrdersFound": {
+    "description": "Empty state when search returns no results"
+  },
+  "noOrdersYet": "아직 주문이 없습니다",
+  "@noOrdersYet": {
+    "description": "Empty state when no orders exist"
+  },
+  "tryDifferentTimeRange": "다른 시간 범위를 선택하거나 시간 필터를 지우세요",
+  "@tryDifferentTimeRange": {
+    "description": "Empty state message for time range filter"
+  },
+  "tryDifferentSearch": "다른 키워드로 검색해보세요",
+  "@tryDifferentSearch": {
+    "description": "Empty state message for search"
+  },
+  "createFirstOrderToViewReports": "여기서 보고서를 보려면 첫 번째 주문을 만드세요",
+  "@createFirstOrderToViewReports": {
+    "description": "Empty state message for no orders"
+  },
+  "noServices": "서비스 없음",
+  "@noServices": {
+    "description": "No services available message"
+  },
+  "billPaymentReceipt": "결제 영수증",
+  "@billPaymentReceipt": {
+    "description": "Bill payment receipt title"
+  },
+  "print": "인쇄",
+  "@print": {
+    "description": "Print button label"
+  },
+  "phoneNumber": "전화번호:",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "billCode": "영수증 번호:",
+  "@billCode": {
+    "description": "Bill code label"
+  },
+  "createdDate": "생성일:",
+  "@createdDate": {
+    "description": "Created date label"
+  },
+  "customerInformation": "고객 정보",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "customerName": "고객명:",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "servingStaff": "서비스 직원:",
+  "@servingStaff": {
+    "description": "Serving staff label"
+  },
+  "serviceDetails": "서비스 세부사항",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "subtotal": "소계:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discount": "할인",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "tip": "팁:",
+  "@tip": {
+    "description": "Tip label"
+  },
+  "totalPayment": "총 결제금액:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "qrCodePayment": "QR 코드 결제",
+  "@qrCodePayment": {
+    "description": "QR Code payment section title"
+  },
+  "noQrCode": "QR 코드 없음",
+  "@noQrCode": {
+    "description": "No QR code message"
+  },
+  "qrCodeDisplayError": "QR 코드 표시 오류",
+  "@qrCodeDisplayError": {
+    "description": "QR Code display error message"
+  },
+  "scanQrToPay": "QR 코드를 스캔하여 결제",
+  "@scanQrToPay": {
+    "description": "Scan QR code to pay instruction"
+  },
+  "temporary": "임시",
+  "@temporary": {
+    "description": "Temporary placeholder text"
+  },
+  "serviceNotFoundError": "이 주문에 대한 서비스 정보를 찾을 수 없습니다",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  },
+  "billFooter": "저희 서비스를 이용해 주셔서 감사합니다!",
+  "@billFooter": {
+    "description": "Bill footer message"
+  },
+  "billFooter2": "다시 만나뵐 수 있기를 기대합니다!",
+  "@billFooter2": {
+    "description": "Bill footer second message"
+  },
+  "updateOrder": "주문 업데이트",
+  "@updateOrder": {
+    "description": "Update order screen title"
+  },
+  "servicesSelected": "{count}개 서비스 선택됨",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "canOnlyUpdateTodayOrders": "오늘 주문만 업데이트할 수 있습니다",
+  "@canOnlyUpdateTodayOrders": {
+    "description": "Warning message for updating orders"
+  },
+  "customerFound": "고객을 찾았습니다: {name}",
+  "@customerFound": {
+    "description": "Customer found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "이 전화번호로 고객을 찾을 수 없습니다. 새로 만들려면 이름을 입력하세요.",
+  "@customerNotFound": {
+    "description": "Customer not found message"
+  },
+  "employeeFound": "직원을 찾았습니다: {name}",
+  "@employeeFound": {
+    "description": "Employee found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "이 전화번호로 직원을 찾을 수 없습니다. 새로 만들려면 이름을 입력하세요.",
+  "@employeeNotFound": {
+    "description": "Employee not found message"
+  },
+  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "@invalidServiceData": {
+    "description": "Invalid service data error"
+  },
+  "customerInformation": "고객 정보",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "전화번호",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "pleaseEnterPhoneNumber": "전화번호를 입력하세요",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Phone number validation message"
+  },
+  "customerName": "고객 이름",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "pleaseEnterCustomerName": "고객 이름을 입력하세요",
+  "@pleaseEnterCustomerName": {
+    "description": "Customer name validation message"
+  },
+  "employeeInformation": "직원 정보",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "직원 선택",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count}명 직원 선택됨",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "담당 직원",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "로그인한 직원",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "서비스 카테고리",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "카테고리 선택",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count}개 카테고리 선택됨",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "서비스",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "서비스 선택",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count}개 서비스 선택됨",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "할인",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "할인은 0-100%여야 합니다",
+  "@discountMustBe0To100": {
+    "description": "Discount validation message"
+  },
+  "discountAmount": "할인: {amount}원",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "팁",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "팁은 0보다 커야 합니다",
+  "@tipMustBeGreaterThan0": {
+    "description": "Tip validation message"
+  },
+  "tipAmount": "팁: {amount}원",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatus": "결제 상태",
+  "@paymentStatus": {
+    "description": "Payment status section title"
+  },
+  "paid": "결제 완료",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "미결제",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "customerPaidFully": "고객이 전액 결제했습니다",
+  "@customerPaidFully": {
+    "description": "Customer paid fully message"
+  },
+  "customerNotPaid": "고객이 아직 결제하지 않았습니다",
+  "@customerNotPaid": {
+    "description": "Customer not paid message"
+  },
+  "subtotal": "소계:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discountPercent": "할인 ({percent}%):",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "팁:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "totalPaymentLabel": "총 결제금액:",
+  "@totalPaymentLabel": {
+    "description": "Total payment label"
+  },
+  "save": "저장",
+  "@save": {
+    "description": "Save button"
+  },
+  "cancel": "취소",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "select": "선택",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "orderNotFound": "주문 정보를 찾을 수 없습니다",
+  "@orderNotFound": {
+    "description": "Error message when order is not found"
+  },
+  "errorLoadingOrder": "주문 정보 로드 중 오류: {error}",
+  "@errorLoadingOrder": {
+    "description": "Error message when loading order fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cannotConnectToServer": "서버에 연결할 수 없습니다",
+  "@cannotConnectToServer": {
+    "description": "Error message when server connection fails"
+  },
+  "notificationNoOrderInfo": "알림에 주문 정보가 포함되어 있지 않습니다",
+  "@notificationNoOrderInfo": {
+    "description": "Warning message when notification lacks order data"
+  },
+  "allNotificationsMarkedAsRead": "모든 알림을 읽음으로 표시했습니다",
+  "@allNotificationsMarkedAsRead": {
+    "description": "Success message when marking all notifications as read"
+  },
+  "notificationDeleted": "알림이 삭제되었습니다",
+  "@notificationDeleted": {
+    "description": "Success message when notification is deleted"
+  },
+  "errorDeletingNotification": "알림 삭제 중 오류: {error}",
+  "@errorDeletingNotification": {
+    "description": "Error message when deleting notification fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allNotificationsDeleted": "모든 알림이 삭제되었습니다",
+  "@allNotificationsDeleted": {
+    "description": "Success message when all notifications are deleted"
+  },
+  "errorDeletingAllNotifications": "모든 알림 삭제 중 오류: {error}",
+  "@errorDeletingAllNotifications": {
+    "description": "Error message when deleting all notifications fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "markAllAsReadTooltip": "모두 읽음으로 표시",
+  "@markAllAsReadTooltip": {
+    "description": "Tooltip for mark all as read button"
+  },
+  "clearAllTooltip": "모두 지우기",
+  "@clearAllTooltip": {
+    "description": "Tooltip for clear all button"
+  },
+  "noNotificationsYet": "아직 알림이 없습니다",
+  "@noNotificationsYet": {
+    "description": "Empty state message when no notifications exist"
+  },
+  "newNotificationsWillAppearHere": "새로운 알림이 여기에 나타납니다",
+  "@newNotificationsWillAppearHere": {
+    "description": "Empty state description for notifications"
+  },
+  "deleteAction": "삭제",
+  "@deleteAction": {
+    "description": "Delete action in popup menu"
+  },
+  "pdfErrorCreating": "PDF 생성 오류: {error}",
+  "@pdfErrorCreating": {
+    "description": "Error message when creating PDF fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorPluginNotSupported": "오류: 이 플랫폼에서 플러그인이 지원되지 않습니다. Android/iOS에서 실행하거나 macOS용 CocoaPods를 설치하세요.",
+  "@pdfErrorPluginNotSupported": {
+    "description": "Error message when plugin is not supported on platform"
+  },
+  "pdfErrorSharingZalo": "Zalo 공유 오류: {error}",
+  "@pdfErrorSharingZalo": {
+    "description": "Error message when sharing to Zalo fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorSharingFile": "파일 공유 오류: {error}",
+  "@pdfErrorSharingFile": {
+    "description": "Error message when sharing file fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorCannotShare": "파일을 공유할 수 없습니다: {error}",
+  "@pdfErrorCannotShare": {
+    "description": "Error message when file cannot be shared",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorNoFileData": "공유할 PDF 파일이나 데이터가 없습니다",
+  "@pdfErrorNoFileData": {
+    "description": "Error message when no PDF file or data available for sharing"
+  },
+  "pdfErrorNoFileToShare": "공유할 PDF 파일이 없습니다",
+  "@pdfErrorNoFileToShare": {
+    "description": "Error message when no PDF file available for sharing"
+  },
+  "pdfZaloOpened": "Zalo가 열렸습니다! 청구서를 보내려면 공유 메뉴에서 Zalo를 선택하세요.",
+  "@pdfZaloOpened": {
+    "description": "Message when Zalo is opened for sharing"
+  },
+  "pdfBillFrom": "{salonName}의 청구서",
+  "@pdfBillFrom": {
+    "description": "Bill sharing text with salon name",
+    "placeholders": {
+      "salonName": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfFileCreatedManualShare": "PDF 파일이 생성되었습니다. 수동으로 공유하세요.",
+  "@pdfFileCreatedManualShare": {
+    "description": "Message when PDF file is created and needs manual sharing"
+  },
+  "pdfPhoneNumber": "전화: {phoneNumber}",
+  "@pdfPhoneNumber": {
+    "description": "Phone number label in PDF",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfBillInfoTitle": "청구서 정보",
+  "@pdfBillInfoTitle": {
+    "description": "Bill information section title in PDF"
+  },
+  "pdfBillCode": "청구서 번호:",
+  "@pdfBillCode": {
+    "description": "Bill code label in PDF"
+  },
+  "pdfCreatedDate": "생성일:",
+  "@pdfCreatedDate": {
+    "description": "Created date label in PDF"
+  },
+  "pdfCustomerInfoTitle": "고객 정보",
+  "@pdfCustomerInfoTitle": {
+    "description": "Customer information section title in PDF"
+  },
+  "pdfCustomerName": "고객명:",
+  "@pdfCustomerName": {
+    "description": "Customer name label in PDF"
+  },
+  "pdfCustomerPhone": "전화번호:",
+  "@pdfCustomerPhone": {
+    "description": "Customer phone label in PDF"
+  },
+  "pdfEmployeeServed": "담당 직원:",
+  "@pdfEmployeeServed": {
+    "description": "Employee served label in PDF"
+  },
+  "pdfServicesDetailTitle": "서비스 상세",
+  "@pdfServicesDetailTitle": {
+    "description": "Services detail section title in PDF"
+  },
+  "pdfPaymentInfoTitle": "결제 정보",
+  "@pdfPaymentInfoTitle": {
+    "description": "Payment information section title in PDF"
+  },
+  "pdfSubtotal": "소계:",
+  "@pdfSubtotal": {
+    "description": "Subtotal label in PDF"
+  },
+  "pdfDiscount": "할인 ({percent}%):",
+  "@pdfDiscount": {
+    "description": "Discount label in PDF with percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTip": "팁:",
+  "@pdfTip": {
+    "description": "Tip label in PDF"
+  },
+  "pdfTotalPayment": "총 결제금액:",
+  "@pdfTotalPayment": {
+    "description": "Total payment label in PDF"
+  },
+  "pdfThankYouMessage": "서비스를 이용해 주셔서 감사합니다!",
+  "@pdfThankYouMessage": {
+    "description": "Thank you message in PDF footer"
+  },
+  "pdfSeeYouAgainMessage": "다시 만나요!",
+  "@pdfSeeYouAgainMessage": {
+    "description": "See you again message in PDF footer"
+  },
+  "pdfShareBillTitle": "청구서 공유",
+  "@pdfShareBillTitle": {
+    "description": "Share bill dialog title"
+  },
+  "pdfShareBillMessage": "청구서 공유 방법을 선택하세요:",
+  "@pdfShareBillMessage": {
+    "description": "Share bill dialog message"
+  },
+  "pdfShareZalo": "Zalo",
+  "@pdfShareZalo": {
+    "description": "Zalo sharing option"
+  },
+  "pdfShareOther": "기타",
+  "@pdfShareOther": {
+    "description": "Other sharing option"
+  },
+  "pdfCancel": "취소",
+  "@pdfCancel": {
+    "description": "Cancel button text"
+  },
+  "pdfFileCreatedTitle": "PDF 파일 생성됨",
+  "@pdfFileCreatedTitle": {
+    "description": "PDF file created dialog title"
+  },
+  "pdfFileCreatedSuccess": "PDF 파일이 성공적으로 생성되었습니다!",
+  "@pdfFileCreatedSuccess": {
+    "description": "PDF file created success message"
+  },
+  "pdfFilePath": "경로: {filePath}",
+  "@pdfFilePath": {
+    "description": "PDF file path label",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfYouCanDo": "다음을 할 수 있습니다:",
+  "@pdfYouCanDo": {
+    "description": "What you can do label"
+  },
+  "pdfOpenWithApp": "• PDF 앱으로 파일 열기",
+  "@pdfOpenWithApp": {
+    "description": "Open file with PDF app option"
+  },
+  "pdfShareManually": "• 파일 수동 공유",
+  "@pdfShareManually": {
+    "description": "Share file manually option"
+  },
+  "pdfSendViaEmail": "• 이메일로 전송",
+  "@pdfSendViaEmail": {
+    "description": "Send via email option"
+  },
+  "pdfClose": "닫기",
+  "@pdfClose": {
+    "description": "Close button text"
+  },
+  "pdfOpenFile": "파일 열기",
+  "@pdfOpenFile": {
+    "description": "Open file button text"
+  },
+  "pdfPathCopiedToClipboard": "파일 경로가 클립보드에 복사되었습니다: {filePath}",
+  "@pdfPathCopiedToClipboard": {
+    "description": "File path copied to clipboard message",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTemporaryBillId": "임시",
+  "@pdfTemporaryBillId": {
+    "description": "Temporary bill ID when order ID is empty"
+  },
+  "roleSelection": "역할 선택",
+  "@roleSelection": {
+    "description": "Role selection title"
+  },
+  "selectAccountTypeToContinue": "계속하려면 계정 유형을 선택하세요",
+  "@selectAccountTypeToContinue": {
+    "description": "Role selection subtitle"
+  },
+  "connect": "연결",
+  "@connect": {
+    "description": "Connect button text"
+  },
+  "enterEmailToCheckAccount": "계정을 확인하려면 이메일을 입력하세요",
+  "@enterEmailToCheckAccount": {
+    "description": "Email check subtitle"
+  },
+  "enterPasswordToLogin": "로그인하려면 비밀번호를 입력하세요",
+  "@enterPasswordToLogin": {
+    "description": "Password login subtitle"
+  },
+  "createNewAccountFor": "새 계정 만들기",
+  "@createNewAccountFor": {
+    "description": "Create account subtitle"
+  },
+  "createNewAccount": "새 계정 만들기",
+  "@createNewAccount": {
+    "description": "Create new account text"
+  },
+  "enterEmployeeLoginInfo": "직원 로그인 정보를 입력하세요",
+  "@enterEmployeeLoginInfo": {
+    "description": "Employee login subtitle"
+  },
+  "continueText": "계속",
+  "@continueText": {
+    "description": "Continue button text"
+  },
+  "manageEntireSystem": "전체 시스템 관리",
+  "@manageEntireSystem": {
+    "description": "Shop owner description"
+  },
+  "accessServicesCreateOrdersAndBills": "서비스 접근, 주문 및 청구서 생성",
+  "@accessServicesCreateOrdersAndBills": {
+    "description": "Employee description"
+  },
+  "shopEmail": "매장 이메일",
+  "@shopEmail": {
+    "description": "Shop email field label"
+  },
+  "employeePhone": "직원 전화번호",
+  "@employeePhone": {
+    "description": "Employee phone field label"
+  },
+  "employeePassword": "직원 비밀번호",
+  "@employeePassword": {
+    "description": "Employee password field label"
+  },
+  "pleaseEnterPhone": "전화번호를 입력해주세요",
+  "@pleaseEnterPhone": {
+    "description": "Please enter phone validation message"
+  },
+  "pleaseEnterPassword": "비밀번호를 입력해주세요",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password validation message"
+  },
+  "pleaseEnterEmail": "이메일을 입력해주세요",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email validation message"
+  },
+  "invalidEmail": "유효하지 않은 이메일",
+  "@invalidEmail": {
+    "description": "Invalid email validation message"
+  },
+  "email": "이메일",
+  "@email": {
+    "description": "Email field label"
+  },
+  "pleaseEnterYourEmail": "이메일을 입력해주세요",
+  "@pleaseEnterYourEmail": {
+    "description": "Please enter your email validation message"
+  },
+  "invalidEmailExample": "유효하지 않은 이메일 (예: example@email.com)",
+  "@invalidEmailExample": {
+    "description": "Invalid email example validation message"
+  },
+  "invalidEmailMissingDomain": "유효하지 않은 이메일 (도메인 누락)",
+  "@invalidEmailMissingDomain": {
+    "description": "Invalid email missing domain validation message"
+  },
+  "emailExistsInSystem": "이메일이 시스템에 이미 존재합니다",
+  "@emailExistsInSystem": {
+    "description": "Email exists in system message"
+  },
+  "emailNotExistsWillCreateNew": "이메일이 존재하지 않습니다. 새 계정을 생성합니다",
+  "@emailNotExistsWillCreateNew": {
+    "description": "Email not exists will create new account message"
+  },
+  "password": "비밀번호",
+  "@password": {
+    "description": "Password field label"
+  },
+  "pleaseEnterPasswordValidation": "비밀번호를 입력해주세요",
+  "@pleaseEnterPasswordValidation": {
+    "description": "Please enter password validation message"
+  },
+  "passwordMinLength": "비밀번호는 최소 8자 이상이어야 합니다",
+  "@passwordMinLength": {
+    "description": "Password minimum length validation message"
+  },
+  "passwordMustHaveUppercase": "비밀번호는 최소 1개의 대문자(A-Z)가 있어야 합니다",
+  "@passwordMustHaveUppercase": {
+    "description": "Password must have uppercase validation message"
+  },
+  "passwordMustHaveLowercase": "비밀번호는 최소 1개의 소문자(a-z)가 있어야 합니다",
+  "@passwordMustHaveLowercase": {
+    "description": "Password must have lowercase validation message"
+  },
+  "passwordMustHaveNumber": "비밀번호는 최소 1개의 숫자(0-9)가 있어야 합니다",
+  "@passwordMustHaveNumber": {
+    "description": "Password must have number validation message"
+  },
+  "passwordMustHaveSpecialChar": "비밀번호는 최소 1개의 특수문자가 있어야 합니다",
+  "@passwordMustHaveSpecialChar": {
+    "description": "Password must have special character validation message"
+  },
+  "database": "데이터베이스",
+  "@database": {
+    "description": "Database label"
+  },
+  "databaseLoginUsername": "데이터베이스 로그인 사용자명",
+  "@databaseLoginUsername": {
+    "description": "Database login username field label"
+  },
+  "databasePassword": "데이터베이스 비밀번호",
+  "@databasePassword": {
+    "description": "Database password field label"
+  },
+  "pleaseEnterDatabaseUsername": "데이터베이스 사용자명을 입력해주세요",
+  "@pleaseEnterDatabaseUsername": {
+    "description": "Please enter database username validation message"
+  },
+  "pleaseEnterDatabasePassword": "데이터베이스 비밀번호를 입력해주세요",
+  "@pleaseEnterDatabasePassword": {
+    "description": "Please enter database password validation message"
+  },
+  "databasePasswordMinLength": "데이터베이스 비밀번호는 최소 8자 이상이어야 합니다",
+  "@databasePasswordMinLength": {
+    "description": "Database password minimum length validation message"
+  },
+  "databasePasswordMustHaveUppercase": "데이터베이스 비밀번호는 최소 1개의 대문자(A-Z)가 있어야 합니다",
+  "@databasePasswordMustHaveUppercase": {
+    "description": "Database password must have uppercase validation message"
+  },
+  "databasePasswordMustHaveLowercase": "데이터베이스 비밀번호는 최소 1개의 소문자(a-z)가 있어야 합니다",
+  "@databasePasswordMustHaveLowercase": {
+    "description": "Database password must have lowercase validation message"
+  },
+  "databasePasswordMustHaveNumber": "데이터베이스 비밀번호는 최소 1개의 숫자(0-9)가 있어야 합니다",
+  "@databasePasswordMustHaveNumber": {
+    "description": "Database password must have number validation message"
+  },
+  "databasePasswordMustHaveSpecialChar": "데이터베이스 비밀번호는 최소 1개의 특수문자가 있어야 합니다",
+  "@databasePasswordMustHaveSpecialChar": {
+    "description": "Database password must have special character validation message"
+  },
+  "welcomeBack": "다시 오신 것을 환영합니다",
+  "@welcomeBack": {
+    "description": "Welcome back message"
+  },
+  "passwordIncorrect": "비밀번호가 올바르지 않습니다. 다시 확인해주세요.",
+  "@passwordIncorrect": {
+    "description": "Password incorrect error message"
+  },
+  "databaseLoginInfoIncorrect": "데이터베이스 로그인 정보가 올바르지 않습니다. 다시 확인해주세요.",
+  "@databaseLoginInfoIncorrect": {
+    "description": "Database login info incorrect error message"
+  },
+  "databaseUsernameIncorrect": "데이터베이스 사용자명이 올바르지 않습니다.",
+  "@databaseUsernameIncorrect": {
+    "description": "Database username incorrect error message"
+  },
+  "databasePasswordIncorrect": "데이터베이스 비밀번호가 올바르지 않습니다.",
+  "@databasePasswordIncorrect": {
+    "description": "Database password incorrect error message"
+  },
+  "accountCreatedButDatabaseError": "계정이 성공적으로 생성되었지만 데이터베이스를 생성할 수 없습니다. 관리자에게 문의하세요.",
+  "@accountCreatedButDatabaseError": {
+    "description": "Account created but database error message"
+  },
+  "databasePasswordNotStrongEnough": "데이터베이스 비밀번호가 충분히 강력하지 않습니다. 아래 요구사항을 확인해주세요.",
+  "@databasePasswordNotStrongEnough": {
+    "description": "Database password not strong enough error message"
+  },
+  "loginInfoIncorrect": "로그인 정보가 올바르지 않습니다. 다시 확인해주세요.",
+  "@loginInfoIncorrect": {
+    "description": "Login info incorrect error message"
+  },
+  "systemErrorOccurred": "시스템 오류가 발생했습니다. 나중에 다시 시도해주세요.",
+  "@systemErrorOccurred": {
+    "description": "System error occurred message"
+  },
+  "cannotConnectToServer": "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.",
+  "@cannotConnectToServer": {
+    "description": "Cannot connect to server error message"
+  },
+  "connectionTimeout": "연결 시간 초과. 다시 시도해주세요.",
+  "@connectionTimeout": {
+    "description": "Connection timeout error message"
+  },
+  "networkConnectionError": "네트워크 연결 오류. 인터넷 연결을 확인해주세요.",
+  "@networkConnectionError": {
+    "description": "Network connection error message"
+  },
+  "errorOccurredPleaseTryAgain": "오류가 발생했습니다. 나중에 다시 시도해주세요.",
+  "@errorOccurredPleaseTryAgain": {
+    "description": "Error occurred please try again message"
+  }
+}

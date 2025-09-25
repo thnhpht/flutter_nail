@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,7 +111,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _categories = categories;
       });
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tải danh mục: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.errorLoadingCategories(e.toString()),
           type: MessageType.error);
     }
   }
@@ -122,7 +124,8 @@ class _OrderScreenState extends State<OrderScreen> {
         _services = services;
       });
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tải dịch vụ: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.errorLoadingServices(e.toString()),
           type: MessageType.error);
     }
   }
@@ -144,7 +147,8 @@ class _OrderScreenState extends State<OrderScreen> {
         }
       });
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tải danh sách nhân viên: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.errorLoadingEmployees(e.toString()),
           type: MessageType.error);
     }
   }
@@ -158,19 +162,20 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _customerNameController.text = customer.name;
           });
-          AppWidgets.showFlushbar(
-              context, 'Đã tìm thấy khách hàng: ${customer.name}',
+          final l10n = AppLocalizations.of(context)!;
+          AppWidgets.showFlushbar(context, l10n.customerFound(customer.name),
               type: MessageType.success);
         } else {
           setState(() {
             _customerNameController.clear();
           });
-          AppWidgets.showFlushbar(context,
-              'Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.',
+          final l10n = AppLocalizations.of(context)!;
+          AppWidgets.showFlushbar(context, l10n.customerNotFound,
               type: MessageType.info);
         }
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm khách hàng: $e',
+        AppWidgets.showFlushbar(context,
+            AppLocalizations.of(context)!.errorSearchingCustomer(e.toString()),
             type: MessageType.error);
       }
     } else {
@@ -189,19 +194,20 @@ class _OrderScreenState extends State<OrderScreen> {
           setState(() {
             _employeeNameController.text = employee.name;
           });
-          AppWidgets.showFlushbar(
-              context, 'Đã tìm thấy nhân viên: ${employee.name}',
+          final l10n = AppLocalizations.of(context)!;
+          AppWidgets.showFlushbar(context, l10n.employeeFound(employee.name),
               type: MessageType.success);
         } else {
           setState(() {
             _employeeNameController.clear();
           });
-          AppWidgets.showFlushbar(context,
-              'Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.',
+          final l10n = AppLocalizations.of(context)!;
+          AppWidgets.showFlushbar(context, l10n.employeeNotFound,
               type: MessageType.info);
         }
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi tìm kiếm nhân viên: $e',
+        AppWidgets.showFlushbar(context,
+            AppLocalizations.of(context)!.errorSearchingEmployee(e.toString()),
             type: MessageType.error);
       }
     } else {
@@ -437,12 +443,14 @@ class _OrderScreenState extends State<OrderScreen> {
   Future<void> _createOrder() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedServices.isEmpty) {
-      AppWidgets.showFlushbar(context, 'Vui lòng chọn ít nhất một dịch vụ',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.pleaseSelectAtLeastOneService,
           type: MessageType.warning);
       return;
     }
     if (_selectedEmployees.isEmpty) {
-      AppWidgets.showFlushbar(context, 'Vui lòng chọn ít nhất một nhân viên',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.pleaseSelectAtLeastOneEmployee,
           type: MessageType.warning);
       return;
     }
@@ -484,7 +492,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
         // Validate order data
         if (order.serviceIds.isEmpty || order.serviceNames.isEmpty) {
-          throw Exception('Dữ liệu dịch vụ không hợp lệ');
+          final l10n = AppLocalizations.of(context)!;
+          throw Exception(l10n.invalidServiceData);
         }
 
         // Create order and get the response with real ID
@@ -492,7 +501,8 @@ class _OrderScreenState extends State<OrderScreen> {
         createdOrders.add(createdOrder);
       }
 
-      AppWidgets.showFlushbar(context, 'Đã tạo đơn thành công!',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.orderCreatedSuccessfully,
           type: MessageType.success);
 
       // Send notification to shop owner if employee created the order
@@ -548,7 +558,8 @@ class _OrderScreenState extends State<OrderScreen> {
         }
       });
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi tạo đơn: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.errorCreatingOrder(e.toString()),
           type: MessageType.error);
     } finally {
       setState(() {
@@ -581,6 +592,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () {
         // Close dropdowns when tapping outside
@@ -642,9 +654,9 @@ class _OrderScreenState extends State<OrderScreen> {
                             size: 32,
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Tạo đơn mới',
-                            style: TextStyle(
+                          Text(
+                            l10n.createNewOrder,
+                            style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -652,7 +664,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${_selectedServices.length} dịch vụ đã chọn',
+                            l10n.servicesSelected(_selectedServices.length),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white70,
@@ -666,17 +678,17 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Customer Information
                     _buildSectionCard(
-                      title: 'Thông tin khách hàng',
+                      title: l10n.customerInformation,
                       icon: Icons.person,
                       child: Column(
                         children: [
                           _buildTextField(
                             controller: _customerPhoneController,
-                            label: 'Số điện thoại',
+                            label: l10n.phoneNumber,
                             prefixIcon: Icons.phone,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
+                                return l10n.pleaseEnterPhoneNumber;
                               }
                               return null;
                             },
@@ -684,11 +696,11 @@ class _OrderScreenState extends State<OrderScreen> {
                           const SizedBox(height: 16),
                           _buildTextField(
                             controller: _customerNameController,
-                            label: 'Tên khách hàng',
+                            label: l10n.customerName,
                             prefixIcon: Icons.person_outline,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập tên khách hàng';
+                                return l10n.pleaseEnterCustomerName;
                               }
                               return null;
                             },
@@ -702,7 +714,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     // Employee Information - chỉ hiển thị khi không phải nhân viên đăng nhập
                     if (_currentUserRole != 'employee')
                       _buildSectionCard(
-                        title: 'Thông tin nhân viên',
+                        title: l10n.employeeInformation,
                         icon: Icons.work,
                         child: Column(
                           children: [
@@ -727,9 +739,11 @@ class _OrderScreenState extends State<OrderScreen> {
                             _buildDropdownButton(
                               onTap: _toggleEmployeeDropdown,
                               label: _selectedEmployees.isEmpty
-                                  ? 'Chọn nhân viên'
-                                  : '${_selectedEmployees.length} nhân viên đã chọn',
+                                  ? l10n.selectEmployee
+                                  : l10n.employeesSelected(
+                                      _selectedEmployees.length),
                               isExpanded: _showEmployeeDropdown,
+                              selectText: l10n.select,
                             ),
                             if (_showEmployeeDropdown) ...[
                               const SizedBox(height: 8),
@@ -761,7 +775,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     else
                       // Hiển thị thông tin nhân viên đăng nhập
                       _buildSectionCard(
-                        title: 'Nhân viên thực hiện',
+                        title: l10n.performingEmployee,
                         icon: Icons.person,
                         child: Container(
                           padding: const EdgeInsets.all(16),
@@ -790,7 +804,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     Text(
                                       _selectedEmployees.isNotEmpty
                                           ? _selectedEmployees.first.name
-                                          : 'Nhân viên đăng nhập',
+                                          : l10n.loggedInEmployee,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -819,7 +833,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Category Selection
                     _buildSectionCard(
-                      title: 'Danh mục dịch vụ',
+                      title: l10n.serviceCategories,
                       icon: Icons.category,
                       child: Column(
                         children: [
@@ -844,9 +858,11 @@ class _OrderScreenState extends State<OrderScreen> {
                           _buildDropdownButton(
                             onTap: _toggleCategoryDropdown,
                             label: _selectedCategories.isEmpty
-                                ? 'Chọn danh mục'
-                                : '${_selectedCategories.length} danh mục đã chọn',
+                                ? l10n.selectCategory
+                                : l10n.categoriesSelected(
+                                    _selectedCategories.length),
                             isExpanded: _showCategoryDropdown,
+                            selectText: l10n.select,
                           ),
 
                           // Category Dropdown Menu
@@ -879,7 +895,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Services Selection
                     _buildSectionCard(
-                      title: 'Dịch vụ',
+                      title: l10n.services,
                       icon: Icons.spa,
                       child: Column(
                         children: [
@@ -904,9 +920,11 @@ class _OrderScreenState extends State<OrderScreen> {
                           _buildDropdownButton(
                             onTap: _toggleServiceDropdown,
                             label: _selectedServices.isEmpty
-                                ? 'Chọn dịch vụ'
-                                : '${_selectedServices.length} dịch vụ đã chọn',
+                                ? l10n.selectService
+                                : l10n.servicesSelectedCount(
+                                    _selectedServices.length),
                             isExpanded: _showServiceDropdown,
+                            selectText: l10n.select,
                           ),
 
                           // Service Dropdown Menu
@@ -964,8 +982,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                             _selectedServices.contains(service);
                                         return _buildDropdownServiceItem(
                                           title: service.name,
-                                          subtitle:
-                                              '${_formatPrice(service.price)} VNĐ',
+                                          subtitle: l10n.subtotalAmount(
+                                              _formatPrice(service.price)),
                                           isSelected: isSelected,
                                           onTap: () =>
                                               _onServiceToggled(service),
@@ -986,7 +1004,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Discount Section
                     _buildSectionCard(
-                      title: 'Giảm giá',
+                      title: l10n.discount,
                       icon: Icons.discount,
                       child: Row(
                         children: [
@@ -1024,7 +1042,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                   if (discount == null ||
                                       discount < 0 ||
                                       discount > 100) {
-                                    return 'Giảm giá phải từ 0-100%';
+                                    return l10n.discountMustBe0To100;
                                   }
                                 }
                                 return null;
@@ -1046,7 +1064,8 @@ class _OrderScreenState extends State<OrderScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
-                              'Giảm giá: ${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                              l10n.discountAmount(_formatPrice(
+                                  _totalPrice * _discountPercent / 100)),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -1061,7 +1080,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     // Tip Section
                     _buildSectionCard(
-                      title: 'Tiền bo',
+                      title: l10n.tip,
                       icon: Icons.volunteer_activism,
                       child: Row(
                         children: [
@@ -1070,7 +1089,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               controller: _tipController,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: 'VNĐ',
+                                labelText: AppLocalizations.of(context)!.vnd,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -1096,7 +1115,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 if (value != null && value.isNotEmpty) {
                                   final tip = double.tryParse(value);
                                   if (tip == null || tip < 0) {
-                                    return 'Tiền bo phải lớn hơn 0';
+                                    return l10n.tipMustBeGreaterThan0;
                                   }
                                 }
                                 return null;
@@ -1118,7 +1137,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
-                              'Tip: ${_formatPrice(_tip)} VNĐ',
+                              l10n.tipAmount(_formatPrice(_tip)),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -1147,16 +1166,16 @@ class _OrderScreenState extends State<OrderScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Thành tiền:',
-                                style: TextStyle(
+                              Text(
+                                l10n.subtotal,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                '${_formatPrice(_totalPrice)} VNĐ',
+                                l10n.subtotalAmount(_formatPrice(_totalPrice)),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -1171,7 +1190,8 @@ class _OrderScreenState extends State<OrderScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Giảm giá (${_discountPercent.toStringAsFixed(0)}%):',
+                                  l10n.discountPercentage(
+                                      _discountPercent.toStringAsFixed(0)),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -1179,7 +1199,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '-${_formatPrice(_totalPrice * _discountPercent / 100)} VNĐ',
+                                  l10n.discountAmountNegative(_formatPrice(
+                                      _totalPrice * _discountPercent / 100)),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -1194,16 +1215,16 @@ class _OrderScreenState extends State<OrderScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Tiền bo:',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.tipLabel,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
                                 ),
                                 Text(
-                                  '+${_formatPrice(_tip)} VNĐ',
+                                  l10n.tipAmountPositive(_formatPrice(_tip)),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -1217,16 +1238,17 @@ class _OrderScreenState extends State<OrderScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Tổng thanh toán:',
-                                style: TextStyle(
+                              Text(
+                                l10n.totalPayment,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                '${_formatPrice(_finalTotalPrice)} VNĐ',
+                                l10n.totalPaymentAmount(
+                                    _formatPrice(_finalTotalPrice)),
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -1248,7 +1270,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           child: _buildPrimaryButton(
                             onPressed: _isLoading ? null : _createOrder,
                             isLoading: _isLoading,
-                            label: 'Tạo đơn',
+                            label: l10n.createOrder,
                             icon: Icons.check,
                           ),
                         ),
@@ -1256,7 +1278,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         Expanded(
                           child: _buildSecondaryButton(
                             onPressed: _isLoading ? null : _resetForm,
-                            label: 'Làm mới',
+                            label: l10n.refresh,
                             icon: Icons.refresh,
                           ),
                         ),
@@ -1377,6 +1399,7 @@ class _OrderScreenState extends State<OrderScreen> {
     required VoidCallback onTap,
     required String label,
     required bool isExpanded,
+    required String selectText,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -1393,7 +1416,9 @@ class _OrderScreenState extends State<OrderScreen> {
             Text(
               label,
               style: TextStyle(
-                color: label.contains('Chọn') ? Colors.grey[600] : Colors.black,
+                color: label.contains(selectText)
+                    ? Colors.grey[600]
+                    : Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),

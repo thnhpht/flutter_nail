@@ -11,6 +11,7 @@ import '../models.dart';
 import '../config/salon_config.dart';
 import '../api_client.dart';
 import 'design_system.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class PdfBillGenerator {
   static pw.Font? _vietnameseFont;
@@ -55,6 +56,7 @@ class PdfBillGenerator {
 
       // Tạo PDF
       final pdf = await _createPdf(
+        context: context,
         order: order,
         services: services,
         salonName: displaySalonName,
@@ -67,7 +69,7 @@ class PdfBillGenerator {
       Uint8List? pdfBytes;
 
       try {
-        file = await _savePdf(pdf, order);
+        file = await _savePdf(context, pdf, order);
       } catch (e) {
         // Nếu không thể lưu file, sử dụng bytes trực tiếp
         pdfBytes = await pdf.save();
@@ -86,10 +88,10 @@ class PdfBillGenerator {
       }
 
       // Hiển thị thông báo lỗi chi tiết hơn
-      String errorMessage = 'Lỗi tạo PDF: $e';
+      String errorMessage =
+          AppLocalizations.of(context)!.pdfErrorCreating(e.toString());
       if (e.toString().contains('MissingPluginException')) {
-        errorMessage =
-            'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
+        errorMessage = AppLocalizations.of(context)!.pdfErrorPluginNotSupported;
       }
 
       AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
@@ -136,6 +138,7 @@ class PdfBillGenerator {
 
       // Tạo PDF
       final pdf = await _createPdf(
+        context: context,
         order: order,
         services: services,
         salonName: displaySalonName,
@@ -148,7 +151,7 @@ class PdfBillGenerator {
       Uint8List? pdfBytes;
 
       try {
-        file = await _savePdf(pdf, order);
+        file = await _savePdf(context, pdf, order);
       } catch (e) {
         // Nếu không thể lưu file, sử dụng bytes trực tiếp
         pdfBytes = await pdf.save();
@@ -170,10 +173,10 @@ class PdfBillGenerator {
       }
 
       // Hiển thị thông báo lỗi chi tiết hơn
-      String errorMessage = 'Lỗi tạo PDF: $e';
+      String errorMessage =
+          AppLocalizations.of(context)!.pdfErrorCreating(e.toString());
       if (e.toString().contains('MissingPluginException')) {
-        errorMessage =
-            'Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.';
+        errorMessage = AppLocalizations.of(context)!.pdfErrorPluginNotSupported;
       }
 
       AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
@@ -204,15 +207,16 @@ class PdfBillGenerator {
         await Future.delayed(const Duration(seconds: 2));
 
         // Hiển thị thông báo hướng dẫn người dùng
-        AppWidgets.showFlushbar(context,
-            'Zalo đã mở! Vui lòng chọn Zalo trong menu chia sẻ để gửi hóa đơn.',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.pdfZaloOpened,
             type: MessageType.info);
       } else {
         // Nếu không có Zalo, chia sẻ file thông thường
         await _shareFileDirectly(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ Zalo: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorSharingZalo(e.toString()),
           type: MessageType.error);
 
       // Fallback: chia sẻ file thông thường
@@ -234,7 +238,8 @@ class PdfBillGenerator {
             salonName: salonName);
       }
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ file: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorSharingFile(e.toString()),
           type: MessageType.error);
     }
   } // Chia sẻ file trên mobile mà không hiển thị dialog
@@ -248,8 +253,10 @@ class PdfBillGenerator {
         // Sử dụng file nếu có - chia sẻ với Zalo
         await Share.shareXFiles(
           [XFile(file.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
-          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
+          subject: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
       } else if (pdfBytes != null) {
         // Sử dụng bytes trực tiếp nếu không có file
@@ -258,8 +265,10 @@ class PdfBillGenerator {
 
         await Share.shareXFiles(
           [XFile(tempFile.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
-          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
+          subject: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
 
         // Xóa file tạm
@@ -269,11 +278,12 @@ class PdfBillGenerator {
           return;
         }
       } else {
-        throw Exception('Không có file PDF hoặc dữ liệu để chia sẻ');
+        throw Exception(AppLocalizations.of(context)!.pdfErrorNoFileData);
       }
     } catch (e) {
       // Nếu không thể chia sẻ, hiển thị thông báo
-      AppWidgets.showFlushbar(context, 'Không thể chia sẻ file: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorCannotShare(e.toString()),
           type: MessageType.error);
     }
   }
@@ -288,8 +298,10 @@ class PdfBillGenerator {
       if (file != null && await file.exists()) {
         await Share.shareXFiles(
           [XFile(file.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
-          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
+          subject: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
       } else if (pdfBytes != null) {
         final tempFile = File('temp_bill.pdf');
@@ -297,8 +309,10 @@ class PdfBillGenerator {
 
         await Share.shareXFiles(
           [XFile(tempFile.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
-          subject: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
+          subject: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
 
         // Xóa file tạm
@@ -311,7 +325,7 @@ class PdfBillGenerator {
     } catch (e) {
       // Nếu share_plus không hoạt động, hiển thị thông báo
       AppWidgets.showFlushbar(
-          context, 'File PDF đã được tạo. Vui lòng chia sẻ thủ công.',
+          context, AppLocalizations.of(context)!.pdfFileCreatedManualShare,
           type: MessageType.info);
     }
   }
@@ -425,6 +439,7 @@ class PdfBillGenerator {
   }
 
   static Future<pw.Document> _createPdf({
+    required BuildContext context,
     required Order order,
     required List<Service> services,
     required String salonName,
@@ -440,35 +455,35 @@ class PdfBillGenerator {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(20),
-        build: (pw.Context context) {
+        build: (pw.Context pdfContext) {
           return [
             // Header - Salon Info
-            _buildSalonHeader(salonName, salonAddress, salonPhone),
+            _buildSalonHeader(context, salonName, salonAddress, salonPhone),
 
             pw.SizedBox(height: 20),
 
             // Bill Info
-            _buildBillInfo(order),
+            _buildBillInfo(context, order),
 
             pw.SizedBox(height: 20),
 
             // Customer Info
-            _buildCustomerInfo(order),
+            _buildCustomerInfo(context, order),
 
             pw.SizedBox(height: 20),
 
             // Services - có thể cắt tự nhiên
-            _buildServicesTable(services),
+            _buildServicesTable(context, services),
 
             pw.SizedBox(height: 20),
 
             // Total
-            _buildTotalSection(order),
+            _buildTotalSection(context, order),
 
             pw.SizedBox(height: 20),
 
             // Footer
-            _buildFooter(),
+            _buildFooter(context),
           ];
         },
       ),
@@ -477,8 +492,8 @@ class PdfBillGenerator {
     return pdf;
   }
 
-  static pw.Widget _buildSalonHeader(
-      String salonName, String salonAddress, String salonPhone) {
+  static pw.Widget _buildSalonHeader(BuildContext context, String salonName,
+      String salonAddress, String salonPhone) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(20),
@@ -507,7 +522,8 @@ class PdfBillGenerator {
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            'Số điện thoại: ${_formatPhoneNumber(salonPhone)}',
+            AppLocalizations.of(context)!
+                .pdfPhoneNumber(_formatPhoneNumber(salonPhone)),
             style: _getVietnameseTextStyle(
               fontSize: 14,
               color: PdfColors.grey600,
@@ -519,7 +535,7 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildBillInfo(Order order) {
+  static pw.Widget _buildBillInfo(BuildContext context, Order order) {
     return pw.Container(
       width: double.infinity,
       decoration: pw.BoxDecoration(
@@ -540,7 +556,7 @@ class PdfBillGenerator {
               ),
             ),
             child: pw.Text(
-              'THÔNG TIN HÓA ĐƠN',
+              AppLocalizations.of(context)!.pdfBillInfoTitle,
               style: _getVietnameseTextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
@@ -557,14 +573,14 @@ class PdfBillGenerator {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      'Mã hóa đơn:',
+                      AppLocalizations.of(context)!.pdfBillCode,
                       style: _getVietnameseTextStyle(
                         fontSize: 12,
                         color: PdfColors.grey600,
                       ),
                     ),
                     pw.Text(
-                      '#${_formatBillId(order.id)}',
+                      '#${_formatBillId(context, order.id)}',
                       style: _getVietnameseTextStyle(
                         fontSize: 16,
                         fontWeight: pw.FontWeight.bold,
@@ -576,7 +592,7 @@ class PdfBillGenerator {
                   crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
                     pw.Text(
-                      'Ngày tạo:',
+                      AppLocalizations.of(context)!.pdfCreatedDate,
                       style: _getVietnameseTextStyle(
                         fontSize: 12,
                         color: PdfColors.grey600,
@@ -599,7 +615,7 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildCustomerInfo(Order order) {
+  static pw.Widget _buildCustomerInfo(BuildContext context, Order order) {
     return pw.Container(
       width: double.infinity,
       decoration: pw.BoxDecoration(
@@ -620,7 +636,7 @@ class PdfBillGenerator {
               ),
             ),
             child: pw.Text(
-              'THÔNG TIN KHÁCH HÀNG',
+              AppLocalizations.of(context)!.pdfCustomerInfoTitle,
               style: _getVietnameseTextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
@@ -634,11 +650,18 @@ class PdfBillGenerator {
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.SizedBox(height: 10),
-                _buildInfoRow('Tên khách hàng:', order.customerName),
                 _buildInfoRow(
-                    'Số điện thoại:', _formatPhoneNumber(order.customerPhone)),
+                    context,
+                    AppLocalizations.of(context)!.pdfCustomerName,
+                    order.customerName),
                 _buildInfoRow(
-                    'Nhân viên phục vụ:', order.employeeNames.join(', ')),
+                    context,
+                    AppLocalizations.of(context)!.pdfCustomerPhone,
+                    _formatPhoneNumber(order.customerPhone)),
+                _buildInfoRow(
+                    context,
+                    AppLocalizations.of(context)!.pdfEmployeeServed,
+                    order.employeeNames.join(', ')),
               ],
             ),
           ),
@@ -647,7 +670,8 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildInfoRow(String label, String value) {
+  static pw.Widget _buildInfoRow(
+      BuildContext context, String label, String value) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
       child: pw.Row(
@@ -672,7 +696,8 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildServicesTable(List<Service> services) {
+  static pw.Widget _buildServicesTable(
+      BuildContext context, List<Service> services) {
     return pw.Column(
       children: [
         // Header
@@ -688,7 +713,7 @@ class PdfBillGenerator {
             border: pw.Border.all(color: PdfColors.grey300, width: 0.5),
           ),
           child: pw.Text(
-            'CHI TIẾT DỊCH VỤ',
+            AppLocalizations.of(context)!.pdfServicesDetailTitle,
             style: _getVietnameseTextStyle(
               fontSize: 16,
               fontWeight: pw.FontWeight.bold,
@@ -748,7 +773,7 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildTotalSection(Order order) {
+  static pw.Widget _buildTotalSection(BuildContext context, Order order) {
     return pw.Container(
       width: double.infinity,
       decoration: pw.BoxDecoration(
@@ -769,7 +794,7 @@ class PdfBillGenerator {
               ),
             ),
             child: pw.Text(
-              'THÔNG TIN THANH TOÁN',
+              AppLocalizations.of(context)!.pdfPaymentInfoTitle,
               style: _getVietnameseTextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
@@ -786,7 +811,7 @@ class PdfBillGenerator {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text(
-                      'Thành tiền:',
+                      AppLocalizations.of(context)!.pdfSubtotal,
                       style: _getVietnameseTextStyle(
                         fontSize: 16,
                         fontWeight: pw.FontWeight.normal,
@@ -809,7 +834,8 @@ class PdfBillGenerator {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(
-                        'Giảm giá (${order.discountPercent.toStringAsFixed(0)}%):',
+                        AppLocalizations.of(context)!.pdfDiscount(
+                            order.discountPercent.toStringAsFixed(0)),
                         style: _getVietnameseTextStyle(
                           fontSize: 16,
                           fontWeight: pw.FontWeight.normal,
@@ -833,7 +859,7 @@ class PdfBillGenerator {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(
-                        'Tiền bo:',
+                        AppLocalizations.of(context)!.pdfTip,
                         style: _getVietnameseTextStyle(
                           fontSize: 16,
                           fontWeight: pw.FontWeight.normal,
@@ -859,7 +885,7 @@ class PdfBillGenerator {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text(
-                      'TỔNG THANH TOÁN:',
+                      AppLocalizations.of(context)!.pdfTotalPayment,
                       style: _getVietnameseTextStyle(
                         fontSize: 18,
                         fontWeight: pw.FontWeight.bold,
@@ -882,7 +908,7 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildFooter() {
+  static pw.Widget _buildFooter(BuildContext context) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(15),
@@ -893,7 +919,7 @@ class PdfBillGenerator {
       child: pw.Column(
         children: [
           pw.Text(
-            SalonConfig.billFooter,
+            AppLocalizations.of(context)!.pdfThankYouMessage,
             style: _getVietnameseTextStyle(
               fontSize: 14,
               color: PdfColors.grey600,
@@ -903,7 +929,7 @@ class PdfBillGenerator {
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            SalonConfig.billFooter2,
+            AppLocalizations.of(context)!.pdfSeeYouAgainMessage,
             style: _getVietnameseTextStyle(
               fontSize: 14,
               color: PdfColors.grey600,
@@ -916,12 +942,13 @@ class PdfBillGenerator {
     );
   }
 
-  static Future<File> _savePdf(pw.Document pdf, Order order) async {
+  static Future<File> _savePdf(
+      BuildContext context, pw.Document pdf, Order order) async {
     try {
       // Thử sử dụng path_provider trước
       final output = await getTemporaryDirectory();
       final fileName =
-          'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+          'HoaDon_${_formatBillId(context, order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       final file = File('${output.path}/$fileName');
 
       await file.writeAsBytes(await pdf.save());
@@ -933,7 +960,7 @@ class PdfBillGenerator {
       }
 
       final fileName =
-          'HoaDon_${_formatBillId(order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+          'HoaDon_${_formatBillId(context, order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       final file = File(fileName);
 
       await file.writeAsBytes(await pdf.save());
@@ -947,11 +974,11 @@ class PdfBillGenerator {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Chia sẻ hóa đơn'),
+        title: Text(AppLocalizations.of(context)!.pdfShareBillTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Chọn cách chia sẻ hóa đơn:'),
+            Text(AppLocalizations.of(context)!.pdfShareBillMessage),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -969,7 +996,8 @@ class PdfBillGenerator {
                       icon:
                           const Icon(Icons.chat, size: 40, color: Colors.blue),
                     ),
-                    const Text('Zalo', style: TextStyle(fontSize: 12)),
+                    Text(AppLocalizations.of(context)!.pdfShareZalo,
+                        style: const TextStyle(fontSize: 12)),
                   ],
                 ),
                 // Chia sẻ thông thường
@@ -984,7 +1012,8 @@ class PdfBillGenerator {
                       icon: const Icon(Icons.share,
                           size: 40, color: Colors.green),
                     ),
-                    const Text('Khác', style: TextStyle(fontSize: 12)),
+                    Text(AppLocalizations.of(context)!.pdfShareOther,
+                        style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ],
@@ -994,7 +1023,7 @@ class PdfBillGenerator {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.pdfCancel),
           ),
         ],
       ),
@@ -1026,7 +1055,8 @@ class PdfBillGenerator {
         await _shareFile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ Zalo: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorSharingZalo(e.toString()),
           type: MessageType.error);
 
       // Fallback: chia sẻ file thông thường
@@ -1045,7 +1075,8 @@ class PdfBillGenerator {
         await _shareFileMobile(context, file, pdfBytes, salonName: salonName);
       }
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi chia sẻ file: $e',
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorSharingFile(e.toString()),
           type: MessageType.error);
     }
   }
@@ -1057,7 +1088,8 @@ class PdfBillGenerator {
       // Sử dụng file nếu có
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        text: AppLocalizations.of(context)!
+            .pdfBillFrom(salonName ?? SalonConfig.salonName),
       );
     } else if (pdfBytes != null) {
       // Sử dụng bytes trực tiếp nếu không có file
@@ -1066,7 +1098,8 @@ class PdfBillGenerator {
 
       await Share.shareXFiles(
         [XFile(tempFile.path)],
-        text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+        text: AppLocalizations.of(context)!
+            .pdfBillFrom(salonName ?? SalonConfig.salonName),
       );
 
       // Xóa file tạm
@@ -1078,7 +1111,7 @@ class PdfBillGenerator {
         }
       }
     } else {
-      throw Exception('Không có file PDF hoặc dữ liệu để chia sẻ');
+      throw Exception(AppLocalizations.of(context)!.pdfErrorNoFileData);
     }
   }
 
@@ -1091,7 +1124,8 @@ class PdfBillGenerator {
       if (file != null && await file.exists()) {
         await Share.shareXFiles(
           [XFile(file.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
       } else if (pdfBytes != null) {
         final tempFile = File('temp_bill.pdf');
@@ -1099,7 +1133,8 @@ class PdfBillGenerator {
 
         await Share.shareXFiles(
           [XFile(tempFile.path)],
-          text: 'Hóa đơn từ ${salonName ?? SalonConfig.salonName}',
+          text: AppLocalizations.of(context)!
+              .pdfBillFrom(salonName ?? SalonConfig.salonName),
         );
 
         // Xóa file tạm
@@ -1132,32 +1167,32 @@ class PdfBillGenerator {
       await tempFile.writeAsBytes(pdfBytes);
       filePath = tempFile.path;
     } else {
-      throw Exception('Không có file PDF để chia sẻ');
+      throw Exception(AppLocalizations.of(context)!.pdfErrorNoFileToShare);
     }
 
     // Hiển thị dialog với thông tin file
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('File PDF đã được tạo'),
+        title: Text(AppLocalizations.of(context)!.pdfFileCreatedTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('File PDF đã được tạo thành công!'),
+            Text(AppLocalizations.of(context)!.pdfFileCreatedSuccess),
             const SizedBox(height: 16),
-            Text('Đường dẫn: $filePath'),
+            Text(AppLocalizations.of(context)!.pdfFilePath(filePath)),
             const SizedBox(height: 16),
-            const Text('Bạn có thể:'),
-            const Text('• Mở file bằng ứng dụng PDF'),
-            const Text('• Chia sẻ file thủ công'),
-            const Text('• Gửi qua email'),
+            Text(AppLocalizations.of(context)!.pdfYouCanDo),
+            Text(AppLocalizations.of(context)!.pdfOpenWithApp),
+            Text(AppLocalizations.of(context)!.pdfShareManually),
+            Text(AppLocalizations.of(context)!.pdfSendViaEmail),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Đóng'),
+            child: Text(AppLocalizations.of(context)!.pdfClose),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -1177,11 +1212,13 @@ class PdfBillGenerator {
                 }
                 // Fallback: copy path to clipboard
                 AppWidgets.showFlushbar(
-                    context, 'Đã copy đường dẫn file vào clipboard: $filePath',
+                    context,
+                    AppLocalizations.of(context)!
+                        .pdfPathCopiedToClipboard(filePath),
                     type: MessageType.info);
               }
             },
-            child: const Text('Mở file'),
+            child: Text(AppLocalizations.of(context)!.pdfOpenFile),
           ),
         ],
       ),
@@ -1199,10 +1236,10 @@ class PdfBillGenerator {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
   }
 
-  static String _formatBillId(String orderId) {
+  static String _formatBillId(BuildContext context, String orderId) {
     // Kiểm tra nếu ID rỗng
     if (orderId.isEmpty) {
-      return "TẠM THỜI";
+      return AppLocalizations.of(context)!.pdfTemporaryBillId;
     }
 
     // Nếu ID có format GUID, lấy 8 ký tự đầu

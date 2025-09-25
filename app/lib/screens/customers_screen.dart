@@ -3,6 +3,7 @@ import '../api_client.dart';
 import '../models.dart';
 import 'package:flutter/services.dart';
 import '../ui/design_system.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key, required this.api});
@@ -31,6 +32,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }
 
   Future<void> _showAddDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final phoneCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
     final ok = await showDialog<bool>(
@@ -79,12 +81,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Thêm khách hàng',
+                            l10n.addCustomer,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -93,7 +95,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Nhập thông tin khách hàng mới',
+                            l10n.enterNewCustomerInfo,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -122,7 +124,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           child: TextFormField(
                             controller: phoneCtrl,
                             decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
+                              labelText: AppLocalizations.of(context)!.phone,
                               prefixIcon: Icon(Icons.phone,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
@@ -144,7 +146,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             ],
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập số điện thoại';
+                                return l10n.pleaseEnterPhone;
                               }
                               return null;
                             },
@@ -160,7 +162,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           child: TextFormField(
                             controller: nameCtrl,
                             decoration: InputDecoration(
-                              labelText: 'Họ và tên',
+                              labelText: l10n.name,
                               prefixIcon: Icon(Icons.person,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
@@ -178,7 +180,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
+                                return l10n.pleaseEnterName;
                               }
                               return null;
                             },
@@ -204,8 +206,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           ),
                           side: BorderSide(color: Colors.grey[300]!),
                         ),
-                        child: const Text(
-                          'Huỷ',
+                        child: Text(
+                          l10n.cancel,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -243,8 +245,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text(
-                            'Lưu',
+                          child: Text(
+                            l10n.save,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -270,7 +272,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
         // Check if phone exists
         try {
           await widget.api.getCustomer(phone);
-          AppWidgets.showFlushbar(context, 'SĐT của khách hàng đã được tạo',
+          AppWidgets.showFlushbar(
+              context, AppLocalizations.of(context)!.customerPhoneExists,
               type: MessageType.warning);
           return;
         } catch (e) {
@@ -278,16 +281,17 @@ class _CustomersScreenState extends State<CustomersScreen> {
         }
         await widget.api.createCustomer(Customer(name: name, phone: phone));
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm khách hàng thành công',
+        AppWidgets.showFlushbar(context, l10n.customerAddedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm khách hàng',
+        AppWidgets.showFlushbar(context, l10n.errorAddingCustomer,
             type: MessageType.error);
       }
     }
   }
 
   Future<void> _showEditDialog(Customer c) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: c.name);
     final ok = await showDialog<bool>(
       context: context,
@@ -335,12 +339,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           const Icon(Icons.edit, color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Chỉnh sửa khách hàng',
+                            l10n.editCustomer,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -349,7 +353,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Cập nhật thông tin khách hàng',
+                            l10n.updateCustomerInfo,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -382,7 +386,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                   color: AppTheme.primaryStart, size: 20),
                               const SizedBox(width: 12),
                               Text(
-                                'SĐT: ${c.phone}',
+                                l10n.phoneLabel(c.phone),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -402,7 +406,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           child: TextFormField(
                             controller: nameCtrl,
                             decoration: InputDecoration(
-                              labelText: 'Họ và tên',
+                              labelText: l10n.name,
                               prefixIcon: const Icon(Icons.person,
                                   color: AppTheme.primaryStart),
                               border: InputBorder.none,
@@ -420,7 +424,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Vui lòng nhập họ và tên';
+                                return l10n.pleaseEnterName;
                               }
                               return null;
                             },
@@ -446,8 +450,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           ),
                           side: BorderSide(color: Colors.grey[300]!),
                         ),
-                        child: const Text(
-                          'Huỷ',
+                        child: Text(
+                          l10n.cancel,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -485,8 +489,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text(
-                            'Lưu',
+                          child: Text(
+                            l10n.save,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -510,11 +514,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
       try {
         await widget.api.updateCustomer(Customer(phone: c.phone, name: name));
         await _reload();
-        AppWidgets.showFlushbar(
-            context, 'Thay đổi thông tin khách hàng thành công',
+        AppWidgets.showFlushbar(context, l10n.customerUpdatedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin khách hàng',
+        AppWidgets.showFlushbar(context, l10n.errorUpdatingCustomer,
             type: MessageType.error);
       }
     }
@@ -524,10 +527,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
     try {
       await widget.api.deleteCustomer(c.phone);
       await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa khách hàng thành công',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.customerDeletedSuccessfully,
           type: MessageType.success);
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa khách hàng',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.errorDeletingCustomer,
           type: MessageType.error);
     }
   }
@@ -541,7 +546,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
           c.name.isEmpty ? c.phone : c.name,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Chọn hành động cho khách hàng này'),
+        content: Text(AppLocalizations.of(context)!
+            .chooseAction(AppLocalizations.of(context)!.customer)),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -549,7 +555,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               _showEditDialog(c);
             },
             icon: const Icon(Icons.edit, color: Colors.green),
-            label: const Text('Sửa'),
+            label: Text(AppLocalizations.of(context)!.edit),
           ),
           TextButton.icon(
             onPressed: () {
@@ -557,7 +563,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               _delete(c);
             },
             icon: const Icon(Icons.delete, color: Colors.red),
-            label: const Text('Xóa'),
+            label: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -566,6 +572,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -618,8 +625,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
               children: [
                 AppWidgets.gradientHeader(
                   icon: Icons.people,
-                  title: 'Khách hàng',
-                  subtitle: 'Quản lý thông tin khách hàng',
+                  title: l10n.customersTitle,
+                  subtitle: l10n.manageCustomerInfo,
                   fullWidth: true,
                 ),
                 const SizedBox(height: 24),
@@ -628,7 +635,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   child: TextField(
                     textAlignVertical: TextAlignVertical.center,
                     decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm khách hàng...',
+                      label: l10n.searchCustomers,
                       prefixIcon: Icons.search,
                     ),
                     onChanged: (v) => setState(() => _search = v.trim()),
@@ -646,7 +653,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       }
                       if (snapshot.hasError) {
                         AppWidgets.showFlushbar(
-                            context, 'Lỗi tải danh sách khách hàng',
+                            context, l10n.errorLoadingCustomerList,
                             type: MessageType.error);
                         return RefreshIndicator(
                           onRefresh: _reload,
@@ -659,22 +666,23 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     const Icon(Icons.error_outline,
                                         size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách khách hàng',
+                                    Text(
+                                      l10n.cannotLoadCustomerList,
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
+                                    Text(
+                                      l10n.checkNetworkOrTryAgain,
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
                                       onPressed: _reload,
-                                      child: const Text('Thử lại'),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .tryAgain),
                                     ),
                                   ],
                                 ),
@@ -697,9 +705,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
                       if (filtered.isEmpty) {
                         return RefreshIndicator(
                           onRefresh: _reload,
-                          child: ListView(children: const [
-                            SizedBox(height: 200),
-                            Center(child: Text('Không tìm thấy khách hàng'))
+                          child: ListView(children: [
+                            const SizedBox(height: 200),
+                            Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .noItemsFound(AppLocalizations.of(context)!
+                                        .customer)))
                           ]),
                         );
                       }
@@ -712,122 +723,176 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             final c = filtered[i];
                             return AppWidgets.animatedItem(
                               index: i,
-                              child: InkWell(
-                                onLongPress: () => _showActionDialog(c),
-                                borderRadius: BorderRadius.circular(16),
-                                splashColor: Colors.blue.withValues(alpha: 0.2),
-                                highlightColor:
-                                    Colors.blue.withValues(alpha: 0.1),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: AppTheme.cardDecoration(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 48,
-                                          height: 48,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Colors.blue.shade100,
-                                                Colors.blue.shade200,
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.blue
-                                                    .withValues(alpha: 0.2),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.person,
-                                              size: 24,
-                                              color: Colors.blue.shade700,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.blue.shade50,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.blue.shade200),
-                                                ),
-                                                child: Text(
-                                                  c.name.isEmpty
-                                                      ? c.phone
-                                                      : c.name,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.blue.shade800,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 6),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 6,
-                                                        vertical: 2),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.phone,
-                                                      size: 12,
-                                                      color:
-                                                          Colors.grey.shade600,
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    Text(
-                                                      c.phone,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors
-                                                            .grey.shade600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _showActionDialog(c),
+                                  borderRadius: BorderRadius.circular(16),
+                                  splashColor: AppTheme.primaryStart
+                                      .withValues(alpha: 0.2),
+                                  highlightColor: AppTheme.primaryEnd
+                                      .withValues(alpha: 0.1),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          AppTheme.primaryStart
+                                              .withValues(alpha: 0.05),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: AppTheme.primaryStart
+                                            .withValues(alpha: 0.1),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppTheme.primaryStart
+                                              .withValues(alpha: 0.1),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 2),
                                         ),
                                       ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              gradient:
+                                                  AppTheme.primaryGradient,
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppTheme.primaryStart
+                                                      .withValues(alpha: 0.3),
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 24,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppTheme.primaryStart
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                        AppTheme.primaryEnd
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    border: Border.all(
+                                                        color: AppTheme
+                                                            .primaryStart
+                                                            .withValues(
+                                                                alpha: 0.2)),
+                                                  ),
+                                                  child: Text(
+                                                    c.name.isEmpty
+                                                        ? c.phone
+                                                        : c.name,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color:
+                                                          AppTheme.primaryStart,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppTheme.primaryStart
+                                                            .withValues(
+                                                                alpha: 0.05),
+                                                        AppTheme.primaryEnd
+                                                            .withValues(
+                                                                alpha: 0.05),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.phone,
+                                                        size: 12,
+                                                        color:
+                                                            AppTheme.primaryEnd,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        c.phone,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: AppTheme
+                                                              .primaryEnd,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -7,6 +7,7 @@ import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
 import 'dart:convert';
+import '../generated/l10n/app_localizations.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key, required this.api});
@@ -44,14 +45,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        AppWidgets.showFlushbar(context,
-            'Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.',
+        final l10n = AppLocalizations.of(context)!;
+        AppWidgets.showFlushbar(context, l10n.cannotSelectImage,
             type: MessageType.error);
       }
     }
   }
 
   Widget _buildCategoryImagePlaceholder() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -62,7 +64,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         const SizedBox(height: 4),
         Text(
-          'Thêm ảnh',
+          l10n.selectImage,
           style: TextStyle(
             fontSize: 12,
             color: AppTheme.primaryStart,
@@ -116,6 +118,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Future<void> _showAddDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController();
     String? imageUrl;
     XFile? pickedImage;
@@ -137,7 +140,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -168,12 +171,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Thêm danh mục',
+                              l10n.addCategory,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -182,7 +185,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Tạo danh mục dịch vụ mới',
+                              AppLocalizations.of(context)!.addCategory,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -224,7 +227,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Tên danh mục',
+                                    labelText: AppLocalizations.of(context)!
+                                        .categoryName,
                                     prefixIcon: Icon(Icons.category,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -242,7 +246,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập tên danh mục';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterName;
                                     }
                                     return null;
                                   },
@@ -270,9 +275,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.grey,
@@ -288,7 +293,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryStart.withOpacity(0.3),
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -308,9 +314,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -331,7 +337,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        AppWidgets.showFlushbar(context, 'Tên danh mục không được để trống',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.categoryNameRequired,
             type: MessageType.warning);
         return;
       }
@@ -351,7 +358,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
             AppWidgets.showFlushbar(
-                context, 'Lỗi khi upload ảnh lên server: $e',
+                context,
+                AppLocalizations.of(context)!
+                    .errorUploadingImageToServer(e.toString()),
                 type: MessageType.error);
             return;
           }
@@ -361,16 +370,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           image: imageUrlToSave,
         );
         await _reload();
-        AppWidgets.showFlushbar(context, 'Thêm danh mục thành công',
+        AppWidgets.showFlushbar(context, l10n.categoryAddedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi khi thêm danh mục',
+        AppWidgets.showFlushbar(context, l10n.errorAddingCategory,
             type: MessageType.error);
       }
     }
   }
 
   Future<void> _showEditDialog(Category c) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: c.name);
 
     String? imageUrl = c.image;
@@ -393,7 +403,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -417,19 +427,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.edit,
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Chỉnh sửa danh mục',
+                              l10n.editCategory,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -438,7 +448,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Cập nhật thông tin danh mục',
+                              AppLocalizations.of(context)!.updateCategoryInfo,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -480,7 +490,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 child: TextFormField(
                                   controller: nameCtrl,
                                   decoration: InputDecoration(
-                                    labelText: 'Tên danh mục',
+                                    labelText: AppLocalizations.of(context)!
+                                        .categoryName,
                                     prefixIcon: Icon(Icons.category,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
@@ -498,7 +509,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập tên danh mục';
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterName;
                                     }
                                     return null;
                                   },
@@ -526,9 +538,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                             side: BorderSide(color: Colors.grey[300]!),
                           ),
-                          child: const Text(
-                            'Huỷ',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.grey,
@@ -544,7 +556,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryStart.withOpacity(0.3),
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -564,9 +577,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Lưu',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -587,7 +600,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       if (name.isEmpty) {
-        AppWidgets.showFlushbar(context, 'Tên danh mục không được để trống',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.categoryNameRequired,
             type: MessageType.warning);
         return;
       }
@@ -607,7 +621,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 .uploadCategoryImage(selectedImageBytes!, fileName);
           } catch (e) {
             AppWidgets.showFlushbar(
-                context, 'Lỗi khi upload ảnh lên server: $e',
+                context,
+                AppLocalizations.of(context)!
+                    .errorUploadingImageToServer(e.toString()),
                 type: MessageType.error);
             return;
           }
@@ -619,11 +635,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           image: imageUrlToSave,
         ));
         await _reload();
-        AppWidgets.showFlushbar(
-            context, 'Thay đổi thông tin danh mục thành công',
+        AppWidgets.showFlushbar(context,
+            AppLocalizations.of(context)!.categoryInfoUpdatedSuccessfully,
             type: MessageType.success);
       } catch (e) {
-        AppWidgets.showFlushbar(context, 'Lỗi thay đổi thông tin danh mục',
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.errorUpdatingCategory,
             type: MessageType.error);
       }
     }
@@ -633,10 +650,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     try {
       await widget.api.deleteCategory(c.id);
       await _reload();
-      AppWidgets.showFlushbar(context, 'Xóa danh mục thành công',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.categoryDeletedSuccessfully,
           type: MessageType.success);
     } catch (e) {
-      AppWidgets.showFlushbar(context, 'Lỗi khi xóa danh mục',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.errorDeletingCategory,
           type: MessageType.error);
     }
   }
@@ -650,7 +669,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           c.name,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Chọn hành động cho danh mục này'),
+        content: Text(AppLocalizations.of(context)!
+            .chooseAction(AppLocalizations.of(context)!.category)),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -658,7 +678,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               _showEditDialog(c);
             },
             icon: const Icon(Icons.edit, color: Colors.green),
-            label: const Text('Sửa'),
+            label: Text(AppLocalizations.of(context)!.edit),
           ),
           TextButton.icon(
             onPressed: () {
@@ -666,7 +686,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               _delete(c);
             },
             icon: const Icon(Icons.delete, color: Colors.red),
-            label: const Text('Xóa'),
+            label: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -714,7 +734,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -733,7 +753,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryStart.withOpacity(0.3),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -750,46 +770,67 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppWidgets.gradientHeader(
-                  icon: Icons.category,
-                  title: 'Danh mục',
-                  subtitle: 'Danh sách danh mục dịch vụ',
-                  fullWidth: true,
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  height: AppTheme.controlHeight,
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: AppTheme.inputDecoration(
-                      label: 'Tìm kiếm danh mục...',
-                      prefixIcon: Icons.search,
+          body: RefreshIndicator(
+            onRefresh: _reload,
+            child: CustomScrollView(
+              slivers: [
+                // Header Section
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AppWidgets.gradientHeader(
+                          icon: Icons.category,
+                          title: AppLocalizations.of(context)!.categoriesTitle,
+                          subtitle: AppLocalizations.of(context)!
+                              .categoriesListDescription,
+                          fullWidth: true,
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          height: AppTheme.controlHeight,
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: AppTheme.inputDecoration(
+                              label: AppLocalizations.of(context)!
+                                  .searchCategories,
+                              prefixIcon: Icons.search,
+                            ),
+                            onChanged: (v) =>
+                                setState(() => _search = v.trim()),
+                          ),
+                        ),
+                      ],
                     ),
-                    onChanged: (v) => setState(() => _search = v.trim()),
                   ),
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      300, // Đảm bảo có chiều cao cố định
-                  child: FutureBuilder<List<Category>>(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        AppWidgets.showFlushbar(
-                            context, 'Lỗi tải danh sách danh mục',
-                            type: MessageType.error);
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(
+
+                // Categories Grid
+                FutureBuilder<List<Category>>(
+                  future: _future,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(50),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      AppWidgets.showFlushbar(
+                          context,
+                          AppLocalizations.of(context)!
+                              .errorLoadingCategoriesList,
+                          type: MessageType.error);
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
                             children: [
                               const SizedBox(height: 200),
                               Center(
@@ -798,190 +839,201 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     const Icon(Icons.error_outline,
                                         size: 64, color: Colors.red),
                                     const SizedBox(height: 16),
-                                    const Text(
-                                      'Không thể tải danh sách danh mục',
-                                      style: TextStyle(
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .cannotLoadCategoriesList,
+                                      style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 8),
-                                    const Text(
-                                      'Vui lòng kiểm tra kết nối mạng hoặc thử lại',
-                                      style: TextStyle(
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .checkNetworkOrTryAgainCategories,
+                                      style: const TextStyle(
                                           fontSize: 14, color: Colors.grey),
                                     ),
                                     const SizedBox(height: 16),
                                     ElevatedButton(
                                       onPressed: _reload,
-                                      child: const Text('Thử lại'),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .tryAgain),
                                     ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                        );
-                      }
+                        ),
+                      );
+                    }
 
-                      final data = snapshot.data ?? [];
-                      final filtered = data
-                          .where((c) => c.name
-                              .toLowerCase()
-                              .contains(_search.toLowerCase()))
-                          .toList();
+                    final data = snapshot.data ?? [];
+                    final filtered = data
+                        .where((c) => c.name
+                            .toLowerCase()
+                            .contains(_search.toLowerCase()))
+                        .toList();
 
-                      if (filtered.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: _reload,
-                          child: ListView(
-                            children: const [
-                              SizedBox(height: 200),
-                              Center(child: Text('Không tìm thấy danh mục')),
+                    if (filtered.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 200),
+                              Center(
+                                  child: Text(AppLocalizations.of(context)!
+                                      .noItemsFound(
+                                          AppLocalizations.of(context)!
+                                              .category))),
                             ],
                           ),
-                        );
-                      }
+                        ),
+                      );
+                    }
 
-                      return RefreshIndicator(
-                        onRefresh: _reload,
-                        child: GridView.builder(
-                          key: const ValueKey('grid'),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: filtered.length,
-                          itemBuilder: (context, i) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.8,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, i) {
                             final c = filtered[i];
                             return AppWidgets.animatedItem(
                               index: i,
-                              child: InkWell(
-                                onLongPress: () => _showActionDialog(c),
-                                borderRadius: BorderRadius.circular(16),
-                                splashColor:
-                                    Colors.orange.withValues(alpha: 0.2),
-                                highlightColor:
-                                    Colors.orange.withValues(alpha: 0.1),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _showActionDialog(c),
+                                  borderRadius: BorderRadius.circular(16),
+                                  splashColor: AppTheme.primaryStart
+                                      .withValues(alpha: 0.2),
+                                  highlightColor: AppTheme.primaryEnd
+                                      .withValues(alpha: 0.1),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: AppTheme.primaryStart
+                                            .withValues(alpha: 0.1),
+                                        width: 1,
                                       ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        // Background Image or Gradient
-                                        c.image != null && c.image!.isNotEmpty
-                                            ? _buildImageWidget(c.image!)
-                                            : Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      Colors.orange.shade300,
-                                                      Colors.orange.shade500,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppTheme.primaryStart
+                                              .withValues(alpha: 0.1),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          // Background Image or Gradient
+                                          c.image != null && c.image!.isNotEmpty
+                                              ? _buildImageWidget(c.image!)
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    gradient: AppTheme
+                                                        .primaryGradient,
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.category,
+                                                      size: 60,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                          // Content
+                                          Positioned(
+                                            left: 12,
+                                            right: 12,
+                                            bottom: 12,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // Category Name
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppTheme.primaryStart
+                                                            .withValues(
+                                                                alpha: 0.9),
+                                                        AppTheme.primaryEnd
+                                                            .withValues(
+                                                                alpha: 0.9),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: AppTheme
+                                                            .primaryStart
+                                                            .withValues(
+                                                                alpha: 0.3),
+                                                        blurRadius: 4,
+                                                        offset:
+                                                            const Offset(0, 2),
+                                                      ),
                                                     ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                  child: Text(
+                                                    c.name,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.category,
-                                                    size: 60,
-                                                    color: Colors.white
-                                                        .withValues(alpha: 0.8),
-                                                  ),
-                                                ),
-                                              ),
-                                        // Gradient Overlay for better text readability
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.transparent,
-                                                Colors.black
-                                                    .withValues(alpha: 0.7),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                        // Content
-                                        Positioned(
-                                          left: 12,
-                                          right: 12,
-                                          bottom: 12,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Category Name
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.9),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withValues(
-                                                              alpha: 0.1),
-                                                      blurRadius: 4,
-                                                      offset:
-                                                          const Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  c.name,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
-                                                    color:
-                                                        Colors.orange.shade800,
-                                                  ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             );
                           },
+                          childCount: filtered.length,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                ),
+
+                // Bottom padding for FAB
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 100),
                 ),
               ],
             ),

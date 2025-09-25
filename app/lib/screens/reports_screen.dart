@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../api_client.dart';
@@ -61,7 +62,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       setState(() {
         _isLoading = false;
       });
-      AppWidgets.showFlushbar(context, 'Lỗi tải dữ liệu: $e',
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.errorLoadingData(e.toString()),
           type: MessageType.error);
     }
   }
@@ -169,6 +171,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<void> _showDateFilterDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     await showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -211,12 +214,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Lọc theo thời gian',
+                            l10n.filterByTime,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -225,7 +228,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Chọn khoảng thời gian để xem báo cáo',
+                            l10n.selectTimeRangeToViewReports,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -293,7 +296,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Chọn khoảng thời gian tùy chỉnh',
+                                      l10n.selectCustomTimeRange,
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -301,7 +304,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      'Chọn ngày bắt đầu và kết thúc',
+                                      l10n.selectStartAndEndDate,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -325,7 +328,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                     // Preset Buttons
                     Text(
-                      'Chọn nhanh',
+                      l10n.quickSelect,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -335,7 +338,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                     const SizedBox(height: AppTheme.spacingM),
 
-                    _buildPresetButtonsGrid(),
+                    _buildPresetButtonsGrid(l10n),
                   ],
                 ),
               ),
@@ -355,8 +358,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                           side: BorderSide(color: Colors.grey[300]!),
                         ),
-                        child: const Text(
-                          'Đóng',
+                        child: Text(
+                          l10n.close,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -447,34 +450,34 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return '$startDate - $endDate';
   }
 
-  Widget _buildPresetButtonsGrid() {
+  Widget _buildPresetButtonsGrid(AppLocalizations l10n) {
     final presets = [
       {
-        'label': 'Hôm nay',
+        'label': l10n.today,
         'preset': 'today',
         'icon': Icons.today,
         'color': Colors.green
       },
       {
-        'label': 'Hôm qua',
+        'label': l10n.yesterday,
         'preset': 'yesterday',
         'icon': Icons.history,
         'color': Colors.orange
       },
       {
-        'label': 'Tuần này',
+        'label': l10n.thisWeek,
         'preset': 'week',
         'icon': Icons.view_week,
         'color': Colors.blue
       },
       {
-        'label': 'Tháng này',
+        'label': l10n.thisMonth,
         'preset': 'month',
         'icon': Icons.calendar_view_month,
         'color': Colors.purple
       },
       {
-        'label': '30 ngày qua',
+        'label': l10n.last30Days,
         'preset': 'last30days',
         'icon': Icons.trending_up,
         'color': Colors.teal
@@ -553,6 +556,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final filteredOrders = _getFilteredOrders();
 
     return Container(
@@ -610,8 +614,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 children: [
                   AppWidgets.gradientHeader(
                     icon: Icons.receipt,
-                    title: 'Báo Cáo Doanh Thu',
-                    subtitle: 'Thống kê và báo cáo doanh thu',
+                    title: l10n.revenueReports,
+                    subtitle: l10n.statisticsAndRevenueReports,
                     fullWidth: true,
                   ),
 
@@ -628,7 +632,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         _updateFilters();
                       },
                       decoration: InputDecoration(
-                        hintText: 'Tìm kiếm...',
+                        hintText: l10n.searchHint,
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -663,7 +667,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     decoration: AppTheme.cardDecoration(),
                     child: DropdownButtonFormField<Employee>(
                       decoration: AppTheme.inputDecoration(
-                        label: 'Chọn nhân viên',
+                        label: l10n.selectEmployee,
                         prefixIcon: Icons.person,
                       ).copyWith(
                         border: InputBorder.none,
@@ -672,9 +676,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                       value: _selectedEmployee,
                       items: [
-                        const DropdownMenuItem<Employee>(
+                        DropdownMenuItem<Employee>(
                           value: null,
-                          child: Text('Tất cả nhân viên'),
+                          child:
+                              Text(AppLocalizations.of(context)!.allEmployees),
                         ),
                         ..._employees
                             .map((employee) => DropdownMenuItem<Employee>(
@@ -698,7 +703,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     decoration: AppTheme.cardDecoration(),
                     child: DropdownButtonFormField<String>(
                       decoration: AppTheme.inputDecoration(
-                        label: 'Trạng thái thanh toán',
+                        label: l10n.paymentStatus,
                         prefixIcon: Icons.payment,
                       ).copyWith(
                         border: InputBorder.none,
@@ -706,19 +711,20 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             horizontal: 16, vertical: 12),
                       ),
                       initialValue: _selectedPaymentStatus,
-                      items: const [
+                      items: [
                         DropdownMenuItem<String>(
                           value: null,
-                          child: Text('Tất cả trạng thái'),
+                          child:
+                              Text(AppLocalizations.of(context)!.allStatuses),
                         ),
                         DropdownMenuItem<String>(
                           value: 'paid',
                           child: Row(
                             children: [
-                              Icon(Icons.check_circle,
+                              const Icon(Icons.check_circle,
                                   size: 16, color: Colors.green),
-                              SizedBox(width: 8),
-                              Text('Đã thanh toán'),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.paid),
                             ],
                           ),
                         ),
@@ -726,9 +732,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           value: 'unpaid',
                           child: Row(
                             children: [
-                              Icon(Icons.cancel, size: 16, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text('Chưa thanh toán'),
+                              const Icon(Icons.cancel,
+                                  size: 16, color: Colors.red),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.unpaid),
                             ],
                           ),
                         ),
@@ -807,7 +814,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   const SizedBox(height: AppTheme.spacingL),
 
                   // Thống kê tổng quan
-                  _buildSummaryCards(),
+                  _buildSummaryCards(l10n),
 
                   const SizedBox(height: AppTheme.spacingL),
 
@@ -820,14 +827,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                     )
                   else if (filteredOrders.isEmpty)
-                    _buildEmptyState()
+                    _buildEmptyState(l10n)
                   else
                     ...filteredOrders.asMap().entries.map((entry) {
                       final index = entry.key;
                       final order = entry.value;
                       return AppWidgets.animatedItem(
                         index: index,
-                        child: _buildOrderCard(order),
+                        child: _buildOrderCard(order, l10n),
                       );
                     }).toList(),
 
@@ -841,13 +848,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildSummaryCards() {
+  Widget _buildSummaryCards(AppLocalizations l10n) {
     return Container(
       child: Row(
         children: [
           Expanded(
             child: _buildSummaryCard(
-              title: 'Hóa đơn',
+              title: l10n.bills,
               value: _totalOrders.toString(),
               icon: Icons.receipt,
               color: Colors.blue,
@@ -856,7 +863,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           const SizedBox(width: AppTheme.spacingM),
           Expanded(
             child: _buildSummaryCard(
-              title: 'Doanh Thu',
+              title: l10n.revenue,
               value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
                   .format(_totalRevenue),
               icon: Icons.attach_money,
@@ -916,7 +923,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildOrderCard(Order order) {
+  Widget _buildOrderCard(Order order, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
       decoration: AppTheme.cardDecoration(),
@@ -973,9 +980,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  order.isPaid
-                                      ? 'Đã thanh toán'
-                                      : 'Chưa thanh toán',
+                                  order.isPaid ? l10n.paid : l10n.unpaid,
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
@@ -1032,7 +1037,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                       const SizedBox(width: AppTheme.spacingS),
                       Expanded(
-                        child: _buildServicesDisplay(order),
+                        child: _buildServicesDisplay(order, l10n),
                       ),
                     ],
                   ),
@@ -1098,7 +1103,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Giảm ${order.discountPercent.toStringAsFixed(0)}%:',
+                              l10n.discountPercent(
+                                  order.discountPercent.toStringAsFixed(0)),
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -1120,8 +1126,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Tổng tiền:',
+                          Text(
+                            l10n.totalAmount,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -1149,7 +1155,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1168,7 +1174,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           const SizedBox(height: AppTheme.spacingXL),
           Text(
-            _getEmptyStateTitle(),
+            _getEmptyStateTitle(l10n),
             style: TextStyle(
               fontSize: 20,
               color: Colors.grey[700],
@@ -1177,7 +1183,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           const SizedBox(height: AppTheme.spacingS),
           Text(
-            _getEmptyStateMessage(),
+            _getEmptyStateMessage(l10n),
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -1189,24 +1195,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  String _getEmptyStateTitle() {
+  String _getEmptyStateTitle(AppLocalizations l10n) {
     if (_selectedDateRange != null) {
-      return 'Không có hóa đơn trong khoảng thời gian này';
+      return l10n.noOrdersInTimeRange;
     }
     if (_searchQuery.isNotEmpty) {
-      return 'Không tìm thấy hóa đơn';
+      return l10n.noOrdersFound;
     }
-    return 'Chưa có hóa đơn nào';
+    return l10n.noOrdersYet;
   }
 
-  String _getEmptyStateMessage() {
+  String _getEmptyStateMessage(AppLocalizations l10n) {
     if (_selectedDateRange != null) {
-      return 'Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian';
+      return l10n.tryDifferentTimeRange;
     }
     if (_searchQuery.isNotEmpty) {
-      return 'Thử tìm kiếm với từ khóa khác';
+      return l10n.tryDifferentSearch;
     }
-    return 'Tạo hóa đơn đầu tiên để xem báo cáo ở đây';
+    return l10n.createFirstOrderToViewReports;
   }
 
   String _formatPrice(double price) {
@@ -1271,7 +1277,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return phoneNumber;
   }
 
-  Widget _buildServicesDisplay(Order order) {
+  Widget _buildServicesDisplay(Order order, AppLocalizations l10n) {
     if (order.serviceNames.isNotEmpty) {
       final displayServices = order.serviceNames.take(2).join(', ');
       if (order.serviceNames.length > 2) {
@@ -1294,7 +1300,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     // If no service names available, show a placeholder
     return Text(
-      'Không có dịch vụ',
+      l10n.noServices,
       style: TextStyle(
         fontSize: 14,
         color: Colors.grey[600],

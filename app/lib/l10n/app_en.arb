@@ -1,0 +1,1952 @@
+{
+  "appTitle": "Nail Manager",
+  "welcome": "Welcome to",
+  "salon": "Salon",
+  "professionalNailSalonManagement": "Professional nail salon management system",
+  "todayOverview": "Today's Overview",
+  "customers": "Customers",
+  "bills": "Bills",
+  "revenue": "Revenue",
+  "boss": "Boss",
+  "employee": "Employee",
+  "information": "Information",
+  "salonInfo": "Salon Information",
+  "menu": "Menu",
+  "management": "Management",
+  "employees": "Employees",
+  "categories": "Categories",
+  "services": "Services",
+  "createOrder": "Create Order",
+  "billsReports": "Bills & Reports",
+  "reports": "Reports",
+  "version": "Version",
+  "logout": "Logout",
+  "loading": "Loading...",
+  "cannotLoadVersionInfo": "Cannot load version information",
+  "login": "Login",
+  "username": "Username",
+  "password": "Password",
+  "loginButton": "Login",
+  "loginError": "Login Error",
+  "invalidCredentials": "Invalid username or password",
+  "add": "Add",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "search": "Search",
+  "name": "Name",
+  "phone": "Phone",
+  "address": "Address",
+  "price": "Price",
+  "description": "Description",
+  "status": "Status",
+  "date": "Date",
+  "time": "Time",
+  "total": "Total",
+  "quantity": "Quantity",
+  "language": "Language",
+  "settings": "Settings",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+  "chinese": "Chinese",
+  "korean": "Korean",
+  "roleSelection": "Role Selection",
+  "shopOwner": "Shop Owner",
+  "employee": "Employee",
+  "email": "Email",
+  "checkEmail": "Check Email",
+  "emailExists": "Email exists",
+  "emailNotExists": "Email not exists",
+  "createAccount": "Create Account",
+  "employeeLogin": "Employee Login",
+  "databaseName": "Database Name",
+  "phoneNumber": "Phone Number",
+  "employeePhone": "Employee Phone",
+  "employeePassword": "Employee Password",
+  "shopEmail": "Shop Email",
+  "pleaseEnterEmail": "Please enter email",
+  "pleaseEnterPassword": "Please enter password",
+  "pleaseEnterPhone": "Please enter phone",
+  "pleaseEnterName": "Please enter name",
+  "pleaseEnterDatabaseName": "Please enter database name",
+  "invalidEmail": "Invalid email",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "phoneTooShort": "Phone must be at least 10 digits",
+  "databaseNameTooShort": "Database name must be at least 3 characters",
+  "checkingEmail": "Checking email...",
+  "creatingAccount": "Creating account...",
+  "loggingIn": "Logging in...",
+  "errorCheckingEmail": "Error checking email",
+  "errorCreatingAccount": "Error creating account",
+  "errorLoggingIn": "Error logging in",
+  "accountCreatedSuccessfully": "Account created successfully",
+  "loginSuccessful": "Login successful",
+  "customerName": "Customer Name",
+  "customerPhone": "Customer Phone",
+  "customerAddress": "Customer Address",
+  "addCustomer": "Add Customer",
+  "editCustomer": "Edit Customer",
+  "deleteCustomer": "Delete Customer",
+  "customerAddedSuccessfully": "Customer added successfully",
+  "customerUpdatedSuccessfully": "Customer updated successfully",
+  "customerDeletedSuccessfully": "Customer deleted successfully",
+  "errorAddingCustomer": "Error adding customer",
+  "errorUpdatingCustomer": "Error updating customer",
+  "errorDeletingCustomer": "Error deleting customer",
+  "confirmDeleteCustomer": "Are you sure you want to delete this customer?",
+  "employeeName": "Employee Name",
+  "employeePhone": "Employee Phone",
+  "employeeAddress": "Employee Address",
+  "employeePosition": "Position",
+  "employeeSalary": "Salary",
+  "addEmployee": "Add Employee",
+  "editEmployee": "Edit Employee",
+  "deleteEmployee": "Delete Employee",
+  "employeeAddedSuccessfully": "Employee added successfully",
+  "employeeUpdatedSuccessfully": "Employee updated successfully",
+  "employeeDeletedSuccessfully": "Employee deleted successfully",
+  "errorAddingEmployee": "Error adding employee",
+  "errorUpdatingEmployee": "Error updating employee",
+  "errorDeletingEmployee": "Error deleting employee",
+  "confirmDeleteEmployee": "Are you sure you want to delete this employee?",
+  "selectImage": "Select Image",
+  "cannotSelectImage": "Cannot select image. Please check photo library access permissions and try again.",
+  "categoryName": "Category Name",
+  "addCategory": "Add Category",
+  "editCategory": "Edit Category",
+  "deleteCategory": "Delete Category",
+  "categoryAddedSuccessfully": "Category added successfully",
+  "categoryUpdatedSuccessfully": "Category updated successfully",
+  "categoryDeletedSuccessfully": "Category deleted successfully",
+  "errorAddingCategory": "Error adding category",
+  "errorUpdatingCategory": "Error updating category",
+  "errorDeletingCategory": "Error deleting category",
+  "confirmDeleteCategory": "Are you sure you want to delete this category?",
+  "serviceName": "Service Name",
+  "servicePrice": "Service Price",
+  "serviceDuration": "Service Duration",
+  "addService": "Add Service",
+  "editService": "Edit Service",
+  "deleteService": "Delete Service",
+  "serviceAddedSuccessfully": "Service added successfully",
+  "serviceUpdatedSuccessfully": "Service updated successfully",
+  "serviceDeletedSuccessfully": "Service deleted successfully",
+  "errorAddingService": "Error adding service",
+  "errorUpdatingService": "Error updating service",
+  "errorDeletingService": "Error deleting service",
+  "confirmDeleteService": "Are you sure you want to delete this service?",
+  "order": "Order",
+  "orders": "Orders",
+  "createOrder": "Create Order",
+  "updateOrder": "Update Order",
+  "orderCreatedSuccessfully": "Order created successfully",
+  "orderUpdatedSuccessfully": "Order updated successfully",
+  "orderDeletedSuccessfully": "Order deleted successfully",
+  "errorCreatingOrder": "Error creating order",
+  "errorUpdatingOrder": "Error updating order",
+  "errorDeletingOrder": "Error deleting order",
+  "confirmDeleteOrder": "Are you sure you want to delete this order?",
+  "selectServices": "Select Services",
+  "selectEmployees": "Select Employees",
+  "selectedServices": "services selected",
+  "selectedEmployees": "employees selected",
+  "pleaseSelectAtLeastOneService": "Please select at least one service",
+  "pleaseSelectAtLeastOneEmployee": "Please select at least one employee",
+  "canOnlyUpdateOrderToday": "Can only update orders today",
+  "customerInformation": "Customer Information",
+  "employeeInformation": "Employee Information",
+  "serviceCategories": "Service Categories",
+  "performingEmployee": "Performing Employee",
+  "loggedInEmployee": "Logged In Employee",
+  "foundCustomer": "Found customer",
+  "customerNotFound": "Customer not found with this phone number. Please enter name to create new.",
+  "foundEmployee": "Found employee",
+  "employeeNotFound": "Employee not found with this phone number. Please enter name to create new.",
+  "errorLoadingCategories": "Error loading categories",
+  "errorLoadingServices": "Error loading services",
+  "errorLoadingEmployees": "Error loading employees",
+  "errorSearchingCustomer": "Error searching customer",
+  "errorSearchingEmployee": "Error searching employee",
+  "invalidServiceData": "Invalid service data",
+  "bill": "Bill",
+  "bills": "Bills",
+  "billNumber": "Bill Number",
+  "billDate": "Bill Date",
+  "billTotal": "Bill Total",
+  "billStatus": "Bill Status",
+  "paid": "Paid",
+  "unpaid": "Unpaid",
+  "pending": "Pending",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "report": "Report",
+  "reports": "Reports",
+  "dailyReport": "Daily Report",
+  "weeklyReport": "Weekly Report",
+  "monthlyReport": "Monthly Report",
+  "yearlyReport": "Yearly Report",
+  "totalRevenue": "Total Revenue",
+  "totalOrders": "Total Orders",
+  "totalCustomers": "Total Customers",
+  "averageOrderValue": "Average Order Value",
+  "salonName": "Salon Name",
+  "salonAddress": "Salon Address",
+  "salonPhone": "Salon Phone",
+  "salonEmail": "Salon Email",
+  "salonDescription": "Salon Description",
+  "salonHours": "Salon Hours",
+  "updateSalonInfo": "Update Salon Info",
+  "salonInfoUpdatedSuccessfully": "Salon info updated successfully",
+  "errorUpdatingSalonInfo": "Error updating salon info",
+  "notifications": "Notifications",
+  "noNotifications": "No notifications",
+  "markAsRead": "Mark as read",
+  "markAllAsRead": "Mark all as read",
+  "clearAll": "Clear all",
+  "minutes": "minutes",
+  "hours": "hours",
+  "days": "days",
+  "weeks": "weeks",
+  "months": "months",
+  "years": "years",
+  "ago": "ago",
+  "now": "now",
+  "today": "today",
+  "yesterday": "yesterday",
+  "tomorrow": "tomorrow",
+  "clearFilter": "Clear Filter",
+  "apply": "Apply",
+  "chooseAction": "Choose action for this {item}",
+  "tryAgain": "Try Again",
+  "noItemsFound": "No {item} found",
+  "deleteAllNotifications": "Delete All Notifications",
+  "confirmDeleteAllNotifications": "Are you sure you want to delete all notifications?",
+  "selectQRCode": "Select QR Code",
+  "changeLogo": "Change Logo",
+  "allEmployees": "All Employees",
+  "allStatuses": "All Statuses",
+  "errorLoadingData": "Error loading data: {error}",
+  "addImage": "Add Image",
+  "categoryFilter": "Category Filter",
+  "selectCategoriesToFilter": "Select categories to filter services",
+  "categoriesSelected": "{count} categories selected",
+  "selectedCategories": "Selected Categories:",
+  "removeAll": "Remove All",
+  "allCategories": "All Categories ({count})",
+  "createNewService": "Create New Nail Service",
+  "pleaseEnterServiceName": "Please enter service name",
+  "pleaseEnterPrice": "Please enter price",
+  "pleaseEnterValidPrice": "Please enter valid price",
+  "errorUploadingImage": "Error uploading image to server",
+  "serviceAddedSuccessfully": "Service added successfully",
+  "errorAddingService": "Error adding service",
+  "editService": "Edit Service",
+  "updateServiceInfo": "Update Service Information",
+  "errorUpdatingService": "Error updating service information",
+  "serviceDeletedSuccessfully": "Service deleted successfully",
+  "errorDeletingService": "Error deleting service",
+  "categoryNameRequired": "Category name is required",
+  "errorUpdatingCategory": "Error updating category information",
+  "categoryDeletedSuccessfully": "Category deleted successfully",
+  "errorDeletingCategory": "Error deleting category",
+  "employeePhoneExists": "Employee phone number already exists",
+  "errorUpdatingEmployee": "Error updating employee information",
+  "employeeDeletedSuccessfully": "Employee deleted successfully",
+  "errorDeletingEmployee": "Error deleting employee",
+  "customerPhoneExists": "Customer phone number already exists",
+  "customerDeletedSuccessfully": "Customer deleted successfully",
+  "errorDeletingCustomer": "Error deleting customer",
+  "errorLoadingCategories": "Error loading categories: {error}",
+  "errorLoadingServices": "Error loading services: {error}",
+  "errorLoadingEmployees": "Error loading employees: {error}",
+  "errorSearchingCustomer": "Error searching customer: {error}",
+  "errorSearchingEmployee": "Error searching employee: {error}",
+  "orderUpdatedSuccessfully": "Order updated successfully!",
+  "errorUpdatingOrder": "Error updating order: {error}",
+  "orderCreatedSuccessfully": "Order created successfully!",
+  "errorCreatingOrder": "Error creating order: {error}",
+  "errorUploadingLogo": "Error uploading logo to server",
+  "errorUploadingQRCode": "Error uploading QR code to server",
+  "salonInfoSavedSuccessfully": "Salon information saved successfully!",
+  "fullName": "Full Name",
+  "databaseUsername": "Database Username",
+  "databasePassword": "Database Password",
+  "vnd": "VND",
+  "hoursAgo": "{hours} hours ago",
+  "minutesAgo": "{minutes} minutes ago",
+  "justNow": "Just now",
+  "enterNewCustomerInfo": "Enter new customer information",
+  "@enterNewCustomerInfo": {
+    "description": "Enter new customer information"
+  },
+  "updateCustomerInfo": "Update customer information",
+  "@updateCustomerInfo": {
+    "description": "Update customer information"
+  },
+  "phoneLabel": "Phone: {phone}",
+  "@phoneLabel": {
+    "description": "Phone label",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "customer": "customer",
+  "@customer": {
+    "description": "Customer"
+  },
+  "customersTitle": "Customers",
+  "@customersTitle": {
+    "description": "Customers title"
+  },
+  "manageCustomerInfo": "Manage customer information",
+  "@manageCustomerInfo": {
+    "description": "Manage customer information"
+  },
+  "searchCustomers": "Search customers...",
+  "@searchCustomers": {
+    "description": "Search customers"
+  },
+  "errorLoadingCustomerList": "Error loading customer list",
+  "@errorLoadingCustomerList": {
+    "description": "Error loading customer list"
+  },
+  "cannotLoadCustomerList": "Cannot load customer list",
+  "@cannotLoadCustomerList": {
+    "description": "Cannot load customer list"
+  },
+  "checkNetworkOrTryAgain": "Please check network connection or try again",
+  "@checkNetworkOrTryAgain": {
+    "description": "Please check network connection or try again"
+  },
+  "enterNewEmployeeInfo": "Enter new employee information",
+  "@enterNewEmployeeInfo": {
+    "description": "Enter new employee information"
+  },
+  "pleaseEnterFullName": "Please enter full name",
+  "@pleaseEnterFullName": {
+    "description": "Please enter full name"
+  },
+  "pleaseEnterPhoneNumber": "Please enter phone number",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Please enter phone number"
+  },
+  "errorUploadingImageToServer": "Error uploading image to server",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server"
+  },
+  "updateEmployeeInfo": "Update employee information",
+  "@updateEmployeeInfo": {
+    "description": "Update employee information"
+  },
+  "newPasswordOptional": "New password (leave blank if not changing)",
+  "@newPasswordOptional": {
+    "description": "New password optional"
+  },
+  "employeeInfoUpdatedSuccessfully": "Employee information updated successfully",
+  "@employeeInfoUpdatedSuccessfully": {
+    "description": "Employee information updated successfully"
+  },
+  "manageSalonEmployees": "Manage salon employees",
+  "@manageSalonEmployees": {
+    "description": "Manage salon employees"
+  },
+  "searchEmployees": "Search employees...",
+  "@searchEmployees": {
+    "description": "Search employees"
+  },
+  "errorLoadingEmployeeList": "Error loading employee list",
+  "@errorLoadingEmployeeList": {
+    "description": "Error loading employee list"
+  },
+  "cannotLoadEmployeeList": "Cannot load employee list",
+  "@cannotLoadEmployeeList": {
+    "description": "Cannot load employee list"
+  },
+  "errorUploadingImageToServer": "Error uploading image to server: {error}",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCategoryInfo": "Update Category Information",
+  "@updateCategoryInfo": {
+    "description": "Update category information"
+  },
+  "categoryInfoUpdatedSuccessfully": "Category information updated successfully",
+  "@categoryInfoUpdatedSuccessfully": {
+    "description": "Category information updated successfully"
+  },
+  "category": "category",
+  "@category": {
+    "description": "Category"
+  },
+  "categoriesTitle": "Categories",
+  "@categoriesTitle": {
+    "description": "Categories title"
+  },
+  "categoriesListDescription": "List of service categories",
+  "@categoriesListDescription": {
+    "description": "Categories list description"
+  },
+  "searchCategories": "Search categories...",
+  "@searchCategories": {
+    "description": "Search categories"
+  },
+  "errorLoadingCategoriesList": "Error loading categories list",
+  "@errorLoadingCategoriesList": {
+    "description": "Error loading categories list"
+  },
+  "cannotLoadCategoriesList": "Cannot load categories list",
+  "@cannotLoadCategoriesList": {
+    "description": "Cannot load categories list"
+  },
+  "checkNetworkOrTryAgainCategories": "Please check network connection or try again",
+  "@checkNetworkOrTryAgainCategories": {
+    "description": "Please check network connection or try again"
+  },
+  "servicesTitle": "Services",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "Manage services by category",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "searchServices": "Search services...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "showingAllServices": "Showing all {total} services",
+  "@showingAllServices": {
+    "description": "Showing all services message",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategoryAndSearch": "Found {shown}/{total} services (filtered by category and search)",
+  "@foundServicesWithCategoryAndSearch": {
+    "description": "Found services with category and search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategory": "Found {shown}/{total} services (filtered by {count} categories)",
+  "@foundServicesWithCategory": {
+    "description": "Found services with category filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithSearch": "Found {shown}/{total} services (search: \"{search}\")",
+  "@foundServicesWithSearch": {
+    "description": "Found services with search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+  "errorLoadingServicesList": "Error loading services list",
+  "@errorLoadingServicesList": {
+    "description": "Error loading services list"
+  },
+  "cannotLoadServicesList": "Cannot load services list",
+  "@cannotLoadServicesList": {
+    "description": "Cannot load services list"
+  },
+  "checkNetworkOrTryAgainServices": "Please check network connection or try again",
+  "@checkNetworkOrTryAgainServices": {
+    "description": "Please check network connection or try again"
+  },
+  "serviceUpdatedSuccessfully": "Service information updated successfully",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service information updated successfully"
+  },
+  "service": "service",
+  "@service": {
+    "description": "Service"
+  },
+  "vnd": "VND",
+  "@vnd": {
+    "description": "Vietnamese Dong currency"
+  },
+  "customerFound": "Customer found: {customerName}",
+  "@customerFound": {
+    "description": "Message when customer is found",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "Customer not found with this phone number. Please enter name to create new.",
+  "@customerNotFound": {
+    "description": "Message when customer is not found"
+  },
+  "employeeFound": "Employee found: {employeeName}",
+  "@employeeFound": {
+    "description": "Message when employee is found",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "Employee not found with this phone number. Please enter name to create new.",
+  "@employeeNotFound": {
+    "description": "Message when employee is not found"
+  },
+  "invalidServiceData": "Invalid service data",
+  "@invalidServiceData": {
+    "description": "Error message for invalid service data"
+  },
+  "createNewOrder": "Create New Order",
+  "@createNewOrder": {
+    "description": "Title for creating new order"
+  },
+  "servicesSelected": "{count} services selected",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInformation": "Customer Information",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "pleaseEnterPhoneNumber": "Please enter phone number",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Validation message for phone number"
+  },
+  "customerName": "Customer Name",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+  "pleaseEnterCustomerName": "Please enter customer name",
+  "@pleaseEnterCustomerName": {
+    "description": "Validation message for customer name"
+  },
+  "employeeInformation": "Employee Information",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "Select Employee",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count} employees selected",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "Performing Employee",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "Logged In Employee",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "Service Categories",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "Select Category",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count} categories selected",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "Services",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "Select Service",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count} services selected",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "Discount",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "Discount must be between 0-100%",
+  "@discountMustBe0To100": {
+    "description": "Validation message for discount percentage"
+  },
+  "discountAmount": "Discount: {amount} VND",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "Tip",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "Tip must be greater than 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Validation message for tip amount"
+  },
+  "tipAmount": "Tip: {amount} VND",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotal": "Subtotal:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "subtotalAmount": "{amount} VND",
+  "@subtotalAmount": {
+    "description": "Subtotal amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "discountPercentage": "Discount ({percentage}%):",
+  "@discountPercentage": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "discountAmountNegative": "-{amount} VND",
+  "@discountAmountNegative": {
+    "description": "Negative discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "Tip:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "tipAmountPositive": "+{amount} VND",
+  "@tipAmountPositive": {
+    "description": "Positive tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "totalPayment": "Total Payment:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "totalPaymentAmount": "{amount} VND",
+  "@totalPaymentAmount": {
+    "description": "Total payment amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "createOrder": "Create Order",
+  "@createOrder": {
+    "description": "Create order button label"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "select": "Select",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "cannotLoadSalonInfo": "Cannot load salon information. Please check network connection and try again.",
+  "@cannotLoadSalonInfo": {
+    "description": "Error message when cannot load salon information"
+  },
+  "cannotSelectImage": "Cannot select image. Please check photo library access permissions and try again.",
+  "@cannotSelectImage": {
+    "description": "Error message when cannot select image"
+  },
+  "cannotSaveSalonInfo": "Cannot save salon information. Please check network connection and try again.",
+  "@cannotSaveSalonInfo": {
+    "description": "Error message when cannot save salon information"
+  },
+  "basicInformation": "Basic Information",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "socialMedia": "Social Media",
+  "@socialMedia": {
+    "description": "Social media section title"
+  },
+  "salonInformation": "Salon Information",
+  "@salonInformation": {
+    "description": "Salon information title"
+  },
+  "manageSalonInfoAndContact": "Manage salon information and contact details",
+  "@manageSalonInfoAndContact": {
+    "description": "Description for salon information management"
+  },
+  "qrCode": "QR Code",
+  "@qrCode": {
+    "description": "QR Code section title"
+  },
+  "salonLogo": "Salon Logo",
+  "@salonLogo": {
+    "description": "Salon logo section title"
+  },
+  "selectQRCode": "Select QR Code",
+  "@selectQRCode": {
+    "description": "Select QR Code button text"
+  },
+  "selectLogo": "Select Logo",
+  "@selectLogo": {
+    "description": "Select Logo button text"
+  },
+  "salonNameLabel": "Salon Name",
+  "@salonNameLabel": {
+    "description": "Salon name field label"
+  },
+  "addressLabel": "Address",
+  "@addressLabel": {
+    "description": "Address field label"
+  },
+  "phoneNumberLabel": "Phone Number",
+  "@phoneNumberLabel": {
+    "description": "Phone number field label"
+  },
+  "emailLabel": "Email",
+  "@emailLabel": {
+    "description": "Email field label"
+  },
+  "websiteLabel": "Website",
+  "@websiteLabel": {
+    "description": "Website field label"
+  },
+  "facebookLabel": "Facebook",
+  "@facebookLabel": {
+    "description": "Facebook field label"
+  },
+  "instagramLabel": "Instagram",
+  "@instagramLabel": {
+    "description": "Instagram field label"
+  },
+  "zaloLabel": "Zalo",
+  "@zaloLabel": {
+    "description": "Zalo field label"
+  },
+  "saving": "Saving...",
+  "@saving": {
+    "description": "Saving status text"
+  },
+  "saveInformation": "Save Information",
+  "@saveInformation": {
+    "description": "Save information button text"
+  },
+  "menuTitle": "Menu",
+  "@menuTitle": {
+    "description": "Menu screen title"
+  },
+  "menuSubtitle": "Menu categories and services",
+  "@menuSubtitle": {
+    "description": "Menu screen subtitle"
+  },
+  "searchServicesPlaceholder": "Search services...",
+  "@searchServicesPlaceholder": {
+    "description": "Search services placeholder"
+  },
+  "noCategoriesYet": "No categories yet",
+  "@noCategoriesYet": {
+    "description": "No categories available message"
+  },
+  "categoriesSection": "Categories",
+  "@categoriesSection": {
+    "description": "Categories section title"
+  },
+  "servicesCount": "{count} services",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearFilter": "Clear Filter",
+  "@clearFilter": {
+    "description": "Clear filter button text"
+  },
+  "categoriesCount": "{count} categories",
+  "@categoriesCount": {
+    "description": "Categories count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "Services",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "viewAllServices": "View All Services",
+  "@viewAllServices": {
+    "description": "View all services button text"
+  },
+  "noServicesFoundWithSearchAndCategory": "No services found \"{search}\" in {category}",
+  "@noServicesFoundWithSearchAndCategory": {
+    "description": "No services found with search and category filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesFoundWithSearch": "No services found \"{search}\"",
+  "@noServicesFoundWithSearch": {
+    "description": "No services found with search filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesInCategory": "Category \"{category}\" has no services yet",
+  "@noServicesInCategory": {
+    "description": "No services in category message",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesYet": "No services yet",
+  "@noServicesYet": {
+    "description": "No services available message"
+  },
+  "unknownCategory": "Unknown",
+  "@unknownCategory": {
+    "description": "Unknown category name"
+  },
+  "billsManagement": "Bills Management",
+  "@billsManagement": {
+    "description": "Bills management subtitle"
+  },
+  "searchBills": "Search bills...",
+  "@searchBills": {
+    "description": "Search bills placeholder text"
+  },
+  "filterByTime": "Filter by Time",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewBills": "Select time range to view bills",
+  "@selectTimeRangeToViewBills": {
+    "description": "Select time range to view bills description"
+  },
+  "selectCustomTimeRange": "Select custom time range",
+  "@selectCustomTimeRange": {
+    "description": "Select custom time range button text"
+  },
+  "selectStartAndEndDate": "Select start and end date",
+  "@selectStartAndEndDate": {
+    "description": "Select start and end date description"
+  },
+  "quickSelect": "Quick Select",
+  "@quickSelect": {
+    "description": "Quick select label"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today preset"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday preset"
+  },
+  "thisWeek": "This Week",
+  "@thisWeek": {
+    "description": "This week preset"
+  },
+  "thisMonth": "This Month",
+  "@thisMonth": {
+    "description": "This month preset"
+  },
+  "last30Days": "Last 30 Days",
+  "@last30Days": {
+    "description": "Last 30 days preset"
+  },
+  "noBillsInTimeRange": "No bills in this time range",
+  "@noBillsInTimeRange": {
+    "description": "No bills in time range message"
+  },
+  "noBillsFound": "No bills found",
+  "@noBillsFound": {
+    "description": "No bills found message"
+  },
+  "noBillsYet": "No bills yet",
+  "@noBillsYet": {
+    "description": "No bills yet message"
+  },
+  "noYourBillsInTimeRange": "No bills of yours in this time range",
+  "@noYourBillsInTimeRange": {
+    "description": "No your bills in time range message"
+  },
+  "noYourBillsFound": "No bills of yours found",
+  "@noYourBillsFound": {
+    "description": "No your bills found message"
+  },
+  "noYourBillsYet": "You don't have any bills yet",
+  "@noYourBillsYet": {
+    "description": "No your bills yet message"
+  },
+  "tryDifferentTimeRange": "Try selecting a different time range or clear the time filter",
+  "@tryDifferentTimeRange": {
+    "description": "Try different time range message"
+  },
+  "tryDifferentSearch": "Try searching with different keywords",
+  "@tryDifferentSearch": {
+    "description": "Try different search message"
+  },
+  "createFirstOrderToViewBills": "Create your first order to view bills here",
+  "@createFirstOrderToViewBills": {
+    "description": "Create first order to view bills message"
+  },
+  "createFirstOrderToViewYourBills": "Create your first order to view your bills here",
+  "@createFirstOrderToViewYourBills": {
+    "description": "Create first order to view your bills message"
+  },
+  "filtered": "filtered",
+  "@filtered": {
+    "description": "Filtered suffix"
+  },
+  "total": "Total",
+  "@total": {
+    "description": "Total prefix"
+  },
+  "bills": "Bills",
+  "@bills": {
+    "description": "Bills label"
+  },
+  "revenue": "Revenue",
+  "@revenue": {
+    "description": "Revenue label"
+  },
+  "paid": "Paid",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "Unpaid",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "discount": "Discount",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "totalAmount": "Total Amount:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noServices": "No services",
+  "@noServices": {
+    "description": "No services message"
+  },
+  "temporary": "TEMPORARY",
+  "@temporary": {
+    "description": "Temporary bill ID"
+  },
+  "cannotUpdateOrderTodayOnly": "Can only update orders from today",
+  "@cannotUpdateOrderTodayOnly": {
+    "description": "Cannot update order today only message"
+  },
+  "serviceInfoNotFound": "Service information not found for this order",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "filterByTime": "Filter by Time",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewReports": "Select time range to view reports",
+  "@selectTimeRangeToViewReports": {
+    "description": "Filter by time dialog subtitle"
+  },
+  "selectCustomTimeRange": "Select custom time range",
+  "@selectCustomTimeRange": {
+    "description": "Custom time range button text"
+  },
+  "selectStartAndEndDate": "Select start and end date",
+  "@selectStartAndEndDate": {
+    "description": "Custom time range button subtitle"
+  },
+  "quickSelect": "Quick Select",
+  "@quickSelect": {
+    "description": "Quick select section title"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today preset button"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday preset button"
+  },
+  "thisWeek": "This Week",
+  "@thisWeek": {
+    "description": "This week preset button"
+  },
+  "thisMonth": "This Month",
+  "@thisMonth": {
+    "description": "This month preset button"
+  },
+  "last30Days": "Last 30 Days",
+  "@last30Days": {
+    "description": "Last 30 days preset button"
+  },
+  "revenueReports": "Revenue Reports",
+  "@revenueReports": {
+    "description": "Revenue reports screen title"
+  },
+  "statisticsAndRevenueReports": "Statistics and revenue reports",
+  "@statisticsAndRevenueReports": {
+    "description": "Revenue reports screen subtitle"
+  },
+  "searchHint": "Search...",
+  "@searchHint": {
+    "description": "Search field hint text"
+  },
+  "selectEmployee": "Select Employee",
+  "@selectEmployee": {
+    "description": "Employee filter label"
+  },
+  "paymentStatus": "Payment Status",
+  "@paymentStatus": {
+    "description": "Payment status filter label"
+  },
+  "bills": "Bills",
+  "@bills": {
+    "description": "Bills summary card title"
+  },
+  "revenue": "Revenue",
+  "@revenue": {
+    "description": "Revenue summary card title"
+  },
+  "discountPercent": "Discount {percent}%:",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "Total Amount:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noOrdersInTimeRange": "No orders in this time range",
+  "@noOrdersInTimeRange": {
+    "description": "Empty state when no orders in selected time range"
+  },
+  "noOrdersFound": "No orders found",
+  "@noOrdersFound": {
+    "description": "Empty state when search returns no results"
+  },
+  "noOrdersYet": "No orders yet",
+  "@noOrdersYet": {
+    "description": "Empty state when no orders exist"
+  },
+  "tryDifferentTimeRange": "Try selecting a different time range or clear the time filter",
+  "@tryDifferentTimeRange": {
+    "description": "Empty state message for time range filter"
+  },
+  "tryDifferentSearch": "Try searching with different keywords",
+  "@tryDifferentSearch": {
+    "description": "Empty state message for search"
+  },
+  "createFirstOrderToViewReports": "Create your first order to view reports here",
+  "@createFirstOrderToViewReports": {
+    "description": "Empty state message for no orders"
+  },
+  "noServices": "No services",
+  "@noServices": {
+    "description": "No services available message"
+  },
+  "billPaymentReceipt": "Payment Receipt",
+  "@billPaymentReceipt": {
+    "description": "Bill payment receipt title"
+  },
+  "print": "Print",
+  "@print": {
+    "description": "Print button label"
+  },
+  "phoneNumber": "Phone:",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "billCode": "Bill Code:",
+  "@billCode": {
+    "description": "Bill code label"
+  },
+  "createdDate": "Created Date:",
+  "@createdDate": {
+    "description": "Created date label"
+  },
+  "customerInformation": "Customer Information",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "customerName": "Customer Name:",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "servingStaff": "Serving Staff:",
+  "@servingStaff": {
+    "description": "Serving staff label"
+  },
+  "serviceDetails": "Service Details",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "subtotal": "Subtotal:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discount": "Discount",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "tip": "Tip:",
+  "@tip": {
+    "description": "Tip label"
+  },
+  "totalPayment": "Total Payment:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "qrCodePayment": "QR Code Payment",
+  "@qrCodePayment": {
+    "description": "QR Code payment section title"
+  },
+  "noQrCode": "No QR Code Available",
+  "@noQrCode": {
+    "description": "No QR code message"
+  },
+  "qrCodeDisplayError": "QR Code Display Error",
+  "@qrCodeDisplayError": {
+    "description": "QR Code display error message"
+  },
+  "scanQrToPay": "Scan QR code to pay",
+  "@scanQrToPay": {
+    "description": "Scan QR code to pay instruction"
+  },
+  "temporary": "TEMPORARY",
+  "@temporary": {
+    "description": "Temporary placeholder text"
+  },
+  "serviceNotFoundError": "Service information not found for this order",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  },
+  "billFooter": "Thank you for using our services!",
+  "@billFooter": {
+    "description": "Bill footer message"
+  },
+  "billFooter2": "See you again!",
+  "@billFooter2": {
+    "description": "Bill footer second message"
+  },
+  "updateOrder": "Update Order",
+  "@updateOrder": {
+    "description": "Update order screen title"
+  },
+  "servicesSelected": "{count} services selected",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "canOnlyUpdateTodayOrders": "Can only update orders from today",
+  "@canOnlyUpdateTodayOrders": {
+    "description": "Warning message for updating orders"
+  },
+  "customerFound": "Customer found: {name}",
+  "@customerFound": {
+    "description": "Customer found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "Customer not found with this phone number. Please enter name to create new.",
+  "@customerNotFound": {
+    "description": "Customer not found message"
+  },
+  "employeeFound": "Employee found: {name}",
+  "@employeeFound": {
+    "description": "Employee found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "Employee not found with this phone number. Please enter name to create new.",
+  "@employeeNotFound": {
+    "description": "Employee not found message"
+  },
+  "invalidServiceData": "Invalid service data",
+  "@invalidServiceData": {
+    "description": "Invalid service data error"
+  },
+  "customerInformation": "Customer Information",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "pleaseEnterPhoneNumber": "Please enter phone number",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Phone number validation message"
+  },
+  "customerName": "Customer Name",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "pleaseEnterCustomerName": "Please enter customer name",
+  "@pleaseEnterCustomerName": {
+    "description": "Customer name validation message"
+  },
+  "employeeInformation": "Employee Information",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "Select Employee",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count} employees selected",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "Performing Employee",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "Logged in employee",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "Service Categories",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "Select Category",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count} categories selected",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "Services",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "Select Service",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count} services selected",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "Discount",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "Discount must be 0-100%",
+  "@discountMustBe0To100": {
+    "description": "Discount validation message"
+  },
+  "discountAmount": "Discount: {amount} VND",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "Tip",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "Tip must be greater than 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Tip validation message"
+  },
+  "tipAmount": "Tip: {amount} VND",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatus": "Payment Status",
+  "@paymentStatus": {
+    "description": "Payment status section title"
+  },
+  "paid": "Paid",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "Unpaid",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "customerPaidFully": "Customer has paid in full",
+  "@customerPaidFully": {
+    "description": "Customer paid fully message"
+  },
+  "customerNotPaid": "Customer has not paid",
+  "@customerNotPaid": {
+    "description": "Customer not paid message"
+  },
+  "subtotal": "Subtotal:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discountPercent": "Discount ({percent}%):",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "Tip:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "totalPaymentLabel": "Total Payment:",
+  "@totalPaymentLabel": {
+    "description": "Total payment label"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "select": "Select",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "orderNotFound": "Order information not found",
+  "@orderNotFound": {
+    "description": "Error message when order is not found"
+  },
+  "errorLoadingOrder": "Error loading order information: {error}",
+  "@errorLoadingOrder": {
+    "description": "Error message when loading order fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cannotConnectToServer": "Cannot connect to server",
+  "@cannotConnectToServer": {
+    "description": "Error message when server connection fails"
+  },
+  "notificationNoOrderInfo": "Notification does not contain order information",
+  "@notificationNoOrderInfo": {
+    "description": "Warning message when notification lacks order data"
+  },
+  "allNotificationsMarkedAsRead": "All notifications marked as read",
+  "@allNotificationsMarkedAsRead": {
+    "description": "Success message when marking all notifications as read"
+  },
+  "notificationDeleted": "Notification deleted",
+  "@notificationDeleted": {
+    "description": "Success message when notification is deleted"
+  },
+  "errorDeletingNotification": "Error deleting notification: {error}",
+  "@errorDeletingNotification": {
+    "description": "Error message when deleting notification fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allNotificationsDeleted": "All notifications deleted",
+  "@allNotificationsDeleted": {
+    "description": "Success message when all notifications are deleted"
+  },
+  "errorDeletingAllNotifications": "Error deleting all notifications: {error}",
+  "@errorDeletingAllNotifications": {
+    "description": "Error message when deleting all notifications fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "markAllAsReadTooltip": "Mark all as read",
+  "@markAllAsReadTooltip": {
+    "description": "Tooltip for mark all as read button"
+  },
+  "clearAllTooltip": "Clear all",
+  "@clearAllTooltip": {
+    "description": "Tooltip for clear all button"
+  },
+  "noNotificationsYet": "No notifications yet",
+  "@noNotificationsYet": {
+    "description": "Empty state message when no notifications exist"
+  },
+  "newNotificationsWillAppearHere": "New notifications will appear here",
+  "@newNotificationsWillAppearHere": {
+    "description": "Empty state description for notifications"
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Delete action in popup menu"
+  },
+  "pdfErrorCreating": "Error creating PDF: {error}",
+  "@pdfErrorCreating": {
+    "description": "Error message when creating PDF fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorPluginNotSupported": "Error: Plugin not supported on this platform. Please run on Android/iOS or install CocoaPods for macOS.",
+  "@pdfErrorPluginNotSupported": {
+    "description": "Error message when plugin is not supported on platform"
+  },
+  "pdfErrorSharingZalo": "Error sharing to Zalo: {error}",
+  "@pdfErrorSharingZalo": {
+    "description": "Error message when sharing to Zalo fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorSharingFile": "Error sharing file: {error}",
+  "@pdfErrorSharingFile": {
+    "description": "Error message when sharing file fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorCannotShare": "Cannot share file: {error}",
+  "@pdfErrorCannotShare": {
+    "description": "Error message when file cannot be shared",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorNoFileData": "No PDF file or data available for sharing",
+  "@pdfErrorNoFileData": {
+    "description": "Error message when no PDF file or data available for sharing"
+  },
+  "pdfErrorNoFileToShare": "No PDF file available for sharing",
+  "@pdfErrorNoFileToShare": {
+    "description": "Error message when no PDF file available for sharing"
+  },
+  "pdfZaloOpened": "Zalo opened! Please select Zalo in the share menu to send the bill.",
+  "@pdfZaloOpened": {
+    "description": "Message when Zalo is opened for sharing"
+  },
+  "pdfBillFrom": "Bill from {salonName}",
+  "@pdfBillFrom": {
+    "description": "Bill sharing text with salon name",
+    "placeholders": {
+      "salonName": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfFileCreatedManualShare": "PDF file created. Please share manually.",
+  "@pdfFileCreatedManualShare": {
+    "description": "Message when PDF file is created and needs manual sharing"
+  },
+  "pdfPhoneNumber": "Phone: {phoneNumber}",
+  "@pdfPhoneNumber": {
+    "description": "Phone number label in PDF",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfBillInfoTitle": "BILL INFORMATION",
+  "@pdfBillInfoTitle": {
+    "description": "Bill information section title in PDF"
+  },
+  "pdfBillCode": "Bill Code:",
+  "@pdfBillCode": {
+    "description": "Bill code label in PDF"
+  },
+  "pdfCreatedDate": "Created Date:",
+  "@pdfCreatedDate": {
+    "description": "Created date label in PDF"
+  },
+  "pdfCustomerInfoTitle": "CUSTOMER INFORMATION",
+  "@pdfCustomerInfoTitle": {
+    "description": "Customer information section title in PDF"
+  },
+  "pdfCustomerName": "Customer Name:",
+  "@pdfCustomerName": {
+    "description": "Customer name label in PDF"
+  },
+  "pdfCustomerPhone": "Phone Number:",
+  "@pdfCustomerPhone": {
+    "description": "Customer phone label in PDF"
+  },
+  "pdfEmployeeServed": "Employee Served:",
+  "@pdfEmployeeServed": {
+    "description": "Employee served label in PDF"
+  },
+  "pdfServicesDetailTitle": "SERVICES DETAIL",
+  "@pdfServicesDetailTitle": {
+    "description": "Services detail section title in PDF"
+  },
+  "pdfPaymentInfoTitle": "PAYMENT INFORMATION",
+  "@pdfPaymentInfoTitle": {
+    "description": "Payment information section title in PDF"
+  },
+  "pdfSubtotal": "Subtotal:",
+  "@pdfSubtotal": {
+    "description": "Subtotal label in PDF"
+  },
+  "pdfDiscount": "Discount ({percent}%):",
+  "@pdfDiscount": {
+    "description": "Discount label in PDF with percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTip": "Tip:",
+  "@pdfTip": {
+    "description": "Tip label in PDF"
+  },
+  "pdfTotalPayment": "TOTAL PAYMENT:",
+  "@pdfTotalPayment": {
+    "description": "Total payment label in PDF"
+  },
+  "pdfThankYouMessage": "Thank you for using our service!",
+  "@pdfThankYouMessage": {
+    "description": "Thank you message in PDF footer"
+  },
+  "pdfSeeYouAgainMessage": "See you again!",
+  "@pdfSeeYouAgainMessage": {
+    "description": "See you again message in PDF footer"
+  },
+  "pdfShareBillTitle": "Share Bill",
+  "@pdfShareBillTitle": {
+    "description": "Share bill dialog title"
+  },
+  "pdfShareBillMessage": "Choose how to share the bill:",
+  "@pdfShareBillMessage": {
+    "description": "Share bill dialog message"
+  },
+  "pdfShareZalo": "Zalo",
+  "@pdfShareZalo": {
+    "description": "Zalo sharing option"
+  },
+  "pdfShareOther": "Other",
+  "@pdfShareOther": {
+    "description": "Other sharing option"
+  },
+  "pdfCancel": "Cancel",
+  "@pdfCancel": {
+    "description": "Cancel button text"
+  },
+  "pdfFileCreatedTitle": "PDF File Created",
+  "@pdfFileCreatedTitle": {
+    "description": "PDF file created dialog title"
+  },
+  "pdfFileCreatedSuccess": "PDF file created successfully!",
+  "@pdfFileCreatedSuccess": {
+    "description": "PDF file created success message"
+  },
+  "pdfFilePath": "Path: {filePath}",
+  "@pdfFilePath": {
+    "description": "PDF file path label",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfYouCanDo": "You can:",
+  "@pdfYouCanDo": {
+    "description": "What you can do label"
+  },
+  "pdfOpenWithApp": "• Open file with PDF app",
+  "@pdfOpenWithApp": {
+    "description": "Open file with PDF app option"
+  },
+  "pdfShareManually": "• Share file manually",
+  "@pdfShareManually": {
+    "description": "Share file manually option"
+  },
+  "pdfSendViaEmail": "• Send via email",
+  "@pdfSendViaEmail": {
+    "description": "Send via email option"
+  },
+  "pdfClose": "Close",
+  "@pdfClose": {
+    "description": "Close button text"
+  },
+  "pdfOpenFile": "Open File",
+  "@pdfOpenFile": {
+    "description": "Open file button text"
+  },
+  "pdfPathCopiedToClipboard": "File path copied to clipboard: {filePath}",
+  "@pdfPathCopiedToClipboard": {
+    "description": "File path copied to clipboard message",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTemporaryBillId": "TEMPORARY",
+  "@pdfTemporaryBillId": {
+    "description": "Temporary bill ID when order ID is empty"
+  },
+  "roleSelection": "Select Role",
+  "@roleSelection": {
+    "description": "Role selection title"
+  },
+  "selectAccountTypeToContinue": "Select account type to continue",
+  "@selectAccountTypeToContinue": {
+    "description": "Role selection subtitle"
+  },
+  "connect": "Connect",
+  "@connect": {
+    "description": "Connect button text"
+  },
+  "enterEmailToCheckAccount": "Enter email to check account",
+  "@enterEmailToCheckAccount": {
+    "description": "Email check subtitle"
+  },
+  "enterPasswordToLogin": "Enter password to login",
+  "@enterPasswordToLogin": {
+    "description": "Password login subtitle"
+  },
+  "createNewAccountFor": "Create new account for",
+  "@createNewAccountFor": {
+    "description": "Create account subtitle"
+  },
+  "createNewAccount": "Create new account",
+  "@createNewAccount": {
+    "description": "Create new account text"
+  },
+  "enterEmployeeLoginInfo": "Enter employee login information",
+  "@enterEmployeeLoginInfo": {
+    "description": "Employee login subtitle"
+  },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Continue button text"
+  },
+  "manageEntireSystem": "Manage entire system",
+  "@manageEntireSystem": {
+    "description": "Shop owner description"
+  },
+  "accessServicesCreateOrdersAndBills": "Access services, create orders and bills",
+  "@accessServicesCreateOrdersAndBills": {
+    "description": "Employee description"
+  },
+  "shopEmail": "Shop Email",
+  "@shopEmail": {
+    "description": "Shop email field label"
+  },
+  "employeePhone": "Employee Phone",
+  "@employeePhone": {
+    "description": "Employee phone field label"
+  },
+  "employeePassword": "Employee Password",
+  "@employeePassword": {
+    "description": "Employee password field label"
+  },
+  "pleaseEnterPhone": "Please enter phone number",
+  "@pleaseEnterPhone": {
+    "description": "Please enter phone validation message"
+  },
+  "pleaseEnterPassword": "Please enter password",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password validation message"
+  },
+  "pleaseEnterEmail": "Please enter email",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email validation message"
+  },
+  "invalidEmail": "Invalid email",
+  "@invalidEmail": {
+    "description": "Invalid email validation message"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "pleaseEnterYourEmail": "Please enter your email",
+  "@pleaseEnterYourEmail": {
+    "description": "Please enter your email validation message"
+  },
+  "invalidEmailExample": "Invalid email (example: example@email.com)",
+  "@invalidEmailExample": {
+    "description": "Invalid email example validation message"
+  },
+  "invalidEmailMissingDomain": "Invalid email (missing domain)",
+  "@invalidEmailMissingDomain": {
+    "description": "Invalid email missing domain validation message"
+  },
+  "emailExistsInSystem": "Email already exists in system",
+  "@emailExistsInSystem": {
+    "description": "Email exists in system message"
+  },
+  "emailNotExistsWillCreateNew": "Email does not exist, will create new account",
+  "@emailNotExistsWillCreateNew": {
+    "description": "Email not exists will create new account message"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "pleaseEnterPasswordValidation": "Please enter password",
+  "@pleaseEnterPasswordValidation": {
+    "description": "Please enter password validation message"
+  },
+  "passwordMinLength": "Password must be at least 8 characters",
+  "@passwordMinLength": {
+    "description": "Password minimum length validation message"
+  },
+  "passwordMustHaveUppercase": "Password must have at least 1 uppercase letter (A-Z)",
+  "@passwordMustHaveUppercase": {
+    "description": "Password must have uppercase validation message"
+  },
+  "passwordMustHaveLowercase": "Password must have at least 1 lowercase letter (a-z)",
+  "@passwordMustHaveLowercase": {
+    "description": "Password must have lowercase validation message"
+  },
+  "passwordMustHaveNumber": "Password must have at least 1 number (0-9)",
+  "@passwordMustHaveNumber": {
+    "description": "Password must have number validation message"
+  },
+  "passwordMustHaveSpecialChar": "Password must have at least 1 special character",
+  "@passwordMustHaveSpecialChar": {
+    "description": "Password must have special character validation message"
+  },
+  "database": "Database",
+  "@database": {
+    "description": "Database label"
+  },
+  "databaseLoginUsername": "Database Login Username",
+  "@databaseLoginUsername": {
+    "description": "Database login username field label"
+  },
+  "databasePassword": "Database Password",
+  "@databasePassword": {
+    "description": "Database password field label"
+  },
+  "pleaseEnterDatabaseUsername": "Please enter database username",
+  "@pleaseEnterDatabaseUsername": {
+    "description": "Please enter database username validation message"
+  },
+  "pleaseEnterDatabasePassword": "Please enter database password",
+  "@pleaseEnterDatabasePassword": {
+    "description": "Please enter database password validation message"
+  },
+  "databasePasswordMinLength": "Database password must be at least 8 characters",
+  "@databasePasswordMinLength": {
+    "description": "Database password minimum length validation message"
+  },
+  "databasePasswordMustHaveUppercase": "Database password must have at least 1 uppercase letter (A-Z)",
+  "@databasePasswordMustHaveUppercase": {
+    "description": "Database password must have uppercase validation message"
+  },
+  "databasePasswordMustHaveLowercase": "Database password must have at least 1 lowercase letter (a-z)",
+  "@databasePasswordMustHaveLowercase": {
+    "description": "Database password must have lowercase validation message"
+  },
+  "databasePasswordMustHaveNumber": "Database password must have at least 1 number (0-9)",
+  "@databasePasswordMustHaveNumber": {
+    "description": "Database password must have number validation message"
+  },
+  "databasePasswordMustHaveSpecialChar": "Database password must have at least 1 special character",
+  "@databasePasswordMustHaveSpecialChar": {
+    "description": "Database password must have special character validation message"
+  },
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {
+    "description": "Welcome back message"
+  },
+  "passwordIncorrect": "Password is incorrect. Please check again.",
+  "@passwordIncorrect": {
+    "description": "Password incorrect error message"
+  },
+  "databaseLoginInfoIncorrect": "Database login information is incorrect. Please check again.",
+  "@databaseLoginInfoIncorrect": {
+    "description": "Database login info incorrect error message"
+  },
+  "databaseUsernameIncorrect": "Database username is incorrect.",
+  "@databaseUsernameIncorrect": {
+    "description": "Database username incorrect error message"
+  },
+  "databasePasswordIncorrect": "Database password is incorrect.",
+  "@databasePasswordIncorrect": {
+    "description": "Database password incorrect error message"
+  },
+  "accountCreatedButDatabaseError": "Account created successfully but cannot create database. Please contact admin.",
+  "@accountCreatedButDatabaseError": {
+    "description": "Account created but database error message"
+  },
+  "databasePasswordNotStrongEnough": "Database password is not strong enough. Please check requirements below.",
+  "@databasePasswordNotStrongEnough": {
+    "description": "Database password not strong enough error message"
+  },
+  "loginInfoIncorrect": "Login information is incorrect. Please check again.",
+  "@loginInfoIncorrect": {
+    "description": "Login info incorrect error message"
+  },
+  "systemErrorOccurred": "System error occurred. Please try again later.",
+  "@systemErrorOccurred": {
+    "description": "System error occurred message"
+  },
+  "cannotConnectToServer": "Cannot connect to server. Please check network connection.",
+  "@cannotConnectToServer": {
+    "description": "Cannot connect to server error message"
+  },
+  "connectionTimeout": "Connection timeout. Please try again.",
+  "@connectionTimeout": {
+    "description": "Connection timeout error message"
+  },
+  "networkConnectionError": "Network connection error. Please check internet connection.",
+  "@networkConnectionError": {
+    "description": "Network connection error message"
+  },
+  "errorOccurredPleaseTryAgain": "Error occurred. Please try again later.",
+  "@errorOccurredPleaseTryAgain": {
+    "description": "Error occurred please try again message"
+  }
+}

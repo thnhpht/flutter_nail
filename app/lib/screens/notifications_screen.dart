@@ -1,3 +1,4 @@
+import '../generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/notification_service.dart';
@@ -64,11 +65,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     if (difference.inDays > 0) {
       return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} giờ trước';
+      return AppLocalizations.of(context)!.hoursAgo(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} phút trước';
+      return AppLocalizations.of(context)!.minutesAgo(difference.inMinutes);
     } else {
-      return 'Vừa xong';
+      return AppLocalizations.of(context)!.justNow;
     }
   }
 
@@ -130,28 +131,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           } else {
             AppWidgets.showFlushbar(
               context,
-              'Không tìm thấy thông tin đơn hàng',
+              AppLocalizations.of(context)!.orderNotFound,
               type: MessageType.error,
             );
           }
         } catch (e) {
           AppWidgets.showFlushbar(
             context,
-            'Lỗi khi tải thông tin đơn hàng: $e',
+            AppLocalizations.of(context)!.errorLoadingOrder(e.toString()),
             type: MessageType.error,
           );
         }
       } else {
         AppWidgets.showFlushbar(
           context,
-          'Không thể kết nối đến server',
+          AppLocalizations.of(context)!.cannotConnectToServer,
           type: MessageType.error,
         );
       }
     } else {
       AppWidgets.showFlushbar(
         context,
-        'Thông báo không chứa thông tin đơn hàng',
+        AppLocalizations.of(context)!.notificationNoOrderInfo,
         type: MessageType.warning,
       );
     }
@@ -161,7 +162,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     await _notificationService.markAllAsRead();
     AppWidgets.showFlushbar(
       context,
-      'Đã đánh dấu tất cả thông báo là đã đọc',
+      AppLocalizations.of(context)!.allNotificationsMarkedAsRead,
       type: MessageType.success,
     );
   }
@@ -175,13 +176,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
       AppWidgets.showFlushbar(
         context,
-        'Đã xóa thông báo',
+        AppLocalizations.of(context)!.notificationDeleted,
         type: MessageType.success,
       );
     } catch (e) {
       AppWidgets.showFlushbar(
         context,
-        'Lỗi khi xóa thông báo: $e',
+        AppLocalizations.of(context)!.errorDeletingNotification(e.toString()),
         type: MessageType.error,
       );
     }
@@ -191,16 +192,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xóa tất cả thông báo'),
-        content: const Text('Bạn có chắc chắn muốn xóa tất cả thông báo?'),
+        title: Text(AppLocalizations.of(context)!.deleteAllNotifications),
+        content:
+            Text(AppLocalizations.of(context)!.confirmDeleteAllNotifications),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Xóa'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -215,13 +217,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
         AppWidgets.showFlushbar(
           context,
-          'Đã xóa tất cả thông báo',
+          AppLocalizations.of(context)!.allNotificationsDeleted,
           type: MessageType.success,
         );
       } catch (e) {
         AppWidgets.showFlushbar(
           context,
-          'Lỗi khi xóa tất cả thông báo: $e',
+          AppLocalizations.of(context)!
+              .errorDeletingAllNotifications(e.toString()),
           type: MessageType.error,
         );
       }
@@ -233,7 +236,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Thông báo'),
+        title: Text(AppLocalizations.of(context)!.notifications),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -242,13 +245,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             IconButton(
               onPressed: _markAllAsRead,
               icon: const Icon(Icons.done_all),
-              tooltip: 'Đánh dấu tất cả đã đọc',
+              tooltip: AppLocalizations.of(context)!.markAllAsReadTooltip,
             ),
           if (_notifications.isNotEmpty)
             IconButton(
               onPressed: _clearAllNotifications,
               icon: const Icon(Icons.clear_all),
-              tooltip: 'Xóa tất cả',
+              tooltip: AppLocalizations.of(context)!.clearAllTooltip,
             ),
         ],
       ),
@@ -270,7 +273,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Chưa có thông báo nào',
+            AppLocalizations.of(context)!.noNotificationsYet,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -279,7 +282,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Các thông báo mới sẽ xuất hiện ở đây',
+            AppLocalizations.of(context)!.newNotificationsWillAppearHere,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -407,13 +410,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     }
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
                       child: Row(
                         children: [
                           Icon(Icons.delete, color: Colors.red, size: 18),
                           SizedBox(width: 8),
-                          Text('Xóa'),
+                          Text(AppLocalizations.of(context)!.deleteAction),
                         ],
                       ),
                     ),

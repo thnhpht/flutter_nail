@@ -1,0 +1,2856 @@
+{
+  "appTitle": "Nail Manager",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Chào mừng đến với",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "salon": "Salon",
+  "@salon": {
+    "description": "Salon name"
+  },
+  "professionalNailSalonManagement": "Hệ thống quản lý salon nail chuyên nghiệp",
+  "@professionalNailSalonManagement": {
+    "description": "Professional nail salon management system description"
+  },
+  "todayOverview": "Tổng quan hôm nay",
+  "@todayOverview": {
+    "description": "Today's overview"
+  },
+  "customers": "Khách hàng",
+  "@customers": {
+    "description": "Customers"
+  },
+  "bills": "Hóa đơn",
+  "@bills": {
+    "description": "Bills"
+  },
+  "revenue": "Doanh thu",
+  "@revenue": {
+    "description": "Revenue"
+  },
+  "boss": "Boss",
+  "@boss": {
+    "description": "Boss"
+  },
+  "employee": "Employee",
+  "@employee": {
+    "description": "Employee"
+  },
+  "information": "Thông tin",
+  "@information": {
+    "description": "Information section"
+  },
+  "salonInfo": "Thông tin Salon",
+  "@salonInfo": {
+    "description": "Salon information"
+  },
+  "menu": "Menu",
+  "@menu": {
+    "description": "Menu"
+  },
+  "management": "Quản lý",
+  "@management": {
+    "description": "Management section"
+  },
+  "employees": "Nhân viên",
+  "@employees": {
+    "description": "Employees"
+  },
+  "categories": "Danh mục",
+  "@categories": {
+    "description": "Categories"
+  },
+  "services": "Dịch vụ",
+  "@services": {
+    "description": "Services"
+  },
+  "createOrder": "Tạo đơn",
+  "@createOrder": {
+    "description": "Create order"
+  },
+  "billsReports": "Hóa đơn & Báo cáo",
+  "@billsReports": {
+    "description": "Bills & Reports section"
+  },
+  "reports": "Báo cáo",
+  "@reports": {
+    "description": "Reports"
+  },
+  "version": "Phiên bản",
+  "@version": {
+    "description": "Version"
+  },
+  "logout": "Đăng xuất",
+  "@logout": {
+    "description": "Logout"
+  },
+  "loading": "Đang tải...",
+  "@loading": {
+    "description": "Loading"
+  },
+  "cannotLoadVersionInfo": "Không thể tải thông tin phiên bản",
+  "@cannotLoadVersionInfo": {
+    "description": "Cannot load version information"
+  },
+  "login": "Đăng nhập",
+  "@login": {
+    "description": "Login"
+  },
+  "username": "Tên đăng nhập",
+  "@username": {
+    "description": "Username"
+  },
+  "password": "Mật khẩu",
+  "@password": {
+    "description": "Password"
+  },
+  "loginButton": "Đăng nhập",
+  "@loginButton": {
+    "description": "Login button"
+  },
+  "loginError": "Lỗi đăng nhập",
+  "@loginError": {
+    "description": "Login error"
+  },
+  "invalidCredentials": "Tên đăng nhập hoặc mật khẩu không đúng",
+  "@invalidCredentials": {
+    "description": "Invalid credentials message"
+  },
+  "add": "Thêm",
+  "@add": {
+    "description": "Add"
+  },
+  "edit": "Sửa",
+  "@edit": {
+    "description": "Edit"
+  },
+  "delete": "Xóa",
+  "@delete": {
+    "description": "Delete"
+  },
+  "save": "Lưu",
+  "@save": {
+    "description": "Save"
+  },
+  "cancel": "Hủy",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "confirm": "Xác nhận",
+  "@confirm": {
+    "description": "Confirm"
+  },
+  "search": "Tìm kiếm",
+  "@search": {
+    "description": "Search"
+  },
+  "name": "Tên",
+  "@name": {
+    "description": "Name"
+  },
+  "phone": "Số điện thoại",
+  "@phone": {
+    "description": "Phone number"
+  },
+  "address": "Địa chỉ",
+  "@address": {
+    "description": "Address"
+  },
+  "price": "Giá",
+  "@price": {
+    "description": "Price"
+  },
+  "description": "Mô tả",
+  "@description": {
+    "description": "Description"
+  },
+  "status": "Trạng thái",
+  "@status": {
+    "description": "Status"
+  },
+  "date": "Ngày",
+  "@date": {
+    "description": "Date"
+  },
+  "time": "Thời gian",
+  "@time": {
+    "description": "Time"
+  },
+  "total": "Tổng",
+  "@total": {
+    "description": "Total"
+  },
+  "quantity": "Số lượng",
+  "@quantity": {
+    "description": "Quantity"
+  },
+  "language": "Ngôn ngữ",
+  "@language": {
+    "description": "Language"
+  },
+  "settings": "Cài đặt",
+  "@settings": {
+    "description": "Settings"
+  },
+  "vietnamese": "Tiếng Việt",
+  "@vietnamese": {
+    "description": "Vietnamese language"
+  },
+  "english": "Tiếng Anh",
+  "@english": {
+    "description": "English language"
+  },
+  "chinese": "Tiếng Trung",
+  "@chinese": {
+    "description": "Chinese language"
+  },
+  "korean": "Tiếng Hàn",
+  "@korean": {
+    "description": "Korean language"
+  },
+  "roleSelection": "Chọn vai trò",
+  "@roleSelection": {
+    "description": "Role selection"
+  },
+  "shopOwner": "Chủ salon",
+  "@shopOwner": {
+    "description": "Shop owner"
+  },
+  "employee": "Nhân viên",
+  "@employee": {
+    "description": "Employee"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email"
+  },
+  "checkEmail": "Kiểm tra email",
+  "@checkEmail": {
+    "description": "Check email"
+  },
+  "emailExists": "Email đã tồn tại",
+  "@emailExists": {
+    "description": "Email exists"
+  },
+  "emailNotExists": "Email chưa tồn tại",
+  "@emailNotExists": {
+    "description": "Email not exists"
+  },
+  "createAccount": "Tạo tài khoản",
+  "@createAccount": {
+    "description": "Create account"
+  },
+  "employeeLogin": "Đăng nhập nhân viên",
+  "@employeeLogin": {
+    "description": "Employee login"
+  },
+  "databaseName": "Tên database",
+  "@databaseName": {
+    "description": "Database name"
+  },
+  "phoneNumber": "Số điện thoại",
+  "@phoneNumber": {
+    "description": "Phone number"
+  },
+  "employeePhone": "Số điện thoại nhân viên",
+  "@employeePhone": {
+    "description": "Employee phone"
+  },
+  "employeePassword": "Mật khẩu nhân viên",
+  "@employeePassword": {
+    "description": "Employee password"
+  },
+  "shopEmail": "Email salon",
+  "@shopEmail": {
+    "description": "Shop email"
+  },
+  "pleaseEnterEmail": "Vui lòng nhập email",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email"
+  },
+  "pleaseEnterPassword": "Vui lòng nhập mật khẩu",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password"
+  },
+  "pleaseEnterPhone": "Vui lòng nhập số điện thoại",
+  "@pleaseEnterPhone": {
+    "description": "Please enter phone"
+  },
+  "pleaseEnterName": "Vui lòng nhập tên",
+  "@pleaseEnterName": {
+    "description": "Please enter name"
+  },
+  "pleaseEnterDatabaseName": "Vui lòng nhập tên database",
+  "@pleaseEnterDatabaseName": {
+    "description": "Please enter database name"
+  },
+  "invalidEmail": "Email không hợp lệ",
+  "@invalidEmail": {
+    "description": "Invalid email"
+  },
+  "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự",
+  "@passwordTooShort": {
+    "description": "Password too short"
+  },
+  "phoneTooShort": "Số điện thoại phải có ít nhất 10 số",
+  "@phoneTooShort": {
+    "description": "Phone too short"
+  },
+  "databaseNameTooShort": "Tên database phải có ít nhất 3 ký tự",
+  "@databaseNameTooShort": {
+    "description": "Database name too short"
+  },
+  "checkingEmail": "Đang kiểm tra email...",
+  "@checkingEmail": {
+    "description": "Checking email"
+  },
+  "creatingAccount": "Đang tạo tài khoản...",
+  "@creatingAccount": {
+    "description": "Creating account"
+  },
+  "loggingIn": "Đang đăng nhập...",
+  "@loggingIn": {
+    "description": "Logging in"
+  },
+  "errorCheckingEmail": "Lỗi kiểm tra email",
+  "@errorCheckingEmail": {
+    "description": "Error checking email"
+  },
+  "errorCreatingAccount": "Lỗi tạo tài khoản",
+  "@errorCreatingAccount": {
+    "description": "Error creating account"
+  },
+  "errorLoggingIn": "Lỗi đăng nhập",
+  "@errorLoggingIn": {
+    "description": "Error logging in"
+  },
+  "accountCreatedSuccessfully": "Tài khoản đã được tạo thành công",
+  "@accountCreatedSuccessfully": {
+    "description": "Account created successfully"
+  },
+  "loginSuccessful": "Đăng nhập thành công",
+  "@loginSuccessful": {
+    "description": "Login successful"
+  },
+  "customerName": "Tên khách hàng",
+  "@customerName": {
+    "description": "Customer name"
+  },
+  "customerPhone": "Số điện thoại khách hàng",
+  "@customerPhone": {
+    "description": "Customer phone"
+  },
+  "customerAddress": "Địa chỉ khách hàng",
+  "@customerAddress": {
+    "description": "Customer address"
+  },
+  "addCustomer": "Thêm khách hàng",
+  "@addCustomer": {
+    "description": "Add customer"
+  },
+  "editCustomer": "Sửa khách hàng",
+  "@editCustomer": {
+    "description": "Edit customer"
+  },
+  "deleteCustomer": "Xóa khách hàng",
+  "@deleteCustomer": {
+    "description": "Delete customer"
+  },
+  "customerAddedSuccessfully": "Khách hàng đã được thêm thành công",
+  "@customerAddedSuccessfully": {
+    "description": "Customer added successfully"
+  },
+  "customerUpdatedSuccessfully": "Khách hàng đã được cập nhật thành công",
+  "@customerUpdatedSuccessfully": {
+    "description": "Customer updated successfully"
+  },
+  "customerDeletedSuccessfully": "Khách hàng đã được xóa thành công",
+  "@customerDeletedSuccessfully": {
+    "description": "Customer deleted successfully"
+  },
+  "errorAddingCustomer": "Lỗi thêm khách hàng",
+  "@errorAddingCustomer": {
+    "description": "Error adding customer"
+  },
+  "errorUpdatingCustomer": "Lỗi cập nhật khách hàng",
+  "@errorUpdatingCustomer": {
+    "description": "Error updating customer"
+  },
+  "errorDeletingCustomer": "Lỗi xóa khách hàng",
+  "@errorDeletingCustomer": {
+    "description": "Error deleting customer"
+  },
+  "confirmDeleteCustomer": "Bạn có chắc chắn muốn xóa khách hàng này?",
+  "@confirmDeleteCustomer": {
+    "description": "Confirm delete customer"
+  },
+  "employeeName": "Tên nhân viên",
+  "@employeeName": {
+    "description": "Employee name"
+  },
+  "employeePhone": "Số điện thoại nhân viên",
+  "@employeePhone": {
+    "description": "Employee phone"
+  },
+  "employeeAddress": "Địa chỉ nhân viên",
+  "@employeeAddress": {
+    "description": "Employee address"
+  },
+  "employeePosition": "Chức vụ",
+  "@employeePosition": {
+    "description": "Employee position"
+  },
+  "employeeSalary": "Lương",
+  "@employeeSalary": {
+    "description": "Employee salary"
+  },
+  "addEmployee": "Thêm nhân viên",
+  "@addEmployee": {
+    "description": "Add employee"
+  },
+  "editEmployee": "Sửa nhân viên",
+  "@editEmployee": {
+    "description": "Edit employee"
+  },
+  "deleteEmployee": "Xóa nhân viên",
+  "@deleteEmployee": {
+    "description": "Delete employee"
+  },
+  "employeeAddedSuccessfully": "Nhân viên đã được thêm thành công",
+  "@employeeAddedSuccessfully": {
+    "description": "Employee added successfully"
+  },
+  "employeeUpdatedSuccessfully": "Nhân viên đã được cập nhật thành công",
+  "@employeeUpdatedSuccessfully": {
+    "description": "Employee updated successfully"
+  },
+  "employeeDeletedSuccessfully": "Nhân viên đã được xóa thành công",
+  "@employeeDeletedSuccessfully": {
+    "description": "Employee deleted successfully"
+  },
+  "errorAddingEmployee": "Lỗi thêm nhân viên",
+  "@errorAddingEmployee": {
+    "description": "Error adding employee"
+  },
+  "errorUpdatingEmployee": "Lỗi cập nhật nhân viên",
+  "@errorUpdatingEmployee": {
+    "description": "Error updating employee"
+  },
+  "errorDeletingEmployee": "Lỗi xóa nhân viên",
+  "@errorDeletingEmployee": {
+    "description": "Error deleting employee"
+  },
+  "confirmDeleteEmployee": "Bạn có chắc chắn muốn xóa nhân viên này?",
+  "@confirmDeleteEmployee": {
+    "description": "Confirm delete employee"
+  },
+  "selectImage": "Chọn hình ảnh",
+  "@selectImage": {
+    "description": "Select image"
+  },
+  "cannotSelectImage": "Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.",
+  "@cannotSelectImage": {
+    "description": "Cannot select image"
+  },
+  "categoryName": "Tên danh mục",
+  "@categoryName": {
+    "description": "Category name"
+  },
+  "addCategory": "Thêm danh mục",
+  "@addCategory": {
+    "description": "Add category"
+  },
+  "editCategory": "Sửa danh mục",
+  "@editCategory": {
+    "description": "Edit category"
+  },
+  "deleteCategory": "Xóa danh mục",
+  "@deleteCategory": {
+    "description": "Delete category"
+  },
+  "categoryAddedSuccessfully": "Danh mục đã được thêm thành công",
+  "@categoryAddedSuccessfully": {
+    "description": "Category added successfully"
+  },
+  "categoryUpdatedSuccessfully": "Danh mục đã được cập nhật thành công",
+  "@categoryUpdatedSuccessfully": {
+    "description": "Category updated successfully"
+  },
+  "categoryDeletedSuccessfully": "Danh mục đã được xóa thành công",
+  "@categoryDeletedSuccessfully": {
+    "description": "Category deleted successfully"
+  },
+  "errorAddingCategory": "Lỗi thêm danh mục",
+  "@errorAddingCategory": {
+    "description": "Error adding category"
+  },
+  "errorUpdatingCategory": "Lỗi cập nhật danh mục",
+  "@errorUpdatingCategory": {
+    "description": "Error updating category"
+  },
+  "errorDeletingCategory": "Lỗi xóa danh mục",
+  "@errorDeletingCategory": {
+    "description": "Error deleting category"
+  },
+  "confirmDeleteCategory": "Bạn có chắc chắn muốn xóa danh mục này?",
+  "@confirmDeleteCategory": {
+    "description": "Confirm delete category"
+  },
+  "serviceName": "Tên dịch vụ",
+  "@serviceName": {
+    "description": "Service name"
+  },
+  "servicePrice": "Giá dịch vụ",
+  "@servicePrice": {
+    "description": "Service price"
+  },
+  "serviceDuration": "Thời gian thực hiện",
+  "@serviceDuration": {
+    "description": "Service duration"
+  },
+  "addService": "Thêm dịch vụ",
+  "@addService": {
+    "description": "Add service"
+  },
+  "editService": "Sửa dịch vụ",
+  "@editService": {
+    "description": "Edit service"
+  },
+  "deleteService": "Xóa dịch vụ",
+  "@deleteService": {
+    "description": "Delete service"
+  },
+  "serviceAddedSuccessfully": "Dịch vụ đã được thêm thành công",
+  "@serviceAddedSuccessfully": {
+    "description": "Service added successfully"
+  },
+  "serviceUpdatedSuccessfully": "Dịch vụ đã được cập nhật thành công",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service updated successfully"
+  },
+  "serviceDeletedSuccessfully": "Dịch vụ đã được xóa thành công",
+  "@serviceDeletedSuccessfully": {
+    "description": "Service deleted successfully"
+  },
+  "errorAddingService": "Lỗi thêm dịch vụ",
+  "@errorAddingService": {
+    "description": "Error adding service"
+  },
+  "errorUpdatingService": "Lỗi cập nhật dịch vụ",
+  "@errorUpdatingService": {
+    "description": "Error updating service"
+  },
+  "errorDeletingService": "Lỗi xóa dịch vụ",
+  "@errorDeletingService": {
+    "description": "Error deleting service"
+  },
+  "confirmDeleteService": "Bạn có chắc chắn muốn xóa dịch vụ này?",
+  "@confirmDeleteService": {
+    "description": "Confirm delete service"
+  },
+  "order": "Đơn hàng",
+  "@order": {
+    "description": "Order"
+  },
+  "orders": "Đơn hàng",
+  "@orders": {
+    "description": "Orders"
+  },
+  "createOrder": "Tạo đơn hàng",
+  "@createOrder": {
+    "description": "Create order"
+  },
+  "updateOrder": "Cập nhật đơn hàng",
+  "@updateOrder": {
+    "description": "Update order"
+  },
+  "orderCreatedSuccessfully": "Đơn hàng đã được tạo thành công",
+  "@orderCreatedSuccessfully": {
+    "description": "Order created successfully"
+  },
+  "orderUpdatedSuccessfully": "Đơn hàng đã được cập nhật thành công",
+  "@orderUpdatedSuccessfully": {
+    "description": "Order updated successfully"
+  },
+  "orderDeletedSuccessfully": "Đơn hàng đã được xóa thành công",
+  "@orderDeletedSuccessfully": {
+    "description": "Order deleted successfully"
+  },
+  "errorCreatingOrder": "Lỗi tạo đơn hàng",
+  "@errorCreatingOrder": {
+    "description": "Error creating order"
+  },
+  "errorUpdatingOrder": "Lỗi cập nhật đơn hàng",
+  "@errorUpdatingOrder": {
+    "description": "Error updating order"
+  },
+  "errorDeletingOrder": "Lỗi xóa đơn hàng",
+  "@errorDeletingOrder": {
+    "description": "Error deleting order"
+  },
+  "confirmDeleteOrder": "Bạn có chắc chắn muốn xóa đơn hàng này?",
+  "@confirmDeleteOrder": {
+    "description": "Confirm delete order"
+  },
+  "selectServices": "Chọn dịch vụ",
+  "@selectServices": {
+    "description": "Select services"
+  },
+  "selectEmployees": "Chọn nhân viên",
+  "@selectEmployees": {
+    "description": "Select employees"
+  },
+  "selectedServices": "dịch vụ đã chọn",
+  "@selectedServices": {
+    "description": "Selected services"
+  },
+  "selectedEmployees": "nhân viên đã chọn",
+  "@selectedEmployees": {
+    "description": "Selected employees"
+  },
+  "pleaseSelectAtLeastOneService": "Vui lòng chọn ít nhất một dịch vụ",
+  "@pleaseSelectAtLeastOneService": {
+    "description": "Please select at least one service"
+  },
+  "pleaseSelectAtLeastOneEmployee": "Vui lòng chọn ít nhất một nhân viên",
+  "@pleaseSelectAtLeastOneEmployee": {
+    "description": "Please select at least one employee"
+  },
+  "canOnlyUpdateOrderToday": "Chỉ có thể cập nhật đơn hàng trong ngày hôm nay",
+  "@canOnlyUpdateOrderToday": {
+    "description": "Can only update order today"
+  },
+  "customerInformation": "Thông tin khách hàng",
+  "@customerInformation": {
+    "description": "Customer information"
+  },
+  "employeeInformation": "Thông tin nhân viên",
+  "@employeeInformation": {
+    "description": "Employee information"
+  },
+  "serviceCategories": "Danh mục dịch vụ",
+  "@serviceCategories": {
+    "description": "Service categories"
+  },
+  "performingEmployee": "Nhân viên thực hiện",
+  "@performingEmployee": {
+    "description": "Performing employee"
+  },
+  "loggedInEmployee": "Nhân viên đăng nhập",
+  "@loggedInEmployee": {
+    "description": "Logged in employee"
+  },
+  "foundCustomer": "Đã tìm thấy khách hàng",
+  "@foundCustomer": {
+    "description": "Found customer"
+  },
+  "customerNotFound": "Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@customerNotFound": {
+    "description": "Customer not found"
+  },
+  "foundEmployee": "Đã tìm thấy nhân viên",
+  "@foundEmployee": {
+    "description": "Found employee"
+  },
+  "employeeNotFound": "Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@employeeNotFound": {
+    "description": "Employee not found"
+  },
+  "errorLoadingCategories": "Lỗi tải danh mục",
+  "@errorLoadingCategories": {
+    "description": "Error loading categories"
+  },
+  "errorLoadingServices": "Lỗi tải dịch vụ",
+  "@errorLoadingServices": {
+    "description": "Error loading services"
+  },
+  "errorLoadingEmployees": "Lỗi tải danh sách nhân viên",
+  "@errorLoadingEmployees": {
+    "description": "Error loading employees"
+  },
+  "errorSearchingCustomer": "Lỗi tìm kiếm khách hàng",
+  "@errorSearchingCustomer": {
+    "description": "Error searching customer"
+  },
+  "errorSearchingEmployee": "Lỗi tìm kiếm nhân viên",
+  "@errorSearchingEmployee": {
+    "description": "Error searching employee"
+  },
+  "invalidServiceData": "Dữ liệu dịch vụ không hợp lệ",
+  "@invalidServiceData": {
+    "description": "Invalid service data"
+  },
+  "bill": "Hóa đơn",
+  "@bill": {
+    "description": "Bill"
+  },
+  "bills": "Hóa đơn",
+  "@bills": {
+    "description": "Bills"
+  },
+  "billNumber": "Số hóa đơn",
+  "@billNumber": {
+    "description": "Bill number"
+  },
+  "billDate": "Ngày hóa đơn",
+  "@billDate": {
+    "description": "Bill date"
+  },
+  "billTotal": "Tổng hóa đơn",
+  "@billTotal": {
+    "description": "Bill total"
+  },
+  "billStatus": "Trạng thái hóa đơn",
+  "@billStatus": {
+    "description": "Bill status"
+  },
+  "paid": "Đã thanh toán",
+  "@paid": {
+    "description": "Paid"
+  },
+  "unpaid": "Chưa thanh toán",
+  "@unpaid": {
+    "description": "Unpaid"
+  },
+  "pending": "Đang chờ",
+  "@pending": {
+    "description": "Pending"
+  },
+  "completed": "Hoàn thành",
+  "@completed": {
+    "description": "Completed"
+  },
+  "cancelled": "Đã hủy",
+  "@cancelled": {
+    "description": "Cancelled"
+  },
+  "report": "Báo cáo",
+  "@report": {
+    "description": "Report"
+  },
+  "reports": "Báo cáo",
+  "@reports": {
+    "description": "Reports"
+  },
+  "dailyReport": "Báo cáo ngày",
+  "@dailyReport": {
+    "description": "Daily report"
+  },
+  "weeklyReport": "Báo cáo tuần",
+  "@weeklyReport": {
+    "description": "Weekly report"
+  },
+  "monthlyReport": "Báo cáo tháng",
+  "@monthlyReport": {
+    "description": "Monthly report"
+  },
+  "yearlyReport": "Báo cáo năm",
+  "@yearlyReport": {
+    "description": "Yearly report"
+  },
+  "totalRevenue": "Tổng doanh thu",
+  "@totalRevenue": {
+    "description": "Total revenue"
+  },
+  "totalOrders": "Tổng đơn hàng",
+  "@totalOrders": {
+    "description": "Total orders"
+  },
+  "totalCustomers": "Tổng khách hàng",
+  "@totalCustomers": {
+    "description": "Total customers"
+  },
+  "averageOrderValue": "Giá trị đơn hàng trung bình",
+  "@averageOrderValue": {
+    "description": "Average order value"
+  },
+  "salonName": "Tên salon",
+  "@salonName": {
+    "description": "Salon name"
+  },
+  "salonAddress": "Địa chỉ salon",
+  "@salonAddress": {
+    "description": "Salon address"
+  },
+  "salonPhone": "Số điện thoại salon",
+  "@salonPhone": {
+    "description": "Salon phone"
+  },
+  "salonEmail": "Email salon",
+  "@salonEmail": {
+    "description": "Salon email"
+  },
+  "salonDescription": "Mô tả salon",
+  "@salonDescription": {
+    "description": "Salon description"
+  },
+  "salonHours": "Giờ hoạt động",
+  "@salonHours": {
+    "description": "Salon hours"
+  },
+  "updateSalonInfo": "Cập nhật thông tin salon",
+  "@updateSalonInfo": {
+    "description": "Update salon info"
+  },
+  "salonInfoUpdatedSuccessfully": "Thông tin salon đã được cập nhật thành công",
+  "@salonInfoUpdatedSuccessfully": {
+    "description": "Salon info updated successfully"
+  },
+  "errorUpdatingSalonInfo": "Lỗi cập nhật thông tin salon",
+  "@errorUpdatingSalonInfo": {
+    "description": "Error updating salon info"
+  },
+  "notifications": "Thông báo",
+  "@notifications": {
+    "description": "Notifications"
+  },
+  "noNotifications": "Không có thông báo",
+  "@noNotifications": {
+    "description": "No notifications"
+  },
+  "markAsRead": "Đánh dấu đã đọc",
+  "@markAsRead": {
+    "description": "Mark as read"
+  },
+  "markAllAsRead": "Đánh dấu tất cả đã đọc",
+  "@markAllAsRead": {
+    "description": "Mark all as read"
+  },
+  "clearAll": "Xóa tất cả",
+  "@clearAll": {
+    "description": "Clear all"
+  },
+  "minutes": "phút",
+  "@minutes": {
+    "description": "Minutes"
+  },
+  "hours": "giờ",
+  "@hours": {
+    "description": "Hours"
+  },
+  "days": "ngày",
+  "@days": {
+    "description": "Days"
+  },
+  "weeks": "tuần",
+  "@weeks": {
+    "description": "Weeks"
+  },
+  "months": "tháng",
+  "@months": {
+    "description": "Months"
+  },
+  "years": "năm",
+  "@years": {
+    "description": "Years"
+  },
+  "ago": "trước",
+  "@ago": {
+    "description": "Ago"
+  },
+  "now": "bây giờ",
+  "@now": {
+    "description": "Now"
+  },
+  "today": "hôm nay",
+  "@today": {
+    "description": "Today"
+  },
+  "yesterday": "hôm qua",
+  "@yesterday": {
+    "description": "Yesterday"
+  },
+  "tomorrow": "ngày mai",
+  "@tomorrow": {
+    "description": "Tomorrow"
+  },
+  "clearFilter": "Xóa bộ lọc",
+  "@clearFilter": {
+    "description": "Clear filter"
+  },
+  "apply": "Áp dụng",
+  "@apply": {
+    "description": "Apply"
+  },
+  "chooseAction": "Chọn hành động cho {item} này",
+  "@chooseAction": {
+    "description": "Choose action for this item",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "tryAgain": "Thử lại",
+  "@tryAgain": {
+    "description": "Try again"
+  },
+  "noItemsFound": "Không tìm thấy {item}",
+  "@noItemsFound": {
+    "description": "No items found",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAllNotifications": "Xóa tất cả thông báo",
+  "@deleteAllNotifications": {
+    "description": "Delete all notifications"
+  },
+  "confirmDeleteAllNotifications": "Bạn có chắc chắn muốn xóa tất cả thông báo?",
+  "@confirmDeleteAllNotifications": {
+    "description": "Confirm delete all notifications"
+  },
+  "selectQRCode": "Chọn QR Code",
+  "@selectQRCode": {
+    "description": "Select QR Code"
+  },
+  "changeLogo": "Thay đổi logo",
+  "@changeLogo": {
+    "description": "Change logo"
+  },
+  "allEmployees": "Tất cả nhân viên",
+  "@allEmployees": {
+    "description": "All employees"
+  },
+  "allStatuses": "Tất cả trạng thái",
+  "@allStatuses": {
+    "description": "All statuses"
+  },
+  "errorLoadingData": "Lỗi tải dữ liệu: {error}",
+  "@errorLoadingData": {
+    "description": "Error loading data",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "addImage": "Thêm ảnh",
+  "@addImage": {
+    "description": "Add image"
+  },
+  "categoryFilter": "Bộ lọc danh mục",
+  "@categoryFilter": {
+    "description": "Category filter"
+  },
+  "selectCategoriesToFilter": "Chọn danh mục để lọc dịch vụ",
+  "@selectCategoriesToFilter": {
+    "description": "Select categories to filter services"
+  },
+  "categoriesSelected": "{count} danh mục đã chọn",
+  "@categoriesSelected": {
+    "description": "Categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectedCategories": "Danh mục đã chọn:",
+  "@selectedCategories": {
+    "description": "Selected categories"
+  },
+  "removeAll": "Xóa tất cả",
+  "@removeAll": {
+    "description": "Remove all"
+  },
+  "allCategories": "Tất cả danh mục ({count})",
+  "@allCategories": {
+    "description": "All categories",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "createNewService": "Tạo dịch vụ nail mới",
+  "@createNewService": {
+    "description": "Create new nail service"
+  },
+  "pleaseEnterServiceName": "Vui lòng nhập tên dịch vụ",
+  "@pleaseEnterServiceName": {
+    "description": "Please enter service name"
+  },
+  "pleaseEnterPrice": "Vui lòng nhập giá",
+  "@pleaseEnterPrice": {
+    "description": "Please enter price"
+  },
+  "pleaseEnterValidPrice": "Vui lòng nhập giá hợp lệ",
+  "@pleaseEnterValidPrice": {
+    "description": "Please enter valid price"
+  },
+  "errorUploadingImage": "Lỗi khi upload ảnh lên server",
+  "@errorUploadingImage": {
+    "description": "Error uploading image to server"
+  },
+  "serviceAddedSuccessfully": "Thêm dịch vụ thành công",
+  "@serviceAddedSuccessfully": {
+    "description": "Service added successfully"
+  },
+  "errorAddingService": "Lỗi khi thêm dịch vụ",
+  "@errorAddingService": {
+    "description": "Error adding service"
+  },
+  "editService": "Chỉnh sửa dịch vụ",
+  "@editService": {
+    "description": "Edit service"
+  },
+  "updateServiceInfo": "Cập nhật thông tin dịch vụ",
+  "@updateServiceInfo": {
+    "description": "Update service information"
+  },
+  "errorUpdatingService": "Lỗi khi thay đổi thông tin dịch vụ",
+  "@errorUpdatingService": {
+    "description": "Error updating service information"
+  },
+  "serviceDeletedSuccessfully": "Xóa dịch vụ thành công",
+  "@serviceDeletedSuccessfully": {
+    "description": "Service deleted successfully"
+  },
+  "errorDeletingService": "Lỗi khi xóa dịch vụ",
+  "@errorDeletingService": {
+    "description": "Error deleting service"
+  },
+  "categoryNameRequired": "Tên danh mục không được để trống",
+  "@categoryNameRequired": {
+    "description": "Category name is required"
+  },
+  "errorUpdatingCategory": "Lỗi thay đổi thông tin danh mục",
+  "@errorUpdatingCategory": {
+    "description": "Error updating category information"
+  },
+  "categoryDeletedSuccessfully": "Xóa danh mục thành công",
+  "@categoryDeletedSuccessfully": {
+    "description": "Category deleted successfully"
+  },
+  "errorDeletingCategory": "Lỗi khi xóa danh mục",
+  "@errorDeletingCategory": {
+    "description": "Error deleting category"
+  },
+  "employeePhoneExists": "SĐT của nhân viên đã được tạo",
+  "@employeePhoneExists": {
+    "description": "Employee phone number already exists"
+  },
+  "errorUpdatingEmployee": "Lỗi thay đổi thông tin nhân viên",
+  "@errorUpdatingEmployee": {
+    "description": "Error updating employee information"
+  },
+  "employeeDeletedSuccessfully": "Xóa nhân viên thành công",
+  "@employeeDeletedSuccessfully": {
+    "description": "Employee deleted successfully"
+  },
+  "errorDeletingEmployee": "Lỗi khi xóa nhân viên",
+  "@errorDeletingEmployee": {
+    "description": "Error deleting employee"
+  },
+  "customerPhoneExists": "SĐT của khách hàng đã được tạo",
+  "@customerPhoneExists": {
+    "description": "Customer phone number already exists"
+  },
+  "customerDeletedSuccessfully": "Xóa khách hàng thành công",
+  "@customerDeletedSuccessfully": {
+    "description": "Customer deleted successfully"
+  },
+  "errorDeletingCustomer": "Lỗi khi xóa khách hàng",
+  "@errorDeletingCustomer": {
+    "description": "Error deleting customer"
+  },
+  "errorLoadingCategories": "Lỗi tải danh mục: {error}",
+  "@errorLoadingCategories": {
+    "description": "Error loading categories",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingServices": "Lỗi tải dịch vụ: {error}",
+  "@errorLoadingServices": {
+    "description": "Error loading services",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingEmployees": "Lỗi tải danh sách nhân viên: {error}",
+  "@errorLoadingEmployees": {
+    "description": "Error loading employees",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSearchingCustomer": "Lỗi tìm kiếm khách hàng: {error}",
+  "@errorSearchingCustomer": {
+    "description": "Error searching customer",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSearchingEmployee": "Lỗi tìm kiếm nhân viên: {error}",
+  "@errorSearchingEmployee": {
+    "description": "Error searching employee",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "orderUpdatedSuccessfully": "Đã cập nhật đơn thành công!",
+  "@orderUpdatedSuccessfully": {
+    "description": "Order updated successfully"
+  },
+  "errorUpdatingOrder": "Lỗi cập nhật đơn: {error}",
+  "@errorUpdatingOrder": {
+    "description": "Error updating order",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCreatedSuccessfully": "Đã tạo đơn thành công!",
+  "@orderCreatedSuccessfully": {
+    "description": "Order created successfully"
+  },
+  "errorCreatingOrder": "Lỗi tạo đơn: {error}",
+  "@errorCreatingOrder": {
+    "description": "Error creating order",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUploadingLogo": "Lỗi khi upload logo lên server",
+  "@errorUploadingLogo": {
+    "description": "Error uploading logo to server"
+  },
+  "errorUploadingQRCode": "Lỗi khi upload QR code lên server",
+  "@errorUploadingQRCode": {
+    "description": "Error uploading QR code to server"
+  },
+  "salonInfoSavedSuccessfully": "Lưu thông tin salon thành công!",
+  "@salonInfoSavedSuccessfully": {
+    "description": "Salon information saved successfully"
+  },
+  "fullName": "Họ và tên",
+  "@fullName": {
+    "description": "Full name"
+  },
+  "databaseUsername": "Tên đăng nhập Database",
+  "@databaseUsername": {
+    "description": "Database username"
+  },
+  "databasePassword": "Mật khẩu Database",
+  "@databasePassword": {
+    "description": "Database password"
+  },
+  "vnd": "VNĐ",
+  "@vnd": {
+    "description": "Vietnamese Dong currency"
+  },
+  "hoursAgo": "{hours} giờ trước",
+  "@hoursAgo": {
+    "description": "Hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesAgo": "{minutes} phút trước",
+  "@minutesAgo": {
+    "description": "Minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "justNow": "Vừa xong",
+  "@justNow": {
+    "description": "Just now"
+  },
+  "enterNewCustomerInfo": "Nhập thông tin khách hàng mới",
+  "@enterNewCustomerInfo": {
+    "description": "Enter new customer information"
+  },
+  "updateCustomerInfo": "Cập nhật thông tin khách hàng",
+  "@updateCustomerInfo": {
+    "description": "Update customer information"
+  },
+  "phoneLabel": "SĐT: {phone}",
+  "@phoneLabel": {
+    "description": "Phone label",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "customer": "khách hàng",
+  "@customer": {
+    "description": "Customer"
+  },
+  "customersTitle": "Khách hàng",
+  "@customersTitle": {
+    "description": "Customers title"
+  },
+  "manageCustomerInfo": "Quản lý thông tin khách hàng",
+  "@manageCustomerInfo": {
+    "description": "Manage customer information"
+  },
+  "searchCustomers": "Tìm kiếm khách hàng...",
+  "@searchCustomers": {
+    "description": "Search customers"
+  },
+  "errorLoadingCustomerList": "Lỗi tải danh sách khách hàng",
+  "@errorLoadingCustomerList": {
+    "description": "Error loading customer list"
+  },
+  "cannotLoadCustomerList": "Không thể tải danh sách khách hàng",
+  "@cannotLoadCustomerList": {
+    "description": "Cannot load customer list"
+  },
+  "checkNetworkOrTryAgain": "Vui lòng kiểm tra kết nối mạng hoặc thử lại",
+  "@checkNetworkOrTryAgain": {
+    "description": "Please check network connection or try again"
+  },
+  "enterNewEmployeeInfo": "Nhập thông tin nhân viên mới",
+  "@enterNewEmployeeInfo": {
+    "description": "Enter new employee information"
+  },
+  "pleaseEnterFullName": "Vui lòng nhập họ và tên",
+  "@pleaseEnterFullName": {
+    "description": "Please enter full name"
+  },
+  "pleaseEnterPhoneNumber": "Vui lòng nhập số điện thoại",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Please enter phone number"
+  },
+  "errorUploadingImageToServer": "Lỗi khi upload ảnh lên server",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server"
+  },
+  "updateEmployeeInfo": "Cập nhật thông tin nhân viên",
+  "@updateEmployeeInfo": {
+    "description": "Update employee information"
+  },
+  "newPasswordOptional": "Mật khẩu mới (để trống nếu không đổi)",
+  "@newPasswordOptional": {
+    "description": "New password optional"
+  },
+  "employeeInfoUpdatedSuccessfully": "Thay đổi thông tin nhân viên thành công",
+  "@employeeInfoUpdatedSuccessfully": {
+    "description": "Employee information updated successfully"
+  },
+  "manageSalonEmployees": "Quản lý nhân viên salon",
+  "@manageSalonEmployees": {
+    "description": "Manage salon employees"
+  },
+  "searchEmployees": "Tìm kiếm nhân viên...",
+  "@searchEmployees": {
+    "description": "Search employees"
+  },
+  "errorLoadingEmployeeList": "Lỗi tải danh sách nhân viên",
+  "@errorLoadingEmployeeList": {
+    "description": "Error loading employee list"
+  },
+  "cannotLoadEmployeeList": "Không thể tải danh sách nhân viên",
+  "@cannotLoadEmployeeList": {
+    "description": "Cannot load employee list"
+  },
+  "errorUploadingImageToServer": "Lỗi khi upload ảnh lên server: {error}",
+  "@errorUploadingImageToServer": {
+    "description": "Error uploading image to server",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCategoryInfo": "Cập nhật thông tin danh mục",
+  "@updateCategoryInfo": {
+    "description": "Update category information"
+  },
+  "categoryInfoUpdatedSuccessfully": "Thay đổi thông tin danh mục thành công",
+  "@categoryInfoUpdatedSuccessfully": {
+    "description": "Category information updated successfully"
+  },
+  "category": "danh mục",
+  "@category": {
+    "description": "Category"
+  },
+  "categoriesTitle": "Danh mục",
+  "@categoriesTitle": {
+    "description": "Categories title"
+  },
+  "categoriesListDescription": "Danh sách danh mục dịch vụ",
+  "@categoriesListDescription": {
+    "description": "Categories list description"
+  },
+  "searchCategories": "Tìm kiếm danh mục...",
+  "@searchCategories": {
+    "description": "Search categories"
+  },
+  "errorLoadingCategoriesList": "Lỗi tải danh sách danh mục",
+  "@errorLoadingCategoriesList": {
+    "description": "Error loading categories list"
+  },
+  "cannotLoadCategoriesList": "Không thể tải danh sách danh mục",
+  "@cannotLoadCategoriesList": {
+    "description": "Cannot load categories list"
+  },
+  "checkNetworkOrTryAgainCategories": "Vui lòng kiểm tra kết nối mạng hoặc thử lại",
+  "@checkNetworkOrTryAgainCategories": {
+    "description": "Please check network connection or try again"
+  },
+  "servicesTitle": "Dịch vụ",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "Quản lý dịch vụ theo danh mục",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "searchServices": "Tìm kiếm dịch vụ...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "showingAllServices": "Hiển thị tất cả {total} dịch vụ",
+  "@showingAllServices": {
+    "description": "Showing all services message",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategoryAndSearch": "Tìm thấy {shown}/{total} dịch vụ (lọc theo danh mục và tìm kiếm)",
+  "@foundServicesWithCategoryAndSearch": {
+    "description": "Found services with category and search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategory": "Tìm thấy {shown}/{total} dịch vụ (lọc theo {count} danh mục)",
+  "@foundServicesWithCategory": {
+    "description": "Found services with category filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithSearch": "Tìm thấy {shown}/{total} dịch vụ (tìm kiếm: \"{search}\")",
+  "@foundServicesWithSearch": {
+    "description": "Found services with search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "clearFilters": "Xóa bộ lọc",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+  "errorLoadingServicesList": "Lỗi tải danh sách dịch vụ",
+  "@errorLoadingServicesList": {
+    "description": "Error loading services list"
+  },
+  "cannotLoadServicesList": "Không thể tải danh sách dịch vụ",
+  "@cannotLoadServicesList": {
+    "description": "Cannot load services list"
+  },
+  "checkNetworkOrTryAgainServices": "Vui lòng kiểm tra kết nối mạng hoặc thử lại",
+  "@checkNetworkOrTryAgainServices": {
+    "description": "Please check network connection or try again"
+  },
+  "serviceUpdatedSuccessfully": "Thay đổi thông tin dịch vụ thành công",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service information updated successfully"
+  },
+  "service": "dịch vụ",
+  "@service": {
+    "description": "Service"
+  },
+  "vnd": "VNĐ",
+  "@vnd": {
+    "description": "Vietnamese Dong currency"
+  },
+  "customerFound": "Đã tìm thấy khách hàng: {customerName}",
+  "@customerFound": {
+    "description": "Message when customer is found",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@customerNotFound": {
+    "description": "Message when customer is not found"
+  },
+  "employeeFound": "Đã tìm thấy nhân viên: {employeeName}",
+  "@employeeFound": {
+    "description": "Message when employee is found",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@employeeNotFound": {
+    "description": "Message when employee is not found"
+  },
+  "invalidServiceData": "Dữ liệu dịch vụ không hợp lệ",
+  "@invalidServiceData": {
+    "description": "Error message for invalid service data"
+  },
+  "createNewOrder": "Tạo đơn mới",
+  "@createNewOrder": {
+    "description": "Title for creating new order"
+  },
+  "servicesSelected": "{count} dịch vụ đã chọn",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInformation": "Thông tin khách hàng",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "Số điện thoại",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "pleaseEnterPhoneNumber": "Vui lòng nhập số điện thoại",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Validation message for phone number"
+  },
+  "customerName": "Tên khách hàng",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+  "pleaseEnterCustomerName": "Vui lòng nhập tên khách hàng",
+  "@pleaseEnterCustomerName": {
+    "description": "Validation message for customer name"
+  },
+  "employeeInformation": "Thông tin nhân viên",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "Chọn nhân viên",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count} nhân viên đã chọn",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "Nhân viên thực hiện",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "Nhân viên đăng nhập",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "Danh mục dịch vụ",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "Chọn danh mục",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count} danh mục đã chọn",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "Dịch vụ",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "Chọn dịch vụ",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count} dịch vụ đã chọn",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "Giảm giá",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "Giảm giá phải từ 0-100%",
+  "@discountMustBe0To100": {
+    "description": "Validation message for discount percentage"
+  },
+  "discountAmount": "Giảm giá: {amount} VNĐ",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "Tiền bo",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "Tiền bo phải lớn hơn 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Validation message for tip amount"
+  },
+  "tipAmount": "Tip: {amount} VNĐ",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotal": "Thành tiền:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "subtotalAmount": "{amount} VNĐ",
+  "@subtotalAmount": {
+    "description": "Subtotal amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "discountPercentage": "Giảm giá ({percentage}%):",
+  "@discountPercentage": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "discountAmountNegative": "-{amount} VNĐ",
+  "@discountAmountNegative": {
+    "description": "Negative discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "Tiền bo:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "tipAmountPositive": "+{amount} VNĐ",
+  "@tipAmountPositive": {
+    "description": "Positive tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "totalPayment": "Tổng thanh toán:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "totalPaymentAmount": "{amount} VNĐ",
+  "@totalPaymentAmount": {
+    "description": "Total payment amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "createOrder": "Tạo đơn",
+  "@createOrder": {
+    "description": "Create order button label"
+  },
+  "refresh": "Làm mới",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "select": "Chọn",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "cannotLoadSalonInfo": "Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "@cannotLoadSalonInfo": {
+    "description": "Error message when cannot load salon information"
+  },
+  "cannotSelectImage": "Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.",
+  "@cannotSelectImage": {
+    "description": "Error message when cannot select image"
+  },
+  "cannotSaveSalonInfo": "Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "@cannotSaveSalonInfo": {
+    "description": "Error message when cannot save salon information"
+  },
+  "basicInformation": "Thông tin cơ bản",
+  "@basicInformation": {
+    "description": "Basic information section title"
+  },
+  "socialMedia": "Mạng xã hội",
+  "@socialMedia": {
+    "description": "Social media section title"
+  },
+  "salonInformation": "Thông tin Salon",
+  "@salonInformation": {
+    "description": "Salon information title"
+  },
+  "manageSalonInfoAndContact": "Quản lý thông tin và liên hệ của salon",
+  "@manageSalonInfoAndContact": {
+    "description": "Description for salon information management"
+  },
+  "qrCode": "QR Code",
+  "@qrCode": {
+    "description": "QR Code section title"
+  },
+  "salonLogo": "Logo salon",
+  "@salonLogo": {
+    "description": "Salon logo section title"
+  },
+  "selectQRCode": "Chọn QR Code",
+  "@selectQRCode": {
+    "description": "Select QR Code button text"
+  },
+  "selectLogo": "Chọn Logo",
+  "@selectLogo": {
+    "description": "Select Logo button text"
+  },
+  "salonNameLabel": "Tên Salon",
+  "@salonNameLabel": {
+    "description": "Salon name field label"
+  },
+  "addressLabel": "Địa chỉ",
+  "@addressLabel": {
+    "description": "Address field label"
+  },
+  "phoneNumberLabel": "Số điện thoại",
+  "@phoneNumberLabel": {
+    "description": "Phone number field label"
+  },
+  "emailLabel": "Email",
+  "@emailLabel": {
+    "description": "Email field label"
+  },
+  "websiteLabel": "Website",
+  "@websiteLabel": {
+    "description": "Website field label"
+  },
+  "facebookLabel": "Facebook",
+  "@facebookLabel": {
+    "description": "Facebook field label"
+  },
+  "instagramLabel": "Instagram",
+  "@instagramLabel": {
+    "description": "Instagram field label"
+  },
+  "zaloLabel": "Zalo",
+  "@zaloLabel": {
+    "description": "Zalo field label"
+  },
+  "saving": "Đang lưu...",
+  "@saving": {
+    "description": "Saving status text"
+  },
+  "saveInformation": "Lưu thông tin",
+  "@saveInformation": {
+    "description": "Save information button text"
+  },
+  "menuTitle": "Menu",
+  "@menuTitle": {
+    "description": "Menu screen title"
+  },
+  "menuSubtitle": "Menu danh mục và dịch vụ",
+  "@menuSubtitle": {
+    "description": "Menu screen subtitle"
+  },
+  "searchServicesPlaceholder": "Tìm kiếm dịch vụ...",
+  "@searchServicesPlaceholder": {
+    "description": "Search services placeholder"
+  },
+  "noCategoriesYet": "Chưa có danh mục nào",
+  "@noCategoriesYet": {
+    "description": "No categories available message"
+  },
+  "categoriesSection": "Danh mục",
+  "@categoriesSection": {
+    "description": "Categories section title"
+  },
+  "servicesCount": "{count} dịch vụ",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearFilter": "Xóa bộ lọc",
+  "@clearFilter": {
+    "description": "Clear filter button text"
+  },
+  "categoriesCount": "{count} danh mục",
+  "@categoriesCount": {
+    "description": "Categories count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "Dịch vụ",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "viewAllServices": "Xem tất cả dịch vụ",
+  "@viewAllServices": {
+    "description": "View all services button text"
+  },
+  "noServicesFoundWithSearchAndCategory": "Không tìm thấy dịch vụ \"{search}\" trong {category}",
+  "@noServicesFoundWithSearchAndCategory": {
+    "description": "No services found with search and category filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesFoundWithSearch": "Không tìm thấy dịch vụ \"{search}\"",
+  "@noServicesFoundWithSearch": {
+    "description": "No services found with search filter",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesInCategory": "Danh mục \"{category}\" chưa có dịch vụ nào",
+  "@noServicesInCategory": {
+    "description": "No services in category message",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesYet": "Chưa có dịch vụ nào",
+  "@noServicesYet": {
+    "description": "No services available message"
+  },
+  "unknownCategory": "Không xác định",
+  "@unknownCategory": {
+    "description": "Unknown category name"
+  },
+  "billsManagement": "Quản lý hóa đơn",
+  "@billsManagement": {
+    "description": "Bills management subtitle"
+  },
+  "searchBills": "Tìm kiếm hóa đơn...",
+  "@searchBills": {
+    "description": "Search bills placeholder text"
+  },
+  "filterByTime": "Lọc theo thời gian",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewBills": "Chọn khoảng thời gian để xem hóa đơn",
+  "@selectTimeRangeToViewBills": {
+    "description": "Select time range to view bills description"
+  },
+  "selectCustomTimeRange": "Chọn khoảng thời gian tùy chỉnh",
+  "@selectCustomTimeRange": {
+    "description": "Select custom time range button text"
+  },
+  "selectStartAndEndDate": "Chọn ngày bắt đầu và kết thúc",
+  "@selectStartAndEndDate": {
+    "description": "Select start and end date description"
+  },
+  "quickSelect": "Chọn nhanh",
+  "@quickSelect": {
+    "description": "Quick select label"
+  },
+  "close": "Đóng",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "Hôm nay",
+  "@today": {
+    "description": "Today preset"
+  },
+  "yesterday": "Hôm qua",
+  "@yesterday": {
+    "description": "Yesterday preset"
+  },
+  "thisWeek": "Tuần này",
+  "@thisWeek": {
+    "description": "This week preset"
+  },
+  "thisMonth": "Tháng này",
+  "@thisMonth": {
+    "description": "This month preset"
+  },
+  "last30Days": "30 ngày qua",
+  "@last30Days": {
+    "description": "Last 30 days preset"
+  },
+  "noBillsInTimeRange": "Không có hóa đơn trong khoảng thời gian này",
+  "@noBillsInTimeRange": {
+    "description": "No bills in time range message"
+  },
+  "noBillsFound": "Không tìm thấy hóa đơn",
+  "@noBillsFound": {
+    "description": "No bills found message"
+  },
+  "noBillsYet": "Chưa có hóa đơn nào",
+  "@noBillsYet": {
+    "description": "No bills yet message"
+  },
+  "noYourBillsInTimeRange": "Không có hóa đơn của bạn trong khoảng thời gian này",
+  "@noYourBillsInTimeRange": {
+    "description": "No your bills in time range message"
+  },
+  "noYourBillsFound": "Không tìm thấy hóa đơn của bạn",
+  "@noYourBillsFound": {
+    "description": "No your bills found message"
+  },
+  "noYourBillsYet": "Bạn chưa có hóa đơn nào",
+  "@noYourBillsYet": {
+    "description": "No your bills yet message"
+  },
+  "tryDifferentTimeRange": "Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian",
+  "@tryDifferentTimeRange": {
+    "description": "Try different time range message"
+  },
+  "tryDifferentSearch": "Thử tìm kiếm với từ khóa khác",
+  "@tryDifferentSearch": {
+    "description": "Try different search message"
+  },
+  "createFirstOrderToViewBills": "Tạo đơn hàng đầu tiên để xem hóa đơn ở đây",
+  "@createFirstOrderToViewBills": {
+    "description": "Create first order to view bills message"
+  },
+  "createFirstOrderToViewYourBills": "Tạo đơn hàng đầu tiên để xem hóa đơn của bạn ở đây",
+  "@createFirstOrderToViewYourBills": {
+    "description": "Create first order to view your bills message"
+  },
+  "filtered": "đã lọc",
+  "@filtered": {
+    "description": "Filtered suffix"
+  },
+  "total": "Tổng",
+  "@total": {
+    "description": "Total prefix"
+  },
+  "bills": "Hóa đơn",
+  "@bills": {
+    "description": "Bills label"
+  },
+  "revenue": "Doanh thu",
+  "@revenue": {
+    "description": "Revenue label"
+  },
+  "paid": "Đã thanh toán",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "Chưa thanh toán",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "discount": "Giảm",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "totalAmount": "Tổng tiền:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noServices": "Không có dịch vụ",
+  "@noServices": {
+    "description": "No services message"
+  },
+  "temporary": "TẠM THỜI",
+  "@temporary": {
+    "description": "Temporary bill ID"
+  },
+  "cannotUpdateOrderTodayOnly": "Chỉ có thể cập nhật đơn hàng trong ngày hôm nay",
+  "@cannotUpdateOrderTodayOnly": {
+    "description": "Cannot update order today only message"
+  },
+  "serviceInfoNotFound": "Không tìm thấy thông tin dịch vụ cho đơn hàng này",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "filterByTime": "Lọc theo thời gian",
+  "@filterByTime": {
+    "description": "Filter by time dialog title"
+  },
+  "selectTimeRangeToViewReports": "Chọn khoảng thời gian để xem báo cáo",
+  "@selectTimeRangeToViewReports": {
+    "description": "Filter by time dialog subtitle"
+  },
+  "selectCustomTimeRange": "Chọn khoảng thời gian tùy chỉnh",
+  "@selectCustomTimeRange": {
+    "description": "Custom time range button text"
+  },
+  "selectStartAndEndDate": "Chọn ngày bắt đầu và kết thúc",
+  "@selectStartAndEndDate": {
+    "description": "Custom time range button subtitle"
+  },
+  "quickSelect": "Chọn nhanh",
+  "@quickSelect": {
+    "description": "Quick select section title"
+  },
+  "close": "Đóng",
+  "@close": {
+    "description": "Close button text"
+  },
+  "today": "Hôm nay",
+  "@today": {
+    "description": "Today preset button"
+  },
+  "yesterday": "Hôm qua",
+  "@yesterday": {
+    "description": "Yesterday preset button"
+  },
+  "thisWeek": "Tuần này",
+  "@thisWeek": {
+    "description": "This week preset button"
+  },
+  "thisMonth": "Tháng này",
+  "@thisMonth": {
+    "description": "This month preset button"
+  },
+  "last30Days": "30 ngày qua",
+  "@last30Days": {
+    "description": "Last 30 days preset button"
+  },
+  "revenueReports": "Báo Cáo Doanh Thu",
+  "@revenueReports": {
+    "description": "Revenue reports screen title"
+  },
+  "statisticsAndRevenueReports": "Thống kê và báo cáo doanh thu",
+  "@statisticsAndRevenueReports": {
+    "description": "Revenue reports screen subtitle"
+  },
+  "searchHint": "Tìm kiếm...",
+  "@searchHint": {
+    "description": "Search field hint text"
+  },
+  "selectEmployee": "Chọn nhân viên",
+  "@selectEmployee": {
+    "description": "Employee filter label"
+  },
+  "paymentStatus": "Trạng thái thanh toán",
+  "@paymentStatus": {
+    "description": "Payment status filter label"
+  },
+  "bills": "Hóa đơn",
+  "@bills": {
+    "description": "Bills summary card title"
+  },
+  "revenue": "Doanh Thu",
+  "@revenue": {
+    "description": "Revenue summary card title"
+  },
+  "discountPercent": "Giảm {percent}%:",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAmount": "Tổng tiền:",
+  "@totalAmount": {
+    "description": "Total amount label"
+  },
+  "noOrdersInTimeRange": "Không có hóa đơn trong khoảng thời gian này",
+  "@noOrdersInTimeRange": {
+    "description": "Empty state when no orders in selected time range"
+  },
+  "noOrdersFound": "Không tìm thấy hóa đơn",
+  "@noOrdersFound": {
+    "description": "Empty state when search returns no results"
+  },
+  "noOrdersYet": "Chưa có hóa đơn nào",
+  "@noOrdersYet": {
+    "description": "Empty state when no orders exist"
+  },
+  "tryDifferentTimeRange": "Thử chọn khoảng thời gian khác hoặc xóa bộ lọc thời gian",
+  "@tryDifferentTimeRange": {
+    "description": "Empty state message for time range filter"
+  },
+  "tryDifferentSearch": "Thử tìm kiếm với từ khóa khác",
+  "@tryDifferentSearch": {
+    "description": "Empty state message for search"
+  },
+  "createFirstOrderToViewReports": "Tạo hóa đơn đầu tiên để xem báo cáo ở đây",
+  "@createFirstOrderToViewReports": {
+    "description": "Empty state message for no orders"
+  },
+  "noServices": "Không có dịch vụ",
+  "@noServices": {
+    "description": "No services available message"
+  },
+  "billPaymentReceipt": "Hóa đơn thanh toán",
+  "@billPaymentReceipt": {
+    "description": "Bill payment receipt title"
+  },
+  "print": "In",
+  "@print": {
+    "description": "Print button label"
+  },
+  "phoneNumber": "Số điện thoại:",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "billCode": "Mã hóa đơn:",
+  "@billCode": {
+    "description": "Bill code label"
+  },
+  "createdDate": "Ngày tạo:",
+  "@createdDate": {
+    "description": "Created date label"
+  },
+  "customerInformation": "Thông tin khách hàng",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "customerName": "Tên khách hàng:",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "servingStaff": "Nhân viên phục vụ:",
+  "@servingStaff": {
+    "description": "Serving staff label"
+  },
+  "serviceDetails": "Chi tiết dịch vụ",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "subtotal": "Thành tiền:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discount": "Giảm giá",
+  "@discount": {
+    "description": "Discount label"
+  },
+  "tip": "Tiền bo:",
+  "@tip": {
+    "description": "Tip label"
+  },
+  "totalPayment": "Tổng thanh toán:",
+  "@totalPayment": {
+    "description": "Total payment label"
+  },
+  "qrCodePayment": "QR Code thanh toán",
+  "@qrCodePayment": {
+    "description": "QR Code payment section title"
+  },
+  "noQrCode": "Chưa có mã QR Code",
+  "@noQrCode": {
+    "description": "No QR code message"
+  },
+  "qrCodeDisplayError": "Lỗi hiển thị QR Code",
+  "@qrCodeDisplayError": {
+    "description": "QR Code display error message"
+  },
+  "scanQrToPay": "Quét mã QR để thanh toán",
+  "@scanQrToPay": {
+    "description": "Scan QR code to pay instruction"
+  },
+  "temporary": "TẠM THỜI",
+  "@temporary": {
+    "description": "Temporary placeholder text"
+  },
+  "serviceNotFoundError": "Không tìm thấy thông tin dịch vụ cho đơn hàng này",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  },
+  "billFooter": "Cảm ơn quý khách đã sử dụng dịch vụ!",
+  "@billFooter": {
+    "description": "Bill footer message"
+  },
+  "billFooter2": "Hẹn gặp lại quý khách!",
+  "@billFooter2": {
+    "description": "Bill footer second message"
+  },
+  "updateOrder": "Cập nhật đơn hàng",
+  "@updateOrder": {
+    "description": "Update order screen title"
+  },
+  "servicesSelected": "{count} dịch vụ đã chọn",
+  "@servicesSelected": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "canOnlyUpdateTodayOrders": "Chỉ có thể cập nhật đơn hàng trong ngày hôm nay",
+  "@canOnlyUpdateTodayOrders": {
+    "description": "Warning message for updating orders"
+  },
+  "customerFound": "Đã tìm thấy khách hàng: {name}",
+  "@customerFound": {
+    "description": "Customer found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "customerNotFound": "Không tìm thấy khách hàng với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@customerNotFound": {
+    "description": "Customer not found message"
+  },
+  "employeeFound": "Đã tìm thấy nhân viên: {name}",
+  "@employeeFound": {
+    "description": "Employee found message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "employeeNotFound": "Không tìm thấy nhân viên với số điện thoại này. Vui lòng nhập tên để tạo mới.",
+  "@employeeNotFound": {
+    "description": "Employee not found message"
+  },
+  "invalidServiceData": "Dữ liệu dịch vụ không hợp lệ",
+  "@invalidServiceData": {
+    "description": "Invalid service data error"
+  },
+  "customerInformation": "Thông tin khách hàng",
+  "@customerInformation": {
+    "description": "Customer information section title"
+  },
+  "phoneNumber": "Số điện thoại",
+  "@phoneNumber": {
+    "description": "Phone number label"
+  },
+  "pleaseEnterPhoneNumber": "Vui lòng nhập số điện thoại",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Phone number validation message"
+  },
+  "customerName": "Tên khách hàng",
+  "@customerName": {
+    "description": "Customer name label"
+  },
+  "pleaseEnterCustomerName": "Vui lòng nhập tên khách hàng",
+  "@pleaseEnterCustomerName": {
+    "description": "Customer name validation message"
+  },
+  "employeeInformation": "Thông tin nhân viên",
+  "@employeeInformation": {
+    "description": "Employee information section title"
+  },
+  "selectEmployee": "Chọn nhân viên",
+  "@selectEmployee": {
+    "description": "Select employee dropdown label"
+  },
+  "employeesSelected": "{count} nhân viên đã chọn",
+  "@employeesSelected": {
+    "description": "Number of employees selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "performingEmployee": "Nhân viên thực hiện",
+  "@performingEmployee": {
+    "description": "Performing employee section title"
+  },
+  "loggedInEmployee": "Nhân viên đăng nhập",
+  "@loggedInEmployee": {
+    "description": "Logged in employee label"
+  },
+  "serviceCategories": "Danh mục dịch vụ",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "selectCategory": "Chọn danh mục",
+  "@selectCategory": {
+    "description": "Select category dropdown label"
+  },
+  "categoriesSelected": "{count} danh mục đã chọn",
+  "@categoriesSelected": {
+    "description": "Number of categories selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "services": "Dịch vụ",
+  "@services": {
+    "description": "Services section title"
+  },
+  "selectService": "Chọn dịch vụ",
+  "@selectService": {
+    "description": "Select service dropdown label"
+  },
+  "servicesSelectedCount": "{count} dịch vụ đã chọn",
+  "@servicesSelectedCount": {
+    "description": "Number of services selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discount": "Giảm giá",
+  "@discount": {
+    "description": "Discount section title"
+  },
+  "discountMustBe0To100": "Giảm giá phải từ 0-100%",
+  "@discountMustBe0To100": {
+    "description": "Discount validation message"
+  },
+  "discountAmount": "Giảm giá: {amount} VNĐ",
+  "@discountAmount": {
+    "description": "Discount amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tip": "Tiền bo",
+  "@tip": {
+    "description": "Tip section title"
+  },
+  "tipMustBeGreaterThan0": "Tiền bo phải lớn hơn 0",
+  "@tipMustBeGreaterThan0": {
+    "description": "Tip validation message"
+  },
+  "tipAmount": "Tip: {amount} VNĐ",
+  "@tipAmount": {
+    "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatus": "Trạng thái thanh toán",
+  "@paymentStatus": {
+    "description": "Payment status section title"
+  },
+  "paid": "Đã thanh toán",
+  "@paid": {
+    "description": "Paid status"
+  },
+  "unpaid": "Chưa thanh toán",
+  "@unpaid": {
+    "description": "Unpaid status"
+  },
+  "customerPaidFully": "Khách hàng đã thanh toán đầy đủ",
+  "@customerPaidFully": {
+    "description": "Customer paid fully message"
+  },
+  "customerNotPaid": "Khách hàng chưa thanh toán",
+  "@customerNotPaid": {
+    "description": "Customer not paid message"
+  },
+  "subtotal": "Thành tiền:",
+  "@subtotal": {
+    "description": "Subtotal label"
+  },
+  "discountPercent": "Giảm giá ({percent}%):",
+  "@discountPercent": {
+    "description": "Discount percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tipLabel": "Tiền bo:",
+  "@tipLabel": {
+    "description": "Tip label"
+  },
+  "totalPaymentLabel": "Tổng thanh toán:",
+  "@totalPaymentLabel": {
+    "description": "Total payment label"
+  },
+  "save": "Lưu",
+  "@save": {
+    "description": "Save button"
+  },
+  "cancel": "Hủy",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "select": "Chọn",
+  "@select": {
+    "description": "Select text for dropdowns"
+  },
+  "orderNotFound": "Không tìm thấy thông tin đơn hàng",
+  "@orderNotFound": {
+    "description": "Error message when order is not found"
+  },
+  "errorLoadingOrder": "Lỗi khi tải thông tin đơn hàng: {error}",
+  "@errorLoadingOrder": {
+    "description": "Error message when loading order fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cannotConnectToServer": "Không thể kết nối đến server",
+  "@cannotConnectToServer": {
+    "description": "Error message when server connection fails"
+  },
+  "notificationNoOrderInfo": "Thông báo không chứa thông tin đơn hàng",
+  "@notificationNoOrderInfo": {
+    "description": "Warning message when notification lacks order data"
+  },
+  "allNotificationsMarkedAsRead": "Đã đánh dấu tất cả thông báo là đã đọc",
+  "@allNotificationsMarkedAsRead": {
+    "description": "Success message when marking all notifications as read"
+  },
+  "notificationDeleted": "Đã xóa thông báo",
+  "@notificationDeleted": {
+    "description": "Success message when notification is deleted"
+  },
+  "errorDeletingNotification": "Lỗi khi xóa thông báo: {error}",
+  "@errorDeletingNotification": {
+    "description": "Error message when deleting notification fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allNotificationsDeleted": "Đã xóa tất cả thông báo",
+  "@allNotificationsDeleted": {
+    "description": "Success message when all notifications are deleted"
+  },
+  "errorDeletingAllNotifications": "Lỗi khi xóa tất cả thông báo: {error}",
+  "@errorDeletingAllNotifications": {
+    "description": "Error message when deleting all notifications fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "markAllAsReadTooltip": "Đánh dấu tất cả đã đọc",
+  "@markAllAsReadTooltip": {
+    "description": "Tooltip for mark all as read button"
+  },
+  "clearAllTooltip": "Xóa tất cả",
+  "@clearAllTooltip": {
+    "description": "Tooltip for clear all button"
+  },
+  "noNotificationsYet": "Chưa có thông báo nào",
+  "@noNotificationsYet": {
+    "description": "Empty state message when no notifications exist"
+  },
+  "newNotificationsWillAppearHere": "Các thông báo mới sẽ xuất hiện ở đây",
+  "@newNotificationsWillAppearHere": {
+    "description": "Empty state description for notifications"
+  },
+  "deleteAction": "Xóa",
+  "@deleteAction": {
+    "description": "Delete action in popup menu"
+  },
+  "pdfErrorCreating": "Lỗi tạo PDF: {error}",
+  "@pdfErrorCreating": {
+    "description": "Error message when creating PDF fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorPluginNotSupported": "Lỗi: Plugin không được hỗ trợ trên platform này. Vui lòng chạy trên Android/iOS hoặc cài đặt CocoaPods cho macOS.",
+  "@pdfErrorPluginNotSupported": {
+    "description": "Error message when plugin is not supported on platform"
+  },
+  "pdfErrorSharingZalo": "Lỗi chia sẻ Zalo: {error}",
+  "@pdfErrorSharingZalo": {
+    "description": "Error message when sharing to Zalo fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorSharingFile": "Lỗi chia sẻ file: {error}",
+  "@pdfErrorSharingFile": {
+    "description": "Error message when sharing file fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorCannotShare": "Không thể chia sẻ file: {error}",
+  "@pdfErrorCannotShare": {
+    "description": "Error message when file cannot be shared",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfErrorNoFileData": "Không có file PDF hoặc dữ liệu để chia sẻ",
+  "@pdfErrorNoFileData": {
+    "description": "Error message when no PDF file or data available for sharing"
+  },
+  "pdfErrorNoFileToShare": "Không có file PDF để chia sẻ",
+  "@pdfErrorNoFileToShare": {
+    "description": "Error message when no PDF file available for sharing"
+  },
+  "pdfZaloOpened": "Zalo đã mở! Vui lòng chọn Zalo trong menu chia sẻ để gửi hóa đơn.",
+  "@pdfZaloOpened": {
+    "description": "Message when Zalo is opened for sharing"
+  },
+  "pdfBillFrom": "Hóa đơn từ {salonName}",
+  "@pdfBillFrom": {
+    "description": "Bill sharing text with salon name",
+    "placeholders": {
+      "salonName": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfFileCreatedManualShare": "File PDF đã được tạo. Vui lòng chia sẻ thủ công.",
+  "@pdfFileCreatedManualShare": {
+    "description": "Message when PDF file is created and needs manual sharing"
+  },
+  "pdfPhoneNumber": "Số điện thoại: {phoneNumber}",
+  "@pdfPhoneNumber": {
+    "description": "Phone number label in PDF",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfBillInfoTitle": "THÔNG TIN HÓA ĐƠN",
+  "@pdfBillInfoTitle": {
+    "description": "Bill information section title in PDF"
+  },
+  "pdfBillCode": "Mã hóa đơn:",
+  "@pdfBillCode": {
+    "description": "Bill code label in PDF"
+  },
+  "pdfCreatedDate": "Ngày tạo:",
+  "@pdfCreatedDate": {
+    "description": "Created date label in PDF"
+  },
+  "pdfCustomerInfoTitle": "THÔNG TIN KHÁCH HÀNG",
+  "@pdfCustomerInfoTitle": {
+    "description": "Customer information section title in PDF"
+  },
+  "pdfCustomerName": "Tên khách hàng:",
+  "@pdfCustomerName": {
+    "description": "Customer name label in PDF"
+  },
+  "pdfCustomerPhone": "Số điện thoại:",
+  "@pdfCustomerPhone": {
+    "description": "Customer phone label in PDF"
+  },
+  "pdfEmployeeServed": "Nhân viên phục vụ:",
+  "@pdfEmployeeServed": {
+    "description": "Employee served label in PDF"
+  },
+  "pdfServicesDetailTitle": "CHI TIẾT DỊCH VỤ",
+  "@pdfServicesDetailTitle": {
+    "description": "Services detail section title in PDF"
+  },
+  "pdfPaymentInfoTitle": "THÔNG TIN THANH TOÁN",
+  "@pdfPaymentInfoTitle": {
+    "description": "Payment information section title in PDF"
+  },
+  "pdfSubtotal": "Thành tiền:",
+  "@pdfSubtotal": {
+    "description": "Subtotal label in PDF"
+  },
+  "pdfDiscount": "Giảm giá ({percent}%):",
+  "@pdfDiscount": {
+    "description": "Discount label in PDF with percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTip": "Tiền bo:",
+  "@pdfTip": {
+    "description": "Tip label in PDF"
+  },
+  "pdfTotalPayment": "TỔNG THANH TOÁN:",
+  "@pdfTotalPayment": {
+    "description": "Total payment label in PDF"
+  },
+  "pdfThankYouMessage": "Cảm ơn quý khách đã sử dụng dịch vụ!",
+  "@pdfThankYouMessage": {
+    "description": "Thank you message in PDF footer"
+  },
+  "pdfSeeYouAgainMessage": "Hẹn gặp lại quý khách!",
+  "@pdfSeeYouAgainMessage": {
+    "description": "See you again message in PDF footer"
+  },
+  "pdfShareBillTitle": "Chia sẻ hóa đơn",
+  "@pdfShareBillTitle": {
+    "description": "Share bill dialog title"
+  },
+  "pdfShareBillMessage": "Chọn cách chia sẻ hóa đơn:",
+  "@pdfShareBillMessage": {
+    "description": "Share bill dialog message"
+  },
+  "pdfShareZalo": "Zalo",
+  "@pdfShareZalo": {
+    "description": "Zalo sharing option"
+  },
+  "pdfShareOther": "Khác",
+  "@pdfShareOther": {
+    "description": "Other sharing option"
+  },
+  "pdfCancel": "Hủy",
+  "@pdfCancel": {
+    "description": "Cancel button text"
+  },
+  "pdfFileCreatedTitle": "File PDF đã được tạo",
+  "@pdfFileCreatedTitle": {
+    "description": "PDF file created dialog title"
+  },
+  "pdfFileCreatedSuccess": "File PDF đã được tạo thành công!",
+  "@pdfFileCreatedSuccess": {
+    "description": "PDF file created success message"
+  },
+  "pdfFilePath": "Đường dẫn: {filePath}",
+  "@pdfFilePath": {
+    "description": "PDF file path label",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfYouCanDo": "Bạn có thể:",
+  "@pdfYouCanDo": {
+    "description": "What you can do label"
+  },
+  "pdfOpenWithApp": "• Mở file bằng ứng dụng PDF",
+  "@pdfOpenWithApp": {
+    "description": "Open file with PDF app option"
+  },
+  "pdfShareManually": "• Chia sẻ file thủ công",
+  "@pdfShareManually": {
+    "description": "Share file manually option"
+  },
+  "pdfSendViaEmail": "• Gửi qua email",
+  "@pdfSendViaEmail": {
+    "description": "Send via email option"
+  },
+  "pdfClose": "Đóng",
+  "@pdfClose": {
+    "description": "Close button text"
+  },
+  "pdfOpenFile": "Mở file",
+  "@pdfOpenFile": {
+    "description": "Open file button text"
+  },
+  "pdfPathCopiedToClipboard": "Đã copy đường dẫn file vào clipboard: {filePath}",
+  "@pdfPathCopiedToClipboard": {
+    "description": "File path copied to clipboard message",
+    "placeholders": {
+      "filePath": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfTemporaryBillId": "TẠM THỜI",
+  "@pdfTemporaryBillId": {
+    "description": "Temporary bill ID when order ID is empty"
+  },
+  "roleSelection": "Chọn vai trò",
+  "@roleSelection": {
+    "description": "Role selection title"
+  },
+  "selectAccountTypeToContinue": "Chọn loại tài khoản để tiếp tục",
+  "@selectAccountTypeToContinue": {
+    "description": "Role selection subtitle"
+  },
+  "connect": "Kết nối",
+  "@connect": {
+    "description": "Connect button text"
+  },
+  "enterEmailToCheckAccount": "Nhập email để kiểm tra tài khoản",
+  "@enterEmailToCheckAccount": {
+    "description": "Email check subtitle"
+  },
+  "enterPasswordToLogin": "Nhập mật khẩu để đăng nhập",
+  "@enterPasswordToLogin": {
+    "description": "Password login subtitle"
+  },
+  "createNewAccountFor": "Tạo tài khoản mới cho",
+  "@createNewAccountFor": {
+    "description": "Create account subtitle"
+  },
+  "createNewAccount": "Tạo tài khoản mới",
+  "@createNewAccount": {
+    "description": "Create new account text"
+  },
+  "enterEmployeeLoginInfo": "Nhập thông tin đăng nhập nhân viên",
+  "@enterEmployeeLoginInfo": {
+    "description": "Employee login subtitle"
+  },
+  "continueText": "Tiếp tục",
+  "@continueText": {
+    "description": "Continue button text"
+  },
+  "manageEntireSystem": "Quản lý toàn bộ hệ thống",
+  "@manageEntireSystem": {
+    "description": "Shop owner description"
+  },
+  "accessServicesCreateOrdersAndBills": "Truy cập dịch vụ, tạo đơn và hóa đơn",
+  "@accessServicesCreateOrdersAndBills": {
+    "description": "Employee description"
+  },
+  "shopEmail": "Email Salon",
+  "@shopEmail": {
+    "description": "Shop email field label"
+  },
+  "employeePhone": "Số điện thoại nhân viên",
+  "@employeePhone": {
+    "description": "Employee phone field label"
+  },
+  "employeePassword": "Mật khẩu nhân viên",
+  "@employeePassword": {
+    "description": "Employee password field label"
+  },
+  "pleaseEnterPhone": "Vui lòng nhập số điện thoại",
+  "@pleaseEnterPhone": {
+    "description": "Please enter phone validation message"
+  },
+  "pleaseEnterPassword": "Vui lòng nhập mật khẩu",
+  "@pleaseEnterPassword": {
+    "description": "Please enter password validation message"
+  },
+  "pleaseEnterEmail": "Vui lòng nhập email",
+  "@pleaseEnterEmail": {
+    "description": "Please enter email validation message"
+  },
+  "invalidEmail": "Email không hợp lệ",
+  "@invalidEmail": {
+    "description": "Invalid email validation message"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "pleaseEnterYourEmail": "Vui lòng nhập email của bạn",
+  "@pleaseEnterYourEmail": {
+    "description": "Please enter your email validation message"
+  },
+  "invalidEmailExample": "Email không hợp lệ (ví dụ: example@email.com)",
+  "@invalidEmailExample": {
+    "description": "Invalid email example validation message"
+  },
+  "invalidEmailMissingDomain": "Email không hợp lệ (thiếu domain)",
+  "@invalidEmailMissingDomain": {
+    "description": "Invalid email missing domain validation message"
+  },
+  "emailExistsInSystem": "Email đã tồn tại trong hệ thống",
+  "@emailExistsInSystem": {
+    "description": "Email exists in system message"
+  },
+  "emailNotExistsWillCreateNew": "Email chưa tồn tại, sẽ tạo tài khoản mới",
+  "@emailNotExistsWillCreateNew": {
+    "description": "Email not exists will create new account message"
+  },
+  "password": "Mật khẩu",
+  "@password": {
+    "description": "Password field label"
+  },
+  "pleaseEnterPasswordValidation": "Vui lòng nhập mật khẩu",
+  "@pleaseEnterPasswordValidation": {
+    "description": "Please enter password validation message"
+  },
+  "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+  "@passwordMinLength": {
+    "description": "Password minimum length validation message"
+  },
+  "passwordMustHaveUppercase": "Mật khẩu phải có ít nhất 1 chữ hoa (A-Z)",
+  "@passwordMustHaveUppercase": {
+    "description": "Password must have uppercase validation message"
+  },
+  "passwordMustHaveLowercase": "Mật khẩu phải có ít nhất 1 chữ thường (a-z)",
+  "@passwordMustHaveLowercase": {
+    "description": "Password must have lowercase validation message"
+  },
+  "passwordMustHaveNumber": "Mật khẩu phải có ít nhất 1 số (0-9)",
+  "@passwordMustHaveNumber": {
+    "description": "Password must have number validation message"
+  },
+  "passwordMustHaveSpecialChar": "Mật khẩu phải có ít nhất 1 ký tự đặc biệt",
+  "@passwordMustHaveSpecialChar": {
+    "description": "Password must have special character validation message"
+  },
+  "database": "Database",
+  "@database": {
+    "description": "Database label"
+  },
+  "databaseLoginUsername": "Tên đăng nhập Database",
+  "@databaseLoginUsername": {
+    "description": "Database login username field label"
+  },
+  "databasePassword": "Mật khẩu Database",
+  "@databasePassword": {
+    "description": "Database password field label"
+  },
+  "pleaseEnterDatabaseUsername": "Vui lòng nhập tên đăng nhập database",
+  "@pleaseEnterDatabaseUsername": {
+    "description": "Please enter database username validation message"
+  },
+  "pleaseEnterDatabasePassword": "Vui lòng nhập mật khẩu database",
+  "@pleaseEnterDatabasePassword": {
+    "description": "Please enter database password validation message"
+  },
+  "databasePasswordMinLength": "Mật khẩu database phải có ít nhất 8 ký tự",
+  "@databasePasswordMinLength": {
+    "description": "Database password minimum length validation message"
+  },
+  "databasePasswordMustHaveUppercase": "Mật khẩu database phải có ít nhất 1 chữ hoa (A-Z)",
+  "@databasePasswordMustHaveUppercase": {
+    "description": "Database password must have uppercase validation message"
+  },
+  "databasePasswordMustHaveLowercase": "Mật khẩu database phải có ít nhất 1 chữ thường (a-z)",
+  "@databasePasswordMustHaveLowercase": {
+    "description": "Database password must have lowercase validation message"
+  },
+  "databasePasswordMustHaveNumber": "Mật khẩu database phải có ít nhất 1 số (0-9)",
+  "@databasePasswordMustHaveNumber": {
+    "description": "Database password must have number validation message"
+  },
+  "databasePasswordMustHaveSpecialChar": "Mật khẩu database phải có ít nhất 1 ký tự đặc biệt",
+  "@databasePasswordMustHaveSpecialChar": {
+    "description": "Database password must have special character validation message"
+  },
+  "welcomeBack": "Chào mừng quay trở lại",
+  "@welcomeBack": {
+    "description": "Welcome back message"
+  },
+  "passwordIncorrect": "Mật khẩu không chính xác. Vui lòng kiểm tra lại.",
+  "@passwordIncorrect": {
+    "description": "Password incorrect error message"
+  },
+  "databaseLoginInfoIncorrect": "Thông tin đăng nhập database không chính xác. Vui lòng kiểm tra lại.",
+  "@databaseLoginInfoIncorrect": {
+    "description": "Database login info incorrect error message"
+  },
+  "databaseUsernameIncorrect": "Tên đăng nhập database không chính xác.",
+  "@databaseUsernameIncorrect": {
+    "description": "Database username incorrect error message"
+  },
+  "databasePasswordIncorrect": "Mật khẩu database không chính xác.",
+  "@databasePasswordIncorrect": {
+    "description": "Database password incorrect error message"
+  },
+  "accountCreatedButDatabaseError": "Tạo tài khoản thành công nhưng không thể tạo database. Vui lòng liên hệ admin.",
+  "@accountCreatedButDatabaseError": {
+    "description": "Account created but database error message"
+  },
+  "databasePasswordNotStrongEnough": "Mật khẩu database không đủ mạnh. Vui lòng kiểm tra yêu cầu bên dưới.",
+  "@databasePasswordNotStrongEnough": {
+    "description": "Database password not strong enough error message"
+  },
+  "loginInfoIncorrect": "Thông tin đăng nhập không chính xác. Vui lòng kiểm tra lại.",
+  "@loginInfoIncorrect": {
+    "description": "Login info incorrect error message"
+  },
+  "systemErrorOccurred": "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.",
+  "@systemErrorOccurred": {
+    "description": "System error occurred message"
+  },
+  "cannotConnectToServer": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
+  "@cannotConnectToServer": {
+    "description": "Cannot connect to server error message"
+  },
+  "connectionTimeout": "Kết nối bị timeout. Vui lòng thử lại.",
+  "@connectionTimeout": {
+    "description": "Connection timeout error message"
+  },
+  "networkConnectionError": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.",
+  "@networkConnectionError": {
+    "description": "Network connection error message"
+  },
+  "errorOccurredPleaseTryAgain": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+  "@errorOccurredPleaseTryAgain": {
+    "description": "Error occurred please try again message"
+  }
+}

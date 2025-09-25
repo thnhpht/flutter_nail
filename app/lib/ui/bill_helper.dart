@@ -6,6 +6,7 @@ import 'pdf_bill_generator.dart';
 import '../api_client.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert'; // Added for base64Decode
+import '../generated/l10n/app_localizations.dart';
 
 class BillHelper {
   static List<Service>? _currentServices;
@@ -76,9 +77,9 @@ class BillHelper {
                         size: 24,
                       ),
                       const SizedBox(width: AppTheme.spacingS),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Hóa đơn thanh toán',
+                          AppLocalizations.of(context)!.billPaymentReceipt,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -99,6 +100,7 @@ class BillHelper {
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(AppTheme.spacingM),
                     child: _buildBillContent(
+                      context: context,
                       order: order,
                       services: services,
                       salonName: name,
@@ -124,7 +126,7 @@ class BillHelper {
                       Expanded(
                         child: _buildActionButton(
                           onPressed: () => _printBill(context, order),
-                          label: 'In',
+                          label: AppLocalizations.of(context)!.print,
                           icon: Icons.print,
                           color: AppTheme.primaryEnd,
                         ),
@@ -141,6 +143,7 @@ class BillHelper {
   }
 
   static Widget _buildBillContent({
+    required BuildContext context,
     required Order order,
     required List<Service> services,
     required String salonName,
@@ -185,7 +188,7 @@ class BillHelper {
               ),
               const SizedBox(height: 4),
               Text(
-                'Số điện thoại: ${_formatPhoneNumber(displaySalonPhone)}',
+                '${AppLocalizations.of(context)!.phoneNumber} ${_formatPhoneNumber(displaySalonPhone)}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -212,14 +215,14 @@ class BillHelper {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Mã hóa đơn:',
+                    AppLocalizations.of(context)!.billCode,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[600],
                     ),
                   ),
                   Text(
-                    '#${_formatBillId(order.id)}',
+                    '#${_formatBillId(context, order.id)}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -231,7 +234,7 @@ class BillHelper {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Ngày tạo:',
+                    AppLocalizations.of(context)!.createdDate,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[600],
@@ -271,8 +274,8 @@ class BillHelper {
                     size: 20,
                   ),
                   const SizedBox(width: AppTheme.spacingS),
-                  const Text(
-                    'Thông tin khách hàng',
+                  Text(
+                    AppLocalizations.of(context)!.customerInformation,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -281,11 +284,12 @@ class BillHelper {
                 ],
               ),
               const SizedBox(height: AppTheme.spacingS),
-              _buildInfoRow('Tên khách hàng:', order.customerName),
-              _buildInfoRow(
-                  'Số điện thoại:', _formatPhoneNumber(order.customerPhone)),
-              _buildInfoRow(
-                  'Nhân viên phục vụ:', order.employeeNames.join(', ')),
+              _buildInfoRow(context, AppLocalizations.of(context)!.customerName,
+                  order.customerName),
+              _buildInfoRow(context, AppLocalizations.of(context)!.phoneNumber,
+                  _formatPhoneNumber(order.customerPhone)),
+              _buildInfoRow(context, AppLocalizations.of(context)!.servingStaff,
+                  order.employeeNames.join(', ')),
             ],
           ),
         ),
@@ -319,8 +323,8 @@ class BillHelper {
                       size: 20,
                     ),
                     const SizedBox(width: AppTheme.spacingS),
-                    const Text(
-                      'Chi tiết dịch vụ',
+                    Text(
+                      AppLocalizations.of(context)!.serviceDetails,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -351,8 +355,8 @@ class BillHelper {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Thành tiền:',
+                  Text(
+                    AppLocalizations.of(context)!.subtotal,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -377,7 +381,7 @@ class BillHelper {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Giảm giá (${order.discountPercent.toStringAsFixed(0)}%):',
+                      '${AppLocalizations.of(context)!.discount} (${order.discountPercent.toStringAsFixed(0)}%):',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -402,9 +406,9 @@ class BillHelper {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Tiền bo:',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.tip,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
@@ -428,8 +432,8 @@ class BillHelper {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Tổng thanh toán:',
+                  Text(
+                    AppLocalizations.of(context)!.totalPayment,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -470,8 +474,8 @@ class BillHelper {
                     size: 20,
                   ),
                   const SizedBox(width: AppTheme.spacingS),
-                  const Text(
-                    'QR Code thanh toán',
+                  Text(
+                    AppLocalizations.of(context)!.qrCodePayment,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -491,7 +495,7 @@ class BillHelper {
                   ),
                   child: qrCode != null &&
                           qrCode.isNotEmpty &&
-                          qrCode != 'Chưa có mã QR Code'
+                          qrCode != AppLocalizations.of(context)!.noQrCode
                       ? ClipRRect(
                           borderRadius:
                               BorderRadius.circular(AppTheme.radiusSmall),
@@ -503,7 +507,8 @@ class BillHelper {
                             errorBuilder: (context, error, stackTrace) {
                               return Center(
                                 child: Text(
-                                  'Lỗi hiển thị QR Code',
+                                  AppLocalizations.of(context)!
+                                      .qrCodeDisplayError,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.red[600],
@@ -516,7 +521,7 @@ class BillHelper {
                         )
                       : Center(
                           child: Text(
-                            qrCode ?? 'Chưa có mã QR Code',
+                            qrCode ?? AppLocalizations.of(context)!.noQrCode,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[600],
@@ -528,7 +533,7 @@ class BillHelper {
               ),
               const SizedBox(height: AppTheme.spacingS),
               Text(
-                'Quét mã QR để thanh toán',
+                AppLocalizations.of(context)!.scanQrToPay,
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey[600],
@@ -553,7 +558,7 @@ class BillHelper {
           child: Column(
             children: [
               Text(
-                SalonConfig.billFooter,
+                AppLocalizations.of(context)!.billFooter,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -563,7 +568,7 @@ class BillHelper {
               ),
               const SizedBox(height: AppTheme.spacingS),
               Text(
-                SalonConfig.billFooter2,
+                AppLocalizations.of(context)!.billFooter2,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -578,7 +583,8 @@ class BillHelper {
     );
   }
 
-  static Widget _buildInfoRow(String label, String value) {
+  static Widget _buildInfoRow(
+      BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -689,10 +695,10 @@ class BillHelper {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
   }
 
-  static String _formatBillId(String orderId) {
+  static String _formatBillId(BuildContext context, String orderId) {
     // Kiểm tra nếu ID rỗng
     if (orderId.isEmpty) {
-      return "TẠM THỜI";
+      return AppLocalizations.of(context)!.temporary;
     }
 
     // Nếu ID có format GUID, lấy 8 ký tự đầu
@@ -740,7 +746,7 @@ class BillHelper {
     // Lấy services từ biến static
     if (_currentServices == null || _currentServices!.isEmpty) {
       AppWidgets.showFlushbar(
-          context, 'Không tìm thấy thông tin dịch vụ cho đơn hàng này',
+          context, AppLocalizations.of(context)!.serviceNotFoundError,
           type: MessageType.error);
       return;
     }
