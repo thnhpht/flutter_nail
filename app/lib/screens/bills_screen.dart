@@ -176,10 +176,30 @@ class _BillsScreenState extends State<BillsScreen> {
       return;
     }
 
+    // Tạo ServiceWithQuantity từ Order nếu có serviceQuantities
+    List<ServiceWithQuantity>? servicesWithQuantity;
+    if (order.serviceQuantities.isNotEmpty &&
+        order.serviceQuantities.length == order.serviceIds.length) {
+      servicesWithQuantity = [];
+      for (int i = 0; i < order.serviceIds.length; i++) {
+        final serviceId = order.serviceIds[i];
+        final quantity = order.serviceQuantities[i];
+        final service = services.firstWhere(
+          (s) => s.id == serviceId,
+          orElse: () => services.first, // Fallback
+        );
+        servicesWithQuantity.add(ServiceWithQuantity(
+          service: service,
+          quantity: quantity,
+        ));
+      }
+    }
+
     BillHelper.showBillDialog(
       context: context,
       order: order,
-      services: services,
+      services: servicesWithQuantity == null ? services : null,
+      servicesWithQuantity: servicesWithQuantity,
       api: widget.api, // Thêm parameter này
       salonName: _information?.salonName,
       salonAddress: _information?.address,

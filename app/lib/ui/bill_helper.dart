@@ -10,12 +10,14 @@ import '../generated/l10n/app_localizations.dart';
 
 class BillHelper {
   static List<Service>? _currentServices;
+  static List<ServiceWithQuantity>? _currentServicesWithQuantity;
   static ApiClient? _apiClient;
 
   static Future<void> showBillDialog({
     required BuildContext context,
     required Order order,
-    required List<Service> services,
+    List<Service>? services,
+    List<ServiceWithQuantity>? servicesWithQuantity,
     required ApiClient api,
     String? salonName,
     String? salonAddress,
@@ -24,6 +26,7 @@ class BillHelper {
   }) async {
     // Lưu trữ services và api client hiện tại
     _currentServices = services;
+    _currentServicesWithQuantity = servicesWithQuantity;
     _apiClient = api;
 
     // Lấy thông tin salon từ database
@@ -103,6 +106,7 @@ class BillHelper {
                       context: context,
                       order: order,
                       services: services,
+                      servicesWithQuantity: servicesWithQuantity,
                       salonName: name,
                       salonAddress: address,
                       salonPhone: phone,
@@ -145,7 +149,8 @@ class BillHelper {
   static Widget _buildBillContent({
     required BuildContext context,
     required Order order,
-    required List<Service> services,
+    List<Service>? services,
+    List<ServiceWithQuantity>? servicesWithQuantity,
     required String salonName,
     required String salonAddress,
     required String salonPhone,
@@ -315,27 +320,111 @@ class BillHelper {
                     topRight: Radius.circular(AppTheme.radiusMedium),
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.spa,
-                      color: AppTheme.primaryStart,
-                      size: 20,
-                    ),
-                    const SizedBox(width: AppTheme.spacingS),
-                    Text(
-                      AppLocalizations.of(context)!.serviceDetails,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                child: servicesWithQuantity != null
+                    ? Column(
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.spa,
+                                color: AppTheme.primaryStart,
+                                size: 20,
+                              ),
+                              const SizedBox(width: AppTheme.spacingS),
+                              Text(
+                                AppLocalizations.of(context)!.serviceDetails,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppTheme.spacingS),
+                          // Column headers for quantity
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  AppLocalizations.of(context)!.serviceName,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  AppLocalizations.of(context)!.quantity,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  AppLocalizations.of(context)!.unitPrice,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  AppLocalizations.of(context)!.totalAmount,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Icon(
+                            Icons.spa,
+                            color: AppTheme.primaryStart,
+                            size: 20,
+                          ),
+                          const SizedBox(width: AppTheme.spacingS),
+                          Text(
+                            AppLocalizations.of(context)!.serviceDetails,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
 
               // Services List
-              ...services.map((service) => _buildServiceItem(service)).toList(),
+              if (servicesWithQuantity != null &&
+                  servicesWithQuantity.isNotEmpty)
+                ...servicesWithQuantity
+                    .map((serviceWithQuantity) =>
+                        _buildServiceWithQuantityItem(serviceWithQuantity))
+                    .toList()
+              else if (services != null && services.isNotEmpty)
+                ...services
+                    .map((service) => _buildServiceItem(service))
+                    .toList(),
             ],
           ),
         ),
@@ -644,6 +733,64 @@ class BillHelper {
     );
   }
 
+  static Widget _buildServiceWithQuantityItem(
+      ServiceWithQuantity serviceWithQuantity) {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingM),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey[200]!),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+              serviceWithQuantity.service.name,
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              '${serviceWithQuantity.quantity}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              _formatPrice(serviceWithQuantity.service.price),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              _formatPrice(serviceWithQuantity.totalPrice),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   static Widget _buildActionButton({
     required VoidCallback onPressed,
     required String label,
@@ -744,7 +891,9 @@ class BillHelper {
 
   static Future<void> _printBill(BuildContext context, Order order) async {
     // Lấy services từ biến static
-    if (_currentServices == null || _currentServices!.isEmpty) {
+    if ((_currentServices == null || _currentServices!.isEmpty) &&
+        (_currentServicesWithQuantity == null ||
+            _currentServicesWithQuantity!.isEmpty)) {
       AppWidgets.showFlushbar(
           context, AppLocalizations.of(context)!.serviceNotFoundError,
           type: MessageType.error);
@@ -765,10 +914,24 @@ class BillHelper {
     final salonAddress = salonInfo?.address;
     final salonPhone = salonInfo?.phone;
 
+    // Convert servicesWithQuantity to services for PDF generation
+    List<Service> servicesForPdf = [];
+    if (_currentServicesWithQuantity != null &&
+        _currentServicesWithQuantity!.isNotEmpty) {
+      // For services with quantity, we need to create multiple entries
+      for (final serviceWithQuantity in _currentServicesWithQuantity!) {
+        for (int i = 0; i < serviceWithQuantity.quantity; i++) {
+          servicesForPdf.add(serviceWithQuantity.service);
+        }
+      }
+    } else if (_currentServices != null && _currentServices!.isNotEmpty) {
+      servicesForPdf = _currentServices!;
+    }
+
     PdfBillGenerator.generateAndSendToZalo(
       context: context,
       order: order,
-      services: _currentServices!,
+      services: servicesForPdf,
       api: _apiClient!,
       salonName: salonName,
       salonAddress: salonAddress,

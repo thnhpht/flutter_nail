@@ -192,6 +192,28 @@ class Service {
       };
 }
 
+class ServiceWithQuantity {
+  final Service service;
+  int quantity;
+
+  ServiceWithQuantity({
+    required this.service,
+    this.quantity = 1,
+  });
+
+  double get totalPrice => service.price * quantity;
+
+  ServiceWithQuantity copyWith({
+    Service? service,
+    int? quantity,
+  }) {
+    return ServiceWithQuantity(
+      service: service ?? this.service,
+      quantity: quantity ?? this.quantity,
+    );
+  }
+}
+
 class Category {
   final String id;
   final String name;
@@ -229,6 +251,7 @@ class Order {
   final List<String> employeeNames;
   final List<String> serviceIds;
   final List<String> serviceNames;
+  final List<int> serviceQuantities; // Thêm field để lưu số lượng
   final double totalPrice;
   final double discountPercent;
   final double tip;
@@ -244,6 +267,7 @@ class Order {
     required this.employeeNames,
     required this.serviceIds,
     required this.serviceNames,
+    this.serviceQuantities = const [], // Mặc định là empty list
     required this.totalPrice,
     this.discountPercent = 0.0,
     this.tip = 0.0,
@@ -257,6 +281,7 @@ class Order {
     List<String> employeeNames = [];
     List<String> serviceIds = [];
     List<String> serviceNames = [];
+    List<int> serviceQuantities = [];
 
     // Handle employeeIds - could be JSON string or array
     if (json['employeeIds'] is String) {
@@ -306,6 +331,19 @@ class Order {
       serviceNames = (json['serviceNames'] as List<dynamic>).cast<String>();
     }
 
+    // Handle serviceQuantities - could be JSON string or array
+    if (json['serviceQuantities'] is String) {
+      try {
+        final decoded = jsonDecode(json['serviceQuantities'] as String);
+        serviceQuantities = (decoded as List<dynamic>).cast<int>();
+      } catch (e) {
+        serviceQuantities = [];
+      }
+    } else if (json['serviceQuantities'] is List) {
+      serviceQuantities =
+          (json['serviceQuantities'] as List<dynamic>).cast<int>();
+    }
+
     return Order(
       id: json['id'] as String,
       customerPhone: json['customerPhone'] as String,
@@ -314,6 +352,7 @@ class Order {
       employeeNames: employeeNames,
       serviceIds: serviceIds,
       serviceNames: serviceNames,
+      serviceQuantities: serviceQuantities,
       totalPrice: (json['totalPrice'] as num).toDouble(),
       discountPercent: (json['discountPercent'] as num?)?.toDouble() ?? 0.0,
       tip: (json['tip'] as num?)?.toDouble() ?? 0.0,
@@ -331,6 +370,8 @@ class Order {
         'employeeNames': employeeNames,
         'serviceIds': serviceIds,
         'serviceNames': serviceNames,
+        'serviceQuantities':
+            jsonEncode(serviceQuantities), // Serialize List<int> to JSON string
         'totalPrice': totalPrice,
         'discountPercent': discountPercent,
         'tip': tip,

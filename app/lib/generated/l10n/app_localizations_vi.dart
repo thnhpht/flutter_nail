@@ -154,6 +154,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get quantity => 'Số lượng';
 
   @override
+  String get unitPrice => 'Đơn giá';
+
+  @override
   String get language => 'Ngôn ngữ';
 
   @override

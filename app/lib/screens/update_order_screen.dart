@@ -35,7 +35,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
   List<Category> _categories = [];
   List<Service> _services = [];
-  List<Service> _selectedServices = [];
+  List<ServiceWithQuantity> _selectedServices = [];
   List<Category> _selectedCategories = [];
   List<Employee> _employees = [];
   List<Employee> _selectedEmployees = [];
@@ -109,8 +109,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         try {
           final currentEmployee = _employees.firstWhere(
             (employee) => employee.id == _currentEmployeeId,
-            orElse: () =>
-                _employees.first, // Fallback to first employee if not found
           );
           _selectedEmployees = [currentEmployee];
         } catch (e) {
@@ -128,14 +126,30 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
           .toList();
     }
 
-    // Initialize selected services and categories
-    _selectedServices = _services
-        .where((service) => widget.order.serviceIds.contains(service.id))
-        .toList();
+    // Initialize selected services and categories with quantities
+    _selectedServices = [];
+    for (int i = 0; i < widget.order.serviceIds.length; i++) {
+      final serviceId = widget.order.serviceIds[i];
+      final quantity = i < widget.order.serviceQuantities.length
+          ? widget.order.serviceQuantities[i]
+          : 1; // Default to 1 if quantity not available
+
+      // Tìm service với try-catch để tránh lỗi "no element"
+      try {
+        final service = _services.firstWhere((s) => s.id == serviceId);
+        _selectedServices.add(ServiceWithQuantity(
+          service: service,
+          quantity: quantity,
+        ));
+      } catch (e) {
+        // Nếu không tìm thấy service, bỏ qua
+        print('Service not found: $serviceId');
+      }
+    }
 
     _selectedCategories = _categories
-        .where((category) => _selectedServices
-            .any((service) => service.categoryId == category.id))
+        .where((category) => _selectedServices.any((serviceWithQuantity) =>
+            serviceWithQuantity.service.categoryId == category.id))
         .toList();
 
     _calculateTotal();
@@ -162,7 +176,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final categories = await widget.api.getCategories();
       setState(() {
         _categories = categories;
-        _initializeFormData(); // Re-initialize after loading data
+        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
+        if (_services.isNotEmpty && _employees.isNotEmpty) {
+          _initializeFormData();
+        }
       });
     } catch (e) {
       AppWidgets.showFlushbar(context,
@@ -176,7 +193,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final services = await widget.api.getServices();
       setState(() {
         _services = services;
-        _initializeFormData(); // Re-initialize after loading data
+        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
+        if (_categories.isNotEmpty && _employees.isNotEmpty) {
+          _initializeFormData();
+        }
       });
     } catch (e) {
       AppWidgets.showFlushbar(context,
@@ -190,7 +210,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final employees = await widget.api.getEmployees();
       setState(() {
         _employees = employees;
-        _initializeFormData(); // Re-initialize after loading data
+        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
+        if (_categories.isNotEmpty && _services.isNotEmpty) {
+          _initializeFormData();
+        }
         _ensureEmployeeSelected(); // Ensure current employee is selected
       });
     } catch (e) {
@@ -209,7 +232,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       try {
         final currentEmployee = _employees.firstWhere(
           (employee) => employee.id == _currentEmployeeId,
-          orElse: () => _employees.first,
         );
         _selectedEmployees = [currentEmployee];
       } catch (e) {
@@ -422,8 +444,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       if (_selectedCategories.contains(category)) {
         _selectedCategories.remove(category);
         // Remove all services from this category
-        _selectedServices
-            .removeWhere((service) => service.categoryId == category.id);
+        _selectedServices.removeWhere((serviceWithQuantity) =>
+            serviceWithQuantity.service.categoryId == category.id);
       } else {
         _selectedCategories.add(category);
       }
@@ -433,10 +455,15 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
   void _onServiceToggled(Service service) {
     setState(() {
-      if (_selectedServices.contains(service)) {
-        _selectedServices.remove(service);
+      final existingIndex = _selectedServices.indexWhere(
+        (swq) => swq.service.id == service.id,
+      );
+
+      if (existingIndex != -1) {
+        _selectedServices.removeAt(existingIndex);
       } else {
-        _selectedServices.add(service);
+        _selectedServices
+            .add(ServiceWithQuantity(service: service, quantity: 1));
         // Add category if not already selected
         try {
           final category =
@@ -456,22 +483,50 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     setState(() {
       _selectedCategories.remove(category);
       // Remove all services from this category
-      _selectedServices
-          .removeWhere((service) => service.categoryId == category.id);
+      _selectedServices.removeWhere((serviceWithQuantity) =>
+          serviceWithQuantity.service.categoryId == category.id);
       _calculateTotal();
     });
   }
 
-  void _removeSelectedService(Service service) {
+  void _removeSelectedService(ServiceWithQuantity serviceWithQuantity) {
     setState(() {
-      _selectedServices.remove(service);
+      _selectedServices.remove(serviceWithQuantity);
       _calculateTotal();
+    });
+  }
+
+  void _increaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
+    setState(() {
+      final index = _selectedServices.indexOf(serviceWithQuantity);
+      if (index != -1) {
+        _selectedServices[index] = serviceWithQuantity.copyWith(
+          quantity: serviceWithQuantity.quantity + 1,
+        );
+        _calculateTotal();
+      }
+    });
+  }
+
+  void _decreaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
+    setState(() {
+      final index = _selectedServices.indexOf(serviceWithQuantity);
+      if (index != -1) {
+        if (serviceWithQuantity.quantity > 1) {
+          _selectedServices[index] = serviceWithQuantity.copyWith(
+            quantity: serviceWithQuantity.quantity - 1,
+          );
+        } else {
+          _selectedServices.removeAt(index);
+        }
+        _calculateTotal();
+      }
     });
   }
 
   void _calculateTotal() {
-    _totalPrice =
-        _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+    _totalPrice = _selectedServices.fold(0.0,
+        (sum, serviceWithQuantity) => sum + serviceWithQuantity.totalPrice);
     final subtotalAfterDiscount = _totalPrice * (1 - _discountPercent / 100);
     final taxAmount = subtotalAfterDiscount * (_taxPercent / 100);
     _finalTotalPrice = subtotalAfterDiscount + _tip + taxAmount;
@@ -585,8 +640,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         customerName: customerName,
         employeeIds: _selectedEmployees.map((e) => e.id).toList(),
         employeeNames: _selectedEmployees.map((e) => e.name).toList(),
-        serviceIds: _selectedServices.map((s) => s.id).toList(),
-        serviceNames: _selectedServices.map((s) => s.name).toList(),
+        serviceIds: _selectedServices.map((swq) => swq.service.id).toList(),
+        serviceNames: _selectedServices.map((swq) => swq.service.name).toList(),
+        serviceQuantities:
+            _selectedServices.map((swq) => swq.quantity).toList(),
         totalPrice: _finalTotalPrice,
         discountPercent: _discountPercent,
         tip: _tip,
@@ -963,13 +1020,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children: _selectedServices.map((service) {
-                                return _buildChip(
-                                  label: service.name,
-                                  onDeleted: () =>
-                                      _removeSelectedService(service),
-                                  color: const Color(0xFF764ba2),
-                                );
+                              children:
+                                  _selectedServices.map((serviceWithQuantity) {
+                                return _buildServiceChipWithQuantity(
+                                    serviceWithQuantity);
                               }).toList(),
                             ),
                             const SizedBox(height: 16),
@@ -1037,7 +1091,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                                       // Services in this category
                                       ...categoryServices.map((service) {
                                         final isSelected =
-                                            _selectedServices.contains(service);
+                                            _selectedServices.any((swq) =>
+                                                swq.service.id == service.id);
                                         return _buildDropdownItem(
                                           title: service.name,
                                           subtitle:
@@ -1622,6 +1677,101 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       onDeleted: onDeleted,
       backgroundColor: color,
       side: BorderSide.none,
+    );
+  }
+
+  Widget _buildServiceChipWithQuantity(
+      ServiceWithQuantity serviceWithQuantity) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF764ba2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            serviceWithQuantity.service.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => _decreaseServiceQuantity(serviceWithQuantity),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.remove,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${serviceWithQuantity.quantity}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => _increaseServiceQuantity(serviceWithQuantity),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => _removeSelectedService(serviceWithQuantity),
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

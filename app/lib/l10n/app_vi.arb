@@ -188,6 +188,10 @@
   "@quantity": {
     "description": "Quantity"
   },
+  "unitPrice": "Đơn giá",
+  "@unitPrice": {
+    "description": "Unit price"
+  },
   "language": "Ngôn ngữ",
   "@language": {
     "description": "Language"

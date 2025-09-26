@@ -153,6 +153,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get quantity => '수량';
 
   @override
+  String get unitPrice => '단가';
+
+  @override
   String get language => '언어';
 
   @override

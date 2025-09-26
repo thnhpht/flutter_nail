@@ -153,6 +153,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get quantity => '数量';
 
   @override
+  String get unitPrice => '单价';
+
+  @override
   String get language => '语言';
 
   @override

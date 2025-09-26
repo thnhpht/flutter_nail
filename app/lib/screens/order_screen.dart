@@ -33,7 +33,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   List<Category> _categories = [];
   List<Service> _services = [];
-  List<Service> _selectedServices = [];
+  List<ServiceWithQuantity> _selectedServices = [];
   List<Category> _selectedCategories = [];
   List<Employee> _employees = [];
   List<Employee> _selectedEmployees = [];
@@ -361,8 +361,8 @@ class _OrderScreenState extends State<OrderScreen> {
       if (_selectedCategories.contains(category)) {
         _selectedCategories.remove(category);
         // Remove all services from this category
-        _selectedServices
-            .removeWhere((service) => service.categoryId == category.id);
+        _selectedServices.removeWhere((serviceWithQuantity) =>
+            serviceWithQuantity.service.categoryId == category.id);
       } else {
         _selectedCategories.add(category);
       }
@@ -372,10 +372,15 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _onServiceToggled(Service service) {
     setState(() {
-      if (_selectedServices.contains(service)) {
-        _selectedServices.remove(service);
+      final existingServiceIndex = _selectedServices.indexWhere(
+          (serviceWithQuantity) =>
+              serviceWithQuantity.service.id == service.id);
+
+      if (existingServiceIndex != -1) {
+        _selectedServices.removeAt(existingServiceIndex);
       } else {
-        _selectedServices.add(service);
+        _selectedServices
+            .add(ServiceWithQuantity(service: service, quantity: 1));
         // Add category if not already selected
         final category =
             _categories.firstWhere((c) => c.id == service.categoryId);
@@ -391,22 +396,38 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {
       _selectedCategories.remove(category);
       // Remove all services from this category
-      _selectedServices
-          .removeWhere((service) => service.categoryId == category.id);
+      _selectedServices.removeWhere((serviceWithQuantity) =>
+          serviceWithQuantity.service.categoryId == category.id);
       _calculateTotal();
     });
   }
 
-  void _removeSelectedService(Service service) {
+  void _removeSelectedService(ServiceWithQuantity serviceWithQuantity) {
     setState(() {
-      _selectedServices.remove(service);
+      _selectedServices.remove(serviceWithQuantity);
       _calculateTotal();
+    });
+  }
+
+  void _increaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
+    setState(() {
+      serviceWithQuantity.quantity++;
+      _calculateTotal();
+    });
+  }
+
+  void _decreaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
+    setState(() {
+      if (serviceWithQuantity.quantity > 1) {
+        serviceWithQuantity.quantity--;
+        _calculateTotal();
+      }
     });
   }
 
   void _calculateTotal() {
-    _totalPrice =
-        _selectedServices.fold(0.0, (sum, service) => sum + service.price);
+    _totalPrice = _selectedServices.fold(0.0,
+        (sum, serviceWithQuantity) => sum + serviceWithQuantity.totalPrice);
     final subtotalAfterDiscount = _totalPrice * (1 - _discountPercent / 100);
     final taxAmount = subtotalAfterDiscount * (_taxPercent / 100);
     _finalTotalPrice = subtotalAfterDiscount + _tip + taxAmount;
@@ -505,8 +526,9 @@ class _OrderScreenState extends State<OrderScreen> {
           customerName: customerName,
           employeeIds: _selectedEmployees.map((e) => e.id).toList(),
           employeeNames: _selectedEmployees.map((e) => e.name).toList(),
-          serviceIds: _selectedServices.map((s) => s.id).toList(),
-          serviceNames: _selectedServices.map((s) => s.name).toList(),
+          serviceIds: _selectedServices.map((s) => s.service.id).toList(),
+          serviceNames: _selectedServices.map((s) => s.service.name).toList(),
+          serviceQuantities: _selectedServices.map((s) => s.quantity).toList(),
           totalPrice: _finalTotalPrice,
           discountPercent: _discountPercent,
           tip: _tip,
@@ -548,7 +570,8 @@ class _OrderScreenState extends State<OrderScreen> {
       }
 
       // Create a backup of selected services before showing bills
-      final selectedServicesBackup = List<Service>.from(_selectedServices);
+      final selectedServicesBackup =
+          List<ServiceWithQuantity>.from(_selectedServices);
 
       // Show bill for each created order using the real order data
       for (final createdOrder in createdOrders) {
@@ -556,13 +579,14 @@ class _OrderScreenState extends State<OrderScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // Create services list from the backup data
           final servicesForBill = selectedServicesBackup
-              .where((service) => createdOrder.serviceIds.contains(service.id))
+              .where((serviceWithQuantity) => createdOrder.serviceIds
+                  .contains(serviceWithQuantity.service.id))
               .toList();
 
           BillHelper.showBillDialog(
             context: context,
             order: createdOrder,
-            services: servicesForBill,
+            servicesWithQuantity: servicesForBill,
             api: widget.api,
             salonName: _information?.salonName,
             salonAddress: _information?.address,
@@ -931,12 +955,16 @@ class _OrderScreenState extends State<OrderScreen> {
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children: _selectedServices.map((service) {
-                                return _buildChip(
-                                  label: service.name,
-                                  onDeleted: () =>
-                                      _removeSelectedService(service),
-                                  color: const Color(0xFF764ba2),
+                              children:
+                                  _selectedServices.map((serviceWithQuantity) {
+                                return _buildServiceChipWithQuantity(
+                                  serviceWithQuantity: serviceWithQuantity,
+                                  onDeleted: () => _removeSelectedService(
+                                      serviceWithQuantity),
+                                  onIncrease: () => _increaseServiceQuantity(
+                                      serviceWithQuantity),
+                                  onDecrease: () => _decreaseServiceQuantity(
+                                      serviceWithQuantity),
                                 );
                               }).toList(),
                             ),
@@ -1005,8 +1033,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                       ),
                                       // Services in this category
                                       ...categoryServices.map((service) {
-                                        final isSelected =
-                                            _selectedServices.contains(service);
+                                        final isSelected = _selectedServices
+                                            .any((serviceWithQuantity) =>
+                                                serviceWithQuantity
+                                                    .service.id ==
+                                                service.id);
                                         return _buildDropdownServiceItem(
                                           title: service.name,
                                           subtitle: l10n.subtotalAmount(
@@ -1523,6 +1554,130 @@ class _OrderScreenState extends State<OrderScreen> {
       onDeleted: onDeleted,
       backgroundColor: color,
       side: BorderSide.none,
+    );
+  }
+
+  Widget _buildServiceChipWithQuantity({
+    required ServiceWithQuantity serviceWithQuantity,
+    required VoidCallback onDeleted,
+    required VoidCallback onIncrease,
+    required VoidCallback onDecrease,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF764ba2), Color(0xFF667eea)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF764ba2).withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Service name
+          Flexible(
+            child: Text(
+              serviceWithQuantity.service.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Quantity controls
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Decrease button
+                GestureDetector(
+                  onTap: onDecrease,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: serviceWithQuantity.quantity > 1
+                          ? Colors.white.withValues(alpha: 0.3)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.remove,
+                      color: serviceWithQuantity.quantity > 1
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.5),
+                      size: 16,
+                    ),
+                  ),
+                ),
+                // Quantity display
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    '${serviceWithQuantity.quantity}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                // Increase button
+                GestureDetector(
+                  onTap: onIncrease,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Delete button
+          GestureDetector(
+            onTap: onDeleted,
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

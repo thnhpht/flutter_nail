@@ -154,6 +154,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quantity => 'Quantity';
 
   @override
+  String get unitPrice => 'Unit Price';
+
+  @override
   String get language => 'Language';
 
   @override

@@ -119,13 +119,36 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           final order = await _apiClient!.getOrderById(orderId);
           if (order != null) {
             // Get all services for the bill
-            final services = await _apiClient!.getServices();
+            final allServices = await _apiClient!.getServices();
+            final services = allServices
+                .where((service) => order.serviceIds.contains(service.id))
+                .toList();
+
+            // Tạo ServiceWithQuantity từ Order nếu có serviceQuantities
+            List<models.ServiceWithQuantity>? servicesWithQuantity;
+            if (order.serviceQuantities.isNotEmpty &&
+                order.serviceQuantities.length == order.serviceIds.length) {
+              servicesWithQuantity = [];
+              for (int i = 0; i < order.serviceIds.length; i++) {
+                final serviceId = order.serviceIds[i];
+                final quantity = order.serviceQuantities[i];
+                final service = services.firstWhere(
+                  (s) => s.id == serviceId,
+                  orElse: () => services.first, // Fallback
+                );
+                servicesWithQuantity.add(models.ServiceWithQuantity(
+                  service: service,
+                  quantity: quantity,
+                ));
+              }
+            }
 
             // Show bill helper
             await BillHelper.showBillDialog(
               context: context,
               order: order,
-              services: services,
+              services: servicesWithQuantity == null ? services : null,
+              servicesWithQuantity: servicesWithQuantity,
               api: _apiClient!,
             );
           } else {

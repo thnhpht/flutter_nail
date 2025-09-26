@@ -457,6 +457,7 @@ namespace NailApi.Controllers
                             [EmployeeNames] nvarchar(max) NOT NULL,
                             [ServiceIds] nvarchar(max) NOT NULL,
                             [ServiceNames] nvarchar(max) NOT NULL,
+                            [ServiceQuantities] nvarchar(max) NOT NULL DEFAULT '[]',
                             [TotalPrice] decimal(18,2) NOT NULL,
                             [DiscountPercent] decimal(18,2) NOT NULL,
                             [Tip] decimal(18,2) NOT NULL DEFAULT 0.0,

@@ -390,6 +390,12 @@ abstract class AppLocalizations {
   /// **'Số lượng'**
   String get quantity;
 
+  /// Unit price
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn giá'**
+  String get unitPrice;
+
   /// Language
   ///
   /// In vi, this message translates to:
