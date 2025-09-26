@@ -273,13 +273,6 @@ class _BillsScreenState extends State<BillsScreen> {
     return orderId.toUpperCase();
   }
 
-  double _getOriginalTotal(Order order) {
-    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
-    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
-    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
-    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
-  }
-
   String _formatPhoneNumber(String phoneNumber) {
     // Loại bỏ tất cả ký tự không phải số
     String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
@@ -1227,52 +1220,24 @@ class _BillsScreenState extends State<BillsScreen> {
                     gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   ),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (order.discountPercent > 0) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${l10n.discount} ${order.discountPercent.toStringAsFixed(0)}%:',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)} ${SalonConfig.currency}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        l10n.totalAmount,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
-                        const SizedBox(height: 4),
-                      ],
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            l10n.totalAmount,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            '${_formatPrice(order.totalPrice)} ${SalonConfig.currency}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                      ),
+                      Text(
+                        '${_formatPrice(order.totalPrice)} ${SalonConfig.currency}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),

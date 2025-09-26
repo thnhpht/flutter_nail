@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 class ApiConfig {
   // Base URL cho tất cả platform
   static const String _ApiServer = 'https://nailapi.logisticssoftware.vn/api';
-  static const String _ApiLocal = 'http://localhost:5088/api';
+  // static const String _ApiLocal = 'http://localhost:5088/api';
 
   // Swagger URLs
   static const String _SwaggerServer =
@@ -19,8 +19,8 @@ class ApiConfig {
     }
 
     // Trả về URL cố định
-    // return _ApiServer;
-    return _ApiLocal;
+    return _ApiServer;
+    // return _ApiLocal;
   }
 
   static String get swaggerUrl {

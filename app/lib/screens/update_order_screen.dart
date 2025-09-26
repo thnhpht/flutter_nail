@@ -13,11 +13,13 @@ class UpdateOrderScreen extends StatefulWidget {
     required this.api,
     required this.order,
     this.onOrderUpdated,
+    this.onCancel,
   });
 
   final ApiClient api;
   final Order order;
   final VoidCallback? onOrderUpdated;
+  final VoidCallback? onCancel;
 
   @override
   State<UpdateOrderScreen> createState() => _UpdateOrderScreenState();
@@ -1562,7 +1564,13 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                           child: _buildSecondaryButton(
                             onPressed: _isLoading
                                 ? null
-                                : () => Navigator.pop(context),
+                                : () {
+                                    if (widget.onCancel != null) {
+                                      widget.onCancel!();
+                                    } else {
+                                      Navigator.pop(context);
+                                    }
+                                  },
                             label: l10n.cancel,
                             icon: Icons.close,
                           ),

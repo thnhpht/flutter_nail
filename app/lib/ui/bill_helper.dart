@@ -496,7 +496,7 @@ class BillHelper {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.tip,
+                      AppLocalizations.of(context)!.tip + ":",
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -505,6 +505,32 @@ class BillHelper {
                     ),
                     Text(
                       '+${_formatPrice(order.tip)}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+
+              // Tax (if any)
+              if (order.taxPercent > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.tax + ":",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '+${_formatPrice(_getTaxAmount(order))}',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -863,10 +889,20 @@ class BillHelper {
   }
 
   static double _getOriginalTotal(Order order) {
-    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
-    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
-    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
-    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá, tip và thuế
+    // totalPrice = (originalTotal * (1 - discountPercent/100) + tip) * (1 + taxPercent/100)
+    // originalTotal = ((totalPrice / (1 + taxPercent/100)) - tip) / (1 - discountPercent/100)
+    final subtotalAfterDiscount =
+        (order.totalPrice / (1 + order.taxPercent / 100)) - order.tip;
+    return subtotalAfterDiscount / (1 - order.discountPercent / 100);
+  }
+
+  static double _getTaxAmount(Order order) {
+    // Tính số tiền thuế
+    // taxAmount = (originalTotal * (1 - discountPercent/100) + tip) * taxPercent/100
+    final subtotalAfterDiscount =
+        _getOriginalTotal(order) * (1 - order.discountPercent / 100);
+    return (subtotalAfterDiscount + order.tip) * order.taxPercent / 100;
   }
 
   static String _formatPhoneNumber(String phoneNumber) {

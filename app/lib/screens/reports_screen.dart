@@ -1096,53 +1096,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   ),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (order.discountPercent > 0) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              l10n.discountPercent(
-                                  order.discountPercent.toStringAsFixed(0)),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)} ₫',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        l10n.totalAmount,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
-                        const SizedBox(height: 4),
-                      ],
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            l10n.totalAmount,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            '${_formatPrice(order.totalPrice)} ₫',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                      ),
+                      Text(
+                        '${_formatPrice(order.totalPrice)} ₫',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -1248,13 +1219,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     // Trường hợp khác, trả về ID gốc
     return orderId.toUpperCase();
-  }
-
-  double _getOriginalTotal(Order order) {
-    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
-    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
-    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
-    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
   }
 
   String _formatPhoneNumber(String phoneNumber) {

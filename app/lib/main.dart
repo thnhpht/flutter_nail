@@ -735,6 +735,12 @@ class _NailAppState extends State<NailApp> {
                   _orderToUpdate = null; // Reset order after update
                 });
               },
+              onCancel: () {
+                setState(() {
+                  _view = _HomeView.bills;
+                  _orderToUpdate = null; // Reset order when cancel
+                });
+              },
             );
           }
           return BillsScreen(
@@ -775,6 +781,12 @@ class _NailAppState extends State<NailApp> {
                 setState(() {
                   _view = _HomeView.bills;
                   _orderToUpdate = null; // Reset order after update
+                });
+              },
+              onCancel: () {
+                setState(() {
+                  _view = _HomeView.bills;
+                  _orderToUpdate = null; // Reset order when cancel
                 });
               },
             );

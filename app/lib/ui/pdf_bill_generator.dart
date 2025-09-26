@@ -876,6 +876,30 @@ class PdfBillGenerator {
                   ),
                 ],
 
+                // Tax (if any)
+                if (order.taxPercent > 0) ...[
+                  pw.SizedBox(height: 8),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text(
+                        AppLocalizations.of(context)!.tax,
+                        style: _getVietnameseTextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                        ),
+                      ),
+                      pw.Text(
+                        '+${_formatPrice(_getTaxAmount(order))}',
+                        style: _getVietnameseTextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+
                 pw.SizedBox(height: 8),
                 pw.Divider(color: PdfColors.grey400),
                 pw.SizedBox(height: 8),
@@ -1257,10 +1281,20 @@ class PdfBillGenerator {
   }
 
   static double _getOriginalTotal(Order order) {
-    // Tính thành tiền gốc từ tổng thanh toán, giảm giá và tip
-    // totalPrice = originalTotal * (1 - discountPercent/100) + tip
-    // originalTotal = (totalPrice - tip) / (1 - discountPercent/100)
-    return (order.totalPrice - order.tip) / (1 - order.discountPercent / 100);
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá, tip và thuế
+    // totalPrice = (originalTotal * (1 - discountPercent/100) + tip) * (1 + taxPercent/100)
+    // originalTotal = ((totalPrice / (1 + taxPercent/100)) - tip) / (1 - discountPercent/100)
+    final subtotalAfterDiscount =
+        (order.totalPrice / (1 + order.taxPercent / 100)) - order.tip;
+    return subtotalAfterDiscount / (1 - order.discountPercent / 100);
+  }
+
+  static double _getTaxAmount(Order order) {
+    // Tính số tiền thuế
+    // taxAmount = (originalTotal * (1 - discountPercent/100) + tip) * taxPercent/100
+    final subtotalAfterDiscount =
+        _getOriginalTotal(order) * (1 - order.discountPercent / 100);
+    return (subtotalAfterDiscount + order.tip) * order.taxPercent / 100;
   }
 
   static String _formatPhoneNumber(String phoneNumber) {
