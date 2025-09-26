@@ -1956,6 +1956,36 @@ abstract class AppLocalizations {
   /// **'Tip: {amount} VNĐ'**
   String tipAmount(String amount);
 
+  /// Tax section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Thuế'**
+  String get tax;
+
+  /// Validation message for tax percentage
+  ///
+  /// In vi, this message translates to:
+  /// **'Thuế phải từ 0-100%'**
+  String get taxMustBe0To100;
+
+  /// Tax amount display
+  ///
+  /// In vi, this message translates to:
+  /// **'Thuế: {amount} VNĐ'**
+  String taxAmount(String amount);
+
+  /// Tax label
+  ///
+  /// In vi, this message translates to:
+  /// **'Thuế:'**
+  String get taxLabel;
+
+  /// Positive tax amount display
+  ///
+  /// In vi, this message translates to:
+  /// **'+{amount} VNĐ'**
+  String taxAmountPositive(String amount);
+
   /// Subtotal label
   ///
   /// In vi, this message translates to:

@@ -31,6 +31,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   final _employeeNameController = TextEditingController();
   final _discountController = TextEditingController();
   final _tipController = TextEditingController();
+  final _taxController = TextEditingController();
 
   List<Category> _categories = [];
   List<Service> _services = [];
@@ -41,6 +42,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   double _totalPrice = 0.0;
   double _discountPercent = 0.0;
   double _tip = 0.0;
+  double _taxPercent = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
   bool _showCategoryDropdown = false;
@@ -58,6 +60,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
+    _taxController.addListener(_onTaxChanged);
   }
 
   Future<void> _initializeData() async {
@@ -92,10 +95,12 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _customerNameController.text = widget.order.customerName;
     _discountController.text = widget.order.discountPercent.toStringAsFixed(0);
     _tipController.text = widget.order.tip.toStringAsFixed(0);
+    _taxController.text = widget.order.taxPercent.toStringAsFixed(0);
     _isPaid = widget.order.isPaid;
 
     _discountPercent = widget.order.discountPercent;
     _tip = widget.order.tip;
+    _taxPercent = widget.order.taxPercent;
 
     // Initialize selected employees
     if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
@@ -141,12 +146,14 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _customerPhoneController.removeListener(_onCustomerPhoneChanged);
     _employeePhoneController.removeListener(_onEmployeePhoneChanged);
     _tipController.removeListener(_onTipChanged);
+    _taxController.removeListener(_onTaxChanged);
     _customerPhoneController.dispose();
     _customerNameController.dispose();
     _employeePhoneController.dispose();
     _employeeNameController.dispose();
     _discountController.dispose();
     _tipController.dispose();
+    _taxController.dispose();
     super.dispose();
   }
 
@@ -465,7 +472,9 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   void _calculateTotal() {
     _totalPrice =
         _selectedServices.fold(0.0, (sum, service) => sum + service.price);
-    _finalTotalPrice = _totalPrice * (1 - _discountPercent / 100) + _tip;
+    final subtotalAfterDiscount = _totalPrice * (1 - _discountPercent / 100);
+    final taxAmount = subtotalAfterDiscount * (_taxPercent / 100);
+    _finalTotalPrice = subtotalAfterDiscount + _tip + taxAmount;
   }
 
   void _onDiscountChanged(String value) {
@@ -492,6 +501,23 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       } else {
         final tip = double.tryParse(value) ?? 0.0;
         _tip = tip.clamp(0.0, double.infinity);
+      }
+      _calculateTotal();
+    });
+  }
+
+  void _onTaxChanged() {
+    final value = _taxController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _taxPercent = 0.0;
+      } else {
+        final tax = double.tryParse(value) ?? 0.0;
+        _taxPercent = tax.clamp(0.0, 100.0);
+        _taxController.text = _taxPercent.toStringAsFixed(0);
+        _taxController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _taxController.text.length),
+        );
       }
       _calculateTotal();
     });
@@ -564,6 +590,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         totalPrice: _finalTotalPrice,
         discountPercent: _discountPercent,
         tip: _tip,
+        taxPercent: _taxPercent,
         createdAt: widget.order.createdAt, // Keep original creation date
         isPaid: _isPaid,
       );
@@ -1181,6 +1208,82 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
                     const SizedBox(height: 16),
 
+                    // Tax Section
+                    _buildSectionCard(
+                      title: l10n.tax,
+                      icon: Icons.receipt,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _taxController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                hintText: '0',
+                                suffixText: '%',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey[300]!),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF667eea), width: 2),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[50],
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                              ),
+                              onChanged: (value) => _onTaxChanged(),
+                              validator: (value) {
+                                if (value != null && value.isNotEmpty) {
+                                  final tax = double.tryParse(value);
+                                  if (tax == null || tax < 0 || tax > 100) {
+                                    return l10n.taxMustBe0To100;
+                                  }
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              l10n.taxAmount(_formatPrice(
+                                  (_totalPrice * (1 - _discountPercent / 100)) *
+                                      _taxPercent /
+                                      100)),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
                     // Payment Status Section
                     _buildSectionCard(
                       title: l10n.paymentStatus,
@@ -1325,6 +1428,30 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                                 ),
                                 Text(
                                   '+${_formatPrice(_tip)} ${l10n.vnd}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          if (_taxPercent > 0) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l10n.taxLabel,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  '+${_formatPrice((_totalPrice * (1 - _discountPercent / 100)) * _taxPercent / 100)} ${l10n.vnd}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,

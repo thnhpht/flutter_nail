@@ -990,6 +990,25 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get tax => '税';
+
+  @override
+  String get taxMustBe0To100 => '税率必须在 0-100% 之间';
+
+  @override
+  String taxAmount(String amount) {
+    return '税：$amount 元';
+  }
+
+  @override
+  String get taxLabel => '税：';
+
+  @override
+  String taxAmountPositive(String amount) {
+    return '+$amount 元';
+  }
+
+  @override
   String get subtotal => '小计：';
 
   @override

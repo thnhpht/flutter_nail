@@ -1011,6 +1011,25 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tax => 'Tax';
+
+  @override
+  String get taxMustBe0To100 => 'Tax must be between 0-100%';
+
+  @override
+  String taxAmount(String amount) {
+    return 'Tax: $amount VND';
+  }
+
+  @override
+  String get taxLabel => 'Tax:';
+
+  @override
+  String taxAmountPositive(String amount) {
+    return '+$amount VND';
+  }
+
+  @override
   String get subtotal => 'Subtotal:';
 
   @override

@@ -1563,6 +1563,36 @@
       }
     }
   },
+  "tax": "Thuế",
+  "@tax": {
+    "description": "Tax section title"
+  },
+  "taxMustBe0To100": "Thuế phải từ 0-100%",
+  "@taxMustBe0To100": {
+    "description": "Validation message for tax percentage"
+  },
+  "taxAmount": "Thuế: {amount} VNĐ",
+  "@taxAmount": {
+    "description": "Tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxLabel": "Thuế:",
+  "@taxLabel": {
+    "description": "Tax label"
+  },
+  "taxAmountPositive": "+{amount} VNĐ",
+  "@taxAmountPositive": {
+    "description": "Positive tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subtotal": "Thành tiền:",
   "@subtotal": {
     "description": "Subtotal label"
@@ -2295,6 +2325,36 @@
   "tipAmount": "Tip: {amount} VNĐ",
   "@tipAmount": {
     "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tax": "Thuế",
+  "@tax": {
+    "description": "Tax section title"
+  },
+  "taxMustBe0To100": "Thuế phải từ 0-100%",
+  "@taxMustBe0To100": {
+    "description": "Validation message for tax percentage"
+  },
+  "taxAmount": "Thuế: {amount} VNĐ",
+  "@taxAmount": {
+    "description": "Tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxLabel": "Thuế:",
+  "@taxLabel": {
+    "description": "Tax label"
+  },
+  "taxAmountPositive": "+{amount} VNĐ",
+  "@taxAmountPositive": {
+    "description": "Positive tax amount display",
     "placeholders": {
       "amount": {
         "type": "String"

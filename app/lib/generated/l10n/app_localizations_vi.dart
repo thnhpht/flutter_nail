@@ -1010,6 +1010,25 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get tax => 'Thuế';
+
+  @override
+  String get taxMustBe0To100 => 'Thuế phải từ 0-100%';
+
+  @override
+  String taxAmount(String amount) {
+    return 'Thuế: $amount VNĐ';
+  }
+
+  @override
+  String get taxLabel => 'Thuế:';
+
+  @override
+  String taxAmountPositive(String amount) {
+    return '+$amount VNĐ';
+  }
+
+  @override
   String get subtotal => 'Thành tiền:';
 
   @override

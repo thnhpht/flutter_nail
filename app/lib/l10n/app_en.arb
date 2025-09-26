@@ -659,6 +659,36 @@
       }
     }
   },
+  "tax": "Tax",
+  "@tax": {
+    "description": "Tax section title"
+  },
+  "taxMustBe0To100": "Tax must be between 0-100%",
+  "@taxMustBe0To100": {
+    "description": "Validation message for tax percentage"
+  },
+  "taxAmount": "Tax: {amount} VND",
+  "@taxAmount": {
+    "description": "Tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxLabel": "Tax:",
+  "@taxLabel": {
+    "description": "Tax label"
+  },
+  "taxAmountPositive": "+{amount} VND",
+  "@taxAmountPositive": {
+    "description": "Positive tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subtotal": "Subtotal:",
   "@subtotal": {
     "description": "Subtotal label"

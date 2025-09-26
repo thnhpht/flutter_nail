@@ -659,6 +659,36 @@
       }
     }
   },
+  "tax": "税",
+  "@tax": {
+    "description": "Tax section title"
+  },
+  "taxMustBe0To100": "税率必须在 0-100% 之间",
+  "@taxMustBe0To100": {
+    "description": "Validation message for tax percentage"
+  },
+  "taxAmount": "税：{amount} 越南盾",
+  "@taxAmount": {
+    "description": "Tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxLabel": "税：",
+  "@taxLabel": {
+    "description": "Tax label"
+  },
+  "taxAmountPositive": "+{amount} 越南盾",
+  "@taxAmountPositive": {
+    "description": "Positive tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "subtotal": "小计：",
   "@subtotal": {
     "description": "Subtotal label"
@@ -1391,6 +1421,36 @@
   "tipAmount": "小费：{amount} 元",
   "@tipAmount": {
     "description": "Tip amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tax": "税",
+  "@tax": {
+    "description": "Tax section title"
+  },
+  "taxMustBe0To100": "税率必须在 0-100% 之间",
+  "@taxMustBe0To100": {
+    "description": "Validation message for tax percentage"
+  },
+  "taxAmount": "税：{amount} 元",
+  "@taxAmount": {
+    "description": "Tax amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "taxLabel": "税：",
+  "@taxLabel": {
+    "description": "Tax label"
+  },
+  "taxAmountPositive": "+{amount} 元",
+  "@taxAmountPositive": {
+    "description": "Positive tax amount display",
     "placeholders": {
       "amount": {
         "type": "String"

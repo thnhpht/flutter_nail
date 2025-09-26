@@ -991,6 +991,25 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get tax => '세금';
+
+  @override
+  String get taxMustBe0To100 => '세금은 0-100% 사이여야 합니다';
+
+  @override
+  String taxAmount(String amount) {
+    return '세금: $amount원';
+  }
+
+  @override
+  String get taxLabel => '세금:';
+
+  @override
+  String taxAmountPositive(String amount) {
+    return '+$amount원';
+  }
+
+  @override
   String get subtotal => '소계:';
 
   @override

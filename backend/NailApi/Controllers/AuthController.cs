@@ -460,6 +460,7 @@ namespace NailApi.Controllers
                             [TotalPrice] decimal(18,2) NOT NULL,
                             [DiscountPercent] decimal(18,2) NOT NULL,
                             [Tip] decimal(18,2) NOT NULL DEFAULT 0.0,
+                            [TaxPercent] decimal(18,2) NOT NULL DEFAULT 0.0,
                             [CreatedAt] datetime2 NOT NULL,
                             [IsPaid] bit NOT NULL DEFAULT 0,
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
