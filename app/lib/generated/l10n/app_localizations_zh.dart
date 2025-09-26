@@ -1642,4 +1642,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get errorOccurredPleaseTryAgain => '发生错误。请稍后重试。';
+
+  @override
+  String get code => '编号';
+
+  @override
+  String get unit => '单位';
+
+  @override
+  String get serviceCode => '服务编号';
+
+  @override
+  String get unitOfMeasurement => '计量单位';
 }

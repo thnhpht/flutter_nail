@@ -2010,5 +2010,21 @@
   "errorOccurredPleaseTryAgain": "发生错误。请稍后重试。",
   "@errorOccurredPleaseTryAgain": {
     "description": "Error occurred please try again message"
+  },
+  "code": "编号",
+  "@code": {
+    "description": "Customer code field"
+  },
+  "unit": "单位",
+  "@unit": {
+    "description": "单位字段"
+  },
+  "serviceCode": "服务编号",
+  "@serviceCode": {
+    "description": "服务编号字段"
+  },
+  "unitOfMeasurement": "计量单位",
+  "@unitOfMeasurement": {
+    "description": "服务计量单位字段"
   }
 }

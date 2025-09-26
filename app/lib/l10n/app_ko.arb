@@ -234,7 +234,7 @@
   "categoryFilter": "카테고리 필터",
   "selectCategoriesToFilter": "서비스를 필터링할 카테고리 선택",
   "categoriesSelected": "{count}개 카테고리 선택됨",
-  "selectedCategories": "선택된 카테고리:",
+  "selectedCategories": "선택된 카테고리",
   "removeAll": "모두 제거",
   "allCategories": "모든 카테고리 ({count})",
   "createNewService": "새 네일 서비스 만들기",
@@ -677,7 +677,7 @@
       }
     }
   },
-  "taxLabel": "세금:",
+  "taxLabel": "세금",
   "@taxLabel": {
     "description": "Tax label"
   },
@@ -690,7 +690,7 @@
       }
     }
   },
-  "subtotal": "소계:",
+  "subtotal": "소계",
   "@subtotal": {
     "description": "Subtotal label"
   },
@@ -703,7 +703,7 @@
       }
     }
   },
-  "discountPercentage": "할인 ({percentage}%):",
+  "discountPercentage": "할인 ({percentage}%)",
   "@discountPercentage": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -721,7 +721,7 @@
       }
     }
   },
-  "tipLabel": "팁:",
+  "tipLabel": "팁",
   "@tipLabel": {
     "description": "Tip label"
   },
@@ -734,7 +734,7 @@
       }
     }
   },
-  "totalPayment": "총 결제금액:",
+  "totalPayment": "총 결제금액",
   "@totalPayment": {
     "description": "Total payment label"
   },
@@ -1051,7 +1051,7 @@
   "@discount": {
     "description": "Discount label"
   },
-  "totalAmount": "총 금액:",
+  "totalAmount": "총 금액",
   "@totalAmount": {
     "description": "Total amount label"
   },
@@ -1143,7 +1143,7 @@
   "@revenue": {
     "description": "Revenue summary card title"
   },
-  "discountPercent": "할인 {percent}%:",
+  "discountPercent": "할인 {percent}%",
   "@discountPercent": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -1152,7 +1152,7 @@
       }
     }
   },
-  "totalAmount": "총 금액:",
+  "totalAmount": "총 금액",
   "@totalAmount": {
     "description": "Total amount label"
   },
@@ -1192,15 +1192,15 @@
   "@print": {
     "description": "Print button label"
   },
-  "phoneNumber": "전화번호:",
+  "phoneNumber": "전화번호",
   "@phoneNumber": {
     "description": "Phone number label"
   },
-  "billCode": "영수증 번호:",
+  "billCode": "영수증 번호",
   "@billCode": {
     "description": "Bill code label"
   },
-  "createdDate": "생성일:",
+  "createdDate": "생성일",
   "@createdDate": {
     "description": "Created date label"
   },
@@ -1208,11 +1208,11 @@
   "@customerInformation": {
     "description": "Customer information section title"
   },
-  "customerName": "고객명:",
+  "customerName": "고객명",
   "@customerName": {
     "description": "Customer name label"
   },
-  "servingStaff": "서비스 직원:",
+  "servingStaff": "서비스 직원",
   "@servingStaff": {
     "description": "Serving staff label"
   },
@@ -1220,7 +1220,7 @@
   "@serviceDetails": {
     "description": "Service details section title"
   },
-  "subtotal": "소계:",
+  "subtotal": "소계",
   "@subtotal": {
     "description": "Subtotal label"
   },
@@ -1228,11 +1228,11 @@
   "@discount": {
     "description": "Discount label"
   },
-  "tip": "팁:",
+  "tip": "팁",
   "@tip": {
     "description": "Tip label"
   },
-  "totalPayment": "총 결제금액:",
+  "totalPayment": "총 결제금액",
   "@totalPayment": {
     "description": "Total payment label"
   },
@@ -1445,7 +1445,7 @@
       }
     }
   },
-  "taxLabel": "세금:",
+  "taxLabel": "세금",
   "@taxLabel": {
     "description": "Tax label"
   },
@@ -1478,11 +1478,11 @@
   "@customerNotPaid": {
     "description": "Customer not paid message"
   },
-  "subtotal": "소계:",
+  "subtotal": "소계",
   "@subtotal": {
     "description": "Subtotal label"
   },
-  "discountPercent": "할인 ({percent}%):",
+  "discountPercent": "할인 ({percent}%)",
   "@discountPercent": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -1491,11 +1491,11 @@
       }
     }
   },
-  "tipLabel": "팁:",
+  "tipLabel": "팁",
   "@tipLabel": {
     "description": "Tip label"
   },
-  "totalPaymentLabel": "총 결제금액:",
+  "totalPaymentLabel": "총 결제금액",
   "@totalPaymentLabel": {
     "description": "Total payment label"
   },
@@ -1660,11 +1660,11 @@
   "@pdfBillInfoTitle": {
     "description": "Bill information section title in PDF"
   },
-  "pdfBillCode": "청구서 번호:",
+  "pdfBillCode": "청구서 번호",
   "@pdfBillCode": {
     "description": "Bill code label in PDF"
   },
-  "pdfCreatedDate": "생성일:",
+  "pdfCreatedDate": "생성일",
   "@pdfCreatedDate": {
     "description": "Created date label in PDF"
   },
@@ -1672,15 +1672,15 @@
   "@pdfCustomerInfoTitle": {
     "description": "Customer information section title in PDF"
   },
-  "pdfCustomerName": "고객명:",
+  "pdfCustomerName": "고객명",
   "@pdfCustomerName": {
     "description": "Customer name label in PDF"
   },
-  "pdfCustomerPhone": "전화번호:",
+  "pdfCustomerPhone": "전화번호",
   "@pdfCustomerPhone": {
     "description": "Customer phone label in PDF"
   },
-  "pdfEmployeeServed": "담당 직원:",
+  "pdfEmployeeServed": "담당 직원",
   "@pdfEmployeeServed": {
     "description": "Employee served label in PDF"
   },
@@ -1692,11 +1692,11 @@
   "@pdfPaymentInfoTitle": {
     "description": "Payment information section title in PDF"
   },
-  "pdfSubtotal": "소계:",
+  "pdfSubtotal": "소계",
   "@pdfSubtotal": {
     "description": "Subtotal label in PDF"
   },
-  "pdfDiscount": "할인 ({percent}%):",
+  "pdfDiscount": "할인 ({percent}%)",
   "@pdfDiscount": {
     "description": "Discount label in PDF with percentage",
     "placeholders": {
@@ -1705,11 +1705,11 @@
       }
     }
   },
-  "pdfTip": "팁:",
+  "pdfTip": "팁",
   "@pdfTip": {
     "description": "Tip label in PDF"
   },
-  "pdfTotalPayment": "총 결제금액:",
+  "pdfTotalPayment": "총 결제금액",
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
@@ -1725,7 +1725,7 @@
   "@pdfShareBillTitle": {
     "description": "Share bill dialog title"
   },
-  "pdfShareBillMessage": "청구서 공유 방법을 선택하세요:",
+  "pdfShareBillMessage": "청구서 공유 방법을 선택하세요",
   "@pdfShareBillMessage": {
     "description": "Share bill dialog message"
   },
@@ -1758,7 +1758,7 @@
       }
     }
   },
-  "pdfYouCanDo": "다음을 할 수 있습니다:",
+  "pdfYouCanDo": "다음을 할 수 있습니다",
   "@pdfYouCanDo": {
     "description": "What you can do label"
   },
@@ -2010,5 +2010,21 @@
   "errorOccurredPleaseTryAgain": "오류가 발생했습니다. 나중에 다시 시도해주세요.",
   "@errorOccurredPleaseTryAgain": {
     "description": "Error occurred please try again message"
+  },
+  "code": "코드",
+  "@code": {
+    "description": "Customer code field"
+  },
+  "unit": "단위",
+  "@unit": {
+    "description": "단위 필드"
+  },
+  "serviceCode": "서비스 코드",
+  "@serviceCode": {
+    "description": "서비스 코드 필드"
+  },
+  "unitOfMeasurement": "측정 단위",
+  "@unitOfMeasurement": {
+    "description": "서비스 측정 단위 필드"
   }
 }

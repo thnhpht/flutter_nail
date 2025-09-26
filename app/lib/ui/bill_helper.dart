@@ -368,6 +368,18 @@ class BillHelper {
                                 ),
                               ),
                               Expanded(
+                                flex: 1,
+                                child: Text(
+                                  AppLocalizations.of(context)!.unit,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
                                 flex: 2,
                                 child: Text(
                                   AppLocalizations.of(context)!.unitPrice,
@@ -395,20 +407,65 @@ class BillHelper {
                           ),
                         ],
                       )
-                    : Row(
+                    : Column(
                         children: [
-                          Icon(
-                            Icons.spa,
-                            color: AppTheme.primaryStart,
-                            size: 20,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.spa,
+                                color: AppTheme.primaryStart,
+                                size: 20,
+                              ),
+                              const SizedBox(width: AppTheme.spacingS),
+                              Text(
+                                AppLocalizations.of(context)!.serviceDetails,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: AppTheme.spacingS),
-                          Text(
-                            AppLocalizations.of(context)!.serviceDetails,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          const SizedBox(height: AppTheme.spacingS),
+                          // Column headers for services without quantity
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  AppLocalizations.of(context)!.serviceName,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  AppLocalizations.of(context)!.unit,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  AppLocalizations.of(context)!.unitPrice,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -746,6 +803,17 @@ class BillHelper {
           Expanded(
             flex: 1,
             child: Text(
+              service.unit ?? '-',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
               _formatPrice(service.price),
               style: const TextStyle(
                 fontSize: 14,
@@ -783,6 +851,17 @@ class BillHelper {
             flex: 1,
             child: Text(
               '${serviceWithQuantity.quantity}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              serviceWithQuantity.service.unit ?? '-',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

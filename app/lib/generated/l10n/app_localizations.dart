@@ -1485,7 +1485,7 @@ abstract class AppLocalizations {
   /// Selected categories
   ///
   /// In vi, this message translates to:
-  /// **'Danh mục đã chọn:'**
+  /// **'Danh mục đã chọn'**
   String get selectedCategories;
 
   /// Remove all
@@ -1983,7 +1983,7 @@ abstract class AppLocalizations {
   /// Tax label
   ///
   /// In vi, this message translates to:
-  /// **'Thuế:'**
+  /// **'Thuế'**
   String get taxLabel;
 
   /// Positive tax amount display
@@ -1995,7 +1995,7 @@ abstract class AppLocalizations {
   /// Subtotal label
   ///
   /// In vi, this message translates to:
-  /// **'Thành tiền:'**
+  /// **'Thành tiền'**
   String get subtotal;
 
   /// Subtotal amount display
@@ -2007,7 +2007,7 @@ abstract class AppLocalizations {
   /// Discount percentage display
   ///
   /// In vi, this message translates to:
-  /// **'Giảm giá ({percentage}%):'**
+  /// **'Giảm giá ({percentage}%)'**
   String discountPercentage(String percentage);
 
   /// Negative discount amount display
@@ -2019,7 +2019,7 @@ abstract class AppLocalizations {
   /// Tip label
   ///
   /// In vi, this message translates to:
-  /// **'Tiền bo:'**
+  /// **'Tiền bo'**
   String get tipLabel;
 
   /// Positive tip amount display
@@ -2031,7 +2031,7 @@ abstract class AppLocalizations {
   /// Total payment label
   ///
   /// In vi, this message translates to:
-  /// **'Tổng thanh toán:'**
+  /// **'Tổng thanh toán'**
   String get totalPayment;
 
   /// Total payment amount display
@@ -2385,7 +2385,7 @@ abstract class AppLocalizations {
   /// Total amount label
   ///
   /// In vi, this message translates to:
-  /// **'Tổng tiền:'**
+  /// **'Tổng tiền'**
   String get totalAmount;
 
   /// No services available message
@@ -2445,7 +2445,7 @@ abstract class AppLocalizations {
   /// Discount percentage display
   ///
   /// In vi, this message translates to:
-  /// **'Giảm giá ({percent}%):'**
+  /// **'Giảm giá ({percent}%)'**
   String discountPercent(String percent);
 
   /// Empty state when no orders in selected time range
@@ -2487,19 +2487,19 @@ abstract class AppLocalizations {
   /// Bill code label
   ///
   /// In vi, this message translates to:
-  /// **'Mã hóa đơn:'**
+  /// **'Mã hóa đơn'**
   String get billCode;
 
   /// Created date label
   ///
   /// In vi, this message translates to:
-  /// **'Ngày tạo:'**
+  /// **'Ngày tạo'**
   String get createdDate;
 
   /// Serving staff label
   ///
   /// In vi, this message translates to:
-  /// **'Nhân viên phục vụ:'**
+  /// **'Nhân viên phục vụ'**
   String get servingStaff;
 
   /// Service details section title
@@ -2571,7 +2571,7 @@ abstract class AppLocalizations {
   /// Total payment label
   ///
   /// In vi, this message translates to:
-  /// **'Tổng thanh toán:'**
+  /// **'Tổng thanh toán'**
   String get totalPaymentLabel;
 
   /// Error message when order is not found
@@ -2733,13 +2733,13 @@ abstract class AppLocalizations {
   /// Bill code label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Mã hóa đơn:'**
+  /// **'Mã hóa đơn'**
   String get pdfBillCode;
 
   /// Created date label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Ngày tạo:'**
+  /// **'Ngày tạo'**
   String get pdfCreatedDate;
 
   /// Customer information section title in PDF
@@ -2751,19 +2751,19 @@ abstract class AppLocalizations {
   /// Customer name label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Tên khách hàng:'**
+  /// **'Tên khách hàng'**
   String get pdfCustomerName;
 
   /// Customer phone label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Số điện thoại:'**
+  /// **'Số điện thoại'**
   String get pdfCustomerPhone;
 
   /// Employee served label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Nhân viên phục vụ:'**
+  /// **'Nhân viên phục vụ'**
   String get pdfEmployeeServed;
 
   /// Services detail section title in PDF
@@ -2781,25 +2781,25 @@ abstract class AppLocalizations {
   /// Subtotal label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Thành tiền:'**
+  /// **'Thành tiền'**
   String get pdfSubtotal;
 
   /// Discount label in PDF with percentage
   ///
   /// In vi, this message translates to:
-  /// **'Giảm giá ({percent}%):'**
+  /// **'Giảm giá ({percent}%)'**
   String pdfDiscount(String percent);
 
   /// Tip label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Tiền bo:'**
+  /// **'Tiền bo'**
   String get pdfTip;
 
   /// Total payment label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'TỔNG THANH TOÁN:'**
+  /// **'TỔNG THANH TOÁN'**
   String get pdfTotalPayment;
 
   /// Thank you message in PDF footer
@@ -2823,7 +2823,7 @@ abstract class AppLocalizations {
   /// Share bill dialog message
   ///
   /// In vi, this message translates to:
-  /// **'Chọn cách chia sẻ hóa đơn:'**
+  /// **'Chọn cách chia sẻ hóa đơn'**
   String get pdfShareBillMessage;
 
   /// Zalo sharing option
@@ -2865,7 +2865,7 @@ abstract class AppLocalizations {
   /// What you can do label
   ///
   /// In vi, this message translates to:
-  /// **'Bạn có thể:'**
+  /// **'Bạn có thể'**
   String get pdfYouCanDo;
 
   /// Open file with PDF app option
@@ -3161,6 +3161,30 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đã xảy ra lỗi. Vui lòng thử lại sau.'**
   String get errorOccurredPleaseTryAgain;
+
+  /// Customer code field
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã số'**
+  String get code;
+
+  /// Trường đơn vị tính
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn vị'**
+  String get unit;
+
+  /// Trường mã dịch vụ
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã dịch vụ'**
+  String get serviceCode;
+
+  /// Trường đơn vị tính cho dịch vụ
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn vị tính'**
+  String get unitOfMeasurement;
 }
 
 class _AppLocalizationsDelegate

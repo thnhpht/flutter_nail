@@ -77,9 +77,20 @@ namespace NailApi.Controllers
                     return Unauthorized("Thông tin xác thực không hợp lệ");
                 
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
-                dbContext.Customers.Add(input);
+                
+                // Code sẽ được tự động tăng bởi IDENTITY, không cần set
+                // Chỉ set Name, Phone, Address
+                var newCustomer = new Customer
+                {
+                    Phone = input.Phone,
+                    Name = input.Name,
+                    Address = input.Address
+                    // Code sẽ được database tự động tạo
+                };
+                
+                dbContext.Customers.Add(newCustomer);
                 await dbContext.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetByPhone), new { phone = input.Phone }, input);
+                return CreatedAtAction(nameof(GetByPhone), new { phone = input.Phone }, newCustomer);
             }
             catch (Exception ex)
             {
@@ -103,7 +114,11 @@ namespace NailApi.Controllers
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 var exists = await dbContext.Customers.FindAsync(phone);
                 if (exists == null) return NotFound();
-                dbContext.Entry(exists).CurrentValues.SetValues(input);
+                
+                // Chỉ cập nhật Name và Address, giữ nguyên Code
+                exists.Name = input.Name;
+                exists.Address = input.Address;
+                
                 await dbContext.SaveChangesAsync();
                 return NoContent();
             }

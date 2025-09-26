@@ -35,6 +35,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     final l10n = AppLocalizations.of(context)!;
     final phoneCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
+    final addressCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -186,6 +187,36 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             },
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: addressCtrl,
+                            decoration: InputDecoration(
+                              labelText: l10n.address,
+                              prefixIcon: Icon(Icons.location_on,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            maxLines: 2,
+                            // Address is optional, no validator needed
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -267,6 +298,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     if (ok == true) {
       final phone = phoneCtrl.text.trim();
       final name = nameCtrl.text.trim();
+      final address = addressCtrl.text.trim();
 
       try {
         // Check if phone exists
@@ -279,7 +311,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
         } catch (e) {
           // If not found, continue
         }
-        await widget.api.createCustomer(Customer(name: name, phone: phone));
+        await widget.api.createCustomer(Customer(
+          name: name,
+          phone: phone,
+          address: address.isEmpty ? null : address,
+        ));
         await _reload();
         AppWidgets.showFlushbar(context, l10n.customerAddedSuccessfully,
             type: MessageType.success);
@@ -293,6 +329,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
   Future<void> _showEditDialog(Customer c) async {
     final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: c.name);
+    final addressCtrl = TextEditingController(text: c.address ?? '');
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -430,6 +467,36 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             },
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: addressCtrl,
+                            decoration: InputDecoration(
+                              labelText: l10n.address,
+                              prefixIcon: const Icon(Icons.location_on,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            maxLines: 2,
+                            // Address is optional, no validator needed
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -510,9 +577,15 @@ class _CustomersScreenState extends State<CustomersScreen> {
     );
     if (ok == true) {
       final name = nameCtrl.text.trim();
+      final address = addressCtrl.text.trim();
 
       try {
-        await widget.api.updateCustomer(Customer(phone: c.phone, name: name));
+        await widget.api.updateCustomer(Customer(
+          phone: c.phone,
+          name: name,
+          code: c.code,
+          address: address.isEmpty ? null : address,
+        ));
         await _reload();
         AppWidgets.showFlushbar(context, l10n.customerUpdatedSuccessfully,
             type: MessageType.success);
@@ -699,7 +772,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                   .contains(_search.toLowerCase()) ||
                               c.phone
                                   .toLowerCase()
-                                  .contains(_search.toLowerCase()))
+                                  .contains(_search.toLowerCase()) ||
+                              (c.address != null &&
+                                  c.address!
+                                      .toLowerCase()
+                                      .contains(_search.toLowerCase())))
                           .toList();
 
                       if (filtered.isEmpty) {
@@ -888,6 +965,66 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                                     ],
                                                   ),
                                                 ),
+                                                if (c.address != null &&
+                                                    c.address!.isNotEmpty) ...[
+                                                  const SizedBox(height: 4),
+                                                  Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2),
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          Colors.green
+                                                              .withValues(
+                                                                  alpha: 0.1),
+                                                          Colors.green
+                                                              .withValues(
+                                                                  alpha: 0.05),
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.location_on,
+                                                          size: 12,
+                                                          color:
+                                                              Colors.green[700],
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 4),
+                                                        Expanded(
+                                                          child: Text(
+                                                            c.address!,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .green[700],
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ],
                                             ),
                                           ),

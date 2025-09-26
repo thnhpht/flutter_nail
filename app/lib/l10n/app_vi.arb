@@ -956,7 +956,7 @@
       }
     }
   },
-  "selectedCategories": "Danh mục đã chọn:",
+  "selectedCategories": "Danh mục đã chọn",
   "@selectedCategories": {
     "description": "Selected categories"
   },
@@ -1584,7 +1584,7 @@
       }
     }
   },
-  "taxLabel": "Thuế:",
+  "taxLabel": "Thuế",
   "@taxLabel": {
     "description": "Tax label"
   },
@@ -1597,7 +1597,7 @@
       }
     }
   },
-  "subtotal": "Thành tiền:",
+  "subtotal": "Thành tiền",
   "@subtotal": {
     "description": "Subtotal label"
   },
@@ -1610,7 +1610,7 @@
       }
     }
   },
-  "discountPercentage": "Giảm giá ({percentage}%):",
+  "discountPercentage": "Giảm giá ({percentage}%)",
   "@discountPercentage": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -1628,7 +1628,7 @@
       }
     }
   },
-  "tipLabel": "Tiền bo:",
+  "tipLabel": "Tiền bo",
   "@tipLabel": {
     "description": "Tip label"
   },
@@ -1641,7 +1641,7 @@
       }
     }
   },
-  "totalPayment": "Tổng thanh toán:",
+  "totalPayment": "Tổng thanh toán",
   "@totalPayment": {
     "description": "Total payment label"
   },
@@ -1958,7 +1958,7 @@
   "@discount": {
     "description": "Discount label"
   },
-  "totalAmount": "Tổng tiền:",
+  "totalAmount": "Tổng tiền",
   "@totalAmount": {
     "description": "Total amount label"
   },
@@ -2050,7 +2050,7 @@
   "@revenue": {
     "description": "Revenue summary card title"
   },
-  "discountPercent": "Giảm {percent}%:",
+  "discountPercent": "Giảm {percent}%",
   "@discountPercent": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -2059,7 +2059,7 @@
       }
     }
   },
-  "totalAmount": "Tổng tiền:",
+  "totalAmount": "Tổng tiền",
   "@totalAmount": {
     "description": "Total amount label"
   },
@@ -2099,15 +2099,15 @@
   "@print": {
     "description": "Print button label"
   },
-  "phoneNumber": "Số điện thoại:",
+  "phoneNumber": "Số điện thoại",
   "@phoneNumber": {
     "description": "Phone number label"
   },
-  "billCode": "Mã hóa đơn:",
+  "billCode": "Mã hóa đơn",
   "@billCode": {
     "description": "Bill code label"
   },
-  "createdDate": "Ngày tạo:",
+  "createdDate": "Ngày tạo",
   "@createdDate": {
     "description": "Created date label"
   },
@@ -2115,11 +2115,11 @@
   "@customerInformation": {
     "description": "Customer information section title"
   },
-  "customerName": "Tên khách hàng:",
+  "customerName": "Tên khách hàng",
   "@customerName": {
     "description": "Customer name label"
   },
-  "servingStaff": "Nhân viên phục vụ:",
+  "servingStaff": "Nhân viên phục vụ",
   "@servingStaff": {
     "description": "Serving staff label"
   },
@@ -2127,7 +2127,7 @@
   "@serviceDetails": {
     "description": "Service details section title"
   },
-  "subtotal": "Thành tiền:",
+  "subtotal": "Thành tiền",
   "@subtotal": {
     "description": "Subtotal label"
   },
@@ -2135,11 +2135,11 @@
   "@discount": {
     "description": "Discount label"
   },
-  "tip": "Tiền bo:",
+  "tip": "Tiền bo",
   "@tip": {
     "description": "Tip label"
   },
-  "totalPayment": "Tổng thanh toán:",
+  "totalPayment": "Tổng thanh toán",
   "@totalPayment": {
     "description": "Total payment label"
   },
@@ -2352,7 +2352,7 @@
       }
     }
   },
-  "taxLabel": "Thuế:",
+  "taxLabel": "Thuế",
   "@taxLabel": {
     "description": "Tax label"
   },
@@ -2385,11 +2385,11 @@
   "@customerNotPaid": {
     "description": "Customer not paid message"
   },
-  "subtotal": "Thành tiền:",
+  "subtotal": "Thành tiền",
   "@subtotal": {
     "description": "Subtotal label"
   },
-  "discountPercent": "Giảm giá ({percent}%):",
+  "discountPercent": "Giảm giá ({percent}%)",
   "@discountPercent": {
     "description": "Discount percentage display",
     "placeholders": {
@@ -2398,11 +2398,11 @@
       }
     }
   },
-  "tipLabel": "Tiền bo:",
+  "tipLabel": "Tiền bo",
   "@tipLabel": {
     "description": "Tip label"
   },
-  "totalPaymentLabel": "Tổng thanh toán:",
+  "totalPaymentLabel": "Tổng thanh toán",
   "@totalPaymentLabel": {
     "description": "Total payment label"
   },
@@ -2567,11 +2567,11 @@
   "@pdfBillInfoTitle": {
     "description": "Bill information section title in PDF"
   },
-  "pdfBillCode": "Mã hóa đơn:",
+  "pdfBillCode": "Mã hóa đơn",
   "@pdfBillCode": {
     "description": "Bill code label in PDF"
   },
-  "pdfCreatedDate": "Ngày tạo:",
+  "pdfCreatedDate": "Ngày tạo",
   "@pdfCreatedDate": {
     "description": "Created date label in PDF"
   },
@@ -2579,15 +2579,15 @@
   "@pdfCustomerInfoTitle": {
     "description": "Customer information section title in PDF"
   },
-  "pdfCustomerName": "Tên khách hàng:",
+  "pdfCustomerName": "Tên khách hàng",
   "@pdfCustomerName": {
     "description": "Customer name label in PDF"
   },
-  "pdfCustomerPhone": "Số điện thoại:",
+  "pdfCustomerPhone": "Số điện thoại",
   "@pdfCustomerPhone": {
     "description": "Customer phone label in PDF"
   },
-  "pdfEmployeeServed": "Nhân viên phục vụ:",
+  "pdfEmployeeServed": "Nhân viên phục vụ",
   "@pdfEmployeeServed": {
     "description": "Employee served label in PDF"
   },
@@ -2599,11 +2599,11 @@
   "@pdfPaymentInfoTitle": {
     "description": "Payment information section title in PDF"
   },
-  "pdfSubtotal": "Thành tiền:",
+  "pdfSubtotal": "Thành tiền",
   "@pdfSubtotal": {
     "description": "Subtotal label in PDF"
   },
-  "pdfDiscount": "Giảm giá ({percent}%):",
+  "pdfDiscount": "Giảm giá ({percent}%)",
   "@pdfDiscount": {
     "description": "Discount label in PDF with percentage",
     "placeholders": {
@@ -2612,11 +2612,11 @@
       }
     }
   },
-  "pdfTip": "Tiền bo:",
+  "pdfTip": "Tiền bo",
   "@pdfTip": {
     "description": "Tip label in PDF"
   },
-  "pdfTotalPayment": "TỔNG THANH TOÁN:",
+  "pdfTotalPayment": "TỔNG THANH TOÁN",
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
@@ -2632,7 +2632,7 @@
   "@pdfShareBillTitle": {
     "description": "Share bill dialog title"
   },
-  "pdfShareBillMessage": "Chọn cách chia sẻ hóa đơn:",
+  "pdfShareBillMessage": "Chọn cách chia sẻ hóa đơn",
   "@pdfShareBillMessage": {
     "description": "Share bill dialog message"
   },
@@ -2665,7 +2665,7 @@
       }
     }
   },
-  "pdfYouCanDo": "Bạn có thể:",
+  "pdfYouCanDo": "Bạn có thể",
   "@pdfYouCanDo": {
     "description": "What you can do label"
   },
@@ -2917,5 +2917,21 @@
   "errorOccurredPleaseTryAgain": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
   "@errorOccurredPleaseTryAgain": {
     "description": "Error occurred please try again message"
+  },
+  "code": "Mã số",
+  "@code": {
+    "description": "Customer code field"
+  },
+  "unit": "Đơn vị",
+  "@unit": {
+    "description": "Trường đơn vị tính"
+  },
+  "serviceCode": "Mã dịch vụ",
+  "@serviceCode": {
+    "description": "Trường mã dịch vụ"
+  },
+  "unitOfMeasurement": "Đơn vị tính",
+  "@unitOfMeasurement": {
+    "description": "Trường đơn vị tính cho dịch vụ"
   }
 }

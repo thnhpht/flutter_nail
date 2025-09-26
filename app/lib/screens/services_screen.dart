@@ -357,6 +357,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Future<void> _showAddDialog() async {
     final nameCtrl = TextEditingController();
     final priceCtrl = TextEditingController();
+    final unitCtrl = TextEditingController();
     String? selectedCatId =
         _categories.isNotEmpty ? _categories.first.id : null;
     String? imageUrl;
@@ -562,6 +563,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: unitCtrl,
+                                  decoration: InputDecoration(
+                                    labelText:
+                                        '${AppLocalizations.of(context)!.unit}',
+                                    prefixIcon: const Icon(Icons.straighten,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -647,6 +667,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     if (ok == true && selectedCatId != null) {
       final name = nameCtrl.text.trim();
       final price = double.tryParse(priceCtrl.text.trim()) ?? 0;
+      final unit = unitCtrl.text.trim().isEmpty ? null : unitCtrl.text.trim();
 
       try {
         String? imageUrlToSave;
@@ -669,8 +690,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
             return;
           }
         }
-        await widget.api
-            .createService(selectedCatId!, name, price, image: imageUrlToSave);
+        await widget.api.createService(selectedCatId!, name, price,
+            image: imageUrlToSave, unit: unit);
         await _reload();
         AppWidgets.showFlushbar(
             context, AppLocalizations.of(context)!.serviceAddedSuccessfully,
@@ -686,6 +707,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Future<void> _showEditDialog(Service s) async {
     final nameCtrl = TextEditingController(text: s.name);
     final priceCtrl = TextEditingController(text: s.price.toStringAsFixed(0));
+    final unitCtrl = TextEditingController(text: s.unit ?? '');
     String? selectedCatId = s.categoryId;
     String? imageUrl = s.image;
     XFile? pickedImage;
@@ -890,6 +912,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: TextFormField(
+                                  controller: unitCtrl,
+                                  decoration: InputDecoration(
+                                    labelText:
+                                        '${AppLocalizations.of(context)!.unit}',
+                                    prefixIcon: const Icon(Icons.straighten,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -975,6 +1016,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     if (ok == true && selectedCatId != null) {
       final name = nameCtrl.text.trim();
       final price = double.tryParse(priceCtrl.text.trim()) ?? s.price;
+      final unit = unitCtrl.text.trim().isEmpty ? null : unitCtrl.text.trim();
 
       try {
         String? imageUrlToSave = imageUrl;
@@ -1003,6 +1045,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           name: name,
           price: price,
           image: imageUrlToSave,
+          unit: unit,
+          code: s.code, // Giữ nguyên code từ service gốc
         ));
         await _reload();
         AppWidgets.showFlushbar(
@@ -1797,6 +1841,36 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                         ],
                                                       ),
                                                     ),
+                                                    // Unit
+                                                    if (s.unit != null) ...[
+                                                      const SizedBox(height: 4),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 6,
+                                                                vertical: 2),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white
+                                                              .withValues(
+                                                                  alpha: 0.2),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                        child: Text(
+                                                          '${AppLocalizations.of(context)!.unit}: ${s.unit}',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 9,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ],
                                                 ),
                                               ),

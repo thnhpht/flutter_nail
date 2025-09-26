@@ -736,7 +736,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get selectedCategories => 'Danh mục đã chọn:';
+  String get selectedCategories => 'Danh mục đã chọn';
 
   @override
   String get removeAll => 'Xóa tất cả';
@@ -1024,7 +1024,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get taxLabel => 'Thuế:';
+  String get taxLabel => 'Thuế';
 
   @override
   String taxAmountPositive(String amount) {
@@ -1032,7 +1032,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get subtotal => 'Thành tiền:';
+  String get subtotal => 'Thành tiền';
 
   @override
   String subtotalAmount(String amount) {
@@ -1041,7 +1041,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String discountPercentage(String percentage) {
-    return 'Giảm giá ($percentage%):';
+    return 'Giảm giá ($percentage%)';
   }
 
   @override
@@ -1050,7 +1050,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get tipLabel => 'Tiền bo:';
+  String get tipLabel => 'Tiền bo';
 
   @override
   String tipAmountPositive(String amount) {
@@ -1058,7 +1058,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get totalPayment => 'Tổng thanh toán:';
+  String get totalPayment => 'Tổng thanh toán';
 
   @override
   String totalPaymentAmount(String amount) {
@@ -1256,7 +1256,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get filtered => 'đã lọc';
 
   @override
-  String get totalAmount => 'Tổng tiền:';
+  String get totalAmount => 'Tổng tiền';
 
   @override
   String get noServices => 'Không có dịch vụ';
@@ -1290,7 +1290,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String discountPercent(String percent) {
-    return 'Giảm giá ($percent%):';
+    return 'Giảm giá ($percent%)';
   }
 
   @override
@@ -1314,13 +1314,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get print => 'In';
 
   @override
-  String get billCode => 'Mã hóa đơn:';
+  String get billCode => 'Mã hóa đơn';
 
   @override
-  String get createdDate => 'Ngày tạo:';
+  String get createdDate => 'Ngày tạo';
 
   @override
-  String get servingStaff => 'Nhân viên phục vụ:';
+  String get servingStaff => 'Nhân viên phục vụ';
 
   @override
   String get serviceDetails => 'Chi tiết dịch vụ';
@@ -1358,7 +1358,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get customerNotPaid => 'Khách hàng chưa thanh toán';
 
   @override
-  String get totalPaymentLabel => 'Tổng thanh toán:';
+  String get totalPaymentLabel => 'Tổng thanh toán';
 
   @override
   String get orderNotFound => 'Không tìm thấy thông tin đơn hàng';
@@ -1464,22 +1464,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfBillInfoTitle => 'THÔNG TIN HÓA ĐƠN';
 
   @override
-  String get pdfBillCode => 'Mã hóa đơn:';
+  String get pdfBillCode => 'Mã hóa đơn';
 
   @override
-  String get pdfCreatedDate => 'Ngày tạo:';
+  String get pdfCreatedDate => 'Ngày tạo';
 
   @override
   String get pdfCustomerInfoTitle => 'THÔNG TIN KHÁCH HÀNG';
 
   @override
-  String get pdfCustomerName => 'Tên khách hàng:';
+  String get pdfCustomerName => 'Tên khách hàng';
 
   @override
-  String get pdfCustomerPhone => 'Số điện thoại:';
+  String get pdfCustomerPhone => 'Số điện thoại';
 
   @override
-  String get pdfEmployeeServed => 'Nhân viên phục vụ:';
+  String get pdfEmployeeServed => 'Nhân viên phục vụ';
 
   @override
   String get pdfServicesDetailTitle => 'CHI TIẾT DỊCH VỤ';
@@ -1488,18 +1488,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfPaymentInfoTitle => 'THÔNG TIN THANH TOÁN';
 
   @override
-  String get pdfSubtotal => 'Thành tiền:';
+  String get pdfSubtotal => 'Thành tiền';
 
   @override
   String pdfDiscount(String percent) {
-    return 'Giảm giá ($percent%):';
+    return 'Giảm giá ($percent%)';
   }
 
   @override
-  String get pdfTip => 'Tiền bo:';
+  String get pdfTip => 'Tiền bo';
 
   @override
-  String get pdfTotalPayment => 'TỔNG THANH TOÁN:';
+  String get pdfTotalPayment => 'TỔNG THANH TOÁN';
 
   @override
   String get pdfThankYouMessage => 'Cảm ơn quý khách đã sử dụng dịch vụ!';
@@ -1511,7 +1511,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfShareBillTitle => 'Chia sẻ hóa đơn';
 
   @override
-  String get pdfShareBillMessage => 'Chọn cách chia sẻ hóa đơn:';
+  String get pdfShareBillMessage => 'Chọn cách chia sẻ hóa đơn';
 
   @override
   String get pdfShareZalo => 'Zalo';
@@ -1534,7 +1534,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get pdfYouCanDo => 'Bạn có thể:';
+  String get pdfYouCanDo => 'Bạn có thể';
 
   @override
   String get pdfOpenWithApp => '• Mở file bằng ứng dụng PDF';
@@ -1705,4 +1705,16 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get errorOccurredPleaseTryAgain =>
       'Đã xảy ra lỗi. Vui lòng thử lại sau.';
+
+  @override
+  String get code => 'Mã số';
+
+  @override
+  String get unit => 'Đơn vị';
+
+  @override
+  String get serviceCode => 'Mã dịch vụ';
+
+  @override
+  String get unitOfMeasurement => 'Đơn vị tính';
 }

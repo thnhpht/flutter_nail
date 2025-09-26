@@ -722,7 +722,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get selectedCategories => '선택된 카테고리:';
+  String get selectedCategories => '선택된 카테고리';
 
   @override
   String get removeAll => '모두 제거';
@@ -1005,7 +1005,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get taxLabel => '세금:';
+  String get taxLabel => '세금';
 
   @override
   String taxAmountPositive(String amount) {
@@ -1013,7 +1013,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get subtotal => '소계:';
+  String get subtotal => '소계';
 
   @override
   String subtotalAmount(String amount) {
@@ -1022,7 +1022,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String discountPercentage(String percentage) {
-    return '할인 ($percentage%):';
+    return '할인 ($percentage%)';
   }
 
   @override
@@ -1031,7 +1031,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get tipLabel => '팁:';
+  String get tipLabel => '팁';
 
   @override
   String tipAmountPositive(String amount) {
@@ -1039,7 +1039,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get totalPayment => '총 결제금액:';
+  String get totalPayment => '총 결제금액';
 
   @override
   String totalPaymentAmount(String amount) {
@@ -1231,7 +1231,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get filtered => '필터됨';
 
   @override
-  String get totalAmount => '총 금액:';
+  String get totalAmount => '총 금액';
 
   @override
   String get noServices => '서비스 없음';
@@ -1262,7 +1262,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String discountPercent(String percent) {
-    return '할인 ($percent%):';
+    return '할인 ($percent%)';
   }
 
   @override
@@ -1284,13 +1284,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get print => '인쇄';
 
   @override
-  String get billCode => '영수증 번호:';
+  String get billCode => '영수증 번호';
 
   @override
-  String get createdDate => '생성일:';
+  String get createdDate => '생성일';
 
   @override
-  String get servingStaff => '서비스 직원:';
+  String get servingStaff => '서비스 직원';
 
   @override
   String get serviceDetails => '서비스 세부사항';
@@ -1326,7 +1326,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get customerNotPaid => '고객이 아직 결제하지 않았습니다';
 
   @override
-  String get totalPaymentLabel => '총 결제금액:';
+  String get totalPaymentLabel => '총 결제금액';
 
   @override
   String get orderNotFound => '주문 정보를 찾을 수 없습니다';
@@ -1426,22 +1426,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfBillInfoTitle => '청구서 정보';
 
   @override
-  String get pdfBillCode => '청구서 번호:';
+  String get pdfBillCode => '청구서 번호';
 
   @override
-  String get pdfCreatedDate => '생성일:';
+  String get pdfCreatedDate => '생성일';
 
   @override
   String get pdfCustomerInfoTitle => '고객 정보';
 
   @override
-  String get pdfCustomerName => '고객명:';
+  String get pdfCustomerName => '고객명';
 
   @override
-  String get pdfCustomerPhone => '전화번호:';
+  String get pdfCustomerPhone => '전화번호';
 
   @override
-  String get pdfEmployeeServed => '담당 직원:';
+  String get pdfEmployeeServed => '담당 직원';
 
   @override
   String get pdfServicesDetailTitle => '서비스 상세';
@@ -1450,18 +1450,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfPaymentInfoTitle => '결제 정보';
 
   @override
-  String get pdfSubtotal => '소계:';
+  String get pdfSubtotal => '소계';
 
   @override
   String pdfDiscount(String percent) {
-    return '할인 ($percent%):';
+    return '할인 ($percent%)';
   }
 
   @override
-  String get pdfTip => '팁:';
+  String get pdfTip => '팁';
 
   @override
-  String get pdfTotalPayment => '총 결제금액:';
+  String get pdfTotalPayment => '총 결제금액';
 
   @override
   String get pdfThankYouMessage => '서비스를 이용해 주셔서 감사합니다!';
@@ -1473,7 +1473,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfShareBillTitle => '청구서 공유';
 
   @override
-  String get pdfShareBillMessage => '청구서 공유 방법을 선택하세요:';
+  String get pdfShareBillMessage => '청구서 공유 방법을 선택하세요';
 
   @override
   String get pdfShareZalo => 'Zalo';
@@ -1496,7 +1496,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get pdfYouCanDo => '다음을 할 수 있습니다:';
+  String get pdfYouCanDo => '다음을 할 수 있습니다';
 
   @override
   String get pdfOpenWithApp => '• PDF 앱으로 파일 열기';
@@ -1653,4 +1653,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get errorOccurredPleaseTryAgain => '오류가 발생했습니다. 나중에 다시 시도해주세요.';
+
+  @override
+  String get code => '코드';
+
+  @override
+  String get unit => '단위';
+
+  @override
+  String get serviceCode => '서비스 코드';
+
+  @override
+  String get unitOfMeasurement => '측정 단위';
 }

@@ -420,6 +420,8 @@ namespace NailApi.Controllers
                         @"CREATE TABLE [Customers] (
                             [Phone] nvarchar(450) NOT NULL,
                             [Name] nvarchar(max) NOT NULL,
+                            [Code] int IDENTITY(1,1) NOT NULL,
+                            [Address] nvarchar(max) NULL,
                             CONSTRAINT [PK_Customers] PRIMARY KEY ([Phone])
                         );",
 
@@ -445,6 +447,8 @@ namespace NailApi.Controllers
                             [Name] nvarchar(max) NOT NULL,
                             [Price] decimal(18,2) NOT NULL,
                             [Image] nvarchar(max) NULL,
+                            [Code] int IDENTITY(1,1) NOT NULL,
+                            [Unit] nvarchar(max) NULL,
                             CONSTRAINT [PK_Services] PRIMARY KEY ([Id]),
                             CONSTRAINT [FK_Services_Categories_CategoryId] FOREIGN KEY ([CategoryId]) REFERENCES [Categories] ([Id]) ON DELETE CASCADE
                         );",

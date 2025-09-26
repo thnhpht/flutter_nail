@@ -428,7 +428,7 @@ class ApiClient {
   }
 
   Future<void> createService(String categoryId, String name, double price,
-      {String? image}) async {
+      {String? image, String? unit}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
 
@@ -441,7 +441,8 @@ class ApiClient {
           'categoryId': categoryId,
           'name': name,
           'price': price,
-          'image': image
+          'image': image,
+          'unit': unit
         }));
     _check(r, expect201: true);
   }

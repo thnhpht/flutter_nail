@@ -735,7 +735,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get selectedCategories => 'Selected Categories:';
+  String get selectedCategories => 'Selected Categories';
 
   @override
   String get removeAll => 'Remove All';
@@ -1025,7 +1025,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get taxLabel => 'Tax:';
+  String get taxLabel => 'Tax';
 
   @override
   String taxAmountPositive(String amount) {
@@ -1033,7 +1033,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get subtotal => 'Subtotal:';
+  String get subtotal => 'Subtotal';
 
   @override
   String subtotalAmount(String amount) {
@@ -1042,7 +1042,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String discountPercentage(String percentage) {
-    return 'Discount ($percentage%):';
+    return 'Discount ($percentage%)';
   }
 
   @override
@@ -1051,7 +1051,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tipLabel => 'Tip:';
+  String get tipLabel => 'Tip';
 
   @override
   String tipAmountPositive(String amount) {
@@ -1059,7 +1059,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get totalPayment => 'Total Payment:';
+  String get totalPayment => 'Total Payment';
 
   @override
   String totalPaymentAmount(String amount) {
@@ -1254,7 +1254,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filtered => 'filtered';
 
   @override
-  String get totalAmount => 'Total Amount:';
+  String get totalAmount => 'Total Amount';
 
   @override
   String get noServices => 'No services';
@@ -1287,7 +1287,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String discountPercent(String percent) {
-    return 'Discount ($percent%):';
+    return 'Discount ($percent%)';
   }
 
   @override
@@ -1310,13 +1310,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get print => 'Print';
 
   @override
-  String get billCode => 'Bill Code:';
+  String get billCode => 'Bill Code';
 
   @override
-  String get createdDate => 'Created Date:';
+  String get createdDate => 'Created Date';
 
   @override
-  String get servingStaff => 'Serving Staff:';
+  String get servingStaff => 'Serving Staff';
 
   @override
   String get serviceDetails => 'Service Details';
@@ -1353,7 +1353,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customerNotPaid => 'Customer has not paid';
 
   @override
-  String get totalPaymentLabel => 'Total Payment:';
+  String get totalPaymentLabel => 'Total Payment';
 
   @override
   String get orderNotFound => 'Order information not found';
@@ -1458,22 +1458,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfBillInfoTitle => 'BILL INFORMATION';
 
   @override
-  String get pdfBillCode => 'Bill Code:';
+  String get pdfBillCode => 'Bill Code';
 
   @override
-  String get pdfCreatedDate => 'Created Date:';
+  String get pdfCreatedDate => 'Created Date';
 
   @override
   String get pdfCustomerInfoTitle => 'CUSTOMER INFORMATION';
 
   @override
-  String get pdfCustomerName => 'Customer Name:';
+  String get pdfCustomerName => 'Customer Name';
 
   @override
-  String get pdfCustomerPhone => 'Phone Number:';
+  String get pdfCustomerPhone => 'Phone Number';
 
   @override
-  String get pdfEmployeeServed => 'Employee Served:';
+  String get pdfEmployeeServed => 'Employee Served';
 
   @override
   String get pdfServicesDetailTitle => 'SERVICES DETAIL';
@@ -1482,18 +1482,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfPaymentInfoTitle => 'PAYMENT INFORMATION';
 
   @override
-  String get pdfSubtotal => 'Subtotal:';
+  String get pdfSubtotal => 'Subtotal';
 
   @override
   String pdfDiscount(String percent) {
-    return 'Discount ($percent%):';
+    return 'Discount ($percent%)';
   }
 
   @override
-  String get pdfTip => 'Tip:';
+  String get pdfTip => 'Tip';
 
   @override
-  String get pdfTotalPayment => 'TOTAL PAYMENT:';
+  String get pdfTotalPayment => 'TOTAL PAYMENT';
 
   @override
   String get pdfThankYouMessage => 'Thank you for using our service!';
@@ -1505,7 +1505,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfShareBillTitle => 'Share Bill';
 
   @override
-  String get pdfShareBillMessage => 'Choose how to share the bill:';
+  String get pdfShareBillMessage => 'Choose how to share the bill';
 
   @override
   String get pdfShareZalo => 'Zalo';
@@ -1528,7 +1528,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get pdfYouCanDo => 'You can:';
+  String get pdfYouCanDo => 'You can';
 
   @override
   String get pdfOpenWithApp => '• Open file with PDF app';
@@ -1697,4 +1697,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorOccurredPleaseTryAgain =>
       'Error occurred. Please try again later.';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get serviceCode => 'Service Code';
+
+  @override
+  String get unitOfMeasurement => 'Unit of Measurement';
 }

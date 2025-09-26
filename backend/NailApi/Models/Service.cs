@@ -12,6 +12,12 @@ namespace NailApi.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public string? Image { get; set; } // URL or path to image
+        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Code { get; set; } // Auto-increment code
+        
+        public string? Unit { get; set; } // Unit of measurement (optional)
+        
         [JsonIgnore]
         public Category? Category { get; set; }
     }

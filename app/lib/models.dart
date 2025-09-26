@@ -116,17 +116,28 @@ class EmployeeLoginRequest {
 class Customer {
   final String phone;
   final String name;
+  final int? code; // Auto-increment code from backend
+  final String? address; // Optional address
 
-  Customer({required this.phone, required this.name});
+  Customer({
+    required this.phone,
+    required this.name,
+    this.code,
+    this.address,
+  });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         phone: json['phone'] as String,
         name: json['name'] as String,
+        code: json['code'] as int?,
+        address: json['address'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
         'phone': phone,
         'name': name,
+        if (code != null) 'code': code,
+        'address': address,
       };
 }
 
@@ -167,13 +178,17 @@ class Service {
   final String name;
   final double price;
   final String? image;
+  final int? code; // Auto-increment code from backend
+  final String? unit; // Unit of measurement (optional)
 
   Service(
       {required this.id,
       required this.categoryId,
       required this.name,
       required this.price,
-      this.image});
+      this.image,
+      this.code,
+      this.unit});
 
   factory Service.fromJson(Map<String, dynamic> json) => Service(
         id: json['id'] as String,
@@ -181,6 +196,8 @@ class Service {
         name: json['name'] as String,
         price: (json['price'] as num).toDouble(),
         image: json['image'] as String?,
+        code: json['code'] as int?,
+        unit: json['unit'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -189,6 +206,8 @@ class Service {
         'name': name,
         'price': price,
         'image': image,
+        'code': code,
+        'unit': unit,
       };
 }
 
