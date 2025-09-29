@@ -235,7 +235,7 @@
   "selectedCategories": "Selected Categories",
   "removeAll": "Remove All",
   "allCategories": "All Categories ({count})",
-  "createNewService": "Create New Nail Service",
+  "createNewService": "Create New Service",
   "pleaseEnterServiceName": "Please enter service name",
   "pleaseEnterPrice": "Please enter price",
   "pleaseEnterValidPrice": "Please enter valid price",

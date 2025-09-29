@@ -5,7 +5,7 @@
 Chạy lệnh sau để tạo keystore mới:
 
 ```bash
-cd /Users/thnhpht/Documents/Workspace/LMS/flutter_nail/app/android && export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" && keytool -genkey -v -keystore keystore/release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias simplenailapp -storepass 123456 -keypass 123456 -dname "CN=Simple Nail App, OU=Development, O=Your Company, L=City, S=State, C=VN"
+cd /Users/thnhpht/Documents/Workspace/LMS/flutter_nail/app/android && export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" && keytool -genkey -v -keystore keystore/release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias fshopapp -storepass 123456 -keypass 123456 -dname "CN=FShop, OU=Development, O=Your Company, L=City, S=State, C=VN"
 ```
 
 **Lưu ý:**

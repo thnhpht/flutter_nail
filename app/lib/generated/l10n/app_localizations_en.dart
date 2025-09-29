@@ -739,7 +739,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get createNewService => 'Create New Nail Service';
+  String get createNewService => 'Create New Service';
 
   @override
   String get pleaseEnterServiceName => 'Please enter service name';

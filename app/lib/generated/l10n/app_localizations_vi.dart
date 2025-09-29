@@ -740,7 +740,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get createNewService => 'Tạo dịch vụ nail mới';
+  String get createNewService => 'Tạo dịch vụ mới';
 
   @override
   String get pleaseEnterServiceName => 'Vui lòng nhập tên dịch vụ';

@@ -1,11 +1,11 @@
 {
-    "name": "nail_app",
-    "short_name": "nail_app",
+    "name": "FShop",
+    "short_name": "FShop",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#667eea",
     "theme_color": "#667eea",
-    "description": "A new Flutter project.",
+    "description": "FShop - A modern shop management app",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

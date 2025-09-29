@@ -965,9 +965,9 @@
       }
     }
   },
-  "createNewService": "Tạo dịch vụ nail mới",
+  "createNewService": "Tạo dịch vụ mới",
   "@createNewService": {
-    "description": "Create new nail service"
+    "description": "Create new service"
   },
   "pleaseEnterServiceName": "Vui lòng nhập tên dịch vụ",
   "@pleaseEnterServiceName": {

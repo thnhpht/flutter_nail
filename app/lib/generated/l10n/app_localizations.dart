@@ -1488,10 +1488,10 @@ abstract class AppLocalizations {
   /// **'Tất cả danh mục ({count})'**
   String allCategories(int count);
 
-  /// Create new nail service
+  /// Create new service
   ///
   /// In vi, this message translates to:
-  /// **'Tạo dịch vụ nail mới'**
+  /// **'Tạo dịch vụ mới'**
   String get createNewService;
 
   /// Please enter service name
