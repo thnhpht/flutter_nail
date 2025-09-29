@@ -50,10 +50,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .SetIsOriginAllowed(origin => true);
+        policy.SetIsOriginAllowed(origin =>
+            origin == "https://fshop.logisticssoftware.vn" ||
+            origin.StartsWith("http://localhost:") ||
+            origin.StartsWith("http://127.0.0.1:")
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
@@ -66,7 +70,7 @@ if (enableSwagger)
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nail API V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FShop API V1");
         // Có thể truy cập Swagger tại /swagger
         c.RoutePrefix = "swagger";
     });

@@ -38,7 +38,7 @@ FShop là một hệ thống quản lý shop toàn diện với kiến trúc mul
 ### Backend (.NET Web API)
 
 ```bash
-cd backend/NailApi
+cd backend/FShopApi
 dotnet restore
 dotnet run
 dotnet publish -c Release -o ./publish

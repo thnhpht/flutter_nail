@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FShopApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d46de258afc4b6cdadcbac80ec0ed084575ca27")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+57d5367dfefc7d741965a5ca808593ab1cf0dad3")]
 [assembly: System.Reflection.AssemblyProductAttribute("FShopApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FShopApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

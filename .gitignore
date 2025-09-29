@@ -59,19 +59,19 @@ app/linux/flutter/generated_plugins.cmake
 app/web/firebase_options.dart
 
 # .NET Backend
-backend/NailApi/bin/
-backend/NailApi/obj/
-backend/NailApi/*.user
-backend/NailApi/*.suo
-backend/NailApi/*.userosscache
-backend/NailApi/*.sln.docstates
-backend/NailApi/*.userprefs
-backend/NailApi/.vs/
-backend/NailApi/.vscode/
-backend/NailApi/appsettings.Development.json
-backend/NailApi/appsettings.Production.json
-backend/NailApi/logs/
-backend/NailApi/wwwroot/
+backend/FShopApi/bin/
+backend/FShopApi/obj/
+backend/FShopApi/*.user
+backend/FShopApi/*.suo
+backend/FShopApi/*.userosscache
+backend/FShopApi/*.sln.docstates
+backend/FShopApi/*.userprefs
+backend/FShopApi/.vs/
+backend/FShopApi/.vscode/
+backend/FShopApi/appsettings.Development.json
+backend/FShopApi/appsettings.Production.json
+backend/FShopApi/logs/
+backend/FShopApi/wwwroot/
 
 # IDE
 .vscode/
