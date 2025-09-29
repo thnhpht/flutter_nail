@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "nail_app" "\0"
+            VALUE "FileDescription", "FShop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "nail_app" "\0"
+            VALUE "InternalName", "fshop" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "nail_app.exe" "\0"
-            VALUE "ProductName", "nail_app" "\0"
+            VALUE "OriginalFilename", "fshop.exe" "\0"
+            VALUE "ProductName", "FShop" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

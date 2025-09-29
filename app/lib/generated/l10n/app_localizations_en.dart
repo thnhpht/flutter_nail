@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => 'Salon';
+  String get shop => 'Shop';
 
   @override
   String get todayOverview => 'Today\'s Overview';
@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get information => 'Information';
 
   @override
-  String get salonInfo => 'Information';
+  String get shopInfo => 'Information';
 
   @override
   String get menu => 'Menu';
@@ -1789,4 +1789,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serviceNotFoundError => 'Item not found error';
+
+  @override
+  String get pdfDownloadTitle => 'Download Bill';
+
+  @override
+  String get pdfDownloadReady => 'Bill is ready for download';
+
+  @override
+  String get pdfDownloadNow => 'Download Now';
+
+  @override
+  String pdfErrorDownloading(String error) {
+    return 'Error downloading file: $error';
+  }
+
+  @override
+  String get pdfWebOnlyFeature => 'This feature is only available on web';
 }

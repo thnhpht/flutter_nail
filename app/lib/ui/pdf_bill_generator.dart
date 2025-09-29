@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:http/http.dart' as http;
 import '../models.dart';
 import '../config/salon_config.dart';
 import '../api_client.dart';
@@ -64,6 +67,16 @@ class PdfBillGenerator {
         salonPhone: displaySalonPhone,
       );
 
+      // Đóng loading dialog
+      Navigator.of(context).pop();
+
+      // Trên web platform, hiển thị dialog download trực tiếp
+      if (kIsWeb) {
+        await _downloadPdfWeb(context, pdf, order, salonName: displaySalonName);
+        return;
+      }
+
+      // Trên các platform khác, giữ nguyên logic cũ
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
       File? file;
       Uint8List? pdfBytes;
@@ -74,9 +87,6 @@ class PdfBillGenerator {
         // Nếu không thể lưu file, sử dụng bytes trực tiếp
         pdfBytes = await pdf.save();
       }
-
-      // Đóng loading dialog
-      Navigator.of(context).pop();
 
       // Hiển thị dialog chọn cách chia sẻ
       await _showShareOptions(context, file, pdfBytes, order.customerPhone,
@@ -330,13 +340,216 @@ class PdfBillGenerator {
     }
   }
 
+  // Phương thức mới cho web platform - tự động download PDF
+  static Future<void> generateAndDownloadBill({
+    required BuildContext context,
+    required Order order,
+    required List<ServiceWithQuantity> services,
+    required ApiClient api,
+    String? salonName,
+    String? salonAddress,
+    String? salonPhone,
+  }) async {
+    try {
+      // Hiển thị loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Lấy thông tin salon từ database
+      Information? salonInfo;
+      try {
+        salonInfo = await api.getInformation();
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error loading salon info for PDF: $e');
+        }
+      }
+
+      // Sử dụng thông tin từ database hoặc fallback về tham số truyền vào hoặc SalonConfig
+      final displaySalonName =
+          salonInfo?.salonName ?? salonName ?? SalonConfig.salonName;
+      final displaySalonAddress =
+          salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
+      final displaySalonPhone =
+          salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
+
+      // Tạo PDF
+      final pdf = await _createPdf(
+        context: context,
+        order: order,
+        services: services,
+        salonName: displaySalonName,
+        salonAddress: displaySalonAddress,
+        salonPhone: displaySalonPhone,
+      );
+
+      // Đóng loading dialog
+      Navigator.of(context).pop();
+
+      // Trên web platform, download trực tiếp
+      if (kIsWeb) {
+        await _downloadPdfWeb(context, pdf, order, salonName: displaySalonName);
+        return;
+      }
+
+      // Trên các platform khác, hiển thị thông báo không hỗ trợ
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.pdfWebOnlyFeature,
+          type: MessageType.info);
+    } catch (e) {
+      // Đóng loading dialog nếu có lỗi
+      if (Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
+
+      // Hiển thị thông báo lỗi
+      String errorMessage =
+          AppLocalizations.of(context)!.pdfErrorCreating(e.toString());
+      if (e.toString().contains('MissingPluginException')) {
+        errorMessage = AppLocalizations.of(context)!.pdfErrorPluginNotSupported;
+      }
+
+      AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
+    }
+  }
+
+  // Download PDF trên web platform
+  static Future<void> _downloadPdfWeb(
+      BuildContext context, pw.Document pdf, Order order,
+      {String? salonName}) async {
+    try {
+      final fileName =
+          'HoaDon_${_formatBillId(context, order.id)}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      // Convert PDF to bytes với encoding UTF-8
+      final bytes = await pdf.save();
+
+      if (kDebugMode) {
+        print(
+            'PDF generated with ${bytes.length} bytes for Vietnamese text support');
+      }
+
+      // Create blob với MIME type đúng
+      final blob = html.Blob([bytes], 'application/pdf');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+
+      // Hiển thị dialog để thông báo cho người dùng biết file đang được download
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(AppLocalizations.of(context)!.pdfDownloadTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.green.shade100,
+                child: Icon(
+                  Icons.check_circle,
+                  size: 40,
+                  color: Colors.green.shade600,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.pdfDownloadReady,
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                fileName,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                  fontFamily: 'monospace',
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppLocalizations.of(context)!.pdfClose),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                // Trigger download
+                final anchor =
+                    html.document.createElement('a') as html.AnchorElement
+                      ..href = url
+                      ..style.display = 'none'
+                      ..download = fileName;
+                html.document.body?.children.add(anchor);
+                anchor.click();
+                html.document.body?.children.remove(anchor);
+                html.Url.revokeObjectUrl(url);
+              },
+              icon: const Icon(Icons.download),
+              label: Text(AppLocalizations.of(context)!.pdfDownloadNow),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.pdfErrorDownloading(e.toString()),
+          type: MessageType.error);
+    }
+  }
+
   static Future<void> _loadVietnameseFont() async {
     if (_vietnameseFont == null || _vietnameseFontBold == null) {
-      // Trên Flutter Web, sử dụng font system thay vì load từ assets
+      // Trên Flutter Web, thử load từ assets hoặc sử dụng font tốt hơn
       if (kIsWeb) {
-        // Sử dụng font system có hỗ trợ Unicode tốt hơn
-        _vietnameseFont = pw.Font.helvetica();
-        _vietnameseFontBold = pw.Font.helveticaBold();
+        try {
+          // Thử load font từ assets trên web
+          final fontData =
+              await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
+          _vietnameseFont = pw.Font.ttf(fontData);
+
+          try {
+            final fontBoldData =
+                await rootBundle.load('assets/fonts/NotoSans-Bold.ttf');
+            _vietnameseFontBold = pw.Font.ttf(fontBoldData);
+          } catch (e) {
+            _vietnameseFontBold = _vietnameseFont;
+          }
+
+          if (kDebugMode) {
+            print('Vietnamese Font loaded successfully from assets on web');
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('Failed to load Vietnamese font from assets on web: $e');
+          }
+
+          // Thử load font từ Google Fonts CDN
+          try {
+            await _loadGoogleFont();
+          } catch (googleFontError) {
+            if (kDebugMode) {
+              print('Failed to load Google Fonts: $googleFontError');
+            }
+
+            // Final fallback với font hỗ trợ Unicode tốt hơn trên web
+            _vietnameseFont = pw.Font
+                .times(); // Times Roman có hỗ trợ Unicode tốt hơn Helvetica
+            _vietnameseFontBold = pw.Font.timesBold();
+
+            if (kDebugMode) {
+              print(
+                  'Using Times font as final fallback for Vietnamese text on web');
+            }
+          }
+        }
         return;
       }
 
@@ -395,6 +608,51 @@ class PdfBillGenerator {
     }
   }
 
+  // Load Vietnamese font từ Google Fonts
+  static Future<void> _loadGoogleFont() async {
+    try {
+      // Noto Sans Regular từ Google Fonts
+      final regularResponse = await http.get(
+        Uri.parse(
+            'https://fonts.gstatic.com/s/notosans/v36/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf'),
+      );
+
+      if (regularResponse.statusCode == 200) {
+        _vietnameseFont =
+            pw.Font.ttf(ByteData.sublistView(regularResponse.bodyBytes));
+
+        try {
+          // Noto Sans Bold từ Google Fonts
+          final boldResponse = await http.get(
+            Uri.parse(
+                'https://fonts.gstatic.com/s/notosans/v36/o-0FIpQlx3QUlC5A4PNjXhFVZNyBxOvpq2O7.ttf'),
+          );
+
+          if (boldResponse.statusCode == 200) {
+            _vietnameseFontBold =
+                pw.Font.ttf(ByteData.sublistView(boldResponse.bodyBytes));
+          } else {
+            _vietnameseFontBold = _vietnameseFont;
+          }
+        } catch (e) {
+          _vietnameseFontBold = _vietnameseFont;
+        }
+
+        if (kDebugMode) {
+          print('Successfully loaded Noto Sans fonts from Google Fonts');
+        }
+      } else {
+        throw Exception(
+            'HTTP ${regularResponse.statusCode}: Failed to load font from Google Fonts');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading Google Fonts: $e');
+      }
+      rethrow;
+    }
+  }
+
   static pw.TextStyle _getVietnameseTextStyle({
     double fontSize = 14,
     pw.FontWeight fontWeight = pw.FontWeight.normal,
@@ -413,17 +671,17 @@ class PdfBillGenerator {
     List<pw.Font> fontFallback = [];
 
     if (kIsWeb) {
-      // Trên web, sử dụng font system có hỗ trợ Unicode
+      // Trên web, sử dụng font có hỗ trợ Unicode tốt hơn
       fontFallback = [
+        pw.Font.times(), // Times Roman hỗ trợ Unicode tốt nhất
         pw.Font.helvetica(),
-        pw.Font.times(),
         pw.Font.courier(),
       ];
     } else {
       // Trên mobile/desktop, sử dụng font fallback
       fontFallback = [
-        pw.Font.helvetica(),
         pw.Font.times(),
+        pw.Font.helvetica(),
         pw.Font.courier(),
       ];
     }
@@ -455,6 +713,7 @@ class PdfBillGenerator {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(20),
+        textDirection: pw.TextDirection.ltr,
         build: (pw.Context pdfContext) {
           return [
             // Header - Salon Info

@@ -12,7 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => 'Salon';
+  String get shop => 'Shop';
 
   @override
   String get todayOverview => 'Tổng quan hôm nay';
@@ -36,7 +36,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get information => 'Thông tin';
 
   @override
-  String get salonInfo => 'Thông tin';
+  String get shopInfo => 'Thông tin';
 
   @override
   String get menu => 'Menu';
@@ -1803,4 +1803,21 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get serviceNotFoundError => 'Lỗi không tìm thấy chi tiết';
+
+  @override
+  String get pdfDownloadTitle => 'Tải hóa đơn';
+
+  @override
+  String get pdfDownloadReady => 'Hóa đơn đã sẵn sàng để tải xuống';
+
+  @override
+  String get pdfDownloadNow => 'Tải xuống ngay';
+
+  @override
+  String pdfErrorDownloading(String error) {
+    return 'Lỗi tải file: $error';
+  }
+
+  @override
+  String get pdfWebOnlyFeature => 'Tính năng này chỉ khả dụng trên web';
 }

@@ -144,7 +144,7 @@ class AppNavigationDrawer extends StatelessWidget {
         _buildSectionHeader(l10n.information),
         _buildNavItem(
           icon: Icons.business,
-          title: l10n.salonInfo,
+          title: l10n.shopInfo,
           index: 8,
           isSelected: selectedIndex == 8,
         ),
@@ -820,7 +820,7 @@ class AppNavigationRail extends StatelessWidget {
         _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
         _buildRailDestination(Icons.receipt, l10n.bills),
         _buildRailDestination(Icons.analytics, l10n.reports),
-        _buildRailDestination(Icons.business, l10n.salonInfo),
+        _buildRailDestination(Icons.business, l10n.shopInfo),
       ];
     }
   }

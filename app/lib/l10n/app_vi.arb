@@ -3,7 +3,7 @@
   "@appTitle": {
     "description": "The title of the application"
   },
-  "salon": "Salon",
+  "shop": "Shop",
   "@salon": {
     "description": "Salon name"
   },
@@ -35,7 +35,7 @@
   "@information": {
     "description": "Information section"
   },
-  "salonInfo": "Thông tin",
+  "shopInfo": "Thông tin",
   "@salonInfo": {
     "description": "Salon information"
   },
@@ -3022,5 +3022,30 @@
   "serviceNotFoundError": "Lỗi không tìm thấy chi tiết",
   "@serviceNotFoundError": {
     "description": "Service not found error message"
+  },
+  "pdfDownloadTitle": "Tải hóa đơn",
+  "@pdfDownloadTitle": {
+    "description": "PDF download dialog title"
+  },
+  "pdfDownloadReady": "Hóa đơn đã sẵn sàng để tải xuống",
+  "@pdfDownloadReady": {
+    "description": "PDF download ready message"
+  },
+  "pdfDownloadNow": "Tải xuống ngay",
+  "@pdfDownloadNow": {
+    "description": "Download now button text"
+  },
+  "pdfErrorDownloading": "Lỗi tải file: {error}",
+  "@pdfErrorDownloading": {
+    "description": "Error downloading PDF file",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfWebOnlyFeature": "Tính năng này chỉ khả dụng trên web",
+  "@pdfWebOnlyFeature": {
+    "description": "Web only feature message"
   }
 }

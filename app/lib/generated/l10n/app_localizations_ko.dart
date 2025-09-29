@@ -12,7 +12,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => '살롱';
+  String get shop => 'Shop';
 
   @override
   String get todayOverview => '오늘의 개요';
@@ -36,7 +36,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get information => '정보';
 
   @override
-  String get salonInfo => '정보';
+  String get shopInfo => 'Thông tin';
 
   @override
   String get menu => '메뉴';
@@ -1751,4 +1751,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get serviceNotFoundError => '상품을 찾을 수 없습니다';
+
+  @override
+  String get pdfDownloadTitle => '청구서 다운로드';
+
+  @override
+  String get pdfDownloadReady => '청구서가 다운로드 준비되었습니다';
+
+  @override
+  String get pdfDownloadNow => '지금 다운로드';
+
+  @override
+  String pdfErrorDownloading(String error) {
+    return '파일 다운로드 오류: $error';
+  }
+
+  @override
+  String get pdfWebOnlyFeature => '이 기능은 웹에서만 사용할 수 있습니다';
 }

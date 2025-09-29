@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => '沙龙';
+  String get shop => 'Shop';
 
   @override
   String get todayOverview => '今日概览';
@@ -36,7 +36,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get information => '信息';
 
   @override
-  String get salonInfo => '信息';
+  String get shopInfo => 'Thông tin';
 
   @override
   String get menu => '菜单';
@@ -1740,4 +1740,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get serviceNotFoundError => '找不到商品';
+
+  @override
+  String get pdfDownloadTitle => '下载账单';
+
+  @override
+  String get pdfDownloadReady => '账单已准备下载';
+
+  @override
+  String get pdfDownloadNow => '立即下载';
+
+  @override
+  String pdfErrorDownloading(String error) {
+    return '下载文件错误: $error';
+  }
+
+  @override
+  String get pdfWebOnlyFeature => '此功能仅在网络上可用';
 }

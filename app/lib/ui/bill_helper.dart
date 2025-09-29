@@ -1041,14 +1041,29 @@ class BillHelper {
           .toList();
     }
 
-    PdfBillGenerator.generateAndSendToZalo(
-      context: context,
-      order: order,
-      services: servicesForPdf,
-      api: _apiClient!,
-      salonName: salonName,
-      salonAddress: salonAddress,
-      salonPhone: salonPhone,
-    );
+    // Kiểm tra platform để sử dụng chức năng phù hợp
+    if (kIsWeb) {
+      // Trên web, sử dụng chức năng download trực tiếp
+      PdfBillGenerator.generateAndDownloadBill(
+        context: context,
+        order: order,
+        services: servicesForPdf,
+        api: _apiClient!,
+        salonName: salonName,
+        salonAddress: salonAddress,
+        salonPhone: salonPhone,
+      );
+    } else {
+      // Trên mobile/desktop, sử dụng chức năng chia sẻ qua Zalo như cũ
+      PdfBillGenerator.generateAndSendToZalo(
+        context: context,
+        order: order,
+        services: servicesForPdf,
+        api: _apiClient!,
+        salonName: salonName,
+        salonAddress: salonAddress,
+        salonPhone: salonPhone,
+      );
+    }
   }
 }

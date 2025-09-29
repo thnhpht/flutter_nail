@@ -2207,5 +2207,30 @@
   "serviceNotFoundError": "找不到商品",
   "@serviceNotFoundError": {
     "description": "Service not found error message"
+  },
+  "pdfDownloadTitle": "下载账单",
+  "@pdfDownloadTitle": {
+    "description": "PDF download dialog title"
+  },
+  "pdfDownloadReady": "账单已准备下载",
+  "@pdfDownloadReady": {
+    "description": "PDF download ready message"
+  },
+  "pdfDownloadNow": "立即下载",
+  "@pdfDownloadNow": {
+    "description": "Download now button text"
+  },
+  "pdfErrorDownloading": "下载文件错误: {error}",
+  "@pdfErrorDownloading": {
+    "description": "Error downloading PDF file",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfWebOnlyFeature": "此功能仅在网络上可用",
+  "@pdfWebOnlyFeature": {
+    "description": "Web only feature message"
   }
 }

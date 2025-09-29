@@ -108,11 +108,11 @@ abstract class AppLocalizations {
   /// **'FShop'**
   String get appTitle;
 
-  /// Salon name
+  /// No description provided for @shop.
   ///
   /// In vi, this message translates to:
-  /// **'Salon'**
-  String get salon;
+  /// **'Shop'**
+  String get shop;
 
   /// Today's overview
   ///
@@ -156,11 +156,11 @@ abstract class AppLocalizations {
   /// **'Thông tin'**
   String get information;
 
-  /// Salon information
+  /// No description provided for @shopInfo.
   ///
   /// In vi, this message translates to:
   /// **'Thông tin'**
-  String get salonInfo;
+  String get shopInfo;
 
   /// Menu
   ///
@@ -3341,6 +3341,36 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Lỗi không tìm thấy chi tiết'**
   String get serviceNotFoundError;
+
+  /// PDF download dialog title
+  ///
+  /// In vi, this message translates to:
+  /// **'Tải hóa đơn'**
+  String get pdfDownloadTitle;
+
+  /// PDF download ready message
+  ///
+  /// In vi, this message translates to:
+  /// **'Hóa đơn đã sẵn sàng để tải xuống'**
+  String get pdfDownloadReady;
+
+  /// Download now button text
+  ///
+  /// In vi, this message translates to:
+  /// **'Tải xuống ngay'**
+  String get pdfDownloadNow;
+
+  /// Error downloading PDF file
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi tải file: {error}'**
+  String pdfErrorDownloading(String error);
+
+  /// Web only feature message
+  ///
+  /// In vi, this message translates to:
+  /// **'Tính năng này chỉ khả dụng trên web'**
+  String get pdfWebOnlyFeature;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,6 @@
 {
   "appTitle": "FShop",
-  "salon": "Salon",
+  "shop": "Shop",
   "todayOverview": "Today's Overview",
   "customers": "Customers",
   "bills": "Bills",
@@ -8,7 +8,7 @@
   "boss": "Boss",
   "employee": "Employee",
   "information": "Information",
-  "salonInfo": "Information",
+  "shopInfo": "Information",
   "menu": "Menu",
   "management": "Management",
   "employees": "Employees",
@@ -2264,5 +2264,30 @@
   "serviceNotFoundError": "Item not found error",
   "@serviceNotFoundError": {
     "description": "Service not found error message"
+  },
+  "pdfDownloadTitle": "Download Bill",
+  "@pdfDownloadTitle": {
+    "description": "PDF download dialog title"
+  },
+  "pdfDownloadReady": "Bill is ready for download",
+  "@pdfDownloadReady": {
+    "description": "PDF download ready message"
+  },
+  "pdfDownloadNow": "Download Now",
+  "@pdfDownloadNow": {
+    "description": "Download now button text"
+  },
+  "pdfErrorDownloading": "Error downloading file: {error}",
+  "@pdfErrorDownloading": {
+    "description": "Error downloading PDF file",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfWebOnlyFeature": "This feature is only available on web",
+  "@pdfWebOnlyFeature": {
+    "description": "Web only feature message"
   }
 }
