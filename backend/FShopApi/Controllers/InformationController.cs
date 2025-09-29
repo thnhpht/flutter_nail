@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using NailApi.Data;
-using NailApi.Models;
-using NailApi.Services;
+using FShopApi.Data;
+using FShopApi.Models;
+using FShopApi.Services;
 using System.Security.Claims;
 
-namespace NailApi.Controllers
+namespace FShopApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

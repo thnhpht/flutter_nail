@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace NailApi.Controllers
+namespace FShopApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

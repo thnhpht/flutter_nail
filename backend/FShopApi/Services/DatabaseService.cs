@@ -1,8 +1,8 @@
 using Microsoft.Data.SqlClient;
-using NailApi.Data;
+using FShopApi.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace NailApi.Services
+namespace FShopApi.Services
 {
     public interface IDatabaseService
     {

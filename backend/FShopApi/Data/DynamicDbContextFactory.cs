@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace NailApi.Data
+namespace FShopApi.Data
 {
     public class DynamicDbContextFactory : IDesignTimeDbContextFactory<DynamicDbContext>
     {

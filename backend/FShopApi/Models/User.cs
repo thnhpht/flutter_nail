@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NailApi.Models
+namespace FShopApi.Models
 {
     [Table("Users")]
     public class User

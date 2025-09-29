@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace NailApi.Models
+namespace FShopApi.Models
 {
     [Table("Services")]
     public class Service

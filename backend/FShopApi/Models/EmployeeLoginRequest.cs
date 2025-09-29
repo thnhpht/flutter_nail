@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NailApi.Models
+namespace FShopApi.Models
 {
     public class EmployeeLoginRequest
     {

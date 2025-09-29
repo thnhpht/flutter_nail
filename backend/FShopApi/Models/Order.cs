@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NailApi.Models
+namespace FShopApi.Models
 {
     [Table("Orders")]
     public class Order

@@ -1,4 +1,4 @@
-namespace NailApi.Models
+namespace FShopApi.Models
 {
     public class LoginResponse
     {

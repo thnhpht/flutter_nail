@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using NailApi.Models;
+using FShopApi.Models;
 
-namespace NailApi.Data
+namespace FShopApi.Data
 {
     public class DynamicDbContext : DbContext
     {
