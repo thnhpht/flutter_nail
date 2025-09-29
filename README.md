@@ -1,15 +1,15 @@
-# Nail Manager - Hệ thống Quản lý Salon Nail (Flutter + .NET)
+# FShop - Hệ thống Quản lý shop (Flutter + .NET)
 
 ## Tổng quan
 
-Nail Manager là một hệ thống quản lý salon nail toàn diện với kiến trúc multi-tenant, cho phép mỗi salon có database riêng biệt. Hệ thống bao gồm backend .NET Web API và frontend Flutter app hỗ trợ đa nền tảng.
+FShop là một hệ thống quản lý shop toàn diện với kiến trúc multi-tenant, cho phép mỗi shop có database riêng biệt. Hệ thống bao gồm backend .NET Web API và frontend Flutter app hỗ trợ đa nền tảng.
 
 ## Tính năng chính
 
 ### 🎯 Quản lý cốt lõi
 
 - **Khách hàng**: Thêm, sửa, xóa thông tin khách hàng
-- **Nhân viên**: Quản lý nhân viên và phân quyền (chủ salon/nhân viên)
+- **Nhân viên**: Quản lý nhân viên và phân quyền (chủ shop/nhân viên)
 - **Danh mục & Dịch vụ**: Tổ chức dịch vụ theo danh mục với hình ảnh
 - **Đơn hàng**: Tạo đơn hàng với nhiều dịch vụ và nhân viên
 
@@ -20,10 +20,10 @@ Nail Manager là một hệ thống quản lý salon nail toàn diện với ki�
 - **Báo cáo doanh thu**: Thống kê theo thời gian và nhân viên
 - **Dashboard**: Tổng quan doanh thu hàng ngày
 
-### 🏪 Thông tin Salon
+### 🏪 Thông tin shop
 
-- **Cấu hình salon**: Logo, thông tin liên hệ, mạng xã hội
-- **QR Code**: Tạo mã QR cho thông tin salon
+- **Cấu hình shop**: Logo, thông tin liên hệ, mạng xã hội
+- **QR Code**: Tạo mã QR cho thông tin shop
 - **Responsive**: Tối ưu cho mọi kích thước màn hình
 
 ## Yêu cầu hệ thống
@@ -88,19 +88,19 @@ flutter run -d macos --dart-define=API_BASE_URL=http://localhost:5088/api
 - `GET/POST/PUT/DELETE /api/categories` - Quản lý danh mục
 - `GET/POST/PUT/DELETE /api/services` - Quản lý dịch vụ
 - `GET/POST/PUT/DELETE /api/orders` - Quản lý đơn hàng
-- `GET/POST/PUT /api/information` - Thông tin salon
+- `GET/POST/PUT /api/information` - Thông tin shop
 - `GET /api/dashboard/today-stats` - Thống kê hôm nay
 
 ### Database Architecture
 
 #### NailAdmin Database
 
-- Lưu trữ thông tin đăng nhập của tất cả salon
+- Lưu trữ thông tin đăng nhập của tất cả shop
 - Bảng `User`: Email, Password (hash+salt), UserLogin, PasswordLogin
 
 #### Dynamic Databases
 
-- Mỗi salon có database riêng với tên = email đăng ký
+- Mỗi shop có database riêng với tên = email đăng ký
 - Tự động tạo khi đăng ký lần đầu
 - Bao gồm: Customers, Employees, Categories, Services, Orders, Information
 
@@ -118,7 +118,7 @@ app/
 │   │   ├── order_screen.dart
 │   │   ├── bills_screen.dart
 │   │   ├── reports_screen.dart
-│   │   └── salon_info_screen.dart
+│   │   └── shop_info_screen.dart
 │   ├── ui/                # UI components
 │   ├── config/            # Cấu hình
 │   ├── models.dart        # Data models
@@ -136,9 +136,9 @@ app/
 
 ### Multi-tenant Architecture
 
-- Mỗi salon có database riêng biệt
+- Mỗi shop có database riêng biệt
 - Tự động tạo SQL Server login và user
-- Cấp quyền `db_owner` cho user salon
+- Cấp quyền `db_owner` cho user shop
 
 ### Cross-platform Support
 
@@ -185,4 +185,4 @@ app/
 
 ## Licens
 
-Dự án này được phát triển cho mục đích quản lý salon nail chuyên nghiệp.
+Dự án này được phát triển cho mục đích quản lý shop chuyên nghiệp.
