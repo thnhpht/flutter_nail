@@ -48,8 +48,8 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "assets/icons/icon.png"
-    background_color: "#667eea"
-    theme_color: "#667eea"
+    background_color: "#9c27b0"
+    theme_color: "#9c27b0"
   windows:
     generate: true
     image_path: "assets/icons/icon.png"
