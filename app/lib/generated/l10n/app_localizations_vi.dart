@@ -51,7 +51,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get categories => 'Danh mục';
 
   @override
-  String get services => 'Dịch vụ';
+  String get items => 'Chi tiết';
 
   @override
   String get createOrder => 'Tạo đơn';
@@ -384,44 +384,44 @@ class AppLocalizationsVi extends AppLocalizations {
   String get confirmDeleteCategory => 'Bạn có chắc chắn muốn xóa danh mục này?';
 
   @override
-  String get serviceName => 'Tên dịch vụ';
+  String get itemName => 'Tên chi tiết';
 
   @override
-  String get servicePrice => 'Giá dịch vụ';
+  String get itemPrice => 'Giá chi tiết';
 
   @override
-  String get serviceDuration => 'Thời gian thực hiện';
+  String get itemDuration => 'Thời gian thực hiện';
 
   @override
-  String get addService => 'Thêm dịch vụ';
+  String get addService => 'Thêm chi tiết';
 
   @override
-  String get editService => 'Chỉnh sửa dịch vụ';
+  String get editService => 'Chỉnh sửa chi tiết';
 
   @override
-  String get deleteService => 'Xóa dịch vụ';
+  String get deleteService => 'Xóa chi tiết';
 
   @override
-  String get serviceAddedSuccessfully => 'Thêm dịch vụ thành công';
+  String get itemAddedSuccessfully => 'Thêm chi tiết thành công';
 
   @override
-  String get serviceUpdatedSuccessfully =>
-      'Thay đổi thông tin dịch vụ thành công';
+  String get itemUpdatedSuccessfully =>
+      'Thay đổi thông tin chi tiết thành công';
 
   @override
-  String get serviceDeletedSuccessfully => 'Xóa dịch vụ thành công';
+  String get itemDeletedSuccessfully => 'Xóa chi tiết thành công';
 
   @override
-  String get errorAddingService => 'Lỗi khi thêm dịch vụ';
+  String get errorAddingService => 'Lỗi khi thêm chi tiết';
 
   @override
-  String get errorUpdatingService => 'Lỗi khi thay đổi thông tin dịch vụ';
+  String get errorUpdatingService => 'Lỗi khi thay đổi thông tin chi tiết';
 
   @override
-  String get errorDeletingService => 'Lỗi khi xóa dịch vụ';
+  String get errorDeletingService => 'Lỗi khi xóa chi tiết';
 
   @override
-  String get confirmDeleteService => 'Bạn có chắc chắn muốn xóa dịch vụ này?';
+  String get confirmDeleteService => 'Bạn có chắc chắn muốn xóa chi tiết này?';
 
   @override
   String get order => 'Đơn hàng';
@@ -458,20 +458,20 @@ class AppLocalizationsVi extends AppLocalizations {
   String get confirmDeleteOrder => 'Bạn có chắc chắn muốn xóa đơn hàng này?';
 
   @override
-  String get selectServices => 'Chọn dịch vụ';
+  String get selectServices => 'Chọn chi tiết';
 
   @override
   String get selectEmployees => 'Chọn nhân viên';
 
   @override
-  String get selectedServices => 'dịch vụ đã chọn';
+  String get selectedServices => 'chi tiết đã chọn';
 
   @override
   String get selectedEmployees => 'nhân viên đã chọn';
 
   @override
   String get pleaseSelectAtLeastOneService =>
-      'Vui lòng chọn ít nhất một dịch vụ';
+      'Vui lòng chọn ít nhất một chi tiết';
 
   @override
   String get pleaseSelectAtLeastOneEmployee =>
@@ -488,7 +488,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get employeeInformation => 'Thông tin nhân viên';
 
   @override
-  String get serviceCategories => 'Danh mục dịch vụ';
+  String get itemCategories => 'Danh mục chi tiết';
 
   @override
   String get performingEmployee => 'Nhân viên thực hiện';
@@ -517,7 +517,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String errorLoadingServices(String error) {
-    return 'Lỗi tải dịch vụ: $error';
+    return 'Lỗi tải chi tiết: $error';
   }
 
   @override
@@ -536,7 +536,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get invalidServiceData => 'Dữ liệu dịch vụ không hợp lệ';
+  String get invalidServiceData => 'Dữ liệu chi tiết không hợp lệ';
 
   @override
   String get bill => 'Hóa đơn';
@@ -740,10 +740,10 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get createNewService => 'Tạo dịch vụ mới';
+  String get createNewService => 'Tạo chi tiết mới';
 
   @override
-  String get pleaseEnterServiceName => 'Vui lòng nhập tên dịch vụ';
+  String get pleaseEnterServiceName => 'Vui lòng nhập tên chi tiết';
 
   @override
   String get pleaseEnterPrice => 'Vui lòng nhập giá';
@@ -755,7 +755,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorUploadingImage => 'Lỗi khi upload ảnh lên server';
 
   @override
-  String get updateServiceInfo => 'Cập nhật thông tin dịch vụ';
+  String get updateServiceInfo => 'Cập nhật thông tin chi tiết';
 
   @override
   String get categoryNameRequired => 'Tên danh mục không được để trống';
@@ -883,7 +883,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get categoriesTitle => 'Danh mục';
 
   @override
-  String get categoriesListDescription => 'Danh sách danh mục dịch vụ';
+  String get categoriesListDescription => 'Danh sách danh mục chi tiết';
 
   @override
   String get searchCategories => 'Tìm kiếm danh mục...';
@@ -899,49 +899,49 @@ class AppLocalizationsVi extends AppLocalizations {
       'Vui lòng kiểm tra kết nối mạng hoặc thử lại';
 
   @override
-  String get servicesTitle => 'Dịch vụ';
+  String get itemsTitle => 'Chi tiết';
 
   @override
-  String get servicesSubtitle => 'Quản lý dịch vụ theo danh mục';
+  String get itemsSubtitle => 'Quản lý chi tiết theo danh mục';
 
   @override
-  String get searchServices => 'Tìm kiếm dịch vụ...';
+  String get searchServices => 'Tìm kiếm chi tiết...';
 
   @override
   String showingAllServices(int total) {
-    return 'Hiển thị tất cả $total dịch vụ';
+    return 'Hiển thị tất cả $total chi tiết';
   }
 
   @override
   String foundServicesWithCategoryAndSearch(int shown, int total) {
-    return 'Tìm thấy $shown/$total dịch vụ (lọc theo danh mục và tìm kiếm)';
+    return 'Tìm thấy $shown/$total chi tiết (lọc theo danh mục và tìm kiếm)';
   }
 
   @override
   String foundServicesWithCategory(int shown, int total, int count) {
-    return 'Tìm thấy $shown/$total dịch vụ (lọc theo $count danh mục)';
+    return 'Tìm thấy $shown/$total chi tiết (lọc theo $count danh mục)';
   }
 
   @override
   String foundServicesWithSearch(int shown, int total, String search) {
-    return 'Tìm thấy $shown/$total dịch vụ (tìm kiếm: \"$search\")';
+    return 'Tìm thấy $shown/$total chi tiết (tìm kiếm: \"$search\")';
   }
 
   @override
   String get clearFilters => 'Xóa bộ lọc';
 
   @override
-  String get errorLoadingServicesList => 'Lỗi tải danh sách dịch vụ';
+  String get errorLoadingServicesList => 'Lỗi tải danh sách chi tiết';
 
   @override
-  String get cannotLoadServicesList => 'Không thể tải danh sách dịch vụ';
+  String get cannotLoadServicesList => 'Không thể tải danh sách chi tiết';
 
   @override
   String get checkNetworkOrTryAgainServices =>
       'Vui lòng kiểm tra kết nối mạng hoặc thử lại';
 
   @override
-  String get service => 'dịch vụ';
+  String get item => 'chi tiết';
 
   @override
   String customerFound(String name) {
@@ -957,8 +957,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get createNewOrder => 'Tạo đơn mới';
 
   @override
-  String servicesSelected(int count) {
-    return '$count dịch vụ đã chọn';
+  String itemsSelected(int count) {
+    return '$count chi tiết đã chọn';
   }
 
   @override
@@ -976,11 +976,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get selectCategory => 'Chọn danh mục';
 
   @override
-  String get selectService => 'Chọn dịch vụ';
+  String get selectService => 'Chọn chi tiết';
 
   @override
-  String servicesSelectedCount(int count) {
-    return '$count dịch vụ đã chọn';
+  String itemsSelectedCount(int count) {
+    return '$count chi tiết đã chọn';
   }
 
   @override
@@ -1127,10 +1127,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get menuTitle => 'Menu';
 
   @override
-  String get menuSubtitle => 'Menu danh mục và dịch vụ';
+  String get menuSubtitle => 'Menu danh mục và chi tiết';
 
   @override
-  String get searchServicesPlaceholder => 'Tìm kiếm dịch vụ...';
+  String get searchServicesPlaceholder => 'Tìm kiếm chi tiết...';
 
   @override
   String get noCategoriesYet => 'Chưa có danh mục nào';
@@ -1139,8 +1139,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get categoriesSection => 'Danh mục';
 
   @override
-  String servicesCount(int count) {
-    return '$count dịch vụ';
+  String itemsCount(int count) {
+    return '$count chi tiết';
   }
 
   @override
@@ -1149,28 +1149,28 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get servicesSection => 'Dịch vụ';
+  String get itemsSection => 'Chi tiết';
 
   @override
-  String get viewAllServices => 'Xem tất cả dịch vụ';
+  String get viewAllServices => 'Xem tất cả chi tiết';
 
   @override
   String noServicesFoundWithSearchAndCategory(String search, String category) {
-    return 'Không tìm thấy dịch vụ \"$search\" trong $category';
+    return 'Không tìm thấy chi tiết \"$search\" trong $category';
   }
 
   @override
   String noServicesFoundWithSearch(String search) {
-    return 'Không tìm thấy dịch vụ \"$search\"';
+    return 'Không tìm thấy chi tiết \"$search\"';
   }
 
   @override
   String noServicesInCategory(String category) {
-    return 'Danh mục \"$category\" chưa có dịch vụ nào';
+    return 'Danh mục \"$category\" chưa có chi tiết nào';
   }
 
   @override
-  String get noServicesYet => 'Chưa có dịch vụ nào';
+  String get noServicesYet => 'Chưa có chi tiết nào';
 
   @override
   String get unknownCategory => 'Không xác định';
@@ -1251,7 +1251,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get totalAmount => 'Tổng tiền';
 
   @override
-  String get noServices => 'Không có dịch vụ';
+  String get noServices => 'Không có chi tiết';
 
   @override
   String get temporary => 'TẠM THỜI';
@@ -1261,8 +1261,8 @@ class AppLocalizationsVi extends AppLocalizations {
       'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay';
 
   @override
-  String get serviceInfoNotFound =>
-      'Không tìm thấy thông tin dịch vụ cho đơn hàng này';
+  String get itemInfoNotFound =>
+      'Không tìm thấy thông tin chi tiết cho đơn hàng này';
 
   @override
   String get selectTimeRangeToViewReports =>
@@ -1315,7 +1315,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get servingStaff => 'Nhân viên phục vụ';
 
   @override
-  String get serviceDetails => 'Chi tiết dịch vụ';
+  String get itemDetails => 'Chi tiết chi tiết';
 
   @override
   String get qrCodePayment => 'QR Code thanh toán';
@@ -1330,11 +1330,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get scanQrToPay => 'Quét mã QR để thanh toán';
 
   @override
-  String get serviceNotFoundError =>
-      'Không tìm thấy thông tin dịch vụ cho đơn hàng này';
+  String get itemNotFoundError =>
+      'Không tìm thấy thông tin chi tiết cho đơn hàng này';
 
   @override
-  String get billFooter => 'Cảm ơn quý khách đã sử dụng dịch vụ!';
+  String get billFooter => 'Cảm ơn quý khách đã sử dụng chi tiết!';
 
   @override
   String get billFooter2 => 'Hẹn gặp lại quý khách!';
@@ -1474,7 +1474,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfEmployeeServed => 'Nhân viên phục vụ';
 
   @override
-  String get pdfServicesDetailTitle => 'CHI TIẾT DỊCH VỤ';
+  String get pdfServicesDetailTitle => 'CHI TIẾT';
 
   @override
   String get pdfPaymentInfoTitle => 'THÔNG TIN THANH TOÁN';
@@ -1494,7 +1494,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfTotalPayment => 'TỔNG THANH TOÁN';
 
   @override
-  String get pdfThankYouMessage => 'Cảm ơn quý khách đã sử dụng dịch vụ!';
+  String get pdfThankYouMessage => 'Cảm ơn quý khách đã sử dụng chi tiết!';
 
   @override
   String get pdfSeeYouAgainMessage => 'Hẹn gặp lại quý khách!';
@@ -1585,7 +1585,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get accessServicesCreateOrdersAndBills =>
-      'Truy cập dịch vụ, tạo đơn và hóa đơn';
+      'Truy cập chi tiết, tạo đơn và hóa đơn';
 
   @override
   String get pleaseEnterYourEmail => 'Vui lòng nhập email của bạn';
@@ -1710,7 +1710,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get unit => 'Đơn vị';
 
   @override
-  String get serviceCode => 'Mã dịch vụ';
+  String get itemCode => 'Mã chi tiết';
 
   @override
   String get unitOfMeasurement => 'Đơn vị tính';
@@ -1741,4 +1741,56 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get clearSorting => 'Xóa sắp xếp';
+
+  @override
+  String servicesSelected(int count) {
+    return '$count chi tiết đã chọn';
+  }
+
+  @override
+  String get serviceCategories => 'Danh mục chi tiết';
+
+  @override
+  String get services => 'Chi tiết';
+
+  @override
+  String servicesSelectedCount(int count) {
+    return '$count chi tiết đã chọn';
+  }
+
+  @override
+  String get serviceName => 'Tên chi tiết';
+
+  @override
+  String get serviceAddedSuccessfully => 'Thêm chi tiết thành công';
+
+  @override
+  String get serviceUpdatedSuccessfully => 'Cập nhật chi tiết thành công';
+
+  @override
+  String get serviceDeletedSuccessfully => 'Xóa chi tiết thành công';
+
+  @override
+  String get serviceDetails => 'Chi tiết chi tiết';
+
+  @override
+  String get serviceInfoNotFound =>
+      'Không tìm thấy thông tin chi tiết cho đơn hàng này';
+
+  @override
+  String get servicesTitle => 'Chi tiết';
+
+  @override
+  String get servicesSubtitle => 'Quản lý chi tiết theo danh mục';
+
+  @override
+  String servicesCount(int count) {
+    return '$count chi tiết';
+  }
+
+  @override
+  String get servicesSection => 'Chi tiết';
+
+  @override
+  String get serviceNotFoundError => 'Lỗi không tìm thấy chi tiết';
 }

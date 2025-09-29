@@ -1014,7 +1014,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                     // Services Selection
                     _buildSectionCard(
                       title: l10n.services,
-                      icon: Icons.spa,
+                      icon: Icons.shopping_cart,
                       child: Column(
                         children: [
                           // Selected Services Chips

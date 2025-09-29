@@ -13,7 +13,7 @@
   "management": "관리",
   "employees": "직원",
   "categories": "카테고리",
-  "services": "서비스",
+  "services": "상품",
   "createOrder": "주문 생성",
   "billsReports": "청구서 및 보고서",
   "reports": "보고서",
@@ -124,19 +124,19 @@
   "errorUpdatingCategory": "카테고리 업데이트 오류",
   "errorDeletingCategory": "카테고리 삭제 오류",
   "confirmDeleteCategory": "이 카테고리를 삭제하시겠습니까?",
-  "serviceName": "서비스 이름",
-  "servicePrice": "서비스 가격",
-  "serviceDuration": "서비스 소요 시간",
-  "addService": "서비스 추가",
-  "editService": "서비스 편집",
-  "deleteService": "서비스 삭제",
-  "serviceAddedSuccessfully": "서비스가 성공적으로 추가되었습니다",
-  "serviceUpdatedSuccessfully": "서비스가 성공적으로 업데이트되었습니다",
-  "serviceDeletedSuccessfully": "서비스가 성공적으로 삭제되었습니다",
-  "errorAddingService": "서비스 추가 오류",
-  "errorUpdatingService": "서비스 업데이트 오류",
-  "errorDeletingService": "서비스 삭제 오류",
-  "confirmDeleteService": "이 서비스를 삭제하시겠습니까?",
+  "serviceName": "상품 이름",
+  "servicePrice": "상품 가격",
+  "serviceDuration": "상품 소요 시간",
+  "addService": "상품 추가",
+  "editService": "상품 편집",
+  "deleteService": "상품 삭제",
+  "serviceAddedSuccessfully": "상품가 성공적으로 추가되었습니다",
+  "serviceUpdatedSuccessfully": "상품가 성공적으로 업데이트되었습니다",
+  "serviceDeletedSuccessfully": "상품가 성공적으로 삭제되었습니다",
+  "errorAddingService": "상품 추가 오류",
+  "errorUpdatingService": "상품 업데이트 오류",
+  "errorDeletingService": "상품 삭제 오류",
+  "confirmDeleteService": "이 상품를 삭제하시겠습니까?",
   "order": "주문",
   "orders": "주문",
   "createOrder": "주문 생성",
@@ -148,16 +148,16 @@
   "errorUpdatingOrder": "주문 업데이트 오류",
   "errorDeletingOrder": "주문 삭제 오류",
   "confirmDeleteOrder": "이 주문을 삭제하시겠습니까?",
-  "selectServices": "서비스 선택",
+  "selectServices": "상품 선택",
   "selectEmployees": "직원 선택",
-  "selectedServices": "개 서비스 선택됨",
+  "selectedServices": "개 상품 선택됨",
   "selectedEmployees": "명 직원 선택됨",
-  "pleaseSelectAtLeastOneService": "최소 하나의 서비스를 선택하세요",
+  "pleaseSelectAtLeastOneService": "최소 하나의 상품를 선택하세요",
   "pleaseSelectAtLeastOneEmployee": "최소 한 명의 직원을 선택하세요",
   "canOnlyUpdateOrderToday": "오늘의 주문만 업데이트할 수 있습니다",
   "customerInformation": "고객 정보",
   "employeeInformation": "직원 정보",
-  "serviceCategories": "서비스 카테고리",
+  "serviceCategories": "상품 카테고리",
   "performingEmployee": "담당 직원",
   "loggedInEmployee": "로그인한 직원",
   "foundCustomer": "고객을 찾았습니다",
@@ -165,11 +165,11 @@
   "foundEmployee": "직원을 찾았습니다",
   "employeeNotFound": "이 전화번호로 직원을 찾을 수 없습니다. 새로 생성하려면 이름을 입력하세요.",
   "errorLoadingCategories": "카테고리 로딩 오류",
-  "errorLoadingServices": "서비스 로딩 오류",
+  "errorLoadingServices": "상품 로딩 오류",
   "errorLoadingEmployees": "직원 목록 로딩 오류",
   "errorSearchingCustomer": "고객 검색 오류",
   "errorSearchingEmployee": "직원 검색 오류",
-  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "invalidServiceData": "유효하지 않은 상품 데이터",
   "bill": "청구서",
   "bills": "청구서",
   "billNumber": "청구서 번호",
@@ -235,18 +235,18 @@
   "selectedCategories": "선택된 카테고리",
   "removeAll": "모두 제거",
   "allCategories": "모든 카테고리 ({count})",
-  "createNewService": "새 네일 서비스 만들기",
-  "pleaseEnterServiceName": "서비스 이름을 입력하세요",
+  "createNewService": "새 네일 상품 만들기",
+  "pleaseEnterServiceName": "상품 이름을 입력하세요",
   "pleaseEnterPrice": "가격을 입력하세요",
   "pleaseEnterValidPrice": "유효한 가격을 입력하세요",
   "errorUploadingImage": "서버에 이미지 업로드 중 오류",
-  "serviceAddedSuccessfully": "서비스가 성공적으로 추가되었습니다",
-  "errorAddingService": "서비스 추가 중 오류",
-  "editService": "서비스 편집",
-  "updateServiceInfo": "서비스 정보 업데이트",
-  "errorUpdatingService": "서비스 정보 업데이트 중 오류",
-  "serviceDeletedSuccessfully": "서비스가 성공적으로 삭제되었습니다",
-  "errorDeletingService": "서비스 삭제 중 오류",
+  "serviceAddedSuccessfully": "상품가 성공적으로 추가되었습니다",
+  "errorAddingService": "상품 추가 중 오류",
+  "editService": "상품 편집",
+  "updateServiceInfo": "상품 정보 업데이트",
+  "errorUpdatingService": "상품 정보 업데이트 중 오류",
+  "serviceDeletedSuccessfully": "상품가 성공적으로 삭제되었습니다",
+  "errorDeletingService": "상품 삭제 중 오류",
   "categoryNameRequired": "카테고리 이름은 필수입니다",
   "errorUpdatingCategory": "카테고리 정보 업데이트 중 오류",
   "categoryDeletedSuccessfully": "카테고리가 성공적으로 삭제되었습니다",
@@ -259,7 +259,7 @@
   "customerDeletedSuccessfully": "고객이 성공적으로 삭제되었습니다",
   "errorDeletingCustomer": "고객 삭제 중 오류",
   "errorLoadingCategories": "카테고리 로딩 중 오류: {error}",
-  "errorLoadingServices": "서비스 로딩 중 오류: {error}",
+  "errorLoadingServices": "상품 로딩 중 오류: {error}",
   "errorLoadingEmployees": "직원 목록 로딩 중 오류: {error}",
   "errorSearchingCustomer": "고객 검색 중 오류: {error}",
   "errorSearchingEmployee": "직원 검색 중 오류: {error}",
@@ -391,7 +391,7 @@
   "@categoriesTitle": {
     "description": "Categories title"
   },
-  "categoriesListDescription": "서비스 카테고리 목록",
+  "categoriesListDescription": "상품 카테고리 목록",
   "@categoriesListDescription": {
     "description": "Categories list description"
   },
@@ -411,19 +411,19 @@
   "@checkNetworkOrTryAgainCategories": {
     "description": "Please check network connection or try again"
   },
-  "servicesTitle": "서비스",
+  "servicesTitle": "상품",
   "@servicesTitle": {
     "description": "Services title"
   },
-  "servicesSubtitle": "카테고리별 서비스 관리",
+  "servicesSubtitle": "카테고리별 상품 관리",
   "@servicesSubtitle": {
     "description": "Services subtitle"
   },
-  "searchServices": "서비스 검색...",
+  "searchServices": "상품 검색...",
   "@searchServices": {
     "description": "Search services placeholder"
   },
-  "showingAllServices": "전체 {total}개 서비스 표시",
+  "showingAllServices": "전체 {total}개 상품 표시",
   "@showingAllServices": {
     "description": "Showing all services message",
     "placeholders": {
@@ -432,7 +432,7 @@
       }
     }
   },
-  "foundServicesWithCategoryAndSearch": "{shown}/{total}개 서비스 발견 (카테고리 및 검색으로 필터링됨)",
+  "foundServicesWithCategoryAndSearch": "{shown}/{total}개 상품 발견 (카테고리 및 검색으로 필터링됨)",
   "@foundServicesWithCategoryAndSearch": {
     "description": "Found services with category and search filter",
     "placeholders": {
@@ -444,7 +444,7 @@
       }
     }
   },
-  "foundServicesWithCategory": "{shown}/{total}개 서비스 발견 ({count}개 카테고리로 필터링됨)",
+  "foundServicesWithCategory": "{shown}/{total}개 상품 발견 ({count}개 카테고리로 필터링됨)",
   "@foundServicesWithCategory": {
     "description": "Found services with category filter",
     "placeholders": {
@@ -459,7 +459,7 @@
       }
     }
   },
-  "foundServicesWithSearch": "{shown}/{total}개 서비스 발견 (검색: \"{search}\")",
+  "foundServicesWithSearch": "{shown}/{total}개 상품 발견 (검색: \"{search}\")",
   "@foundServicesWithSearch": {
     "description": "Found services with search filter",
     "placeholders": {
@@ -478,11 +478,11 @@
   "@clearFilters": {
     "description": "Clear filters button"
   },
-  "errorLoadingServicesList": "서비스 목록 로딩 오류",
+  "errorLoadingServicesList": "상품 목록 로딩 오류",
   "@errorLoadingServicesList": {
     "description": "Error loading services list"
   },
-  "cannotLoadServicesList": "서비스 목록을 불러올 수 없습니다",
+  "cannotLoadServicesList": "상품 목록을 불러올 수 없습니다",
   "@cannotLoadServicesList": {
     "description": "Cannot load services list"
   },
@@ -490,11 +490,11 @@
   "@checkNetworkOrTryAgainServices": {
     "description": "Please check network connection or try again"
   },
-  "serviceUpdatedSuccessfully": "서비스 정보가 성공적으로 업데이트되었습니다",
+  "serviceUpdatedSuccessfully": "상품 정보가 성공적으로 업데이트되었습니다",
   "@serviceUpdatedSuccessfully": {
     "description": "Service information updated successfully"
   },
-  "service": "서비스",
+  "service": "상품",
   "@service": {
     "description": "Service"
   },
@@ -528,7 +528,7 @@
   "@employeeNotFound": {
     "description": "Message when employee is not found"
   },
-  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "invalidServiceData": "유효하지 않은 상품 데이터",
   "@invalidServiceData": {
     "description": "Error message for invalid service data"
   },
@@ -536,7 +536,7 @@
   "@createNewOrder": {
     "description": "Title for creating new order"
   },
-  "servicesSelected": "{count}개 서비스 선택됨",
+  "servicesSelected": "{count}개 상품 선택됨",
   "@servicesSelected": {
     "description": "Number of services selected",
     "placeholders": {
@@ -590,7 +590,7 @@
   "@loggedInEmployee": {
     "description": "Logged in employee label"
   },
-  "serviceCategories": "서비스 카테고리",
+  "serviceCategories": "상품 카테고리",
   "@serviceCategories": {
     "description": "Service categories section title"
   },
@@ -607,15 +607,15 @@
       }
     }
   },
-  "services": "서비스",
+  "services": "상품",
   "@services": {
     "description": "Services section title"
   },
-  "selectService": "서비스 선택",
+  "selectService": "상품 선택",
   "@selectService": {
     "description": "Select service dropdown label"
   },
-  "servicesSelectedCount": "{count}개 서비스 선택됨",
+  "servicesSelectedCount": "{count}개 상품 선택됨",
   "@servicesSelectedCount": {
     "description": "Number of services selected",
     "placeholders": {
@@ -845,11 +845,11 @@
   "@menuTitle": {
     "description": "Menu screen title"
   },
-  "menuSubtitle": "메뉴 카테고리 및 서비스",
+  "menuSubtitle": "메뉴 카테고리 및 상품",
   "@menuSubtitle": {
     "description": "Menu screen subtitle"
   },
-  "searchServicesPlaceholder": "서비스 검색...",
+  "searchServicesPlaceholder": "상품 검색...",
   "@searchServicesPlaceholder": {
     "description": "Search services placeholder"
   },
@@ -861,7 +861,7 @@
   "@categoriesSection": {
     "description": "Categories section title"
   },
-  "servicesCount": "{count}개 서비스",
+  "servicesCount": "{count}개 상품",
   "@servicesCount": {
     "description": "Services count display",
     "placeholders": {
@@ -883,11 +883,11 @@
       }
     }
   },
-  "servicesSection": "서비스",
+  "servicesSection": "상품",
   "@servicesSection": {
     "description": "Services section title"
   },
-  "viewAllServices": "모든 서비스 보기",
+  "viewAllServices": "모든 상품 보기",
   "@viewAllServices": {
     "description": "View all services button text"
   },
@@ -912,7 +912,7 @@
       }
     }
   },
-  "noServicesInCategory": "\"{category}\" 카테고리에 아직 서비스가 없습니다",
+  "noServicesInCategory": "\"{category}\" 카테고리에 아직 상품가 없습니다",
   "@noServicesInCategory": {
     "description": "No services in category message",
     "placeholders": {
@@ -921,7 +921,7 @@
       }
     }
   },
-  "noServicesYet": "아직 서비스가 없습니다",
+  "noServicesYet": "아직 상품가 없습니다",
   "@noServicesYet": {
     "description": "No services available message"
   },
@@ -1053,7 +1053,7 @@
   "@totalAmount": {
     "description": "Total amount label"
   },
-  "noServices": "서비스 없음",
+  "noServices": "상품 없음",
   "@noServices": {
     "description": "No services message"
   },
@@ -1065,7 +1065,7 @@
   "@cannotUpdateOrderTodayOnly": {
     "description": "Cannot update order today only message"
   },
-  "serviceInfoNotFound": "이 주문에 대한 서비스 정보를 찾을 수 없습니다",
+  "serviceInfoNotFound": "이 주문에 대한 상품 정보를 찾을 수 없습니다",
   "@serviceInfoNotFound": {
     "description": "Service info not found message"
   },
@@ -1178,7 +1178,7 @@
   "@createFirstOrderToViewReports": {
     "description": "Empty state message for no orders"
   },
-  "noServices": "서비스 없음",
+  "noServices": "상품 없음",
   "@noServices": {
     "description": "No services available message"
   },
@@ -1210,11 +1210,11 @@
   "@customerName": {
     "description": "Customer name label"
   },
-  "servingStaff": "서비스 직원",
+  "servingStaff": "상품 직원",
   "@servingStaff": {
     "description": "Serving staff label"
   },
-  "serviceDetails": "서비스 세부사항",
+  "serviceDetails": "상품 세부사항",
   "@serviceDetails": {
     "description": "Service details section title"
   },
@@ -1254,11 +1254,11 @@
   "@temporary": {
     "description": "Temporary placeholder text"
   },
-  "serviceNotFoundError": "이 주문에 대한 서비스 정보를 찾을 수 없습니다",
+  "serviceNotFoundError": "이 주문에 대한 상품 정보를 찾을 수 없습니다",
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "저희 서비스를 이용해 주셔서 감사합니다!",
+  "billFooter": "저희 상품를 이용해 주셔서 감사합니다!",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -1270,7 +1270,7 @@
   "@updateOrder": {
     "description": "Update order screen title"
   },
-  "servicesSelected": "{count}개 서비스 선택됨",
+  "servicesSelected": "{count}개 상품 선택됨",
   "@servicesSelected": {
     "description": "Number of services selected",
     "placeholders": {
@@ -1309,7 +1309,7 @@
   "@employeeNotFound": {
     "description": "Employee not found message"
   },
-  "invalidServiceData": "유효하지 않은 서비스 데이터",
+  "invalidServiceData": "유효하지 않은 상품 데이터",
   "@invalidServiceData": {
     "description": "Invalid service data error"
   },
@@ -1358,7 +1358,7 @@
   "@loggedInEmployee": {
     "description": "Logged in employee label"
   },
-  "serviceCategories": "서비스 카테고리",
+  "serviceCategories": "상품 카테고리",
   "@serviceCategories": {
     "description": "Service categories section title"
   },
@@ -1375,15 +1375,15 @@
       }
     }
   },
-  "services": "서비스",
+  "services": "상품",
   "@services": {
     "description": "Services section title"
   },
-  "selectService": "서비스 선택",
+  "selectService": "상품 선택",
   "@selectService": {
     "description": "Select service dropdown label"
   },
-  "servicesSelectedCount": "{count}개 서비스 선택됨",
+  "servicesSelectedCount": "{count}개 상품 선택됨",
   "@servicesSelectedCount": {
     "description": "Number of services selected",
     "placeholders": {
@@ -1682,7 +1682,7 @@
   "@pdfEmployeeServed": {
     "description": "Employee served label in PDF"
   },
-  "pdfServicesDetailTitle": "서비스 상세",
+  "pdfServicesDetailTitle": "상품 상세",
   "@pdfServicesDetailTitle": {
     "description": "Services detail section title in PDF"
   },
@@ -1711,7 +1711,7 @@
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
-  "pdfThankYouMessage": "서비스를 이용해 주셔서 감사합니다!",
+  "pdfThankYouMessage": "상품를 이용해 주셔서 감사합니다!",
   "@pdfThankYouMessage": {
     "description": "Thank you message in PDF footer"
   },
@@ -1837,7 +1837,7 @@
   "@manageEntireSystem": {
     "description": "Shop owner description"
   },
-  "accessServicesCreateOrdersAndBills": "서비스 접근, 주문 및 청구서 생성",
+  "accessServicesCreateOrdersAndBills": "상품 접근, 주문 및 청구서 생성",
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
@@ -2021,13 +2021,13 @@
   "@unit": {
     "description": "단위 필드"
   },
-  "serviceCode": "서비스 코드",
+  "serviceCode": "상품 코드",
   "@serviceCode": {
-    "description": "서비스 코드 필드"
+    "description": "상품 코드 필드"
   },
   "unitOfMeasurement": "측정 단위",
   "@unitOfMeasurement": {
-    "description": "서비스 측정 단위 필드"
+    "description": "상품 측정 단위 필드"
   },
   "sortBy": "정렬 기준",
   "sortAlphabeticalAZ": "A-Z",
@@ -2037,5 +2037,166 @@
   "sortPriceHighToLow": "가격: 높은 것부터 낮은 것까지",
   "sortPriceLowToHigh": "가격: 낮은 것부터 높은 것까지",
   "applySorting": "정렬 적용",
-  "clearSorting": "정렬 초기화"
+  "clearSorting": "정렬 초기화",
+  "items": "상품",
+  "@items": {
+    "description": "Items plural"
+  },
+  "itemName": "상품 이름",
+  "@itemName": {
+    "description": "Item name field label"
+  },
+  "itemPrice": "상품 가격",
+  "@itemPrice": {
+    "description": "Item price field label"
+  },
+  "itemDuration": "상품 소요 시간",
+  "@itemDuration": {
+    "description": "Item duration field label"
+  },
+  "itemAddedSuccessfully": "상품이 성공적으로 추가되었습니다",
+  "@itemAddedSuccessfully": {
+    "description": "Item added successfully message"
+  },
+  "itemUpdatedSuccessfully": "상품이 성공적으로 업데이트되었습니다",
+  "@itemUpdatedSuccessfully": {
+    "description": "Item updated successfully message"
+  },
+  "statusDeletedSuccessfully": "상품이 성공적으로 삭제되었습니다",
+  "@statusDeletedSuccessfully": {
+    "description": "Item deleted successfully message"
+  },
+  "itemCategories": "상품 카테고리",
+  "@itemCategories": {
+    "description": "Item categories section title"
+  },
+  "itemsTitle": "상품",
+  "@itemsTitle": {
+    "description": "Items title"
+  },
+  "itemsSubtitle": "카테고리별 상품 관리",
+  "@itemsSubtitle": {
+    "description": "Items subtitle"
+  },
+  "item": "상품",
+  "@item": {
+    "description": "Item singular"
+  },
+  "itemsSelected": "선택된 상품",
+  "@itemsSelected": {
+    "description": "Items selected"
+  },
+  "itemsSelectedCount": "{count}개 상품 선택됨",
+  "@itemsSelectedCount": {
+    "description": "Number of items selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemsCount": "{count}개 상품",
+  "@itemsCount": {
+    "description": "Items count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemsSection": "상품",
+  "@itemsSection": {
+    "description": "Items section title"
+  },
+  "itemInfoNotFound": "이 주문에 대한 상품 정보를 찾을 수 없습니다",
+  "@itemInfoNotFound": {
+    "description": "Item info not found message"
+  },
+  "itemDetails": "상품 세부사항",
+  "@itemDetails": {
+    "description": "Item details section title"
+  },
+  "itemNotFoundError": "상품을 찾을 수 없습니다",
+  "@itemNotFoundError": {
+    "description": "Item not found error message"
+  },
+  "itemCode": "상품 코드",
+  "@itemCode": {
+    "description": "Item code field label"
+  },
+  "servicesSelected": "{count}개의 상품 선택됨",
+  "@servicesSelected": {
+    "description": "Number of items selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceCategories": "상품 카테고리",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "services": "상품",
+  "@services": {
+    "description": "Services section title"
+  },
+  "servicesSelectedCount": ": {count}개의 상품 선택됨",
+  "@servicesSelectedCount": {
+    "description": "Number of items selected with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceName": "상품 이름",
+  "@serviceName": {
+    "description": "Service name field label"
+  },
+  "serviceAddedSuccessfully": "상품이 성공적으로 추가되었습니다",
+  "@serviceAddedSuccessfully": {
+    "description": "Service added successfully message"
+  },
+  "serviceUpdatedSuccessfully": "상품이 성공적으로 업데되었습니다",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service updated successfully message"
+  },
+  "serviceDeletedSuccessfully": "상품이 성공적으로 삭제되었습니다",
+  "@serviceDeletedSuccessfully": {
+    "description": "Service deleted successfully message"
+  },
+  "serviceDetails": "상품 세부사항",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "serviceInfoNotFound": "이 주문에 대한 상품 정보를 찾을 수 없습니다",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "servicesTitle": "상품",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "카테고리별 상품 관리",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "servicesCount": "{count}개 상품",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "상품",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "serviceNotFoundError": "상품을 찾을 수 없습니다",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  }
 }

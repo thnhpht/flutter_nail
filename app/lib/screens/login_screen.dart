@@ -913,7 +913,7 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.spa,
+            Icons.shopping_cart,
             size: 72,
             color: Colors.grey[400],
           ),

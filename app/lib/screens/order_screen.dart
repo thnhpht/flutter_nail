@@ -1055,7 +1055,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     // Services Selection
                     _buildSectionCard(
                       title: l10n.services,
-                      icon: Icons.spa,
+                      icon: Icons.shopping_cart,
                       child: Column(
                         children: [
                           // Selected Services Chips
@@ -1933,7 +1933,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 border: Border.all(color: Colors.grey[300]!, width: 1),
               ),
               child: Icon(
-                Icons.spa,
+                Icons.shopping_cart,
                 color: Colors.grey[400],
                 size: 20,
               ),

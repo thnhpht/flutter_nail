@@ -51,7 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categories => 'Categories';
 
   @override
-  String get services => 'Services';
+  String get items => 'Items';
 
   @override
   String get createOrder => 'Create Order';
@@ -383,13 +383,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this category?';
 
   @override
-  String get serviceName => 'Service Name';
+  String get itemName => 'Item Name';
 
   @override
-  String get servicePrice => 'Service Price';
+  String get itemPrice => 'Item Price';
 
   @override
-  String get serviceDuration => 'Service Duration';
+  String get itemDuration => 'Item Duration';
 
   @override
   String get addService => 'Add Service';
@@ -401,14 +401,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteService => 'Delete Service';
 
   @override
-  String get serviceAddedSuccessfully => 'Service added successfully';
+  String get itemAddedSuccessfully => 'Item added successfully';
 
   @override
-  String get serviceUpdatedSuccessfully =>
-      'Service information updated successfully';
+  String get itemUpdatedSuccessfully => 'Item updated successfully';
 
   @override
-  String get serviceDeletedSuccessfully => 'Service deleted successfully';
+  String get itemDeletedSuccessfully => 'Item deleted successfully';
 
   @override
   String get errorAddingService => 'Error adding service';
@@ -459,20 +458,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this order?';
 
   @override
-  String get selectServices => 'Select Services';
+  String get selectServices => 'Chọn chi tiết';
 
   @override
   String get selectEmployees => 'Select Employees';
 
   @override
-  String get selectedServices => 'services selected';
+  String get selectedServices => 'chi tiết đã chọn';
 
   @override
   String get selectedEmployees => 'employees selected';
 
   @override
-  String get pleaseSelectAtLeastOneService =>
-      'Please select at least one service';
+  String get pleaseSelectAtLeastOneService => 'Please select at least one item';
 
   @override
   String get pleaseSelectAtLeastOneEmployee =>
@@ -488,7 +486,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employeeInformation => 'Employee Information';
 
   @override
-  String get serviceCategories => 'Service Categories';
+  String get itemCategories => 'Item Categories';
 
   @override
   String get performingEmployee => 'Performing Employee';
@@ -517,7 +515,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String errorLoadingServices(String error) {
-    return 'Error loading services: $error';
+    return 'Error loading items';
   }
 
   @override
@@ -900,49 +898,49 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please check network connection or try again';
 
   @override
-  String get servicesTitle => 'Services';
+  String get itemsTitle => 'Items';
 
   @override
-  String get servicesSubtitle => 'Manage services by category';
+  String get itemsSubtitle => 'Manage items by category';
 
   @override
-  String get searchServices => 'Search services...';
+  String get searchServices => 'Search items';
 
   @override
   String showingAllServices(int total) {
-    return 'Showing all $total services';
+    return 'Showing all $total items';
   }
 
   @override
   String foundServicesWithCategoryAndSearch(int shown, int total) {
-    return 'Found $shown/$total services (filtered by category and search)';
+    return 'Found $shown/$total items (filtered by category and search)';
   }
 
   @override
   String foundServicesWithCategory(int shown, int total, int count) {
-    return 'Found $shown/$total services (filtered by $count categories)';
+    return 'Found $shown/$total items (filtered by $count categories)';
   }
 
   @override
   String foundServicesWithSearch(int shown, int total, String search) {
-    return 'Found $shown/$total services (search: \"$search\")';
+    return 'Found $shown/$total items (search: \"$search\")';
   }
 
   @override
   String get clearFilters => 'Clear Filters';
 
   @override
-  String get errorLoadingServicesList => 'Error loading services list';
+  String get errorLoadingServicesList => 'Error loading items list';
 
   @override
-  String get cannotLoadServicesList => 'Cannot load services list';
+  String get cannotLoadServicesList => 'Cannot load items list';
 
   @override
   String get checkNetworkOrTryAgainServices =>
       'Please check network connection or try again';
 
   @override
-  String get service => 'service';
+  String get item => 'item';
 
   @override
   String customerFound(String name) {
@@ -958,8 +956,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createNewOrder => 'Create New Order';
 
   @override
-  String servicesSelected(int count) {
-    return '$count services selected';
+  String itemsSelected(int count) {
+    return '$count items selected';
   }
 
   @override
@@ -980,8 +978,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectService => 'Select Service';
 
   @override
-  String servicesSelectedCount(int count) {
-    return '$count services selected';
+  String itemsSelectedCount(int count) {
+    return '$count items selected';
   }
 
   @override
@@ -1128,10 +1126,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuTitle => 'Menu';
 
   @override
-  String get menuSubtitle => 'Menu categories and services';
+  String get menuSubtitle => 'Menu categories and items';
 
   @override
-  String get searchServicesPlaceholder => 'Search services...';
+  String get searchServicesPlaceholder => 'Search items...';
 
   @override
   String get noCategoriesYet => 'No categories yet';
@@ -1140,8 +1138,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoriesSection => 'Categories';
 
   @override
-  String servicesCount(int count) {
-    return '$count services';
+  String itemsCount(int count) {
+    return '$count items';
   }
 
   @override
@@ -1150,28 +1148,28 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get servicesSection => 'Services';
+  String get itemsSection => 'Items';
 
   @override
-  String get viewAllServices => 'View All Services';
+  String get viewAllServices => 'View all items';
 
   @override
   String noServicesFoundWithSearchAndCategory(String search, String category) {
-    return 'No services found \"$search\" in $category';
+    return 'No items \"$search\" found in $category';
   }
 
   @override
   String noServicesFoundWithSearch(String search) {
-    return 'No services found \"$search\"';
+    return 'No items \"$search\" found';
   }
 
   @override
   String noServicesInCategory(String category) {
-    return 'Category \"$category\" has no services yet';
+    return 'Category \"$category\" has no items';
   }
 
   @override
-  String get noServicesYet => 'No services yet';
+  String get noServicesYet => 'No items available';
 
   @override
   String get unknownCategory => 'Unknown';
@@ -1249,7 +1247,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalAmount => 'Total Amount';
 
   @override
-  String get noServices => 'No services';
+  String get noServices => 'No items';
 
   @override
   String get temporary => 'TEMPORARY';
@@ -1258,8 +1256,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cannotUpdateOrderTodayOnly => 'Can only update orders from today';
 
   @override
-  String get serviceInfoNotFound =>
-      'Service information not found for this order';
+  String get itemInfoNotFound => 'Item info not found for this order';
 
   @override
   String get selectTimeRangeToViewReports =>
@@ -1311,7 +1308,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get servingStaff => 'Serving Staff';
 
   @override
-  String get serviceDetails => 'Service Details';
+  String get itemDetails => 'Item Details';
 
   @override
   String get qrCodePayment => 'QR Code Payment';
@@ -1326,11 +1323,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanQrToPay => 'Scan QR code to pay';
 
   @override
-  String get serviceNotFoundError =>
-      'Service information not found for this order';
+  String get itemNotFoundError => 'Item not found error';
 
   @override
-  String get billFooter => 'Thank you for using our services!';
+  String get billFooter => 'Thank you for using our items!';
 
   @override
   String get billFooter2 => 'See you again!';
@@ -1468,7 +1464,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfEmployeeServed => 'Employee Served';
 
   @override
-  String get pdfServicesDetailTitle => 'SERVICES DETAIL';
+  String get pdfServicesDetailTitle => 'ITEM DETAILS';
 
   @override
   String get pdfPaymentInfoTitle => 'PAYMENT INFORMATION';
@@ -1579,7 +1575,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accessServicesCreateOrdersAndBills =>
-      'Access services, create orders and bills';
+      'Access items, create orders and bills';
 
   @override
   String get pleaseEnterYourEmail => 'Please enter your email';
@@ -1702,7 +1698,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unit => 'Unit';
 
   @override
-  String get serviceCode => 'Service Code';
+  String get itemCode => 'Item Code';
 
   @override
   String get unitOfMeasurement => 'Unit of Measurement';
@@ -1733,4 +1729,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clearSorting => 'Clear Sorting';
+
+  @override
+  String servicesSelected(int count) {
+    return '$count items selected';
+  }
+
+  @override
+  String get serviceCategories => 'Item Categories';
+
+  @override
+  String get services => 'Items';
+
+  @override
+  String servicesSelectedCount(int count) {
+    return '$count items selected';
+  }
+
+  @override
+  String get serviceName => 'Item Name';
+
+  @override
+  String get serviceAddedSuccessfully => 'Item added successfully';
+
+  @override
+  String get serviceUpdatedSuccessfully => 'Item updated successfully';
+
+  @override
+  String get serviceDeletedSuccessfully => 'Item deleted successfully';
+
+  @override
+  String get serviceDetails => 'Item Details';
+
+  @override
+  String get serviceInfoNotFound => 'Item info not found for this order';
+
+  @override
+  String get servicesTitle => 'Items';
+
+  @override
+  String get servicesSubtitle => 'Manage items by category';
+
+  @override
+  String servicesCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get servicesSection => 'Items';
+
+  @override
+  String get serviceNotFoundError => 'Item not found error';
 }

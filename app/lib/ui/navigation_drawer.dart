@@ -113,7 +113,7 @@ class AppNavigationDrawer extends StatelessWidget {
 
         _buildSectionHeader(l10n.management),
         _buildNavItem(
-          icon: Icons.spa,
+          icon: Icons.shopping_cart,
           title: l10n.services,
           index: 1,
           isSelected: selectedIndex == 1,
@@ -179,7 +179,7 @@ class AppNavigationDrawer extends StatelessWidget {
           isSelected: selectedIndex == 3,
         ),
         _buildNavItem(
-          icon: Icons.spa,
+          icon: Icons.shopping_cart,
           title: l10n.services,
           index: 4,
           isSelected: selectedIndex == 4,
@@ -805,7 +805,7 @@ class AppNavigationRail extends StatelessWidget {
       // Employee navigation - limited features
       return [
         _buildRailDestination(Icons.menu_book, l10n.menu),
-        _buildRailDestination(Icons.spa, l10n.services),
+        _buildRailDestination(Icons.shopping_cart, l10n.services),
         _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
         _buildRailDestination(Icons.receipt, l10n.bills),
       ];
@@ -815,7 +815,7 @@ class AppNavigationRail extends StatelessWidget {
         _buildRailDestination(Icons.people, l10n.customers),
         _buildRailDestination(Icons.work, l10n.employees),
         _buildRailDestination(Icons.category, l10n.categories),
-        _buildRailDestination(Icons.spa, l10n.services),
+        _buildRailDestination(Icons.shopping_cart, l10n.services),
         _buildRailDestination(Icons.menu_book, l10n.menu),
         _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
         _buildRailDestination(Icons.receipt, l10n.bills),

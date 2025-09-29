@@ -13,7 +13,7 @@
   "management": "Management",
   "employees": "Employees",
   "categories": "Categories",
-  "services": "Services",
+  "items": "Items",
   "createOrder": "Create Order",
   "billsReports": "Bills & Reports",
   "reports": "Reports",
@@ -148,16 +148,16 @@
   "errorUpdatingOrder": "Error updating order",
   "errorDeletingOrder": "Error deleting order",
   "confirmDeleteOrder": "Are you sure you want to delete this order?",
-  "selectServices": "Select Services",
+  "selectItems": "Select Items",
   "selectEmployees": "Select Employees",
-  "selectedServices": "services selected",
+  "selectedItems": "items selected",
   "selectedEmployees": "employees selected",
-  "pleaseSelectAtLeastOneService": "Please select at least one service",
+  "pleaseSelectAtLeastOneService": "Please select at least one item",
   "pleaseSelectAtLeastOneEmployee": "Please select at least one employee",
   "canOnlyUpdateOrderToday": "Can only update orders today",
   "customerInformation": "Customer Information",
   "employeeInformation": "Employee Information",
-  "serviceCategories": "Service Categories",
+  "serviceCategories": "Item Categories",
   "performingEmployee": "Performing Employee",
   "loggedInEmployee": "Logged In Employee",
   "foundCustomer": "Found customer",
@@ -165,7 +165,7 @@
   "foundEmployee": "Found employee",
   "employeeNotFound": "Employee not found with this phone number. Please enter name to create new.",
   "errorLoadingCategories": "Error loading categories",
-  "errorLoadingServices": "Error loading services",
+  "errorLoadingItems": "Error loading items",
   "errorLoadingEmployees": "Error loading employees",
   "errorSearchingCustomer": "Error searching customer",
   "errorSearchingEmployee": "Error searching employee",
@@ -259,7 +259,7 @@
   "customerDeletedSuccessfully": "Customer deleted successfully",
   "errorDeletingCustomer": "Error deleting customer",
   "errorLoadingCategories": "Error loading categories: {error}",
-  "errorLoadingServices": "Error loading services: {error}",
+  "errorLoadingItems": "Error loading items: {error}",
   "errorLoadingEmployees": "Error loading employees: {error}",
   "errorSearchingCustomer": "Error searching customer: {error}",
   "errorSearchingEmployee": "Error searching employee: {error}",
@@ -411,30 +411,30 @@
   "@checkNetworkOrTryAgainCategories": {
     "description": "Please check network connection or try again"
   },
-  "servicesTitle": "Services",
-  "@servicesTitle": {
-    "description": "Services title"
+  "itemsTitle": "Items",
+  "@itemsTitle": {
+    "description": "Items title"
   },
-  "servicesSubtitle": "Manage services by category",
-  "@servicesSubtitle": {
-    "description": "Services subtitle"
+  "itemsSubtitle": "Manage items by category",
+  "@itemsSubtitle": {
+    "description": "Items subtitle"
   },
-  "searchServices": "Search services...",
-  "@searchServices": {
-    "description": "Search services placeholder"
+  "searchItems": "Search items...",
+  "@searchItems": {
+    "description": "Search items placeholder"
   },
-  "showingAllServices": "Showing all {total} services",
-  "@showingAllServices": {
-    "description": "Showing all services message",
+  "showingAllItems": "Showing all {total} items",
+  "@showingAllItems": {
+    "description": "Showing all items message",
     "placeholders": {
       "total": {
         "type": "int"
       }
     }
   },
-  "foundServicesWithCategoryAndSearch": "Found {shown}/{total} services (filtered by category and search)",
-  "@foundServicesWithCategoryAndSearch": {
-    "description": "Found services with category and search filter",
+  "foundItemsWithCategoryAndSearch": "Found {shown}/{total} items (filtered by category and search)",
+  "@foundItemsWithCategoryAndSearch": {
+    "description": "Found items with category and search filter",
     "placeholders": {
       "shown": {
         "type": "int"
@@ -444,9 +444,9 @@
       }
     }
   },
-  "foundServicesWithCategory": "Found {shown}/{total} services (filtered by {count} categories)",
-  "@foundServicesWithCategory": {
-    "description": "Found services with category filter",
+  "foundItemsWithCategory": "Found {shown}/{total} items (filtered by {count} categories)",
+  "@foundItemsWithCategory": {
+    "description": "Found items with category filter",
     "placeholders": {
       "shown": {
         "type": "int"
@@ -459,9 +459,9 @@
       }
     }
   },
-  "foundServicesWithSearch": "Found {shown}/{total} services (search: \"{search}\")",
-  "@foundServicesWithSearch": {
-    "description": "Found services with search filter",
+  "foundItemsWithSearch": "Found {shown}/{total} items (search: \"{search}\")",
+  "@foundItemsWithSearch": {
+    "description": "Found items with search filter",
     "placeholders": {
       "shown": {
         "type": "int"
@@ -478,16 +478,16 @@
   "@clearFilters": {
     "description": "Clear filters button"
   },
-  "errorLoadingServicesList": "Error loading services list",
-  "@errorLoadingServicesList": {
-    "description": "Error loading services list"
+  "errorLoadingItemsList": "Error loading items list",
+  "@errorLoadingItemsList": {
+    "description": "Error loading items list"
   },
-  "cannotLoadServicesList": "Cannot load services list",
-  "@cannotLoadServicesList": {
-    "description": "Cannot load services list"
+  "cannotLoadItemsList": "Cannot load items list",
+  "@cannotLoadItemsList": {
+    "description": "Cannot load items list"
   },
-  "checkNetworkOrTryAgainServices": "Please check network connection or try again",
-  "@checkNetworkOrTryAgainServices": {
+  "checkNetworkOrTryAgainItems": "Please check network connection or try again",
+  "@checkNetworkOrTryAgainItems": {
     "description": "Please check network connection or try again"
   },
   "serviceUpdatedSuccessfully": "Service information updated successfully",
@@ -536,9 +536,9 @@
   "@createNewOrder": {
     "description": "Title for creating new order"
   },
-  "servicesSelected": "{count} services selected",
-  "@servicesSelected": {
-    "description": "Number of services selected",
+  "itemsSelected": "{count} items selected",
+  "@itemsSelected": {
+    "description": "Number of items selected",
     "placeholders": {
       "count": {
         "type": "int"
@@ -590,7 +590,7 @@
   "@loggedInEmployee": {
     "description": "Logged in employee label"
   },
-  "serviceCategories": "Service Categories",
+  "serviceCategories": "Item Categories",
   "@serviceCategories": {
     "description": "Service categories section title"
   },
@@ -607,17 +607,17 @@
       }
     }
   },
-  "services": "Services",
-  "@services": {
-    "description": "Services section title"
+  "items": "Items",
+  "@items": {
+    "description": "Items section title"
   },
   "selectService": "Select Service",
   "@selectService": {
     "description": "Select service dropdown label"
   },
-  "servicesSelectedCount": "{count} services selected",
-  "@servicesSelectedCount": {
-    "description": "Number of services selected",
+  "itemsSelectedCount": "{count} items selected",
+  "@itemsSelectedCount": {
+    "description": "Number of items selected",
     "placeholders": {
       "count": {
         "type": "int"
@@ -845,13 +845,13 @@
   "@menuTitle": {
     "description": "Menu screen title"
   },
-  "menuSubtitle": "Menu categories and services",
+  "menuSubtitle": "Menu categories and items",
   "@menuSubtitle": {
     "description": "Menu screen subtitle"
   },
-  "searchServicesPlaceholder": "Search services...",
-  "@searchServicesPlaceholder": {
-    "description": "Search services placeholder"
+  "searchItemsPlaceholder": "Search items...",
+  "@searchItemsPlaceholder": {
+    "description": "Search items placeholder"
   },
   "noCategoriesYet": "No categories yet",
   "@noCategoriesYet": {
@@ -861,9 +861,9 @@
   "@categoriesSection": {
     "description": "Categories section title"
   },
-  "servicesCount": "{count} services",
-  "@servicesCount": {
-    "description": "Services count display",
+  "itemsCount": "{count} items",
+  "@itemsCount": {
+    "description": "Items count display",
     "placeholders": {
       "count": {
         "type": "int"
@@ -883,17 +883,17 @@
       }
     }
   },
-  "servicesSection": "Services",
-  "@servicesSection": {
-    "description": "Services section title"
+  "itemsSection": "Items",
+  "@itemsSection": {
+    "description": "Items section title"
   },
-  "viewAllServices": "View All Services",
-  "@viewAllServices": {
-    "description": "View all services button text"
+  "viewAllItems": "View All Items",
+  "@viewAllItems": {
+    "description": "View all items button text"
   },
-  "noServicesFoundWithSearchAndCategory": "No services found \"{search}\" in {category}",
-  "@noServicesFoundWithSearchAndCategory": {
-    "description": "No services found with search and category filter",
+  "noItemsFoundWithSearchAndCategory": "No items found \"{search}\" in {category}",
+  "@noItemsFoundWithSearchAndCategory": {
+    "description": "No items found with search and category filter",
     "placeholders": {
       "search": {
         "type": "String"
@@ -903,27 +903,27 @@
       }
     }
   },
-  "noServicesFoundWithSearch": "No services found \"{search}\"",
-  "@noServicesFoundWithSearch": {
-    "description": "No services found with search filter",
+  "noItemsFoundWithSearch": "No items found \"{search}\"",
+  "@noItemsFoundWithSearch": {
+    "description": "No items found with search filter",
     "placeholders": {
       "search": {
         "type": "String"
       }
     }
   },
-  "noServicesInCategory": "Category \"{category}\" has no services yet",
-  "@noServicesInCategory": {
-    "description": "No services in category message",
+  "noItemsInCategory": "Category \"{category}\" has no items yet",
+  "@noItemsInCategory": {
+    "description": "No items in category message",
     "placeholders": {
       "category": {
         "type": "String"
       }
     }
   },
-  "noServicesYet": "No services yet",
-  "@noServicesYet": {
-    "description": "No services available message"
+  "noItemsYet": "No items yet",
+  "@noItemsYet": {
+    "description": "No items available message"
   },
   "unknownCategory": "Unknown",
   "@unknownCategory": {
@@ -1053,9 +1053,9 @@
   "@totalAmount": {
     "description": "Total amount label"
   },
-  "noServices": "No services",
-  "@noServices": {
-    "description": "No services message"
+  "noItems": "No items",
+  "@noItems": {
+    "description": "No items message"
   },
   "temporary": "TEMPORARY",
   "@temporary": {
@@ -1178,9 +1178,9 @@
   "@createFirstOrderToViewReports": {
     "description": "Empty state message for no orders"
   },
-  "noServices": "No services",
-  "@noServices": {
-    "description": "No services available message"
+  "noItems": "No items",
+  "@noItems": {
+    "description": "No items available message"
   },
   "billPaymentReceipt": "Payment Receipt",
   "@billPaymentReceipt": {
@@ -1258,7 +1258,7 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "Thank you for using our services!",
+  "billFooter": "Thank you for using our items!",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -1270,9 +1270,9 @@
   "@updateOrder": {
     "description": "Update order screen title"
   },
-  "servicesSelected": "{count} services selected",
-  "@servicesSelected": {
-    "description": "Number of services selected",
+  "itemsSelected": "{count} items selected",
+  "@itemsSelected": {
+    "description": "Number of items selected",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1358,7 +1358,7 @@
   "@loggedInEmployee": {
     "description": "Logged in employee label"
   },
-  "serviceCategories": "Service Categories",
+  "serviceCategories": "Item Categories",
   "@serviceCategories": {
     "description": "Service categories section title"
   },
@@ -1375,17 +1375,17 @@
       }
     }
   },
-  "services": "Services",
-  "@services": {
-    "description": "Services section title"
+  "items": "Items",
+  "@items": {
+    "description": "Items section title"
   },
   "selectService": "Select Service",
   "@selectService": {
     "description": "Select service dropdown label"
   },
-  "servicesSelectedCount": "{count} services selected",
-  "@servicesSelectedCount": {
-    "description": "Number of services selected",
+  "itemsSelectedCount": "{count} items selected",
+  "@itemsSelectedCount": {
+    "description": "Number of items selected",
     "placeholders": {
       "count": {
         "type": "int"
@@ -1652,9 +1652,9 @@
   "@pdfEmployeeServed": {
     "description": "Employee served label in PDF"
   },
-  "pdfServicesDetailTitle": "SERVICES DETAIL",
-  "@pdfServicesDetailTitle": {
-    "description": "Services detail section title in PDF"
+  "pdfItemsDetailTitle": "SERVICES DETAIL",
+  "@pdfItemsDetailTitle": {
+    "description": "Items detail section title in PDF"
   },
   "pdfPaymentInfoTitle": "PAYMENT INFORMATION",
   "@pdfPaymentInfoTitle": {
@@ -1807,8 +1807,8 @@
   "@manageEntireSystem": {
     "description": "Shop owner description"
   },
-  "accessServicesCreateOrdersAndBills": "Access services, create orders and bills",
-  "@accessServicesCreateOrdersAndBills": {
+  "accessItemsCreateOrdersAndBills": "Access items, create orders and bills",
+  "@accessItemsCreateOrdersAndBills": {
     "description": "Employee description"
   },
   "shopEmail": "Shop Email",
@@ -1997,7 +1997,7 @@
   },
   "unitOfMeasurement": "Unit of Measurement",
   "@unitOfMeasurement": {
-    "description": "Unit of measurement field for services"
+    "description": "Unit of measurement field for items"
   },
   "sortBy": "Sort By",
   "sortAlphabeticalAZ": "A-Z",
@@ -2007,5 +2007,253 @@
   "sortPriceHighToLow": "Price: High to Low",
   "sortPriceLowToHigh": "Price: Low to High",
   "applySorting": "Apply Sorting",
-  "clearSorting": "Clear Sorting"
+  "clearSorting": "Clear Sorting",
+  "itemName": "Item Name",
+  "@itemName": {
+    "description": "Item name field label"
+  },
+  "itemPrice": "Item Price",
+  "@itemPrice": {
+    "description": "Item price field label"
+  },
+  "itemDuration": "Item Duration",
+  "@itemDuration": {
+    "description": "Item duration field label"
+  },
+  "itemAddedSuccessfully": "Item added successfully",
+  "@itemAddedSuccessfully": {
+    "description": "Item added successfully message"
+  },
+  "itemUpdatedSuccessfully": "Item updated successfully",
+  "@itemUpdatedSuccessfully": {
+    "description": "Item updated successfully message"
+  },
+  "itemDeletedSuccessfully": "Item deleted successfully",
+  "@itemDeletedSuccessfully": {
+    "description": "Item deleted successfully message"
+  },
+  "itemCategories": "Item Categories",
+  "@itemCategories": {
+    "description": "Item categories section title"
+  },
+  "errorLoadingServices": "Error loading items",
+  "@errorLoadingServices": {
+    "description": "Error loading items message"
+  },
+  "searchServices": "Search items",
+  "@searchServices": {
+    "description": "Search items label"
+  },
+  "showingAllServices": "Showing all {total} items",
+  "@showingAllServices": {
+    "description": "Showing all items message",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategoryAndSearch": "Found {shown}/{total} items (filtered by category and search)",
+  "@foundServicesWithCategoryAndSearch": {
+    "description": "Found items with category and search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithCategory": "Found {shown}/{total} items (filtered by {count} categories)",
+  "@foundServicesWithCategory": {
+    "description": "Found items with category filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "foundServicesWithSearch": "Found {shown}/{total} items (search: \"{search}\")",
+  "@foundServicesWithSearch": {
+    "description": "Found items with search filter",
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingServicesList": "Error loading items list",
+  "@errorLoadingServicesList": {
+    "description": "Error loading items list message"
+  },
+  "cannotLoadServicesList": "Cannot load items list",
+  "@cannotLoadServicesList": {
+    "description": "Cannot load items list message"
+  },
+  "checkNetworkOrTryAgainServices": "Please check network connection or try again",
+  "@checkNetworkOrTryAgainServices": {
+    "description": "Please check network connection or try again"
+  },
+  "item": "item",
+  "@item": {
+    "description": "Item singular"
+  },
+  "searchServicesPlaceholder": "Search items...",
+  "@searchServicesPlaceholder": {
+    "description": "Search items placeholder"
+  },
+  "viewAllServices": "View all items",
+  "@viewAllServices": {
+    "description": "View all items button"
+  },
+  "noServicesFoundWithSearchAndCategory": "No items \"{search}\" found in {category}",
+  "@noServicesFoundWithSearchAndCategory": {
+    "description": "No items found with search and category",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesFoundWithSearch": "No items \"{search}\" found",
+  "@noServicesFoundWithSearch": {
+    "description": "No items found with search",
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesInCategory": "Category \"{category}\" has no items",
+  "@noServicesInCategory": {
+    "description": "No items in category message",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "noServicesYet": "No items available",
+  "@noServicesYet": {
+    "description": "No items available message"
+  },
+  "noServices": "No items",
+  "@noServices": {
+    "description": "No items message"
+  },
+  "itemInfoNotFound": "Item info not found for this order",
+  "@itemInfoNotFound": {
+    "description": "Item info not found message"
+  },
+  "itemDetails": "Item Details",
+  "@itemDetails": {
+    "description": "Item details section title"
+  },
+  "itemNotFoundError": "Item not found error",
+  "@itemNotFoundError": {
+    "description": "Item not found error message"
+  },
+  "pdfServicesDetailTitle": "ITEM DETAILS",
+  "@pdfServicesDetailTitle": {
+    "description": "Item details section title in PDF"
+  },
+  "accessServicesCreateOrdersAndBills": "Access items, create orders and bills",
+  "@accessServicesCreateOrdersAndBills": {
+    "description": "Employee description"
+  },
+  "itemCode": "Item Code",
+  "@itemCode": {
+    "description": "Item code field label"
+  },
+  "servicesSelected": "{count} items selected",
+  "@servicesSelected": {
+    "description": "Number of items selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceCategories": "Item Categories",
+  "@serviceCategories": {
+    "description": "Service categories section title"
+  },
+  "services": "Items",
+  "@services": {
+    "description": "Services section title"
+  },
+  "servicesSelectedCount": "{count} items selected",
+  "@servicesSelectedCount": {
+    "description": "Number of items selected with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceName": "Item Name",
+  "@serviceName": {
+    "description": "Service name field label"
+  },
+  "serviceAddedSuccessfully": "Item added successfully",
+  "@serviceAddedSuccessfully": {
+    "description": "Service added successfully message"
+  },
+  "serviceUpdatedSuccessfully": "Item updated successfully",
+  "@serviceUpdatedSuccessfully": {
+    "description": "Service updated successfully message"
+  },
+  "serviceDeletedSuccessfully": "Item deleted successfully",
+  "@serviceDeletedSuccessfully": {
+    "description": "Service deleted successfully message"
+  },
+  "serviceDetails": "Item Details",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "serviceInfoNotFound": "Item info not found for this order",
+  "@serviceInfoNotFound": {
+    "description": "Service info not found message"
+  },
+  "servicesTitle": "Items",
+  "@servicesTitle": {
+    "description": "Services title"
+  },
+  "servicesSubtitle": "Manage items by category",
+  "@servicesSubtitle": {
+    "description": "Services subtitle"
+  },
+  "servicesCount": "{count} items",
+  "@servicesCount": {
+    "description": "Services count display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSection": "Items",
+  "@servicesSection": {
+    "description": "Services section title"
+  },
+  "serviceNotFoundError": "Item not found error",
+  "@serviceNotFoundError": {
+    "description": "Service not found error message"
+  }
 }

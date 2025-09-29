@@ -189,8 +189,8 @@ abstract class AppLocalizations {
   /// Services section title
   ///
   /// In vi, this message translates to:
-  /// **'Dịch vụ'**
-  String get services;
+  /// **'Chi tiết'**
+  String get items;
 
   /// Create order button label
   ///
@@ -840,82 +840,82 @@ abstract class AppLocalizations {
   /// **'Bạn có chắc chắn muốn xóa danh mục này?'**
   String get confirmDeleteCategory;
 
-  /// Service name
+  /// Item name
   ///
   /// In vi, this message translates to:
-  /// **'Tên dịch vụ'**
-  String get serviceName;
+  /// **'Tên chi tiết'**
+  String get itemName;
 
-  /// Service price
+  /// Item price
   ///
   /// In vi, this message translates to:
-  /// **'Giá dịch vụ'**
-  String get servicePrice;
+  /// **'Giá chi tiết'**
+  String get itemPrice;
 
   /// Service duration
   ///
   /// In vi, this message translates to:
   /// **'Thời gian thực hiện'**
-  String get serviceDuration;
+  String get itemDuration;
 
-  /// Add service
+  /// Add item
   ///
   /// In vi, this message translates to:
-  /// **'Thêm dịch vụ'**
+  /// **'Thêm chi tiết'**
   String get addService;
 
-  /// Edit service
+  /// Edit item
   ///
   /// In vi, this message translates to:
-  /// **'Chỉnh sửa dịch vụ'**
+  /// **'Chỉnh sửa chi tiết'**
   String get editService;
 
-  /// Delete service
+  /// Delete item
   ///
   /// In vi, this message translates to:
-  /// **'Xóa dịch vụ'**
+  /// **'Xóa chi tiết'**
   String get deleteService;
 
   /// Service added successfully
   ///
   /// In vi, this message translates to:
-  /// **'Thêm dịch vụ thành công'**
-  String get serviceAddedSuccessfully;
+  /// **'Thêm chi tiết thành công'**
+  String get itemAddedSuccessfully;
 
   /// Service information updated successfully
   ///
   /// In vi, this message translates to:
-  /// **'Thay đổi thông tin dịch vụ thành công'**
-  String get serviceUpdatedSuccessfully;
+  /// **'Thay đổi thông tin chi tiết thành công'**
+  String get itemUpdatedSuccessfully;
 
   /// Service deleted successfully
   ///
   /// In vi, this message translates to:
-  /// **'Xóa dịch vụ thành công'**
-  String get serviceDeletedSuccessfully;
+  /// **'Xóa chi tiết thành công'**
+  String get itemDeletedSuccessfully;
 
-  /// Error adding service
+  /// Error adding item
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi khi thêm dịch vụ'**
+  /// **'Lỗi khi thêm chi tiết'**
   String get errorAddingService;
 
-  /// Error updating service information
+  /// Error updating item information
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi khi thay đổi thông tin dịch vụ'**
+  /// **'Lỗi khi thay đổi thông tin chi tiết'**
   String get errorUpdatingService;
 
-  /// Error deleting service
+  /// Error deleting item
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi khi xóa dịch vụ'**
+  /// **'Lỗi khi xóa chi tiết'**
   String get errorDeletingService;
 
-  /// Confirm delete service
+  /// Confirm delete item
   ///
   /// In vi, this message translates to:
-  /// **'Bạn có chắc chắn muốn xóa dịch vụ này?'**
+  /// **'Bạn có chắc chắn muốn xóa chi tiết này?'**
   String get confirmDeleteService;
 
   /// Order
@@ -978,10 +978,10 @@ abstract class AppLocalizations {
   /// **'Bạn có chắc chắn muốn xóa đơn hàng này?'**
   String get confirmDeleteOrder;
 
-  /// Select services
+  /// Select items
   ///
   /// In vi, this message translates to:
-  /// **'Chọn dịch vụ'**
+  /// **'Chọn chi tiết'**
   String get selectServices;
 
   /// Select employees
@@ -990,10 +990,10 @@ abstract class AppLocalizations {
   /// **'Chọn nhân viên'**
   String get selectEmployees;
 
-  /// Selected services
+  /// Selected items
   ///
   /// In vi, this message translates to:
-  /// **'dịch vụ đã chọn'**
+  /// **'chi tiết đã chọn'**
   String get selectedServices;
 
   /// Selected employees
@@ -1002,10 +1002,10 @@ abstract class AppLocalizations {
   /// **'nhân viên đã chọn'**
   String get selectedEmployees;
 
-  /// Please select at least one service
+  /// Please select at least one item
   ///
   /// In vi, this message translates to:
-  /// **'Vui lòng chọn ít nhất một dịch vụ'**
+  /// **'Vui lòng chọn ít nhất một chi tiết'**
   String get pleaseSelectAtLeastOneService;
 
   /// Please select at least one employee
@@ -1035,8 +1035,8 @@ abstract class AppLocalizations {
   /// Service categories section title
   ///
   /// In vi, this message translates to:
-  /// **'Danh mục dịch vụ'**
-  String get serviceCategories;
+  /// **'Danh mục chi tiết'**
+  String get itemCategories;
 
   /// Performing employee section title
   ///
@@ -1080,10 +1080,10 @@ abstract class AppLocalizations {
   /// **'Lỗi tải danh mục: {error}'**
   String errorLoadingCategories(String error);
 
-  /// Error loading services
+  /// Error loading items
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi tải dịch vụ: {error}'**
+  /// **'Lỗi tải chi tiết: {error}'**
   String errorLoadingServices(String error);
 
   /// Error loading employees
@@ -1104,10 +1104,10 @@ abstract class AppLocalizations {
   /// **'Lỗi tìm kiếm nhân viên: {error}'**
   String errorSearchingEmployee(String error);
 
-  /// Invalid service data error
+  /// Invalid item data error
   ///
   /// In vi, this message translates to:
-  /// **'Dữ liệu dịch vụ không hợp lệ'**
+  /// **'Dữ liệu chi tiết không hợp lệ'**
   String get invalidServiceData;
 
   /// Bill
@@ -1458,7 +1458,7 @@ abstract class AppLocalizations {
   /// **'Bộ lọc'**
   String get categoryFilter;
 
-  /// Select categories to filter services
+  /// Select categories to filter items
   ///
   /// In vi, this message translates to:
   /// **'Chọn danh mục và sắp xếp'**
@@ -1488,16 +1488,16 @@ abstract class AppLocalizations {
   /// **'Tất cả danh mục ({count})'**
   String allCategories(int count);
 
-  /// Create new service
+  /// Create new item
   ///
   /// In vi, this message translates to:
-  /// **'Tạo dịch vụ mới'**
+  /// **'Tạo chi tiết mới'**
   String get createNewService;
 
-  /// Please enter service name
+  /// Please enter item name
   ///
   /// In vi, this message translates to:
-  /// **'Vui lòng nhập tên dịch vụ'**
+  /// **'Vui lòng nhập tên chi tiết'**
   String get pleaseEnterServiceName;
 
   /// Please enter price
@@ -1518,10 +1518,10 @@ abstract class AppLocalizations {
   /// **'Lỗi khi upload ảnh lên server'**
   String get errorUploadingImage;
 
-  /// Update service information
+  /// Update item information
   ///
   /// In vi, this message translates to:
-  /// **'Cập nhật thông tin dịch vụ'**
+  /// **'Cập nhật thông tin chi tiết'**
   String get updateServiceInfo;
 
   /// Category name is required
@@ -1755,7 +1755,7 @@ abstract class AppLocalizations {
   /// Categories list description
   ///
   /// In vi, this message translates to:
-  /// **'Danh sách danh mục dịch vụ'**
+  /// **'Danh sách danh mục chi tiết'**
   String get categoriesListDescription;
 
   /// Search categories
@@ -1782,46 +1782,46 @@ abstract class AppLocalizations {
   /// **'Vui lòng kiểm tra kết nối mạng hoặc thử lại'**
   String get checkNetworkOrTryAgainCategories;
 
-  /// Services title
+  /// Items title
   ///
   /// In vi, this message translates to:
-  /// **'Dịch vụ'**
-  String get servicesTitle;
+  /// **'Chi tiết'**
+  String get itemsTitle;
 
   /// Services subtitle
   ///
   /// In vi, this message translates to:
-  /// **'Quản lý dịch vụ theo danh mục'**
-  String get servicesSubtitle;
+  /// **'Quản lý chi tiết theo danh mục'**
+  String get itemsSubtitle;
 
-  /// Search services placeholder
+  /// Search items placeholder
   ///
   /// In vi, this message translates to:
-  /// **'Tìm kiếm dịch vụ...'**
+  /// **'Tìm kiếm chi tiết...'**
   String get searchServices;
 
-  /// Showing all services message
+  /// Showing all items message
   ///
   /// In vi, this message translates to:
-  /// **'Hiển thị tất cả {total} dịch vụ'**
+  /// **'Hiển thị tất cả {total} chi tiết'**
   String showingAllServices(int total);
 
-  /// Found services with category and search filter
+  /// Found items with category and search filter
   ///
   /// In vi, this message translates to:
-  /// **'Tìm thấy {shown}/{total} dịch vụ (lọc theo danh mục và tìm kiếm)'**
+  /// **'Tìm thấy {shown}/{total} chi tiết (lọc theo danh mục và tìm kiếm)'**
   String foundServicesWithCategoryAndSearch(int shown, int total);
 
-  /// Found services with category filter
+  /// Found items with category filter
   ///
   /// In vi, this message translates to:
-  /// **'Tìm thấy {shown}/{total} dịch vụ (lọc theo {count} danh mục)'**
+  /// **'Tìm thấy {shown}/{total} chi tiết (lọc theo {count} danh mục)'**
   String foundServicesWithCategory(int shown, int total, int count);
 
-  /// Found services with search filter
+  /// Found items with search filter
   ///
   /// In vi, this message translates to:
-  /// **'Tìm thấy {shown}/{total} dịch vụ (tìm kiếm: \"{search}\")'**
+  /// **'Tìm thấy {shown}/{total} chi tiết (tìm kiếm: \"{search}\")'**
   String foundServicesWithSearch(int shown, int total, String search);
 
   /// Clear filters button
@@ -1830,16 +1830,16 @@ abstract class AppLocalizations {
   /// **'Xóa bộ lọc'**
   String get clearFilters;
 
-  /// Error loading services list
+  /// Error loading items list
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi tải danh sách dịch vụ'**
+  /// **'Lỗi tải danh sách chi tiết'**
   String get errorLoadingServicesList;
 
-  /// Cannot load services list
+  /// Cannot load items list
   ///
   /// In vi, this message translates to:
-  /// **'Không thể tải danh sách dịch vụ'**
+  /// **'Không thể tải danh sách chi tiết'**
   String get cannotLoadServicesList;
 
   /// Please check network connection or try again
@@ -1851,8 +1851,8 @@ abstract class AppLocalizations {
   /// Service
   ///
   /// In vi, this message translates to:
-  /// **'dịch vụ'**
-  String get service;
+  /// **'chi tiết'**
+  String get item;
 
   /// Customer found message
   ///
@@ -1872,11 +1872,11 @@ abstract class AppLocalizations {
   /// **'Tạo đơn mới'**
   String get createNewOrder;
 
-  /// Number of services selected
+  /// Number of items selected
   ///
   /// In vi, this message translates to:
-  /// **'{count} dịch vụ đã chọn'**
-  String servicesSelected(int count);
+  /// **'{count} chi tiết đã chọn'**
+  String itemsSelected(int count);
 
   /// Customer name validation message
   ///
@@ -1902,17 +1902,17 @@ abstract class AppLocalizations {
   /// **'Chọn danh mục'**
   String get selectCategory;
 
-  /// Select service dropdown label
+  /// Select item dropdown label
   ///
   /// In vi, this message translates to:
-  /// **'Chọn dịch vụ'**
+  /// **'Chọn chi tiết'**
   String get selectService;
 
-  /// Number of services selected
+  /// Number of items selected
   ///
   /// In vi, this message translates to:
-  /// **'{count} dịch vụ đã chọn'**
-  String servicesSelectedCount(int count);
+  /// **'{count} chi tiết đã chọn'**
+  String itemsSelectedCount(int count);
 
   /// Discount section title
   ///
@@ -2163,13 +2163,13 @@ abstract class AppLocalizations {
   /// Menu screen subtitle
   ///
   /// In vi, this message translates to:
-  /// **'Menu danh mục và dịch vụ'**
+  /// **'Menu danh mục và chi tiết'**
   String get menuSubtitle;
 
-  /// Search services placeholder
+  /// Search items placeholder
   ///
   /// In vi, this message translates to:
-  /// **'Tìm kiếm dịch vụ...'**
+  /// **'Tìm kiếm chi tiết...'**
   String get searchServicesPlaceholder;
 
   /// No categories available message
@@ -2187,8 +2187,8 @@ abstract class AppLocalizations {
   /// Services count display
   ///
   /// In vi, this message translates to:
-  /// **'{count} dịch vụ'**
-  String servicesCount(int count);
+  /// **'{count} chi tiết'**
+  String itemsCount(int count);
 
   /// Categories count display
   ///
@@ -2199,37 +2199,37 @@ abstract class AppLocalizations {
   /// Services section title
   ///
   /// In vi, this message translates to:
-  /// **'Dịch vụ'**
-  String get servicesSection;
+  /// **'Chi tiết'**
+  String get itemsSection;
 
-  /// View all services button text
+  /// View all items button text
   ///
   /// In vi, this message translates to:
-  /// **'Xem tất cả dịch vụ'**
+  /// **'Xem tất cả chi tiết'**
   String get viewAllServices;
 
-  /// No services found with search and category filter
+  /// No items found with search and category filter
   ///
   /// In vi, this message translates to:
-  /// **'Không tìm thấy dịch vụ \"{search}\" trong {category}'**
+  /// **'Không tìm thấy chi tiết \"{search}\" trong {category}'**
   String noServicesFoundWithSearchAndCategory(String search, String category);
 
-  /// No services found with search filter
+  /// No items found with search filter
   ///
   /// In vi, this message translates to:
-  /// **'Không tìm thấy dịch vụ \"{search}\"'**
+  /// **'Không tìm thấy chi tiết \"{search}\"'**
   String noServicesFoundWithSearch(String search);
 
-  /// No services in category message
+  /// No items in category message
   ///
   /// In vi, this message translates to:
-  /// **'Danh mục \"{category}\" chưa có dịch vụ nào'**
+  /// **'Danh mục \"{category}\" chưa có chi tiết nào'**
   String noServicesInCategory(String category);
 
-  /// No services available message
+  /// No items available message
   ///
   /// In vi, this message translates to:
-  /// **'Chưa có dịch vụ nào'**
+  /// **'Chưa có chi tiết nào'**
   String get noServicesYet;
 
   /// Unknown category name
@@ -2376,10 +2376,10 @@ abstract class AppLocalizations {
   /// **'Tổng tiền'**
   String get totalAmount;
 
-  /// No services available message
+  /// No items available message
   ///
   /// In vi, this message translates to:
-  /// **'Không có dịch vụ'**
+  /// **'Không có chi tiết'**
   String get noServices;
 
   /// Temporary placeholder text
@@ -2397,8 +2397,8 @@ abstract class AppLocalizations {
   /// Service info not found message
   ///
   /// In vi, this message translates to:
-  /// **'Không tìm thấy thông tin dịch vụ cho đơn hàng này'**
-  String get serviceInfoNotFound;
+  /// **'Không tìm thấy thông tin chi tiết cho đơn hàng này'**
+  String get itemInfoNotFound;
 
   /// Filter by time dialog subtitle
   ///
@@ -2493,8 +2493,8 @@ abstract class AppLocalizations {
   /// Service details section title
   ///
   /// In vi, this message translates to:
-  /// **'Chi tiết dịch vụ'**
-  String get serviceDetails;
+  /// **'Chi tiết chi tiết'**
+  String get itemDetails;
 
   /// QR Code payment section title
   ///
@@ -2523,13 +2523,13 @@ abstract class AppLocalizations {
   /// Service not found error message
   ///
   /// In vi, this message translates to:
-  /// **'Không tìm thấy thông tin dịch vụ cho đơn hàng này'**
-  String get serviceNotFoundError;
+  /// **'Không tìm thấy thông tin chi tiết cho đơn hàng này'**
+  String get itemNotFoundError;
 
   /// Bill footer message
   ///
   /// In vi, this message translates to:
-  /// **'Cảm ơn quý khách đã sử dụng dịch vụ!'**
+  /// **'Cảm ơn quý khách đã sử dụng chi tiết!'**
   String get billFooter;
 
   /// Bill footer second message
@@ -2757,7 +2757,7 @@ abstract class AppLocalizations {
   /// Services detail section title in PDF
   ///
   /// In vi, this message translates to:
-  /// **'CHI TIẾT DỊCH VỤ'**
+  /// **'CHI TIẾT'**
   String get pdfServicesDetailTitle;
 
   /// Payment information section title in PDF
@@ -2793,7 +2793,7 @@ abstract class AppLocalizations {
   /// Thank you message in PDF footer
   ///
   /// In vi, this message translates to:
-  /// **'Cảm ơn quý khách đã sử dụng dịch vụ!'**
+  /// **'Cảm ơn quý khách đã sử dụng chi tiết!'**
   String get pdfThankYouMessage;
 
   /// See you again message in PDF footer
@@ -2961,7 +2961,7 @@ abstract class AppLocalizations {
   /// Employee description
   ///
   /// In vi, this message translates to:
-  /// **'Truy cập dịch vụ, tạo đơn và hóa đơn'**
+  /// **'Truy cập chi tiết, tạo đơn và hóa đơn'**
   String get accessServicesCreateOrdersAndBills;
 
   /// Please enter your email validation message
@@ -3168,13 +3168,13 @@ abstract class AppLocalizations {
   /// **'Đơn vị'**
   String get unit;
 
-  /// Trường mã dịch vụ
+  /// Trường mã chi tiết
   ///
   /// In vi, this message translates to:
-  /// **'Mã dịch vụ'**
-  String get serviceCode;
+  /// **'Mã chi tiết'**
+  String get itemCode;
 
-  /// Trường đơn vị tính cho dịch vụ
+  /// Trường đơn vị tính cho chi tiết
   ///
   /// In vi, this message translates to:
   /// **'Đơn vị tính'**
@@ -3233,6 +3233,96 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Xóa sắp xếp'**
   String get clearSorting;
+
+  /// Number of items selected
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} chi tiết đã chọn'**
+  String servicesSelected(int count);
+
+  /// Service categories section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Danh mục chi tiết'**
+  String get serviceCategories;
+
+  /// Services section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết'**
+  String get services;
+
+  /// Number of items selected with count
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} chi tiết đã chọn'**
+  String servicesSelectedCount(int count);
+
+  /// Service name field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên chi tiết'**
+  String get serviceName;
+
+  /// Service added successfully message
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm chi tiết thành công'**
+  String get serviceAddedSuccessfully;
+
+  /// Service updated successfully message
+  ///
+  /// In vi, this message translates to:
+  /// **'Cập nhật chi tiết thành công'**
+  String get serviceUpdatedSuccessfully;
+
+  /// Service deleted successfully message
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa chi tiết thành công'**
+  String get serviceDeletedSuccessfully;
+
+  /// Service details section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết chi tiết'**
+  String get serviceDetails;
+
+  /// Service info not found message
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy thông tin chi tiết cho đơn hàng này'**
+  String get serviceInfoNotFound;
+
+  /// Services title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết'**
+  String get servicesTitle;
+
+  /// Services subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Quản lý chi tiết theo danh mục'**
+  String get servicesSubtitle;
+
+  /// Services count display
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} chi tiết'**
+  String servicesCount(int count);
+
+  /// Services section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết'**
+  String get servicesSection;
+
+  /// Service not found error message
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi không tìm thấy chi tiết'**
+  String get serviceNotFoundError;
 }
 
 class _AppLocalizationsDelegate

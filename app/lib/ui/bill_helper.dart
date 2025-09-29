@@ -326,7 +326,7 @@ class BillHelper {
                           Row(
                             children: [
                               Icon(
-                                Icons.spa,
+                                Icons.shopping_cart,
                                 color: AppTheme.primaryStart,
                                 size: 20,
                               ),
@@ -412,7 +412,7 @@ class BillHelper {
                           Row(
                             children: [
                               Icon(
-                                Icons.spa,
+                                Icons.shopping_cart,
                                 color: AppTheme.primaryStart,
                                 size: 20,
                               ),

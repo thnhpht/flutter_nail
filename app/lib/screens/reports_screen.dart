@@ -1031,7 +1031,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.spa,
+                        Icons.shopping_cart,
                         size: 16,
                         color: Colors.grey[600],
                       ),

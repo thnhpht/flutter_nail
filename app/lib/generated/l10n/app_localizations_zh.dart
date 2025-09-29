@@ -51,7 +51,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categories => '分类';
 
   @override
-  String get services => '服务';
+  String get items => '商品';
 
   @override
   String get createOrder => '创建订单';
@@ -378,43 +378,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirmDeleteCategory => '确定要删除此分类吗？';
 
   @override
-  String get serviceName => '服务名称';
+  String get itemName => '商品名称';
 
   @override
-  String get servicePrice => '服务价格';
+  String get itemPrice => '商品价格';
 
   @override
-  String get serviceDuration => '服务时长';
+  String get itemDuration => '商品用时';
 
   @override
-  String get addService => '添加服务';
+  String get addService => '添加商品';
 
   @override
-  String get editService => '编辑服务';
+  String get editService => '编辑商品';
 
   @override
-  String get deleteService => '删除服务';
+  String get deleteService => '删除商品';
 
   @override
-  String get serviceAddedSuccessfully => '服务添加成功';
+  String get itemAddedSuccessfully => '商品添加成功';
 
   @override
-  String get serviceUpdatedSuccessfully => '服务信息更新成功';
+  String get itemUpdatedSuccessfully => '商品更新成功';
 
   @override
-  String get serviceDeletedSuccessfully => '服务删除成功';
+  String get itemDeletedSuccessfully => '商品删除成功';
 
   @override
-  String get errorAddingService => '添加服务时出错';
+  String get errorAddingService => '添加商品时出错';
 
   @override
-  String get errorUpdatingService => '更新服务信息时出错';
+  String get errorUpdatingService => '更新商品信息时出错';
 
   @override
-  String get errorDeletingService => '删除服务时出错';
+  String get errorDeletingService => '删除商品时出错';
 
   @override
-  String get confirmDeleteService => '确定要删除此服务吗？';
+  String get confirmDeleteService => '确定要删除此商品吗？';
 
   @override
   String get order => '订单';
@@ -451,19 +451,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirmDeleteOrder => '确定要删除此订单吗？';
 
   @override
-  String get selectServices => '选择服务';
+  String get selectServices => '选择商品';
 
   @override
   String get selectEmployees => '选择员工';
 
   @override
-  String get selectedServices => '个服务已选择';
+  String get selectedServices => '个商品已选择';
 
   @override
   String get selectedEmployees => '个员工已选择';
 
   @override
-  String get pleaseSelectAtLeastOneService => '请至少选择一个服务';
+  String get pleaseSelectAtLeastOneService => '请至少选择一个商品';
 
   @override
   String get pleaseSelectAtLeastOneEmployee => '请至少选择一个员工';
@@ -478,7 +478,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get employeeInformation => '员工信息';
 
   @override
-  String get serviceCategories => '服务类别';
+  String get itemCategories => '商品分类';
 
   @override
   String get performingEmployee => '执行员工';
@@ -505,7 +505,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String errorLoadingServices(String error) {
-    return '加载服务时出错：$error';
+    return '加载商品时出错：$error';
   }
 
   @override
@@ -524,7 +524,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get invalidServiceData => '无效的服务数据';
+  String get invalidServiceData => '无效的商品数据';
 
   @override
   String get bill => '账单';
@@ -726,10 +726,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get createNewService => '创建新的美甲服务';
+  String get createNewService => '创建新的美甲商品';
 
   @override
-  String get pleaseEnterServiceName => '请输入服务名称';
+  String get pleaseEnterServiceName => '请输入商品名称';
 
   @override
   String get pleaseEnterPrice => '请输入价格';
@@ -738,10 +738,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pleaseEnterValidPrice => '请输入有效价格';
 
   @override
-  String get errorUploadingImage => '上传图片到服务器时出错';
+  String get errorUploadingImage => '上传图片到商品器时出错';
 
   @override
-  String get updateServiceInfo => '更新服务信息';
+  String get updateServiceInfo => '更新商品信息';
 
   @override
   String get categoryNameRequired => '分类名称不能为空';
@@ -753,10 +753,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customerPhoneExists => '客户电话号码已存在';
 
   @override
-  String get errorUploadingLogo => '上传标志到服务器时出错';
+  String get errorUploadingLogo => '上传标志到商品器时出错';
 
   @override
-  String get errorUploadingQRCode => '上传二维码到服务器时出错';
+  String get errorUploadingQRCode => '上传二维码到商品器时出错';
 
   @override
   String get salonInfoSavedSuccessfully => '沙龙信息保存成功！';
@@ -829,7 +829,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String errorUploadingImageToServer(String error) {
-    return '上传图片到服务器时出错：$error';
+    return '上传图片到商品器时出错：$error';
   }
 
   @override
@@ -866,7 +866,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categoriesTitle => '分类';
 
   @override
-  String get categoriesListDescription => '服务分类列表';
+  String get categoriesListDescription => '商品分类列表';
 
   @override
   String get searchCategories => '搜索分类...';
@@ -881,48 +881,48 @@ class AppLocalizationsZh extends AppLocalizations {
   String get checkNetworkOrTryAgainCategories => '请检查网络连接或重试';
 
   @override
-  String get servicesTitle => '服务';
+  String get itemsTitle => '商品';
 
   @override
-  String get servicesSubtitle => '按分类管理服务';
+  String get itemsSubtitle => '按分类管理商品';
 
   @override
-  String get searchServices => '搜索服务...';
+  String get searchServices => '搜索商品...';
 
   @override
   String showingAllServices(int total) {
-    return '显示全部 $total 个服务';
+    return '显示全部 $total 个商品';
   }
 
   @override
   String foundServicesWithCategoryAndSearch(int shown, int total) {
-    return '找到 $shown/$total 个服务（按分类和搜索筛选）';
+    return '找到 $shown/$total 个商品（按分类和搜索筛选）';
   }
 
   @override
   String foundServicesWithCategory(int shown, int total, int count) {
-    return '找到 $shown/$total 个服务（按 $count 个分类筛选）';
+    return '找到 $shown/$total 个商品（按 $count 个分类筛选）';
   }
 
   @override
   String foundServicesWithSearch(int shown, int total, String search) {
-    return '找到 $shown/$total 个服务（搜索：\"$search\"）';
+    return '找到 $shown/$total 个商品（搜索：\"$search\"）';
   }
 
   @override
   String get clearFilters => '清除筛选';
 
   @override
-  String get errorLoadingServicesList => '加载服务列表时出错';
+  String get errorLoadingServicesList => '加载商品列表时出错';
 
   @override
-  String get cannotLoadServicesList => '无法加载服务列表';
+  String get cannotLoadServicesList => '无法加载商品列表';
 
   @override
   String get checkNetworkOrTryAgainServices => '请检查网络连接或重试';
 
   @override
-  String get service => '服务';
+  String get item => '商品';
 
   @override
   String customerFound(String name) {
@@ -938,8 +938,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createNewOrder => '创建新订单';
 
   @override
-  String servicesSelected(int count) {
-    return '已选择 $count 个服务';
+  String itemsSelected(int count) {
+    return '已选商品';
   }
 
   @override
@@ -957,11 +957,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectCategory => '选择类别';
 
   @override
-  String get selectService => '选择服务';
+  String get selectService => '选择商品';
 
   @override
-  String servicesSelectedCount(int count) {
-    return '已选择 $count 个服务';
+  String itemsSelectedCount(int count) {
+    return '已选 $count 个商品';
   }
 
   @override
@@ -1106,10 +1106,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuTitle => '菜单';
 
   @override
-  String get menuSubtitle => '菜单分类和服务';
+  String get menuSubtitle => '菜单分类和商品';
 
   @override
-  String get searchServicesPlaceholder => '搜索服务...';
+  String get searchServicesPlaceholder => '搜索商品...';
 
   @override
   String get noCategoriesYet => '暂无分类';
@@ -1118,8 +1118,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categoriesSection => '分类';
 
   @override
-  String servicesCount(int count) {
-    return '$count个服务';
+  String itemsCount(int count) {
+    return '$count 个商品';
   }
 
   @override
@@ -1128,10 +1128,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get servicesSection => '服务';
+  String get itemsSection => '商品';
 
   @override
-  String get viewAllServices => '查看所有服务';
+  String get viewAllServices => '查看所有商品';
 
   @override
   String noServicesFoundWithSearchAndCategory(String search, String category) {
@@ -1145,11 +1145,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String noServicesInCategory(String category) {
-    return '\"$category\"分类暂无服务';
+    return '\"$category\"分类暂无商品';
   }
 
   @override
-  String get noServicesYet => '暂无服务';
+  String get noServicesYet => '暂无商品';
 
   @override
   String get unknownCategory => '未知';
@@ -1224,7 +1224,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get totalAmount => '总金额：';
 
   @override
-  String get noServices => '无服务';
+  String get noServices => '无商品';
 
   @override
   String get temporary => '临时';
@@ -1233,7 +1233,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cannotUpdateOrderTodayOnly => '只能更新今天的订单';
 
   @override
-  String get serviceInfoNotFound => '未找到此订单的服务信息';
+  String get itemInfoNotFound => '找不到此订单的商品信息';
 
   @override
   String get selectTimeRangeToViewReports => '选择时间范围查看报告';
@@ -1280,10 +1280,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createdDate => '创建日期：';
 
   @override
-  String get servingStaff => '服务员工：';
+  String get servingStaff => '商品员工：';
 
   @override
-  String get serviceDetails => '服务详情';
+  String get itemDetails => '商品详情';
 
   @override
   String get qrCodePayment => '二维码付款';
@@ -1298,13 +1298,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scanQrToPay => '扫描二维码付款';
 
   @override
-  String get serviceNotFoundError => '未找到此订单的服务信息';
+  String get itemNotFoundError => '找不到商品';
 
   @override
-  String get billFooter => '感谢您使用我们的服务！';
+  String get billFooter => '感谢您使用我们的商品！';
 
   @override
-  String get billFooter2 => '期待再次为您服务！';
+  String get billFooter2 => '期待再次为您商品！';
 
   @override
   String get canOnlyUpdateTodayOrders => '只能更新今天的订单';
@@ -1327,7 +1327,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get cannotConnectToServer => '无法连接到服务器。请检查网络连接。';
+  String get cannotConnectToServer => '无法连接到商品器。请检查网络连接。';
 
   @override
   String get notificationNoOrderInfo => '通知不包含订单信息';
@@ -1431,10 +1431,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pdfCustomerPhone => '电话号码：';
 
   @override
-  String get pdfEmployeeServed => '服务员工：';
+  String get pdfEmployeeServed => '商品员工：';
 
   @override
-  String get pdfServicesDetailTitle => '服务详情';
+  String get pdfServicesDetailTitle => '商品详情';
 
   @override
   String get pdfPaymentInfoTitle => '付款信息';
@@ -1454,10 +1454,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pdfTotalPayment => '总付款：';
 
   @override
-  String get pdfThankYouMessage => '感谢您使用我们的服务！';
+  String get pdfThankYouMessage => '感谢您使用我们的商品！';
 
   @override
-  String get pdfSeeYouAgainMessage => '期待再次为您服务！';
+  String get pdfSeeYouAgainMessage => '期待再次为您商品！';
 
   @override
   String get pdfShareBillTitle => '分享账单';
@@ -1544,7 +1544,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get manageEntireSystem => '管理整个系统';
 
   @override
-  String get accessServicesCreateOrdersAndBills => '访问服务，创建订单和账单';
+  String get accessServicesCreateOrdersAndBills => '访问商品，创建订单和账单';
 
   @override
   String get pleaseEnterYourEmail => '请输入您的邮箱';
@@ -1649,7 +1649,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get unit => '单位';
 
   @override
-  String get serviceCode => '服务编号';
+  String get itemCode => '商品代码';
 
   @override
   String get unitOfMeasurement => '计量单位';
@@ -1680,4 +1680,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get clearSorting => '清除排序';
+
+  @override
+  String servicesSelected(int count) {
+    return '$count 个商品已选';
+  }
+
+  @override
+  String get serviceCategories => '商品分类';
+
+  @override
+  String get services => '商品';
+
+  @override
+  String servicesSelectedCount(int count) {
+    return '$count 个商品已选';
+  }
+
+  @override
+  String get serviceName => '商品名称';
+
+  @override
+  String get serviceAddedSuccessfully => '商品添加成功';
+
+  @override
+  String get serviceUpdatedSuccessfully => '商品更新成功';
+
+  @override
+  String get serviceDeletedSuccessfully => '商品删除成功';
+
+  @override
+  String get serviceDetails => '商品详情';
+
+  @override
+  String get serviceInfoNotFound => '找不到此订单的商品信息';
+
+  @override
+  String get servicesTitle => '商品';
+
+  @override
+  String get servicesSubtitle => '按分类管理商品';
+
+  @override
+  String servicesCount(int count) {
+    return '$count 个商品';
+  }
+
+  @override
+  String get servicesSection => '商品';
+
+  @override
+  String get serviceNotFoundError => '找不到商品';
 }

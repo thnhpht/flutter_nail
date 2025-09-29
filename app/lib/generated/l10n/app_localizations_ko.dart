@@ -51,7 +51,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get categories => '카테고리';
 
   @override
-  String get services => '서비스';
+  String get items => '상품';
 
   @override
   String get createOrder => '주문 만들기';
@@ -379,43 +379,43 @@ class AppLocalizationsKo extends AppLocalizations {
   String get confirmDeleteCategory => '이 카테고리를 삭제하시겠습니까?';
 
   @override
-  String get serviceName => '서비스 이름';
+  String get itemName => '상품 이름';
 
   @override
-  String get servicePrice => '서비스 가격';
+  String get itemPrice => '상품 가격';
 
   @override
-  String get serviceDuration => '서비스 소요 시간';
+  String get itemDuration => '상품 소요 시간';
 
   @override
-  String get addService => '서비스 추가';
+  String get addService => '상품 추가';
 
   @override
-  String get editService => '서비스 편집';
+  String get editService => '상품 편집';
 
   @override
-  String get deleteService => '서비스 삭제';
+  String get deleteService => '상품 삭제';
 
   @override
-  String get serviceAddedSuccessfully => '서비스가 성공적으로 추가되었습니다';
+  String get itemAddedSuccessfully => '상품이 성공적으로 추가되었습니다';
 
   @override
-  String get serviceUpdatedSuccessfully => '서비스 정보가 성공적으로 업데이트되었습니다';
+  String get itemUpdatedSuccessfully => '상품이 성공적으로 업데이트되었습니다';
 
   @override
-  String get serviceDeletedSuccessfully => '서비스가 성공적으로 삭제되었습니다';
+  String get itemDeletedSuccessfully => 'Xóa chi tiết thành công';
 
   @override
-  String get errorAddingService => '서비스 추가 중 오류';
+  String get errorAddingService => '상품 추가 중 오류';
 
   @override
-  String get errorUpdatingService => '서비스 정보 업데이트 중 오류';
+  String get errorUpdatingService => '상품 정보 업데이트 중 오류';
 
   @override
-  String get errorDeletingService => '서비스 삭제 중 오류';
+  String get errorDeletingService => '상품 삭제 중 오류';
 
   @override
-  String get confirmDeleteService => '이 서비스를 삭제하시겠습니까?';
+  String get confirmDeleteService => '이 상품를 삭제하시겠습니까?';
 
   @override
   String get order => '주문';
@@ -452,19 +452,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get confirmDeleteOrder => '이 주문을 삭제하시겠습니까?';
 
   @override
-  String get selectServices => '서비스 선택';
+  String get selectServices => '상품 선택';
 
   @override
   String get selectEmployees => '직원 선택';
 
   @override
-  String get selectedServices => '개 서비스 선택됨';
+  String get selectedServices => '개 상품 선택됨';
 
   @override
   String get selectedEmployees => '명 직원 선택됨';
 
   @override
-  String get pleaseSelectAtLeastOneService => '최소 하나의 서비스를 선택하세요';
+  String get pleaseSelectAtLeastOneService => '최소 하나의 상품를 선택하세요';
 
   @override
   String get pleaseSelectAtLeastOneEmployee => '최소 한 명의 직원을 선택하세요';
@@ -479,7 +479,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get employeeInformation => '직원 정보';
 
   @override
-  String get serviceCategories => '서비스 카테고리';
+  String get itemCategories => '상품 카테고리';
 
   @override
   String get performingEmployee => '담당 직원';
@@ -506,7 +506,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String errorLoadingServices(String error) {
-    return '서비스 로딩 중 오류: $error';
+    return '상품 로딩 중 오류: $error';
   }
 
   @override
@@ -525,7 +525,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get invalidServiceData => '유효하지 않은 서비스 데이터';
+  String get invalidServiceData => '유효하지 않은 상품 데이터';
 
   @override
   String get bill => '청구서';
@@ -727,10 +727,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get createNewService => '새 네일 서비스 만들기';
+  String get createNewService => '새 네일 상품 만들기';
 
   @override
-  String get pleaseEnterServiceName => '서비스 이름을 입력하세요';
+  String get pleaseEnterServiceName => '상품 이름을 입력하세요';
 
   @override
   String get pleaseEnterPrice => '가격을 입력하세요';
@@ -742,7 +742,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get errorUploadingImage => '서버에 이미지 업로드 중 오류';
 
   @override
-  String get updateServiceInfo => '서비스 정보 업데이트';
+  String get updateServiceInfo => '상품 정보 업데이트';
 
   @override
   String get categoryNameRequired => '카테고리 이름은 필수입니다';
@@ -867,7 +867,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get categoriesTitle => '카테고리';
 
   @override
-  String get categoriesListDescription => '서비스 카테고리 목록';
+  String get categoriesListDescription => '상품 카테고리 목록';
 
   @override
   String get searchCategories => '카테고리 검색...';
@@ -882,48 +882,48 @@ class AppLocalizationsKo extends AppLocalizations {
   String get checkNetworkOrTryAgainCategories => '네트워크 연결을 확인하거나 다시 시도해주세요';
 
   @override
-  String get servicesTitle => '서비스';
+  String get itemsTitle => '상품';
 
   @override
-  String get servicesSubtitle => '카테고리별 서비스 관리';
+  String get itemsSubtitle => '카테고리별 상품 관리';
 
   @override
-  String get searchServices => '서비스 검색...';
+  String get searchServices => '상품 검색...';
 
   @override
   String showingAllServices(int total) {
-    return '전체 $total개 서비스 표시';
+    return '전체 $total개 상품 표시';
   }
 
   @override
   String foundServicesWithCategoryAndSearch(int shown, int total) {
-    return '$shown/$total개 서비스 발견 (카테고리 및 검색으로 필터링됨)';
+    return '$shown/$total개 상품 발견 (카테고리 및 검색으로 필터링됨)';
   }
 
   @override
   String foundServicesWithCategory(int shown, int total, int count) {
-    return '$shown/$total개 서비스 발견 ($count개 카테고리로 필터링됨)';
+    return '$shown/$total개 상품 발견 ($count개 카테고리로 필터링됨)';
   }
 
   @override
   String foundServicesWithSearch(int shown, int total, String search) {
-    return '$shown/$total개 서비스 발견 (검색: \"$search\")';
+    return '$shown/$total개 상품 발견 (검색: \"$search\")';
   }
 
   @override
   String get clearFilters => '필터 지우기';
 
   @override
-  String get errorLoadingServicesList => '서비스 목록 로딩 오류';
+  String get errorLoadingServicesList => '상품 목록 로딩 오류';
 
   @override
-  String get cannotLoadServicesList => '서비스 목록을 불러올 수 없습니다';
+  String get cannotLoadServicesList => '상품 목록을 불러올 수 없습니다';
 
   @override
   String get checkNetworkOrTryAgainServices => '네트워크 연결을 확인하거나 다시 시도해주세요';
 
   @override
-  String get service => '서비스';
+  String get item => '상품';
 
   @override
   String customerFound(String name) {
@@ -939,8 +939,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get createNewOrder => '새 주문 만들기';
 
   @override
-  String servicesSelected(int count) {
-    return '$count개 서비스 선택됨';
+  String itemsSelected(int count) {
+    return '선택된 상품';
   }
 
   @override
@@ -958,11 +958,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get selectCategory => '카테고리 선택';
 
   @override
-  String get selectService => '서비스 선택';
+  String get selectService => '상품 선택';
 
   @override
-  String servicesSelectedCount(int count) {
-    return '$count개 서비스 선택됨';
+  String itemsSelectedCount(int count) {
+    return '$count개 상품 선택됨';
   }
 
   @override
@@ -1109,10 +1109,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuTitle => '메뉴';
 
   @override
-  String get menuSubtitle => '메뉴 카테고리 및 서비스';
+  String get menuSubtitle => '메뉴 카테고리 및 상품';
 
   @override
-  String get searchServicesPlaceholder => '서비스 검색...';
+  String get searchServicesPlaceholder => '상품 검색...';
 
   @override
   String get noCategoriesYet => '아직 카테고리가 없습니다';
@@ -1121,8 +1121,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get categoriesSection => '카테고리';
 
   @override
-  String servicesCount(int count) {
-    return '$count개 서비스';
+  String itemsCount(int count) {
+    return '$count개 상품';
   }
 
   @override
@@ -1131,10 +1131,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get servicesSection => '서비스';
+  String get itemsSection => '상품';
 
   @override
-  String get viewAllServices => '모든 서비스 보기';
+  String get viewAllServices => '모든 상품 보기';
 
   @override
   String noServicesFoundWithSearchAndCategory(String search, String category) {
@@ -1148,11 +1148,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String noServicesInCategory(String category) {
-    return '\"$category\" 카테고리에 아직 서비스가 없습니다';
+    return '\"$category\" 카테고리에 아직 상품가 없습니다';
   }
 
   @override
-  String get noServicesYet => '아직 서비스가 없습니다';
+  String get noServicesYet => '아직 상품가 없습니다';
 
   @override
   String get unknownCategory => '알 수 없음';
@@ -1228,7 +1228,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get totalAmount => '총 금액';
 
   @override
-  String get noServices => '서비스 없음';
+  String get noServices => '상품 없음';
 
   @override
   String get temporary => '임시';
@@ -1237,7 +1237,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get cannotUpdateOrderTodayOnly => '오늘의 주문만 업데이트할 수 있습니다';
 
   @override
-  String get serviceInfoNotFound => '이 주문에 대한 서비스 정보를 찾을 수 없습니다';
+  String get itemInfoNotFound => '이 주문에 대한 상품 정보를 찾을 수 없습니다';
 
   @override
   String get selectTimeRangeToViewReports => '보고서를 보기 위한 시간 범위 선택';
@@ -1284,10 +1284,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get createdDate => '생성일';
 
   @override
-  String get servingStaff => '서비스 직원';
+  String get servingStaff => '상품 직원';
 
   @override
-  String get serviceDetails => '서비스 세부사항';
+  String get itemDetails => '상품 세부사항';
 
   @override
   String get qrCodePayment => 'QR 코드 결제';
@@ -1302,10 +1302,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get scanQrToPay => 'QR 코드를 스캔하여 결제';
 
   @override
-  String get serviceNotFoundError => '이 주문에 대한 서비스 정보를 찾을 수 없습니다';
+  String get itemNotFoundError => '상품을 찾을 수 없습니다';
 
   @override
-  String get billFooter => '저희 서비스를 이용해 주셔서 감사합니다!';
+  String get billFooter => '저희 상품를 이용해 주셔서 감사합니다!';
 
   @override
   String get billFooter2 => '다시 만나뵐 수 있기를 기대합니다!';
@@ -1438,7 +1438,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfEmployeeServed => '담당 직원';
 
   @override
-  String get pdfServicesDetailTitle => '서비스 상세';
+  String get pdfServicesDetailTitle => '상품 상세';
 
   @override
   String get pdfPaymentInfoTitle => '결제 정보';
@@ -1458,7 +1458,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfTotalPayment => '총 결제금액';
 
   @override
-  String get pdfThankYouMessage => '서비스를 이용해 주셔서 감사합니다!';
+  String get pdfThankYouMessage => '상품를 이용해 주셔서 감사합니다!';
 
   @override
   String get pdfSeeYouAgainMessage => '다시 만나요!';
@@ -1548,7 +1548,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get manageEntireSystem => '전체 시스템 관리';
 
   @override
-  String get accessServicesCreateOrdersAndBills => '서비스 접근, 주문 및 청구서 생성';
+  String get accessServicesCreateOrdersAndBills => '상품 접근, 주문 및 청구서 생성';
 
   @override
   String get pleaseEnterYourEmail => '이메일을 입력해주세요';
@@ -1660,7 +1660,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get unit => '단위';
 
   @override
-  String get serviceCode => '서비스 코드';
+  String get itemCode => '상품 코드';
 
   @override
   String get unitOfMeasurement => '측정 단위';
@@ -1691,4 +1691,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get clearSorting => '정렬 초기화';
+
+  @override
+  String servicesSelected(int count) {
+    return '$count개의 상품 선택됨';
+  }
+
+  @override
+  String get serviceCategories => '상품 카테고리';
+
+  @override
+  String get services => '상품';
+
+  @override
+  String servicesSelectedCount(int count) {
+    return ': $count개의 상품 선택됨';
+  }
+
+  @override
+  String get serviceName => '상품 이름';
+
+  @override
+  String get serviceAddedSuccessfully => '상품이 성공적으로 추가되었습니다';
+
+  @override
+  String get serviceUpdatedSuccessfully => '상품이 성공적으로 업데되었습니다';
+
+  @override
+  String get serviceDeletedSuccessfully => '상품이 성공적으로 삭제되었습니다';
+
+  @override
+  String get serviceDetails => '상품 세부사항';
+
+  @override
+  String get serviceInfoNotFound => '이 주문에 대한 상품 정보를 찾을 수 없습니다';
+
+  @override
+  String get servicesTitle => '상품';
+
+  @override
+  String get servicesSubtitle => '카테고리별 상품 관리';
+
+  @override
+  String servicesCount(int count) {
+    return '$count개 상품';
+  }
+
+  @override
+  String get servicesSection => '상품';
+
+  @override
+  String get serviceNotFoundError => '상품을 찾을 수 없습니다';
 }

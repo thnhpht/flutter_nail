@@ -535,7 +535,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.spa,
+                        child: const Icon(Icons.shopping_cart,
                             color: Colors.white, size: 24),
                       ),
                       const SizedBox(width: 16),
@@ -623,7 +623,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   decoration: InputDecoration(
                                     labelText: AppLocalizations.of(context)!
                                         .serviceName,
-                                    prefixIcon: const Icon(Icons.spa,
+                                    prefixIcon: const Icon(Icons.shopping_cart,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -972,7 +972,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   decoration: InputDecoration(
                                     labelText: AppLocalizations.of(context)!
                                         .serviceName,
-                                    prefixIcon: const Icon(Icons.spa,
+                                    prefixIcon: const Icon(Icons.shopping_cart,
                                         color: AppTheme.primaryStart),
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(16),
@@ -1212,7 +1212,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         content: Text(AppLocalizations.of(context)!
-            .chooseAction(AppLocalizations.of(context)!.service)),
+            .chooseAction(AppLocalizations.of(context)!.item)),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -1559,7 +1559,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             AppWidgets.gradientHeader(
-                              icon: Icons.spa,
+                              icon: Icons.shopping_cart,
                               title:
                                   AppLocalizations.of(context)!.servicesTitle,
                               subtitle: AppLocalizations.of(context)!
@@ -1776,7 +1776,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                       child: Text(AppLocalizations.of(context)!
                                           .noItemsFound(
                                               AppLocalizations.of(context)!
-                                                  .service)))
+                                                  .item)))
                                 ],
                               ),
                             ),
@@ -1842,7 +1842,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                       ),
                                                       child: Center(
                                                         child: Icon(
-                                                          Icons.spa,
+                                                          Icons.shopping_cart,
                                                           size: 60,
                                                           color: Colors.white,
                                                         ),

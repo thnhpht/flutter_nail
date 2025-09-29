@@ -1050,7 +1050,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         color: Colors.grey[100],
       ),
       child: Icon(
-        Icons.spa,
+        Icons.shopping_cart,
         size: AppTheme.getResponsiveFontSize(
           context,
           mobile: 48,

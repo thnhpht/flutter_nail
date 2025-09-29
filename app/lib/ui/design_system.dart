@@ -317,7 +317,7 @@ class AppWidgets {
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: const Icon(
-                  Icons.spa,
+                  Icons.shopping_cart,
                   color: AppTheme.primaryStart,
                   size: 20,
                 ),
