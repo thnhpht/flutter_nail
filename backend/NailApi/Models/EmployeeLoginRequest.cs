@@ -5,8 +5,7 @@ namespace NailApi.Models
     public class EmployeeLoginRequest
     {
         [Required]
-        [EmailAddress]
-        public string ShopEmail { get; set; } = string.Empty;
+        public string ShopName { get; set; } = string.Empty;
 
         [Required]
         public string EmployeePhone { get; set; } = string.Empty;

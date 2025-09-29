@@ -44,13 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onEmailChanged() {
     final email = _emailController.text;
-    if (email.contains('@')) {
-      setState(() {
-        _databaseName = email;
-        // Tự động điền email vào trường tên đăng nhập database
-        _userLoginController.text = email;
-      });
-    }
+    setState(() {
+      _databaseName = email;
+      // Tự động điền tên shop vào trường tên đăng nhập database
+      _userLoginController.text = email;
+    });
   }
 
   @override
@@ -68,13 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     if (_emailController.text.trim().isEmpty) {
-      AppWidgets.showFlushbar(context, l10n.pleaseEnterEmail,
-          type: MessageType.warning);
-      return;
-    }
-
-    if (!_emailController.text.contains('@')) {
-      AppWidgets.showFlushbar(context, l10n.invalidEmail,
+      AppWidgets.showFlushbar(context, l10n.pleaseEnterShopName,
           type: MessageType.warning);
       return;
     }
@@ -219,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final request = EmployeeLoginRequest(
-        shopEmail: _shopEmailController.text.trim(),
+        shopName: _shopEmailController.text.trim(),
         employeePhone: _employeePhoneController.text.trim(),
         employeePassword: _employeePasswordController.text,
       );
@@ -233,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('database_name', response.databaseName);
         await prefs.setString('user_role', response.userRole ?? 'employee');
         await prefs.setString('employee_id', response.employeeId ?? '');
-        await prefs.setString('shop_email', _shopEmailController.text.trim());
+        await prefs.setString('shop_name', _shopEmailController.text.trim());
 
         // Hiển thị thông báo thành công
         if (mounted) {
@@ -527,7 +519,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _currentStep == 'role_selection'
                         ? l10n.selectAccountTypeToContinue
                         : _currentStep == 'email'
-                            ? l10n.enterEmailToCheckAccount
+                            ? l10n.enterShopNameToCheckAccount
                             : _currentStep == 'login'
                                 ? l10n.enterPasswordToLogin
                                 : _currentStep == 'create_account'
@@ -580,10 +572,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (_currentStep == 'employee_login') ...[
                             TextFormField(
                               controller: _shopEmailController,
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.text,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                labelText: l10n.shopEmail,
+                                labelText: l10n.shopName,
                                 labelStyle:
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.business,
@@ -606,10 +598,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return l10n.pleaseEnterEmail;
-                                }
-                                if (!value.contains('@')) {
-                                  return l10n.invalidEmail;
+                                  return l10n.pleaseEnterShopName;
                                 }
                                 return null;
                               },
@@ -690,13 +679,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 TextFormField(
                                   controller: _emailController,
-                                  keyboardType: TextInputType.emailAddress,
+                                  keyboardType: TextInputType.text,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
-                                    labelText: l10n.email,
+                                    labelText: l10n.shopName,
                                     labelStyle:
                                         const TextStyle(color: Colors.white70),
-                                    prefixIcon: const Icon(Icons.email,
+                                    prefixIcon: const Icon(Icons.business,
                                         color: Colors.white70),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -716,13 +705,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return l10n.pleaseEnterYourEmail;
-                                    }
-                                    if (!value.contains('@')) {
-                                      return l10n.invalidEmailExample;
-                                    }
-                                    if (!value.contains('.')) {
-                                      return l10n.invalidEmailMissingDomain;
+                                      return l10n.pleaseEnterShopName;
                                     }
                                     return null;
                                   },

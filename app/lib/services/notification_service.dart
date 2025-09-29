@@ -69,12 +69,12 @@ class NotificationService {
       // Try to load from API first if available
       if (_apiClient != null) {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           try {
-            final response = await _apiClient!.getNotifications(shopEmail);
+            final response = await _apiClient!.getNotifications(shopName);
             if (response['success'] == true) {
               final List<dynamic> notificationsList =
                   response['notifications'] ?? [];
@@ -182,12 +182,12 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.markNotificationRead(
-            shopEmail: shopEmail,
+            shopName: shopName,
             notificationId: notificationId,
           );
         }
@@ -240,12 +240,12 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           final response = await _apiClient!.deleteNotification(
-            shopEmail: shopEmail,
+            shopName: shopName,
             notificationId: notificationId,
           );
 
@@ -287,12 +287,12 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           final response = await _apiClient!.clearAllNotifications(
-            shopEmail: shopEmail,
+            shopName: shopName,
           );
 
           // If API call was successful, refresh notifications from server
@@ -362,12 +362,12 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
-            shopEmail: shopEmail,
+            shopName: shopName,
             title: 'Đơn hàng mới',
             message:
                 'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
@@ -468,12 +468,12 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
-            shopEmail: shopEmail,
+            shopName: shopName,
             title: 'Đơn hàng được cập nhật',
             message:
                 'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName',
@@ -545,12 +545,12 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopEmail =
+        final shopName =
             prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-        if (shopEmail != null && shopEmail.isNotEmpty) {
+        if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
-            shopEmail: shopEmail,
+            shopName: shopName,
             title: 'Đơn hàng đã thanh toán',
             message:
                 'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}',
@@ -652,11 +652,11 @@ class NotificationService {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final shopEmail =
+      final shopName =
           prefs.getString('shop_email') ?? prefs.getString('user_email');
 
-      if (shopEmail != null && shopEmail.isNotEmpty) {
-        final response = await _apiClient!.getNotifications(shopEmail);
+      if (shopName != null && shopName.isNotEmpty) {
+        final response = await _apiClient!.getNotifications(shopName);
 
         if (response['success'] == true) {
           final List<dynamic> notificationsList =

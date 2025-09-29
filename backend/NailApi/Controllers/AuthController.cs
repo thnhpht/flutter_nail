@@ -179,10 +179,10 @@ namespace NailApi.Controllers
         {
             try
             {
-                Console.WriteLine($"Employee login attempt for shop email: {request.ShopEmail}");
+                Console.WriteLine($"Employee login attempt for shop name: {request.ShopName}");
 
-                // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                // Kiểm tra tên shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
 
                 if (shopOwner == null)
                 {
@@ -190,12 +190,12 @@ namespace NailApi.Controllers
                     return BadRequest(new LoginResponse
                     {
                         Success = false,
-                        Message = "Email chủ shop không tồn tại trong hệ thống."
+                        Message = "Tên shop không tồn tại trong hệ thống."
                     });
                 }
 
-                // Tạo database name từ email chủ shop - sử dụng email gốc
-                var databaseName = request.ShopEmail;
+                // Tạo database name từ tên shop
+                var databaseName = request.ShopName;
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop để tìm nhân viên
@@ -231,7 +231,7 @@ namespace NailApi.Controllers
                                     Success = true,
                                     Message = $"Đăng nhập thành công! Chào mừng {employeeName}",
                                     DatabaseName = databaseName,
-                                    Token = _jwtService.GenerateToken(request.ShopEmail, shopOwner.UserLogin, "employee", employeeId),
+                                    Token = _jwtService.GenerateToken(request.ShopName, shopOwner.UserLogin, "employee", employeeId),
                                     UserRole = "employee",
                                     EmployeeId = employeeId
                                 });
@@ -547,19 +547,19 @@ namespace NailApi.Controllers
         {
             try
             {
-                Console.WriteLine($"Sending notification for shop: {request.ShopEmail}");
+                Console.WriteLine($"Sending notification for shop: {request.ShopName}");
 
-                // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                // Kiểm tra tên shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
 
                 if (shopOwner == null)
                 {
                     Console.WriteLine("Shop owner not found");
-                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopEmail;
+                var databaseName = request.ShopName;
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop để lưu thông báo
@@ -636,7 +636,7 @@ namespace NailApi.Controllers
                 if (shopOwner == null)
                 {
                     Console.WriteLine("Shop owner not found");
-                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
                 }
 
                 // Tạo database name từ email chủ shop
@@ -705,19 +705,19 @@ namespace NailApi.Controllers
         {
             try
             {
-                Console.WriteLine($"Marking notification as read: {request.NotificationId} for shop: {request.ShopEmail}");
+                Console.WriteLine($"Marking notification as read: {request.NotificationId} for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
 
                 if (shopOwner == null)
                 {
                     Console.WriteLine("Shop owner not found");
-                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopEmail;
+                var databaseName = request.ShopName;
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop
@@ -764,18 +764,18 @@ namespace NailApi.Controllers
         {
             try
             {
-                Console.WriteLine($"Deleting notification: {request.NotificationId} for shop: {request.ShopEmail}");
+                Console.WriteLine($"Deleting notification: {request.NotificationId} for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
 
                 if (shopOwner == null)
                 {
-                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopEmail;
+                var databaseName = request.ShopName;
 
                 // Kết nối đến database của chủ shop
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
@@ -827,18 +827,18 @@ namespace NailApi.Controllers
         {
             try
             {
-                Console.WriteLine($"Clearing all notifications for shop: {request.ShopEmail}");
+                Console.WriteLine($"Clearing all notifications for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopEmail);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
 
                 if (shopOwner == null)
                 {
-                    return BadRequest(new { success = false, message = "Email chủ shop không tồn tại trong hệ thống." });
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopEmail;
+                var databaseName = request.ShopName;
 
                 // Kết nối đến database của chủ shop
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";

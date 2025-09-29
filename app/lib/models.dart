@@ -96,18 +96,18 @@ class LoginResponse {
 }
 
 class EmployeeLoginRequest {
-  final String shopEmail;
+  final String shopName;
   final String employeePhone;
   final String employeePassword;
 
   EmployeeLoginRequest({
-    required this.shopEmail,
+    required this.shopName,
     required this.employeePhone,
     required this.employeePassword,
   });
 
   Map<String, dynamic> toJson() => {
-        'shopEmail': shopEmail,
+        'shopName': shopName,
         'employeePhone': employeePhone,
         'employeePassword': employeePassword,
       };

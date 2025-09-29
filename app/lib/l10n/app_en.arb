@@ -56,6 +56,10 @@
   "shopOwner": "Shop Owner",
   "employee": "Employee",
   "email": "Email",
+  "shopName": "Shop Name",
+  "@shopName": {
+    "description": "Shop name"
+  },
   "checkEmail": "Check Email",
   "emailExists": "Email exists",
   "emailNotExists": "Email not exists",
@@ -67,6 +71,10 @@
   "employeePassword": "Employee Password",
   "shopEmail": "Shop Email",
   "pleaseEnterEmail": "Please enter email",
+  "pleaseEnterShopName": "Please enter shop name",
+  "@pleaseEnterShopName": {
+    "description": "Please enter shop name"
+  },
   "pleaseEnterPassword": "Please enter password",
   "pleaseEnterPhone": "Please enter phone",
   "pleaseEnterName": "Please enter name",
@@ -1780,6 +1788,7 @@
     "description": "Connect button text"
   },
   "enterEmailToCheckAccount": "Enter email to check account",
+  "enterShopNameToCheckAccount": "Enter shop name to check account",
   "@enterEmailToCheckAccount": {
     "description": "Email check subtitle"
   },

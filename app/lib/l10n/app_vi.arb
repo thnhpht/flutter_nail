@@ -224,6 +224,10 @@
   "@email": {
     "description": "Email"
   },
+  "shopName": "Tên shop",
+  "@shopName": {
+    "description": "Shop name"
+  },
   "checkEmail": "Kiểm tra email",
   "@checkEmail": {
     "description": "Check email"
@@ -265,6 +269,10 @@
     "description": "Shop email"
   },
   "pleaseEnterEmail": "Vui lòng nhập email",
+  "pleaseEnterShopName": "Vui lòng nhập tên shop",
+  "@pleaseEnterShopName": {
+    "description": "Please enter shop name"
+  },
   "@pleaseEnterEmail": {
     "description": "Please enter email"
   },
@@ -2711,6 +2719,7 @@
     "description": "Connect button text"
   },
   "enterEmailToCheckAccount": "Nhập email để kiểm tra tài khoản",
+  "enterShopNameToCheckAccount": "Nhập tên shop để kiểm tra tài khoản",
   "@enterEmailToCheckAccount": {
     "description": "Email check subtitle"
   },

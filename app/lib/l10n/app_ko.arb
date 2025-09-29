@@ -56,6 +56,10 @@
   "shopOwner": "샵 오너",
   "employee": "직원",
   "email": "이메일",
+  "shopName": "샵 이름",
+  "@shopName": {
+    "description": "Shop name"
+  },
   "checkEmail": "이메일 확인",
   "emailExists": "이메일이 존재합니다",
   "emailNotExists": "이메일이 존재하지 않습니다",
@@ -67,6 +71,10 @@
   "employeePassword": "직원 비밀번호",
   "shopEmail": "샵 이메일",
   "pleaseEnterEmail": "이메일을 입력하세요",
+  "pleaseEnterShopName": "샵 이름을 입력하세요",
+  "@pleaseEnterShopName": {
+    "description": "Please enter shop name"
+  },
   "pleaseEnterPassword": "비밀번호를 입력하세요",
   "pleaseEnterPhone": "전화번호를 입력하세요",
   "pleaseEnterName": "이름을 입력하세요",
@@ -1810,6 +1818,7 @@
     "description": "Connect button text"
   },
   "enterEmailToCheckAccount": "계정을 확인하려면 이메일을 입력하세요",
+  "enterShopNameToCheckAccount": "계정을 확인하려면 샵 이름을 입력하세요",
   "@enterEmailToCheckAccount": {
     "description": "Email check subtitle"
   },

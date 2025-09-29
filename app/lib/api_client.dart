@@ -56,7 +56,7 @@ class ApiClient {
     await prefs.setString('user_role', response.userRole ?? 'employee');
     await prefs.setString('employee_id', response.employeeId ?? '');
     await prefs.setString(
-        'shop_email', request.shopEmail); // Lưu shop email để gửi thông báo
+        'shop_name', request.shopName); // Lưu tên shop để gửi thông báo
 
     return response;
   }
@@ -71,12 +71,12 @@ class ApiClient {
     await prefs.remove('jwt_token');
     await prefs.remove('user_role');
     await prefs.remove('employee_id');
-    await prefs.remove('shop_email');
+    await prefs.remove('shop_name');
   }
 
   // Notification methods
   Future<Map<String, dynamic>> sendNotification({
-    required String shopEmail,
+    required String shopName,
     required String title,
     required String message,
     required String type,
@@ -87,7 +87,7 @@ class ApiClient {
     required double totalPrice,
   }) async {
     final requestBody = {
-      'shopEmail': shopEmail,
+      'shopName': shopName,
       'title': title,
       'message': message,
       'type': type,
@@ -107,20 +107,20 @@ class ApiClient {
     return jsonDecode(r.body);
   }
 
-  Future<Map<String, dynamic>> getNotifications(String shopEmail) async {
+  Future<Map<String, dynamic>> getNotifications(String shopName) async {
     final r = await _client
-        .get(_u('/auth/get-notifications?shopEmail=$shopEmail'))
+        .get(_u('/auth/get-notifications?shopName=$shopName'))
         .timeout(_timeout);
     _check(r);
     return jsonDecode(r.body);
   }
 
   Future<Map<String, dynamic>> markNotificationRead({
-    required String shopEmail,
+    required String shopName,
     required String notificationId,
   }) async {
     final requestBody = {
-      'shopEmail': shopEmail,
+      'shopName': shopName,
       'notificationId': notificationId,
     };
 
@@ -134,11 +134,11 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> deleteNotification({
-    required String shopEmail,
+    required String shopName,
     required String notificationId,
   }) async {
     final requestBody = {
-      'shopEmail': shopEmail,
+      'shopName': shopName,
       'notificationId': notificationId,
     };
 
@@ -152,10 +152,10 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> clearAllNotifications({
-    required String shopEmail,
+    required String shopName,
   }) async {
     final requestBody = {
-      'shopEmail': shopEmail,
+      'shopName': shopName,
     };
 
     final r = await _client

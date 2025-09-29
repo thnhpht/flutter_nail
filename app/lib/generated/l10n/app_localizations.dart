@@ -438,6 +438,12 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email;
 
+  /// Shop name
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên shop'**
+  String get shopName;
+
   /// Check email
   ///
   /// In vi, this message translates to:
@@ -503,6 +509,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Vui lòng nhập email'**
   String get pleaseEnterEmail;
+
+  /// Please enter shop name
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập tên shop'**
+  String get pleaseEnterShopName;
 
   /// Please enter password validation message
   ///
@@ -2921,6 +2933,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Nhập email để kiểm tra tài khoản'**
   String get enterEmailToCheckAccount;
+
+  /// No description provided for @enterShopNameToCheckAccount.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập tên shop để kiểm tra tài khoản'**
+  String get enterShopNameToCheckAccount;
 
   /// Password login subtitle
   ///

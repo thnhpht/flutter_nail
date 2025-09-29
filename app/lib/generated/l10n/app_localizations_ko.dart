@@ -177,6 +177,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get email => '이메일';
 
   @override
+  String get shopName => '샵 이름';
+
+  @override
   String get checkEmail => '이메일 확인';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pleaseEnterEmail => '이메일을 입력해주세요';
+
+  @override
+  String get pleaseEnterShopName => '샵 이름을 입력하세요';
 
   @override
   String get pleaseEnterPassword => '비밀번호를 입력해주세요';
@@ -1528,6 +1534,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get enterEmailToCheckAccount => '계정을 확인하려면 이메일을 입력하세요';
+
+  @override
+  String get enterShopNameToCheckAccount => '계정을 확인하려면 샵 이름을 입력하세요';
 
   @override
   String get enterPasswordToLogin => '로그인하려면 비밀번호를 입력하세요';

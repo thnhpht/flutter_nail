@@ -177,6 +177,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get email => '邮箱';
 
   @override
+  String get shopName => '店铺名称';
+
+  @override
   String get checkEmail => '检查邮箱';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pleaseEnterEmail => '请输入邮箱';
+
+  @override
+  String get pleaseEnterShopName => '请输入店铺名称';
 
   @override
   String get pleaseEnterPassword => '请输入密码';
@@ -1524,6 +1530,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get enterEmailToCheckAccount => '输入邮箱以检查账户';
+
+  @override
+  String get enterShopNameToCheckAccount => '输入店铺名称以检查账户';
 
   @override
   String get enterPasswordToLogin => '输入密码以登录';

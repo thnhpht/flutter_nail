@@ -177,6 +177,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get email => 'Email';
 
   @override
+  String get shopName => 'Tên shop';
+
+  @override
   String get checkEmail => 'Kiểm tra email';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pleaseEnterEmail => 'Vui lòng nhập email';
+
+  @override
+  String get pleaseEnterShopName => 'Vui lòng nhập tên shop';
 
   @override
   String get pleaseEnterPassword => 'Vui lòng nhập mật khẩu';
@@ -1564,6 +1570,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get enterEmailToCheckAccount => 'Nhập email để kiểm tra tài khoản';
+
+  @override
+  String get enterShopNameToCheckAccount =>
+      'Nhập tên shop để kiểm tra tài khoản';
 
   @override
   String get enterPasswordToLogin => 'Nhập mật khẩu để đăng nhập';

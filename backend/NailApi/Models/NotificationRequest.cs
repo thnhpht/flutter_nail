@@ -2,7 +2,7 @@ namespace NailApi.Models
 {
     public class NotificationRequest
     {
-        public string ShopEmail { get; set; } = string.Empty;
+        public string ShopName { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;

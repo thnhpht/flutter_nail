@@ -177,6 +177,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email => 'Email';
 
   @override
+  String get shopName => 'Shop Name';
+
+  @override
   String get checkEmail => 'Check Email';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pleaseEnterEmail => 'Please enter email';
+
+  @override
+  String get pleaseEnterShopName => 'Please enter shop name';
 
   @override
   String get pleaseEnterPassword => 'Please enter password';
@@ -1554,6 +1560,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterEmailToCheckAccount => 'Enter email to check account';
+
+  @override
+  String get enterShopNameToCheckAccount => 'Enter shop name to check account';
 
   @override
   String get enterPasswordToLogin => 'Enter password to login';

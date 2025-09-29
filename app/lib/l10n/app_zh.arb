@@ -56,6 +56,10 @@
   "shopOwner": "店主",
   "employee": "员工",
   "email": "邮箱",
+  "shopName": "店铺名称",
+  "@shopName": {
+    "description": "Shop name"
+  },
   "checkEmail": "检查邮箱",
   "emailExists": "邮箱已存在",
   "emailNotExists": "邮箱不存在",
@@ -67,6 +71,10 @@
   "employeePassword": "员工密码",
   "shopEmail": "店铺邮箱",
   "pleaseEnterEmail": "请输入邮箱",
+  "pleaseEnterShopName": "请输入店铺名称",
+  "@pleaseEnterShopName": {
+    "description": "Please enter shop name"
+  },
   "pleaseEnterPassword": "请输入密码",
   "pleaseEnterPhone": "请输入电话号码",
   "pleaseEnterName": "请输入姓名",
@@ -1810,6 +1818,7 @@
     "description": "Connect button text"
   },
   "enterEmailToCheckAccount": "输入邮箱以检查账户",
+  "enterShopNameToCheckAccount": "输入店铺名称以检查账户",
   "@enterEmailToCheckAccount": {
     "description": "Email check subtitle"
   },
