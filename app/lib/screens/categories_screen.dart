@@ -873,7 +873,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         .where((c) => c.name
                             .toLowerCase()
                             .contains(_search.toLowerCase()))
-                        .toList();
+                        .toList()
+                      ..sort((a, b) =>
+                          a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
                     if (filtered.isEmpty) {
                       return SliverToBoxAdapter(

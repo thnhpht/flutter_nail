@@ -50,6 +50,11 @@ class _OrderScreenState extends State<OrderScreen> {
   String? _currentEmployeeId;
   final NotificationService _notificationService = NotificationService();
 
+  // Customer phone dropdown
+  List<Customer> _allCustomers = [];
+  List<Customer> _filteredCustomers = [];
+  bool _showCustomerDropdown = false;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadServices();
     _loadEmployees();
     _loadInformation();
+    _loadCustomers();
     // Add listeners for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
@@ -113,6 +119,9 @@ class _OrderScreenState extends State<OrderScreen> {
     try {
       final categories = await widget.api.getCategories();
       setState(() {
+        // Sort categories alphabetically by name
+        categories.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         _categories = categories;
       });
     } catch (e) {
@@ -126,6 +135,8 @@ class _OrderScreenState extends State<OrderScreen> {
     try {
       final services = await widget.api.getServices();
       setState(() {
+        // Sort services by price from low to high
+        services.sort((a, b) => a.price.compareTo(b.price));
         _services = services;
       });
     } catch (e) {
@@ -139,6 +150,9 @@ class _OrderScreenState extends State<OrderScreen> {
     try {
       final employees = await widget.api.getEmployees();
       setState(() {
+        // Sort employees alphabetically by name
+        employees.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         _employees = employees;
 
         // Tự động chọn nhân viên đăng nhập nếu là employee
@@ -155,6 +169,17 @@ class _OrderScreenState extends State<OrderScreen> {
       AppWidgets.showFlushbar(context,
           AppLocalizations.of(context)!.errorLoadingEmployees(e.toString()),
           type: MessageType.error);
+    }
+  }
+
+  Future<void> _loadCustomers() async {
+    try {
+      final customers = await widget.api.getCustomers();
+      setState(() {
+        _allCustomers = customers;
+      });
+    } catch (e) {
+      // Handle error silently
     }
   }
 
@@ -262,7 +287,39 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void _onCustomerPhoneChanged() {
-    _findCustomerByPhone();
+    final phone = _customerPhoneController.text.trim();
+
+    // Filter customers based on phone input
+    if (phone.length >= 3) {
+      setState(() {
+        _filteredCustomers = _allCustomers
+            .where((customer) {
+              final customerPhone =
+                  customer.phone.replaceAll(RegExp(r'[^0-9]'), '');
+              return customerPhone.startsWith(phone) ||
+                  customerPhone.contains(phone);
+            })
+            .take(10)
+            .toList(); // Limit to 10 results for better performance
+
+        _showCustomerDropdown = _filteredCustomers.isNotEmpty;
+      });
+    } else {
+      setState(() {
+        _showCustomerDropdown = false;
+        _filteredCustomers.clear();
+      });
+    }
+
+    // Still perform the original search for exact match
+    if (phone.length == 10) {
+      _findCustomerByPhone();
+    } else {
+      // Clear customer name if phone is not 10 digits
+      setState(() {
+        _customerNameController.clear();
+      });
+    }
   }
 
   void _onEmployeePhoneChanged() {
@@ -479,6 +536,14 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
+  void _selectCustomer(Customer customer) {
+    setState(() {
+      _customerPhoneController.text = customer.phone;
+      _customerNameController.text = customer.name;
+      _showCustomerDropdown = false;
+    });
+  }
+
   String _generateOrderId() {
     // Generate a real UUID using the uuid package
     const uuid = Uuid();
@@ -638,6 +703,7 @@ class _OrderScreenState extends State<OrderScreen> {
       _showCategoryDropdown = false;
       _showServiceDropdown = false;
       _showEmployeeDropdown = false;
+      _showCustomerDropdown = false;
     });
   }
 
@@ -649,11 +715,13 @@ class _OrderScreenState extends State<OrderScreen> {
         // Close dropdowns when tapping outside
         if (_showCategoryDropdown ||
             _showServiceDropdown ||
-            _showEmployeeDropdown) {
+            _showEmployeeDropdown ||
+            _showCustomerDropdown) {
           setState(() {
             _showCategoryDropdown = false;
             _showServiceDropdown = false;
             _showEmployeeDropdown = false;
+            _showCustomerDropdown = false;
           });
         }
       },
@@ -733,16 +801,56 @@ class _OrderScreenState extends State<OrderScreen> {
                       icon: Icons.person,
                       child: Column(
                         children: [
-                          _buildTextField(
-                            controller: _customerPhoneController,
-                            label: l10n.phoneNumber,
-                            prefixIcon: Icons.phone,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return l10n.pleaseEnterPhoneNumber;
-                              }
-                              return null;
-                            },
+                          // Phone input with dropdown
+                          Column(
+                            children: [
+                              _buildTextField(
+                                controller: _customerPhoneController,
+                                label: l10n.phoneNumber,
+                                prefixIcon: Icons.phone,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return l10n.pleaseEnterPhoneNumber;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              // Customer dropdown when typing phone
+                              if (_showCustomerDropdown) ...[
+                                const SizedBox(height: 4),
+                                Container(
+                                  constraints:
+                                      const BoxConstraints(maxHeight: 200),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border:
+                                        Border.all(color: Colors.grey[300]!),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            Colors.black.withValues(alpha: 0.1),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: _filteredCustomers.length,
+                                    itemBuilder: (context, index) {
+                                      final customer =
+                                          _filteredCustomers[index];
+                                      return _buildDropdownCustomerItem(
+                                        customerName: customer.name,
+                                        customerPhone: customer.phone,
+                                        onTap: () => _selectCustomer(customer),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                           const SizedBox(height: 16),
                           _buildTextField(
@@ -1003,7 +1111,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                   final categoryServices = _services
                                       .where((service) =>
                                           service.categoryId == category.id)
-                                      .toList();
+                                      .toList()
+                                    ..sort(
+                                        (a, b) => a.price.compareTo(b.price));
 
                                   if (categoryServices.isEmpty)
                                     return const SizedBox.shrink();
@@ -1994,6 +2104,44 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownCustomerItem({
+    required String customerName,
+    required String customerPhone,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: const Color(0xFF667eea).withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Icon(
+          Icons.person,
+          color: Color(0xFF667eea),
+          size: 20,
+        ),
+      ),
+      title: Text(
+        customerName,
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(_formatPhoneNumber(customerPhone)),
+      trailing: const Icon(
+        Icons.navigate_next,
+        color: Color(0xFF667eea),
+        size: 20,
+      ),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }

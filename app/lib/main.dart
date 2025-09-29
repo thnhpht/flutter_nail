@@ -109,7 +109,15 @@ class _NailAppState extends State<NailApp> {
       });
       _loadTodayStats();
       _loadSalonInfo(); // Load salon info when checking login status
-      _loadEmployeeName(); // Load employee name if user is employee
+      // Load employee name with the correct userRole
+      if (userRole == 'employee') {
+        _loadEmployeeName();
+      } else {
+        setState(() {
+          _employeeName = null;
+          _isLoadingEmployeeName = false;
+        });
+      }
     } else {
       setState(() {
         _isLoggedIn = isLoggedIn;
@@ -159,13 +167,6 @@ class _NailAppState extends State<NailApp> {
   }
 
   Future<void> _loadEmployeeName() async {
-    if (_userRole != 'employee') {
-      setState(() {
-        _isLoadingEmployeeName = false;
-      });
-      return;
-    }
-
     try {
       setState(() {
         _isLoadingEmployeeName = true;
@@ -264,7 +265,16 @@ class _NailAppState extends State<NailApp> {
 
     _loadTodayStats();
     _loadSalonInfo();
-    _loadEmployeeName();
+
+    // Load employee name with the correct userRole
+    if (userRole == 'employee') {
+      _loadEmployeeName();
+    } else {
+      setState(() {
+        _employeeName = null;
+        _isLoadingEmployeeName = false;
+      });
+    }
   }
 
   void _refreshBills() {
@@ -316,7 +326,7 @@ class _NailAppState extends State<NailApp> {
       animation: _languageService,
       builder: (context, child) {
         return MaterialApp(
-          title: 'Nail Manager',
+          title: 'FShop',
           locale: _languageService.currentLocale,
           localizationsDelegates: [
             AppLocalizations.delegate,
@@ -478,7 +488,7 @@ class _NailAppState extends State<NailApp> {
                                   Text(
                                     _salonInfo?.salonName.isNotEmpty == true
                                         ? _salonInfo!.salonName
-                                        : 'Salon',
+                                        : 'Shop',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: AppTheme.getResponsiveFontSize(
@@ -681,26 +691,19 @@ class _NailAppState extends State<NailApp> {
   }
 
   String _getWelcomeText(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    if (l10n == null) {
-      // Fallback text if localization is not available
-      if (_userRole == 'employee') {
-        return 'Nhân viên';
-      } else {
-        return 'Boss';
-      }
-    }
-
     if (_userRole == 'employee') {
       if (_isLoadingEmployeeName) {
         return '...';
       } else if (_employeeName != null && _employeeName!.isNotEmpty) {
         return '$_employeeName';
       } else {
-        return l10n.employee;
+        // Fallback to localized text or default
+        final l10n = AppLocalizations.of(context);
+        return l10n?.employee ?? 'Nhân viên';
       }
     } else {
-      return l10n.boss;
+      final l10n = AppLocalizations.of(context);
+      return l10n?.boss ?? 'Boss';
     }
   }
 
@@ -839,102 +842,6 @@ class _NailAppState extends State<NailApp> {
             SizedBox(
                 height: AppTheme.getResponsiveSpacing(context,
                     mobile: 16, tablet: 24, desktop: 24)),
-
-            // Welcome Text with responsive styling
-            Builder(
-              builder: (context) {
-                final l10n = AppLocalizations.of(context);
-                if (l10n == null) {
-                  return Text(
-                    'Chào mừng đến với\nSalon',
-                    style: TextStyle(
-                      fontSize: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 22,
-                        tablet: 28,
-                        desktop: 32,
-                      ),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 0.8,
-                      shadows: const [
-                        Shadow(
-                          offset: Offset(0, 2),
-                          blurRadius: 4,
-                          color: Colors.black26,
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                  );
-                }
-
-                return Text(
-                  '${l10n.welcome}\n${_salonInfo?.salonName.isNotEmpty == true ? _salonInfo!.salonName : l10n.salon}',
-                  style: TextStyle(
-                    fontSize: AppTheme.getResponsiveFontSize(
-                      context,
-                      mobile: 22,
-                      tablet: 28,
-                      desktop: 32,
-                    ),
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 0.8,
-                    shadows: const [
-                      Shadow(
-                        offset: Offset(0, 2),
-                        blurRadius: 4,
-                        color: Colors.black26,
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                );
-              },
-            ),
-            SizedBox(
-                height: AppTheme.getResponsiveSpacing(context,
-                    mobile: 12, tablet: 16, desktop: 20)),
-            Builder(
-              builder: (context) {
-                final l10n = AppLocalizations.of(context);
-                if (l10n == null) {
-                  return Text(
-                    'Hệ thống quản lý salon nail chuyên nghiệp',
-                    style: TextStyle(
-                      fontSize: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 14,
-                        tablet: 16,
-                        desktop: 18,
-                      ),
-                      color: Colors.white70,
-                      letterSpacing: 0.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  );
-                }
-
-                return Text(
-                  l10n.professionalNailSalonManagement,
-                  style: TextStyle(
-                    fontSize: AppTheme.getResponsiveFontSize(
-                      context,
-                      mobile: 14,
-                      tablet: 16,
-                      desktop: 18,
-                    ),
-                    color: Colors.white70,
-                    letterSpacing: 0.4,
-                  ),
-                  textAlign: TextAlign.center,
-                );
-              },
-            ),
-            SizedBox(
-                height: AppTheme.getResponsiveSpacing(context,
-                    mobile: 24, tablet: 32, desktop: 32)),
 
             // Quick Stats Cards
             _buildQuickStats(),

@@ -9,16 +9,10 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => '美甲管理';
-
-  @override
-  String get welcome => '欢迎来到';
+  String get appTitle => 'FShop';
 
   @override
   String get salon => '沙龙';
-
-  @override
-  String get professionalNailSalonManagement => '专业美甲沙龙管理系统';
 
   @override
   String get todayOverview => '今日概览';
@@ -42,7 +36,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get information => '信息';
 
   @override
-  String get salonInfo => '沙龙信息';
+  String get salonInfo => '信息';
 
   @override
   String get menu => '菜单';
@@ -710,10 +704,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addImage => '添加图片';
 
   @override
-  String get categoryFilter => '分类筛选';
+  String get categoryFilter => '筛选';
 
   @override
-  String get selectCategoriesToFilter => '选择分类以筛选服务';
+  String get selectCategoriesToFilter => '选择分类并排序';
 
   @override
   String categoriesSelected(int count) {
@@ -1064,16 +1058,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get socialMedia => '社交媒体';
 
   @override
-  String get salonInformation => '沙龙信息';
+  String get salonInformation => '信息';
 
   @override
-  String get manageSalonInfoAndContact => '管理沙龙信息和联系方式';
+  String get manageSalonInfoAndContact => '管理信息和联系方式';
 
   @override
   String get qrCode => '二维码';
 
   @override
-  String get salonLogo => '沙龙标志';
+  String get salonLogo => '标志';
 
   @override
   String get selectLogo => '选择标志';
@@ -1518,6 +1512,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pdfTemporaryBillId => '临时';
 
   @override
+  String pdfServiceQuantity(Object quantity) {
+    return 'x$quantity';
+  }
+
+  @override
   String get selectAccountTypeToContinue => '选择账户类型以继续';
 
   @override
@@ -1654,4 +1653,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unitOfMeasurement => '计量单位';
+
+  @override
+  String get sortBy => '排序方式';
+
+  @override
+  String get sortAlphabeticalAZ => 'A-Z';
+
+  @override
+  String get sortAlphabeticalZA => 'Z-A';
+
+  @override
+  String get sortNewestFirst => '最新';
+
+  @override
+  String get sortOldestFirst => '最旧';
+
+  @override
+  String get sortPriceHighToLow => '价格：高到低';
+
+  @override
+  String get sortPriceLowToHigh => '价格：低到高';
+
+  @override
+  String get applySorting => '应用排序';
+
+  @override
+  String get clearSorting => '清除排序';
 }

@@ -9,17 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Nail Manager';
-
-  @override
-  String get welcome => 'Welcome to';
+  String get appTitle => 'FShop';
 
   @override
   String get salon => 'Salon';
-
-  @override
-  String get professionalNailSalonManagement =>
-      'Professional nail salon management system';
 
   @override
   String get todayOverview => 'Today\'s Overview';
@@ -43,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get information => 'Information';
 
   @override
-  String get salonInfo => 'Salon Information';
+  String get salonInfo => 'Information';
 
   @override
   String get menu => 'Menu';
@@ -724,10 +717,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addImage => 'Add Image';
 
   @override
-  String get categoryFilter => 'Category Filter';
+  String get categoryFilter => 'Filter';
 
   @override
-  String get selectCategoriesToFilter => 'Select categories to filter services';
+  String get selectCategoriesToFilter => 'Select categories and sort';
 
   @override
   String categoriesSelected(int count) {
@@ -1087,17 +1080,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get socialMedia => 'Social Media';
 
   @override
-  String get salonInformation => 'Salon Information';
+  String get salonInformation => 'Information';
 
   @override
-  String get manageSalonInfoAndContact =>
-      'Manage salon information and contact details';
+  String get manageSalonInfoAndContact => 'Manage information and contact';
 
   @override
   String get qrCode => 'QR Code';
 
   @override
-  String get salonLogo => 'Salon Logo';
+  String get salonLogo => 'Logo';
 
   @override
   String get selectLogo => 'Select Logo';
@@ -1554,6 +1546,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfTemporaryBillId => 'TEMPORARY';
 
   @override
+  String pdfServiceQuantity(Object quantity) {
+    return 'x$quantity';
+  }
+
+  @override
   String get selectAccountTypeToContinue => 'Select account type to continue';
 
   @override
@@ -1709,4 +1706,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitOfMeasurement => 'Unit of Measurement';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get sortAlphabeticalAZ => 'A-Z';
+
+  @override
+  String get sortAlphabeticalZA => 'Z-A';
+
+  @override
+  String get sortNewestFirst => 'Newest';
+
+  @override
+  String get sortOldestFirst => 'Oldest';
+
+  @override
+  String get sortPriceHighToLow => 'Price: High to Low';
+
+  @override
+  String get sortPriceLowToHigh => 'Price: Low to High';
+
+  @override
+  String get applySorting => 'Apply Sorting';
+
+  @override
+  String get clearSorting => 'Clear Sorting';
 }

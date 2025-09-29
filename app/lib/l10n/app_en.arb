@@ -1,8 +1,6 @@
 {
-  "appTitle": "Nail Manager",
-  "welcome": "Welcome to",
+  "appTitle": "FShop",
   "salon": "Salon",
-  "professionalNailSalonManagement": "Professional nail salon management system",
   "todayOverview": "Today's Overview",
   "customers": "Customers",
   "bills": "Bills",
@@ -10,7 +8,7 @@
   "boss": "Boss",
   "employee": "Employee",
   "information": "Information",
-  "salonInfo": "Salon Information",
+  "salonInfo": "Information",
   "menu": "Menu",
   "management": "Management",
   "employees": "Employees",
@@ -231,8 +229,8 @@
   "allStatuses": "All Statuses",
   "errorLoadingData": "Error loading data: {error}",
   "addImage": "Add Image",
-  "categoryFilter": "Category Filter",
-  "selectCategoriesToFilter": "Select categories to filter services",
+  "categoryFilter": "Filter",
+  "selectCategoriesToFilter": "Select categories and sort",
   "categoriesSelected": "{count} categories selected",
   "selectedCategories": "Selected Categories",
   "removeAll": "Remove All",
@@ -779,11 +777,11 @@
   "@socialMedia": {
     "description": "Social media section title"
   },
-  "salonInformation": "Salon Information",
+  "salonInformation": "Information",
   "@salonInformation": {
     "description": "Salon information title"
   },
-  "manageSalonInfoAndContact": "Manage salon information and contact details",
+  "manageSalonInfoAndContact": "Manage information and contact",
   "@manageSalonInfoAndContact": {
     "description": "Description for salon information management"
   },
@@ -791,9 +789,9 @@
   "@qrCode": {
     "description": "QR Code section title"
   },
-  "salonLogo": "Salon Logo",
+  "salonLogo": "Logo",
   "@salonLogo": {
-    "description": "Salon logo section title"
+    "description": "Logo section title"
   },
   "selectQRCode": "Select QR Code",
   "@selectQRCode": {
@@ -1765,6 +1763,10 @@
   "@pdfTemporaryBillId": {
     "description": "Temporary bill ID when order ID is empty"
   },
+  "pdfServiceQuantity": "x{quantity}",
+  "@pdfServiceQuantity": {
+    "description": "Service quantity display format in PDF"
+  },
   "roleSelection": "Select Role",
   "@roleSelection": {
     "description": "Role selection title"
@@ -1996,5 +1998,14 @@
   "unitOfMeasurement": "Unit of Measurement",
   "@unitOfMeasurement": {
     "description": "Unit of measurement field for services"
-  }
+  },
+  "sortBy": "Sort By",
+  "sortAlphabeticalAZ": "A-Z",
+  "sortAlphabeticalZA": "Z-A", 
+  "sortNewestFirst": "Newest",
+  "sortOldestFirst": "Oldest",
+  "sortPriceHighToLow": "Price: High to Low",
+  "sortPriceLowToHigh": "Price: Low to High",
+  "applySorting": "Apply Sorting",
+  "clearSorting": "Clear Sorting"
 }

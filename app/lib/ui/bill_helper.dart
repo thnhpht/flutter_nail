@@ -1029,18 +1029,16 @@ class BillHelper {
     final salonAddress = salonInfo?.address;
     final salonPhone = salonInfo?.phone;
 
-    // Convert servicesWithQuantity to services for PDF generation
-    List<Service> servicesForPdf = [];
+    // Use servicesWithQuantity directly for PDF generation
+    List<ServiceWithQuantity> servicesForPdf = [];
     if (_currentServicesWithQuantity != null &&
         _currentServicesWithQuantity!.isNotEmpty) {
-      // For services with quantity, we need to create multiple entries
-      for (final serviceWithQuantity in _currentServicesWithQuantity!) {
-        for (int i = 0; i < serviceWithQuantity.quantity; i++) {
-          servicesForPdf.add(serviceWithQuantity.service);
-        }
-      }
+      servicesForPdf = _currentServicesWithQuantity!;
     } else if (_currentServices != null && _currentServices!.isNotEmpty) {
-      servicesForPdf = _currentServices!;
+      // Convert regular services to ServiceWithQuantity with quantity 1
+      servicesForPdf = _currentServices!
+          .map((service) => ServiceWithQuantity(service: service, quantity: 1))
+          .toList();
     }
 
     PdfBillGenerator.generateAndSendToZalo(

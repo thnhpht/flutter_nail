@@ -9,17 +9,10 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
-  String get appTitle => 'Nail Manager';
-
-  @override
-  String get welcome => 'Chào mừng đến với';
+  String get appTitle => 'FShop';
 
   @override
   String get salon => 'Salon';
-
-  @override
-  String get professionalNailSalonManagement =>
-      'Hệ thống quản lý salon nail chuyên nghiệp';
 
   @override
   String get todayOverview => 'Tổng quan hôm nay';
@@ -43,7 +36,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get information => 'Thông tin';
 
   @override
-  String get salonInfo => 'Thông tin Salon';
+  String get salonInfo => 'Thông tin';
 
   @override
   String get menu => 'Menu';
@@ -725,10 +718,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get addImage => 'Thêm ảnh';
 
   @override
-  String get categoryFilter => 'Bộ lọc danh mục';
+  String get categoryFilter => 'Bộ lọc';
 
   @override
-  String get selectCategoriesToFilter => 'Chọn danh mục để lọc dịch vụ';
+  String get selectCategoriesToFilter => 'Chọn danh mục và sắp xếp';
 
   @override
   String categoriesSelected(int count) {
@@ -1086,17 +1079,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get socialMedia => 'Mạng xã hội';
 
   @override
-  String get salonInformation => 'Thông tin Salon';
+  String get salonInformation => 'Thông tin';
 
   @override
-  String get manageSalonInfoAndContact =>
-      'Quản lý thông tin và liên hệ của salon';
+  String get manageSalonInfoAndContact => 'Quản lý thông tin và liên hệ';
 
   @override
   String get qrCode => 'QR Code';
 
   @override
-  String get salonLogo => 'Logo salon';
+  String get salonLogo => 'Logo';
 
   @override
   String get selectLogo => 'Chọn Logo';
@@ -1560,6 +1552,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfTemporaryBillId => 'TẠM THỜI';
 
   @override
+  String pdfServiceQuantity(Object quantity) {
+    return 'x$quantity';
+  }
+
+  @override
   String get selectAccountTypeToContinue => 'Chọn loại tài khoản để tiếp tục';
 
   @override
@@ -1717,4 +1714,31 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get unitOfMeasurement => 'Đơn vị tính';
+
+  @override
+  String get sortBy => 'Sắp xếp theo';
+
+  @override
+  String get sortAlphabeticalAZ => 'A-Z';
+
+  @override
+  String get sortAlphabeticalZA => 'Z-A';
+
+  @override
+  String get sortNewestFirst => 'Mới nhất';
+
+  @override
+  String get sortOldestFirst => 'Cũ nhất';
+
+  @override
+  String get sortPriceHighToLow => 'Giá: Cao đến thấp';
+
+  @override
+  String get sortPriceLowToHigh => 'Giá: Thấp đến cao';
+
+  @override
+  String get applySorting => 'Áp dụng sắp xếp';
+
+  @override
+  String get clearSorting => 'Xóa sắp xếp';
 }

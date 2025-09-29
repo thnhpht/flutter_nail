@@ -1,8 +1,6 @@
 {
-  "appTitle": "美甲管理",
-  "welcome": "欢迎来到",
+  "appTitle": "FShop",
   "salon": "沙龙",
-  "professionalNailSalonManagement": "专业美甲沙龙管理系统",
   "todayOverview": "今日概览",
   "customers": "客户",
   "bills": "账单",
@@ -10,7 +8,7 @@
   "boss": "老板",
   "employee": "员工",
   "information": "信息",
-  "salonInfo": "沙龙信息",
+  "salonInfo": "信息",
   "menu": "菜单",
   "management": "管理",
   "employees": "员工",
@@ -231,8 +229,8 @@
   "allStatuses": "所有状态",
   "errorLoadingData": "加载数据错误：{error}",
   "addImage": "添加图片",
-  "categoryFilter": "分类筛选",
-  "selectCategoriesToFilter": "选择分类以筛选服务",
+  "categoryFilter": "筛选",
+  "selectCategoriesToFilter": "选择分类并排序",
   "categoriesSelected": "已选择{count}个分类",
   "selectedCategories": "已选择的分类：",
   "removeAll": "移除全部",
@@ -779,11 +777,11 @@
   "@socialMedia": {
     "description": "Social media section title"
   },
-  "salonInformation": "沙龙信息",
+  "salonInformation": "信息",
   "@salonInformation": {
     "description": "Salon information title"
   },
-  "manageSalonInfoAndContact": "管理沙龙信息和联系方式",
+  "manageSalonInfoAndContact": "管理信息和联系方式",
   "@manageSalonInfoAndContact": {
     "description": "Description for salon information management"
   },
@@ -791,9 +789,9 @@
   "@qrCode": {
     "description": "QR Code section title"
   },
-  "salonLogo": "沙龙标志",
+  "salonLogo": "标志",
   "@salonLogo": {
-    "description": "Salon logo section title"
+    "description": "Logo section title"
   },
   "selectQRCode": "选择二维码",
   "@selectQRCode": {
@@ -1795,6 +1793,10 @@
   "@pdfTemporaryBillId": {
     "description": "Temporary bill ID when order ID is empty"
   },
+  "pdfServiceQuantity": "x{quantity}",
+  "@pdfServiceQuantity": {
+    "description": "Service quantity display format in PDF"
+  },
   "roleSelection": "选择角色",
   "@roleSelection": {
     "description": "Role selection title"
@@ -2026,5 +2028,14 @@
   "unitOfMeasurement": "计量单位",
   "@unitOfMeasurement": {
     "description": "服务计量单位字段"
-  }
+  },
+  "sortBy": "排序方式",
+  "sortAlphabeticalAZ": "A-Z",
+  "sortAlphabeticalZA": "Z-A", 
+  "sortNewestFirst": "最新",
+  "sortOldestFirst": "最旧",
+  "sortPriceHighToLow": "价格：高到低",
+  "sortPriceLowToHigh": "价格：低到高",
+  "applySorting": "应用排序",
+  "clearSorting": "清除排序"
 }

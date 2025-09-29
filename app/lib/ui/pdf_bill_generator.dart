@@ -20,7 +20,7 @@ class PdfBillGenerator {
   static Future<void> generateAndShareBill({
     required BuildContext context,
     required Order order,
-    required List<Service> services,
+    required List<ServiceWithQuantity> services,
     required ApiClient api,
     String? salonName,
     String? salonAddress,
@@ -102,7 +102,7 @@ class PdfBillGenerator {
   static Future<void> generateAndSendToZalo({
     required BuildContext context,
     required Order order,
-    required List<Service> services,
+    required List<ServiceWithQuantity> services,
     required ApiClient api,
     String? salonName,
     String? salonAddress,
@@ -441,7 +441,7 @@ class PdfBillGenerator {
   static Future<pw.Document> _createPdf({
     required BuildContext context,
     required Order order,
-    required List<Service> services,
+    required List<ServiceWithQuantity> services,
     required String salonName,
     required String salonAddress,
     required String salonPhone,
@@ -697,7 +697,7 @@ class PdfBillGenerator {
   }
 
   static pw.Widget _buildServicesTable(
-      BuildContext context, List<Service> services) {
+      BuildContext context, List<ServiceWithQuantity> services) {
     return pw.Column(
       children: [
         // Header
@@ -726,13 +726,15 @@ class PdfBillGenerator {
           final index = entry.key;
           final service = entry.value;
           final isLast = index == services.length - 1;
-          return _buildServiceRow(service, isLast: isLast);
+          return _buildServiceRow(context, service, isLast: isLast);
         }).toList(),
       ],
     );
   }
 
-  static pw.Widget _buildServiceRow(Service service, {bool isLast = false}) {
+  static pw.Widget _buildServiceRow(
+      BuildContext context, ServiceWithQuantity serviceWithQuantity,
+      {bool isLast = false}) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(15),
@@ -751,7 +753,12 @@ class PdfBillGenerator {
           pw.Expanded(
             flex: 3,
             child: pw.Text(
-              service.name,
+              serviceWithQuantity.service.name +
+                  (serviceWithQuantity.quantity > 1
+                      ? ' ' +
+                          AppLocalizations.of(context)!
+                              .pdfServiceQuantity(serviceWithQuantity.quantity)
+                      : ''),
               style: _getVietnameseTextStyle(
                 fontSize: 14,
               ),
@@ -760,7 +767,7 @@ class PdfBillGenerator {
           pw.Expanded(
             flex: 1,
             child: pw.Text(
-              _formatPrice(service.price),
+              _formatPrice(serviceWithQuantity.totalPrice),
               style: _getVietnameseTextStyle(
                 fontSize: 14,
                 fontWeight: pw.FontWeight.normal,

@@ -1,8 +1,6 @@
 {
-  "appTitle": "네일 관리",
-  "welcome": "환영합니다",
+  "appTitle": "FShop",
   "salon": "살롱",
-  "professionalNailSalonManagement": "전문 네일 살롱 관리 시스템",
   "todayOverview": "오늘의 개요",
   "customers": "고객",
   "bills": "청구서",
@@ -10,7 +8,7 @@
   "boss": "사장",
   "employee": "직원",
   "information": "정보",
-  "salonInfo": "살롱 정보",
+  "salonInfo": "정보",
   "menu": "메뉴",
   "management": "관리",
   "employees": "직원",
@@ -231,8 +229,8 @@
   "allStatuses": "모든 상태",
   "errorLoadingData": "데이터 로딩 오류: {error}",
   "addImage": "이미지 추가",
-  "categoryFilter": "카테고리 필터",
-  "selectCategoriesToFilter": "서비스를 필터링할 카테고리 선택",
+  "categoryFilter": "필터",
+  "selectCategoriesToFilter": "카테고리 선택 및 정렬",
   "categoriesSelected": "{count}개 카테고리 선택됨",
   "selectedCategories": "선택된 카테고리",
   "removeAll": "모두 제거",
@@ -779,11 +777,11 @@
   "@socialMedia": {
     "description": "Social media section title"
   },
-  "salonInformation": "살롱 정보",
+  "salonInformation": "정보",
   "@salonInformation": {
     "description": "Salon information title"
   },
-  "manageSalonInfoAndContact": "살롱 정보 및 연락처 관리",
+  "manageSalonInfoAndContact": "정보 및 연락처 관리",
   "@manageSalonInfoAndContact": {
     "description": "Description for salon information management"
   },
@@ -791,9 +789,9 @@
   "@qrCode": {
     "description": "QR Code section title"
   },
-  "salonLogo": "살롱 로고",
+  "salonLogo": "로고",
   "@salonLogo": {
-    "description": "Salon logo section title"
+    "description": "Logo section title"
   },
   "selectQRCode": "QR 코드 선택",
   "@selectQRCode": {
@@ -1795,6 +1793,10 @@
   "@pdfTemporaryBillId": {
     "description": "Temporary bill ID when order ID is empty"
   },
+  "pdfServiceQuantity": "x{quantity}",
+  "@pdfServiceQuantity": {
+    "description": "Service quantity display format in PDF"
+  },
   "roleSelection": "역할 선택",
   "@roleSelection": {
     "description": "Role selection title"
@@ -2026,5 +2028,14 @@
   "unitOfMeasurement": "측정 단위",
   "@unitOfMeasurement": {
     "description": "서비스 측정 단위 필드"
-  }
+  },
+  "sortBy": "정렬 기준",
+  "sortAlphabeticalAZ": "A-Z",
+  "sortAlphabeticalZA": "Z-A", 
+  "sortNewestFirst": "최신",
+  "sortOldestFirst": "오래된 것",
+  "sortPriceHighToLow": "가격: 높은 것부터 낮은 것까지",
+  "sortPriceLowToHigh": "가격: 낮은 것부터 높은 것까지",
+  "applySorting": "정렬 적용",
+  "clearSorting": "정렬 초기화"
 }

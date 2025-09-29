@@ -105,26 +105,14 @@ abstract class AppLocalizations {
   /// The title of the application
   ///
   /// In vi, this message translates to:
-  /// **'Nail Manager'**
+  /// **'FShop'**
   String get appTitle;
-
-  /// Welcome message
-  ///
-  /// In vi, this message translates to:
-  /// **'Chào mừng đến với'**
-  String get welcome;
 
   /// Salon name
   ///
   /// In vi, this message translates to:
   /// **'Salon'**
   String get salon;
-
-  /// Professional nail salon management system description
-  ///
-  /// In vi, this message translates to:
-  /// **'Hệ thống quản lý salon nail chuyên nghiệp'**
-  String get professionalNailSalonManagement;
 
   /// Today's overview
   ///
@@ -171,7 +159,7 @@ abstract class AppLocalizations {
   /// Salon information
   ///
   /// In vi, this message translates to:
-  /// **'Thông tin Salon'**
+  /// **'Thông tin'**
   String get salonInfo;
 
   /// Menu
@@ -1467,13 +1455,13 @@ abstract class AppLocalizations {
   /// Category filter
   ///
   /// In vi, this message translates to:
-  /// **'Bộ lọc danh mục'**
+  /// **'Bộ lọc'**
   String get categoryFilter;
 
   /// Select categories to filter services
   ///
   /// In vi, this message translates to:
-  /// **'Chọn danh mục để lọc dịch vụ'**
+  /// **'Chọn danh mục và sắp xếp'**
   String get selectCategoriesToFilter;
 
   /// Number of categories selected
@@ -2079,13 +2067,13 @@ abstract class AppLocalizations {
   /// Salon information title
   ///
   /// In vi, this message translates to:
-  /// **'Thông tin Salon'**
+  /// **'Thông tin'**
   String get salonInformation;
 
   /// Description for salon information management
   ///
   /// In vi, this message translates to:
-  /// **'Quản lý thông tin và liên hệ của salon'**
+  /// **'Quản lý thông tin và liên hệ'**
   String get manageSalonInfoAndContact;
 
   /// QR Code section title
@@ -2094,10 +2082,10 @@ abstract class AppLocalizations {
   /// **'QR Code'**
   String get qrCode;
 
-  /// Salon logo section title
+  /// Logo section title
   ///
   /// In vi, this message translates to:
-  /// **'Logo salon'**
+  /// **'Logo'**
   String get salonLogo;
 
   /// Select Logo button text
@@ -2910,6 +2898,12 @@ abstract class AppLocalizations {
   /// **'TẠM THỜI'**
   String get pdfTemporaryBillId;
 
+  /// Service quantity display format in PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'x{quantity}'**
+  String pdfServiceQuantity(Object quantity);
+
   /// Role selection subtitle
   ///
   /// In vi, this message translates to:
@@ -3185,6 +3179,60 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đơn vị tính'**
   String get unitOfMeasurement;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sắp xếp theo'**
+  String get sortBy;
+
+  /// No description provided for @sortAlphabeticalAZ.
+  ///
+  /// In vi, this message translates to:
+  /// **'A-Z'**
+  String get sortAlphabeticalAZ;
+
+  /// No description provided for @sortAlphabeticalZA.
+  ///
+  /// In vi, this message translates to:
+  /// **'Z-A'**
+  String get sortAlphabeticalZA;
+
+  /// No description provided for @sortNewestFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mới nhất'**
+  String get sortNewestFirst;
+
+  /// No description provided for @sortOldestFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cũ nhất'**
+  String get sortOldestFirst;
+
+  /// No description provided for @sortPriceHighToLow.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giá: Cao đến thấp'**
+  String get sortPriceHighToLow;
+
+  /// No description provided for @sortPriceLowToHigh.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giá: Thấp đến cao'**
+  String get sortPriceLowToHigh;
+
+  /// No description provided for @applySorting.
+  ///
+  /// In vi, this message translates to:
+  /// **'Áp dụng sắp xếp'**
+  String get applySorting;
+
+  /// No description provided for @clearSorting.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa sắp xếp'**
+  String get clearSorting;
 }
 
 class _AppLocalizationsDelegate

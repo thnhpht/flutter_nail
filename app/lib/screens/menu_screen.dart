@@ -61,7 +61,13 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       final services = await widget.api.getServices();
 
       setState(() {
+        // Sort categories alphabetically by name
+        categories.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         _categories = categories;
+
+        // Sort services by price from low to high
+        services.sort((a, b) => a.price.compareTo(b.price));
         _services = services;
         _filteredServices = services;
         _isLoading = false;
@@ -109,7 +115,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           .toList();
     }
 
-    // Sort services: first by category, then by newest to oldest (using ID)
+    // Sort services: first by category name, then by price from low to high
     filtered.sort((a, b) {
       // First sort by category name
       final categoryA = _categories.firstWhere(
@@ -126,8 +132,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         return categoryComparison;
       }
 
-      // If same category, sort by ID (newest first - assuming newer IDs are lexicographically larger)
-      return b.id.compareTo(a.id);
+      // If same category, sort by price from low to high
+      return a.price.compareTo(b.price);
     });
 
     setState(() {
@@ -768,7 +774,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
 
     return Column(
       children: sortedCategories.map((categoryId) {
-        final services = groupedServices[categoryId]!;
+        final services = groupedServices[categoryId]!
+          ..sort((a, b) => a.price.compareTo(
+              b.price)); // Sort services by price within each category
         final category = _categories.firstWhere(
           (cat) => cat.id == categoryId,
           orElse: () => Category(

@@ -29,6 +29,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
   List<Category> _appliedCategories = [];
   bool _showCategoryFilter = false;
 
+  // Sorting state
+  String? _selectedSortOption;
+  String? _appliedSortOption;
+
+  // Sorting options will be created dynamically with localization
+  Map<String, String> _getSortOptions(BuildContext context) {
+    return {
+      'alphabetical_az': AppLocalizations.of(context)!.sortAlphabeticalAZ,
+      'alphabetical_za': AppLocalizations.of(context)!.sortAlphabeticalZA,
+      'newest_first': AppLocalizations.of(context)!.sortNewestFirst,
+      'oldest_first': AppLocalizations.of(context)!.sortOldestFirst,
+      'price_high_to_low': AppLocalizations.of(context)!.sortPriceHighToLow,
+      'price_low_to_high': AppLocalizations.of(context)!.sortPriceLowToHigh,
+    };
+  }
+
   @override
   void initState() {
     super.initState();
@@ -169,12 +185,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
       _selectedCategories.clear();
       _appliedCategories.clear();
       _search = '';
+      _selectedSortOption = null;
+      _appliedSortOption = null;
     });
   }
 
   void _applyFilters() {
     setState(() {
       _appliedCategories = List.from(_selectedCategories);
+      _appliedSortOption = _selectedSortOption;
       _showCategoryFilter = false;
     });
   }
@@ -196,7 +215,43 @@ class _ServicesScreenState extends State<ServicesScreen> {
           .toList();
     }
 
-    return filtered;
+    // Apply sorting
+    return _sortServices(filtered);
+  }
+
+  List<Service> _sortServices(List<Service> services) {
+    if (_appliedSortOption == null) return services;
+
+    List<Service> sorted = List.from(services);
+
+    switch (_appliedSortOption) {
+      case 'alphabetical_az':
+        sorted.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        break;
+      case 'alphabetical_za':
+        sorted.sort(
+            (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+        break;
+      case 'newest_first':
+        // Assuming code represents creation order - higher code = newer
+        sorted.sort((a, b) => (b.code ?? 0).compareTo(a.code ?? 0));
+        break;
+      case 'oldest_first':
+        // Assuming code represents creation order - lower code = higher
+        sorted.sort((a, b) => (a.code ?? 0).compareTo(b.code ?? 0));
+        break;
+      case 'price_high_to_low':
+        sorted.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case 'price_low_to_high':
+        sorted.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      default:
+        break;
+    }
+
+    return sorted;
   }
 
   Widget _buildCompactCategoryFilter() {
@@ -322,6 +377,79 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     ),
                   ),
                 ],
+
+                const SizedBox(height: 16),
+
+                // Sorting Section
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.sortBy,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Sort Options
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _getSortOptions(context).entries.map((entry) {
+                    final isSelected = _selectedSortOption == entry.key;
+                    return GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        setState(() {
+                          _selectedSortOption = _selectedSortOption == entry.key
+                              ? null
+                              : entry.key;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: isSelected
+                              ? const LinearGradient(colors: [
+                                  Color(0xFF7386dd),
+                                  Color(0xFF5a6fd8)
+                                ])
+                              : LinearGradient(colors: [
+                                  Colors.grey[100]!,
+                                  Colors.grey[200]!,
+                                ]),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFF7386dd)
+                                        .withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Text(
+                          entry.value,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.grey[600],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
 
                 const SizedBox(height: 16),
 
@@ -1464,7 +1592,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   height: AppTheme.controlHeight,
                                   width: AppTheme.controlHeight,
                                   decoration: BoxDecoration(
-                                    gradient: _appliedCategories.isNotEmpty
+                                    gradient: (_appliedCategories.isNotEmpty ||
+                                            _appliedSortOption != null)
                                         ? AppTheme.primaryGradient
                                         : LinearGradient(
                                             colors: [
@@ -1478,7 +1607,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           ),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: _appliedCategories.isNotEmpty
+                                      color: (_appliedCategories.isNotEmpty ||
+                                              _appliedSortOption != null)
                                           ? AppTheme.primaryStart
                                               .withValues(alpha: 0.3)
                                           : AppTheme.primaryStart
@@ -1487,7 +1617,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: (_appliedCategories.isNotEmpty
+                                        color: ((_appliedCategories
+                                                        .isNotEmpty ||
+                                                    _appliedSortOption != null)
                                                 ? AppTheme.primaryStart
                                                 : AppTheme.primaryStart
                                                     .withValues(alpha: 0.3))
@@ -1507,15 +1639,18 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           Center(
                                             child: Icon(
                                               Icons.filter_list,
-                                              color: _appliedCategories
-                                                      .isNotEmpty
+                                              color: (_appliedCategories
+                                                          .isNotEmpty ||
+                                                      _appliedSortOption !=
+                                                          null)
                                                   ? Colors.white
                                                   : AppTheme.primaryStart
                                                       .withValues(alpha: 0.7),
                                               size: 20,
                                             ),
                                           ),
-                                          if (_appliedCategories.isNotEmpty)
+                                          if (_appliedCategories.isNotEmpty ||
+                                              _appliedSortOption != null)
                                             Positioned(
                                               right: 6,
                                               top: 6,
@@ -1543,7 +1678,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                   minHeight: 16,
                                                 ),
                                                 child: Text(
-                                                  '${_appliedCategories.length}',
+                                                  '${_appliedCategories.length + (_appliedSortOption != null ? 1 : 0)}',
                                                   style: const TextStyle(
                                                     color:
                                                         AppTheme.primaryStart,
@@ -1776,7 +1911,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                             .ellipsis,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 6),
+                                                    const SizedBox(height: 4),
                                                     // Price
                                                     Container(
                                                       padding: const EdgeInsets
@@ -1848,26 +1983,71 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .symmetric(
-                                                                horizontal: 6,
-                                                                vertical: 2),
+                                                                horizontal: 8,
+                                                                vertical: 4),
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: Colors.white
-                                                              .withValues(
-                                                                  alpha: 0.2),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            colors: [
+                                                              AppTheme
+                                                                  .primaryStart
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.9),
+                                                              AppTheme
+                                                                  .primaryEnd
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.9),
+                                                            ],
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                          ),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(8),
+                                                                  .circular(
+                                                                      100),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: AppTheme
+                                                                  .primaryStart
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.3),
+                                                              blurRadius: 4,
+                                                              offset:
+                                                                  const Offset(
+                                                                      0, 2),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        child: Text(
-                                                          '${AppLocalizations.of(context)!.unit}: ${s.unit}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 9,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.white,
-                                                          ),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.straighten,
+                                                              size: 12,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 4),
+                                                            Text(
+                                                              '${AppLocalizations.of(context)!.unit}: ${s.unit}',
+                                                              style: TextStyle(
+                                                                fontSize: 11,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     ],

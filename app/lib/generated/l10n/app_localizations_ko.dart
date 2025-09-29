@@ -9,16 +9,10 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
-  String get appTitle => '네일 관리';
-
-  @override
-  String get welcome => '환영합니다';
+  String get appTitle => 'FShop';
 
   @override
   String get salon => '살롱';
-
-  @override
-  String get professionalNailSalonManagement => '전문 네일 살롱 관리 시스템';
 
   @override
   String get todayOverview => '오늘의 개요';
@@ -42,7 +36,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get information => '정보';
 
   @override
-  String get salonInfo => '살롱 정보';
+  String get salonInfo => '정보';
 
   @override
   String get menu => '메뉴';
@@ -711,10 +705,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get addImage => '이미지 추가';
 
   @override
-  String get categoryFilter => '카테고리 필터';
+  String get categoryFilter => '필터';
 
   @override
-  String get selectCategoriesToFilter => '서비스를 필터링할 카테고리 선택';
+  String get selectCategoriesToFilter => '카테고리 선택 및 정렬';
 
   @override
   String categoriesSelected(int count) {
@@ -1067,16 +1061,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get socialMedia => '소셜 미디어';
 
   @override
-  String get salonInformation => '살롱 정보';
+  String get salonInformation => '정보';
 
   @override
-  String get manageSalonInfoAndContact => '살롱 정보 및 연락처 관리';
+  String get manageSalonInfoAndContact => '정보 및 연락처 관리';
 
   @override
   String get qrCode => 'QR 코드';
 
   @override
-  String get salonLogo => '살롱 로고';
+  String get salonLogo => '로고';
 
   @override
   String get selectLogo => '로고 선택';
@@ -1522,6 +1516,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfTemporaryBillId => '임시';
 
   @override
+  String pdfServiceQuantity(Object quantity) {
+    return 'x$quantity';
+  }
+
+  @override
   String get selectAccountTypeToContinue => '계속하려면 계정 유형을 선택하세요';
 
   @override
@@ -1665,4 +1664,31 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get unitOfMeasurement => '측정 단위';
+
+  @override
+  String get sortBy => '정렬 기준';
+
+  @override
+  String get sortAlphabeticalAZ => 'A-Z';
+
+  @override
+  String get sortAlphabeticalZA => 'Z-A';
+
+  @override
+  String get sortNewestFirst => '최신';
+
+  @override
+  String get sortOldestFirst => '오래된 것';
+
+  @override
+  String get sortPriceHighToLow => '가격: 높은 것부터 낮은 것까지';
+
+  @override
+  String get sortPriceLowToHigh => '가격: 낮은 것부터 높은 것까지';
+
+  @override
+  String get applySorting => '정렬 적용';
+
+  @override
+  String get clearSorting => '정렬 초기화';
 }
