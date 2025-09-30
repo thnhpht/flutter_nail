@@ -296,6 +296,12 @@ class BillHelper {
                   order.customerName),
               _buildInfoRow(context, AppLocalizations.of(context)!.phoneNumber,
                   _formatPhoneNumber(order.customerPhone)),
+              if (order.customerAddress != null &&
+                  order.customerAddress!.isNotEmpty)
+                _buildInfoRowWithWrap(
+                    context,
+                    AppLocalizations.of(context)!.customerAddress,
+                    order.customerAddress!),
               _buildInfoRowWithWrap(
                   context,
                   AppLocalizations.of(context)!.servingStaff,

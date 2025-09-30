@@ -177,7 +177,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get shopName => 'Tên shop';
+  String get shopName => 'Tên Salon';
 
   @override
   String get checkEmail => 'Kiểm tra email';
@@ -205,9 +205,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get employeePassword => 'Mật khẩu nhân viên';
-
-  @override
-  String get shopEmail => 'Email Salon';
 
   @override
   String get pleaseEnterEmail => 'Vui lòng nhập email';
@@ -267,10 +264,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get customerName => 'Tên khách hàng';
 
   @override
-  String get customerPhone => 'Số điện thoại khách hàng';
+  String get customerPhone => 'Số điện thoại';
 
   @override
-  String get customerAddress => 'Địa chỉ khách hàng';
+  String get customerAddress => 'Địa chỉ';
 
   @override
   String get addCustomer => 'Thêm khách hàng';
@@ -590,10 +587,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get yearlyReport => 'Báo cáo năm';
 
   @override
-  String get totalRevenue => 'Tổng doanh thu';
+  String totalRevenue(String amount) {
+    return 'Tổng doanh thu: $amount';
+  }
 
   @override
-  String get totalOrders => 'Tổng đơn hàng';
+  String totalOrders(int count) {
+    return 'Tổng số hóa đơn: $count';
+  }
 
   @override
   String get totalCustomers => 'Tổng khách hàng';
@@ -711,6 +712,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get allEmployees => 'Tất cả nhân viên';
+
+  @override
+  String get allCustomers => 'Tất cả khách hàng';
 
   @override
   String get allStatuses => 'Tất cả trạng thái';
@@ -972,6 +976,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get selectEmployee => 'Chọn nhân viên';
+
+  @override
+  String get selectCustomer => 'Chọn khách hàng';
 
   @override
   String employeesSelected(int count) {
@@ -1348,6 +1355,18 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get canOnlyUpdateTodayOrders =>
       'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay';
+
+  @override
+  String get orderId => 'Mã hóa đơn';
+
+  @override
+  String get pleaseEnterOrderId => 'Vui lòng nhập mã hóa đơn';
+
+  @override
+  String get orderIdExists => 'Mã hóa đơn đã tồn tại. Vui lòng nhập mã khác.';
+
+  @override
+  String get orderIdOptional => 'Mã hóa đơn (tùy chọn)';
 
   @override
   String get customerPaidFully => 'Khách hàng đã thanh toán đầy đủ';
@@ -1833,4 +1852,38 @@ class AppLocalizationsVi extends AppLocalizations {
   String shippingFeeAmountPositive(String amount) {
     return '+$amount VNĐ';
   }
+
+  @override
+  String get exportReports => 'Xuất báo cáo';
+
+  @override
+  String get exportReportsToPDF => 'Xuất báo cáo ra PDF';
+
+  @override
+  String get exportingReports => 'Đang xuất báo cáo...';
+
+  @override
+  String get exportReportsSuccess => 'Xuất báo cáo thành công';
+
+  @override
+  String exportReportsError(String error) {
+    return 'Lỗi khi xuất báo cáo: $error';
+  }
+
+  @override
+  String get reportsPDFTitle => 'Báo cáo doanh thu';
+
+  @override
+  String exportedOn(String date) {
+    return 'Xuất ngày: $date';
+  }
+
+  @override
+  String get noOrdersToExport => 'Không có hóa đơn để xuất';
+
+  @override
+  String get summary => 'Tóm tắt';
+
+  @override
+  String get exportDate => 'Ngày xuất';
 }

@@ -313,7 +313,7 @@ class AppWidgets {
               Container(
                 padding: const EdgeInsets.all(AppTheme.spacingS),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryStart.withOpacity(0.1),
+                  color: AppTheme.primaryStart.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: const Icon(

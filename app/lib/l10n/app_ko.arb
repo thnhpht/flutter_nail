@@ -69,7 +69,7 @@
   "phoneNumber": "전화번호",
   "employeePhone": "직원 전화번호",
   "employeePassword": "직원 비밀번호",
-  "shopEmail": "샵 이메일",
+  "shopName": "샵 이름",
   "pleaseEnterEmail": "이메일을 입력하세요",
   "pleaseEnterShopName": "샵 이름을 입력하세요",
   "@pleaseEnterShopName": {
@@ -234,6 +234,7 @@
   "selectQRCode": "QR 코드 선택",
   "changeLogo": "로고 변경",
   "allEmployees": "모든 직원",
+  "allCustomers": "모든 고객",
   "allStatuses": "모든 상태",
   "errorLoadingData": "데이터 로딩 오류: {error}",
   "addImage": "이미지 추가",
@@ -578,6 +579,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "직원 선택",
+  "selectCustomer": "고객 선택",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1134,6 +1139,10 @@
     "description": "Search field hint text"
   },
   "selectEmployee": "직원 선택",
+  "selectCustomer": "고객 선택",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Employee filter label"
   },
@@ -1321,6 +1330,22 @@
   "@invalidServiceData": {
     "description": "Invalid service data error"
   },
+  "orderId": "주문 ID",
+  "@orderId": {
+    "description": "Order ID label"
+  },
+  "pleaseEnterOrderId": "주문 ID를 입력하세요",
+  "@pleaseEnterOrderId": {
+    "description": "Order ID validation message"
+  },
+  "orderIdExists": "주문 ID가 이미 존재합니다. 다른 ID를 입력하세요.",
+  "@orderIdExists": {
+    "description": "Order ID already exists error message"
+  },
+  "orderIdOptional": "주문 ID (선택사항)",
+  "@orderIdOptional": {
+    "description": "Optional order ID label"
+  },
   "customerInformation": "고객 정보",
   "@customerInformation": {
     "description": "Customer information section title"
@@ -1346,6 +1371,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "직원 선택",
+  "selectCustomer": "고객 선택",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1850,9 +1879,9 @@
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
-  "shopEmail": "매장 이메일",
-  "@shopEmail": {
-    "description": "Shop email field label"
+  "shopName": "매장 이름",
+  "@shopName": {
+    "description": "Shop name field label"
   },
   "employeePhone": "직원 전화번호",
   "@employeePhone": {
@@ -2230,5 +2259,93 @@
   "shippingFeeMustBeGreaterThan0": "배송비는 0 이상이어야 합니다",
   "shippingFeeAmount": "배송비: {amount} VND",
   "shippingFeeLabel": "배송비",
-  "shippingFeeAmountPositive": "+{amount} VND"
+  "shippingFeeAmountPositive": "+{amount} VND",
+  "exportReports": "보고서 내보내기",
+  "@exportReports": {
+    "description": "Export reports button text"
+  },
+  "exportReportsToPDF": "PDF로 보고서 내보내기",
+  "@exportReportsToPDF": {
+    "description": "Export reports to PDF button text"
+  },
+  "exportingReports": "보고서 내보내는 중...",
+  "@exportingReports": {
+    "description": "Loading message when exporting reports"
+  },
+  "exportReportsSuccess": "보고서 내보내기 성공",
+  "@exportReportsSuccess": {
+    "description": "Success message when reports are exported"
+  },
+  "exportReportsError": "보고서 내보내기 오류: {error}",
+  "@exportReportsError": {
+    "description": "Error message when export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsPDFTitle": "수익 보고서",
+  "@reportsPDFTitle": {
+    "description": "Title for the reports PDF"
+  },
+  "billCode": "청구서 코드",
+  "@billCode": {
+    "description": "Bill code column header"
+  },
+  "customerName": "고객 이름",
+  "@customerName": {
+    "description": "Customer name column header"
+  },
+  "customerPhone": "고객 전화번호",
+  "@customerPhone": {
+    "description": "Customer phone column header"
+  },
+  "customerAddress": "고객 주소",
+  "@customerAddress": {
+    "description": "Customer address column header"
+  },
+  "totalAmount": "총 금액",
+  "@totalAmount": {
+    "description": "Total amount column header"
+  },
+  "exportedOn": "내보낸 날짜: {date}",
+  "@exportedOn": {
+    "description": "Export date in PDF",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "totalOrders": "총 주문 수: {count}",
+  "@totalOrders": {
+    "description": "Total orders count in PDF",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalRevenue": "총 수익: {amount}",
+  "@totalRevenue": {
+    "description": "Total revenue in PDF",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noOrdersToExport": "내보낼 주문이 없습니다",
+  "@noOrdersToExport": {
+    "description": "Message when there are no orders to export"
+  },
+  "summary": "요약",
+  "@summary": {
+    "description": "Summary section title"
+  },
+  "exportDate": "내보낸 날짜",
+  "@exportDate": {
+    "description": "Export date column header"
+  }
 }

@@ -438,10 +438,10 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email;
 
-  /// Shop name
+  /// Shop name field label
   ///
   /// In vi, this message translates to:
-  /// **'Tên shop'**
+  /// **'Tên Salon'**
   String get shopName;
 
   /// Check email
@@ -497,12 +497,6 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Mật khẩu nhân viên'**
   String get employeePassword;
-
-  /// Shop email field label
-  ///
-  /// In vi, this message translates to:
-  /// **'Email Salon'**
-  String get shopEmail;
 
   /// Please enter email validation message
   ///
@@ -612,22 +606,22 @@ abstract class AppLocalizations {
   /// **'Đăng nhập thành công'**
   String get loginSuccessful;
 
-  /// Customer name label
+  /// Customer name column header
   ///
   /// In vi, this message translates to:
   /// **'Tên khách hàng'**
   String get customerName;
 
-  /// Customer phone
+  /// Customer phone column header
   ///
   /// In vi, this message translates to:
-  /// **'Số điện thoại khách hàng'**
+  /// **'Số điện thoại'**
   String get customerPhone;
 
-  /// Customer address
+  /// Customer address column header
   ///
   /// In vi, this message translates to:
-  /// **'Địa chỉ khách hàng'**
+  /// **'Địa chỉ'**
   String get customerAddress;
 
   /// Add customer
@@ -1212,17 +1206,17 @@ abstract class AppLocalizations {
   /// **'Báo cáo năm'**
   String get yearlyReport;
 
-  /// Total revenue
+  /// Total revenue in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Tổng doanh thu'**
-  String get totalRevenue;
+  /// **'Tổng doanh thu: {amount}'**
+  String totalRevenue(String amount);
 
-  /// Total orders
+  /// Total orders count in PDF
   ///
   /// In vi, this message translates to:
-  /// **'Tổng đơn hàng'**
-  String get totalOrders;
+  /// **'Tổng số hóa đơn: {count}'**
+  String totalOrders(int count);
 
   /// Total customers
   ///
@@ -1445,6 +1439,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Tất cả nhân viên'**
   String get allEmployees;
+
+  /// No description provided for @allCustomers.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả khách hàng'**
+  String get allCustomers;
 
   /// All statuses
   ///
@@ -1901,6 +1901,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Chọn nhân viên'**
   String get selectEmployee;
+
+  /// Select customer dropdown label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn khách hàng'**
+  String get selectCustomer;
 
   /// Number of employees selected
   ///
@@ -2382,7 +2388,7 @@ abstract class AppLocalizations {
   /// **'đã lọc'**
   String get filtered;
 
-  /// Total amount label
+  /// Total amount column header
   ///
   /// In vi, this message translates to:
   /// **'Tổng tiền'**
@@ -2484,7 +2490,7 @@ abstract class AppLocalizations {
   /// **'In'**
   String get print;
 
-  /// Bill code label
+  /// Bill code column header
   ///
   /// In vi, this message translates to:
   /// **'Mã hóa đơn'**
@@ -2555,6 +2561,30 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Chỉ có thể cập nhật đơn hàng trong ngày hôm nay'**
   String get canOnlyUpdateTodayOrders;
+
+  /// Order ID label
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã hóa đơn'**
+  String get orderId;
+
+  /// Order ID validation message
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập mã hóa đơn'**
+  String get pleaseEnterOrderId;
+
+  /// Order ID already exists error message
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã hóa đơn đã tồn tại. Vui lòng nhập mã khác.'**
+  String get orderIdExists;
+
+  /// Optional order ID label
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã hóa đơn (tùy chọn)'**
+  String get orderIdOptional;
 
   /// Customer paid fully message
   ///
@@ -3383,6 +3413,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'+{amount} VNĐ'**
   String shippingFeeAmountPositive(String amount);
+
+  /// Export reports button text
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất báo cáo'**
+  String get exportReports;
+
+  /// Export reports to PDF button text
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất báo cáo ra PDF'**
+  String get exportReportsToPDF;
+
+  /// Loading message when exporting reports
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang xuất báo cáo...'**
+  String get exportingReports;
+
+  /// Success message when reports are exported
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất báo cáo thành công'**
+  String get exportReportsSuccess;
+
+  /// Error message when export fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi khi xuất báo cáo: {error}'**
+  String exportReportsError(String error);
+
+  /// Title for the reports PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo doanh thu'**
+  String get reportsPDFTitle;
+
+  /// Export date in PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất ngày: {date}'**
+  String exportedOn(String date);
+
+  /// Message when there are no orders to export
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có hóa đơn để xuất'**
+  String get noOrdersToExport;
+
+  /// Summary section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Tóm tắt'**
+  String get summary;
+
+  /// Export date column header
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngày xuất'**
+  String get exportDate;
 }
 
 class _AppLocalizationsDelegate

@@ -522,6 +522,15 @@ class ApiClient {
     return Order.fromJson(orderJson);
   }
 
+  Future<bool> checkOrderIdExists(String orderId) async {
+    try {
+      await getOrderById(orderId);
+      return true; // Order exists
+    } catch (e) {
+      return false; // Order doesn't exist
+    }
+  }
+
   Future<Order> createOrder(Order order) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';

@@ -207,9 +207,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get employeePassword => '员工密码';
 
   @override
-  String get shopEmail => '店铺邮箱';
-
-  @override
   String get pleaseEnterEmail => '请输入邮箱';
 
   @override
@@ -578,10 +575,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get yearlyReport => '年报';
 
   @override
-  String get totalRevenue => '总收入';
+  String totalRevenue(String amount) {
+    return '总收入: $amount';
+  }
 
   @override
-  String get totalOrders => '总订单数';
+  String totalOrders(int count) {
+    return '总订单数: $count';
+  }
 
   @override
   String get totalCustomers => '总客户数';
@@ -697,6 +698,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get allEmployees => '所有员工';
+
+  @override
+  String get allCustomers => '所有客户';
 
   @override
   String get allStatuses => '所有状态';
@@ -953,6 +957,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectEmployee => '选择员工';
+
+  @override
+  String get selectCustomer => '选择客户';
 
   @override
   String employeesSelected(int count) {
@@ -1227,7 +1234,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filtered => '已筛选';
 
   @override
-  String get totalAmount => '总金额：';
+  String get totalAmount => '总金额';
 
   @override
   String get noServices => '无商品';
@@ -1280,7 +1287,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get print => '打印';
 
   @override
-  String get billCode => '账单编号：';
+  String get billCode => '账单代码';
 
   @override
   String get createdDate => '创建日期：';
@@ -1314,6 +1321,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get canOnlyUpdateTodayOrders => '只能更新今天的订单';
+
+  @override
+  String get orderId => '订单ID';
+
+  @override
+  String get pleaseEnterOrderId => '请输入订单ID';
+
+  @override
+  String get orderIdExists => '订单ID已存在。请输入不同的ID。';
+
+  @override
+  String get orderIdOptional => '订单ID（可选）';
 
   @override
   String get customerPaidFully => '客户已全额付款';
@@ -1769,4 +1788,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String shippingFeeAmountPositive(String amount) {
     return '+$amount VND';
   }
+
+  @override
+  String get exportReports => '导出报告';
+
+  @override
+  String get exportReportsToPDF => '导出报告为PDF';
+
+  @override
+  String get exportingReports => '正在导出报告...';
+
+  @override
+  String get exportReportsSuccess => '报告导出成功';
+
+  @override
+  String exportReportsError(String error) {
+    return '导出报告错误: $error';
+  }
+
+  @override
+  String get reportsPDFTitle => '收入报告';
+
+  @override
+  String exportedOn(String date) {
+    return '导出日期: $date';
+  }
+
+  @override
+  String get noOrdersToExport => '没有订单可导出';
+
+  @override
+  String get summary => '摘要';
+
+  @override
+  String get exportDate => '导出日期';
 }

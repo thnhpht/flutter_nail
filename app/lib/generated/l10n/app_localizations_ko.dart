@@ -177,7 +177,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get email => '이메일';
 
   @override
-  String get shopName => '샵 이름';
+  String get shopName => '매장 이름';
 
   @override
   String get checkEmail => '이메일 확인';
@@ -205,9 +205,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get employeePassword => '직원 비밀번호';
-
-  @override
-  String get shopEmail => '매장 이메일';
 
   @override
   String get pleaseEnterEmail => '이메일을 입력해주세요';
@@ -579,10 +576,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get yearlyReport => '연간 보고서';
 
   @override
-  String get totalRevenue => '총 수익';
+  String totalRevenue(String amount) {
+    return '총 수익: $amount';
+  }
 
   @override
-  String get totalOrders => '총 주문 수';
+  String totalOrders(int count) {
+    return '총 주문 수: $count';
+  }
 
   @override
   String get totalCustomers => '총 고객 수';
@@ -698,6 +699,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get allEmployees => '모든 직원';
+
+  @override
+  String get allCustomers => '모든 고객';
 
   @override
   String get allStatuses => '모든 상태';
@@ -954,6 +958,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get selectEmployee => '직원 선택';
+
+  @override
+  String get selectCustomer => '고객 선택';
 
   @override
   String employeesSelected(int count) {
@@ -1284,7 +1291,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get print => '인쇄';
 
   @override
-  String get billCode => '영수증 번호';
+  String get billCode => '청구서 코드';
 
   @override
   String get createdDate => '생성일';
@@ -1318,6 +1325,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get canOnlyUpdateTodayOrders => '오늘 주문만 업데이트할 수 있습니다';
+
+  @override
+  String get orderId => '주문 ID';
+
+  @override
+  String get pleaseEnterOrderId => '주문 ID를 입력하세요';
+
+  @override
+  String get orderIdExists => '주문 ID가 이미 존재합니다. 다른 ID를 입력하세요.';
+
+  @override
+  String get orderIdOptional => '주문 ID (선택사항)';
 
   @override
   String get customerPaidFully => '고객이 전액 결제했습니다';
@@ -1780,4 +1799,38 @@ class AppLocalizationsKo extends AppLocalizations {
   String shippingFeeAmountPositive(String amount) {
     return '+$amount VND';
   }
+
+  @override
+  String get exportReports => '보고서 내보내기';
+
+  @override
+  String get exportReportsToPDF => 'PDF로 보고서 내보내기';
+
+  @override
+  String get exportingReports => '보고서 내보내는 중...';
+
+  @override
+  String get exportReportsSuccess => '보고서 내보내기 성공';
+
+  @override
+  String exportReportsError(String error) {
+    return '보고서 내보내기 오류: $error';
+  }
+
+  @override
+  String get reportsPDFTitle => '수익 보고서';
+
+  @override
+  String exportedOn(String date) {
+    return '내보낸 날짜: $date';
+  }
+
+  @override
+  String get noOrdersToExport => '내보낼 주문이 없습니다';
+
+  @override
+  String get summary => '요약';
+
+  @override
+  String get exportDate => '내보낸 날짜';
 }

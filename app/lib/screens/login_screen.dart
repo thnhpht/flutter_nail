@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _userLoginController = TextEditingController();
   final _passwordLoginController = TextEditingController();
-  final _shopEmailController = TextEditingController();
+  final _shopNameController = TextEditingController();
   final _employeePhoneController = TextEditingController();
   final _employeePasswordController = TextEditingController();
 
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _userLoginController.dispose();
     _passwordLoginController.dispose();
-    _shopEmailController.dispose();
+    _shopNameController.dispose();
     _employeePhoneController.dispose();
     _employeePasswordController.dispose();
     super.dispose();
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _emailExists = false;
       _userLoginController.clear();
       _passwordLoginController.clear();
-      _shopEmailController.clear();
+      _shopNameController.clear();
       _employeePhoneController.clear();
       _employeePasswordController.clear();
       _databaseName = '';
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final request = EmployeeLoginRequest(
-        shopName: _shopEmailController.text.trim(),
+        shopName: _shopNameController.text.trim(),
         employeePhone: _employeePhoneController.text.trim(),
         employeePassword: _employeePasswordController.text,
       );
@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('database_name', response.databaseName);
         await prefs.setString('user_role', response.userRole ?? 'employee');
         await prefs.setString('employee_id', response.employeeId ?? '');
-        await prefs.setString('shop_name', _shopEmailController.text.trim());
+        await prefs.setString('shop_name', _shopNameController.text.trim());
 
         // Hiển thị thông báo thành công
         if (mounted) {
@@ -571,7 +571,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Employee login form
                           if (_currentStep == 'employee_login') ...[
                             TextFormField(
-                              controller: _shopEmailController,
+                              controller: _shopNameController,
                               keyboardType: TextInputType.text,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(

@@ -23,8 +23,10 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   Information? _information;
   final _formKey = GlobalKey<FormState>();
+  final _orderIdController = TextEditingController();
   final _customerPhoneController = TextEditingController();
   final _customerNameController = TextEditingController();
+  final _customerAddressController = TextEditingController();
   final _employeePhoneController = TextEditingController();
   final _employeeNameController = TextEditingController();
   final _discountController = TextEditingController();
@@ -109,8 +111,10 @@ class _OrderScreenState extends State<OrderScreen> {
     _tipController.removeListener(_onTipChanged);
     _taxController.removeListener(_onTaxChanged);
     _shippingFeeController.removeListener(_onShippingFeeChanged);
+    _orderIdController.dispose();
     _customerPhoneController.dispose();
     _customerNameController.dispose();
+    _customerAddressController.dispose();
     _employeePhoneController.dispose();
     _employeeNameController.dispose();
     _discountController.dispose();
@@ -196,6 +200,7 @@ class _OrderScreenState extends State<OrderScreen> {
         if (customer != null) {
           setState(() {
             _customerNameController.text = customer.name;
+            _customerAddressController.text = customer.address ?? '';
           });
           final l10n = AppLocalizations.of(context)!;
           AppWidgets.showFlushbar(context, l10n.customerFound(customer.name),
@@ -203,6 +208,7 @@ class _OrderScreenState extends State<OrderScreen> {
         } else {
           setState(() {
             _customerNameController.clear();
+            _customerAddressController.clear();
           });
           final l10n = AppLocalizations.of(context)!;
           AppWidgets.showFlushbar(context, l10n.customerNotFound,
@@ -216,6 +222,7 @@ class _OrderScreenState extends State<OrderScreen> {
     } else {
       setState(() {
         _customerNameController.clear();
+        _customerAddressController.clear();
       });
     }
   }
@@ -323,6 +330,7 @@ class _OrderScreenState extends State<OrderScreen> {
       // Clear customer name if phone is not 10 digits
       setState(() {
         _customerNameController.clear();
+        _customerAddressController.clear();
       });
     }
   }
@@ -558,6 +566,7 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {
       _customerPhoneController.text = customer.phone;
       _customerNameController.text = customer.name;
+      _customerAddressController.text = customer.address ?? '';
       _showCustomerDropdown = false;
     });
   }
@@ -566,6 +575,19 @@ class _OrderScreenState extends State<OrderScreen> {
     // Generate a real UUID using the uuid package
     const uuid = Uuid();
     return uuid.v4();
+  }
+
+  Future<bool> _validateOrderId(String orderId) async {
+    if (orderId.trim().isEmpty) {
+      return true; // Empty is valid (will auto-generate)
+    }
+
+    try {
+      final exists = await widget.api.checkOrderIdExists(orderId.trim());
+      return !exists; // Valid if it doesn't exist
+    } catch (e) {
+      return false; // Invalid if there's an error
+    }
   }
 
   Future<void> _createOrder() async {
@@ -583,6 +605,18 @@ class _OrderScreenState extends State<OrderScreen> {
       return;
     }
 
+    // Validate order ID if provided
+    final orderId = _orderIdController.text.trim();
+    if (orderId.isNotEmpty) {
+      final isValidOrderId = await _validateOrderId(orderId);
+      if (!isValidOrderId) {
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.orderIdExists,
+            type: MessageType.error);
+        return;
+      }
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -591,22 +625,29 @@ class _OrderScreenState extends State<OrderScreen> {
       // Create customer if not exists
       final customerPhone = _customerPhoneController.text.trim();
       final customerName = _customerNameController.text.trim();
+      final customerAddress = _customerAddressController.text.trim();
 
       try {
         await widget.api.getCustomer(customerPhone);
       } catch (e) {
         // Customer doesn't exist, create new one
-        await widget.api
-            .createCustomer(Customer(phone: customerPhone, name: customerName));
+        await widget.api.createCustomer(Customer(
+          phone: customerPhone,
+          name: customerName,
+          address: customerAddress.isNotEmpty ? customerAddress : null,
+        ));
       }
 
       // Create orders for each selected employee
       List<Order> createdOrders = [];
       if (_selectedCategories.isNotEmpty && _selectedServices.isNotEmpty) {
         final order = Order(
-          id: _generateOrderId(), // Generate unique ID locally
+          id: orderId.isNotEmpty
+              ? orderId
+              : _generateOrderId(), // Use provided ID or generate new one
           customerPhone: customerPhone,
           customerName: customerName,
+          customerAddress: customerAddress.isNotEmpty ? customerAddress : null,
           employeeIds: _selectedEmployees.map((e) => e.id).toList(),
           employeeNames: _selectedEmployees.map((e) => e.name).toList(),
           serviceIds: _selectedServices.map((s) => s.service.id).toList(),
@@ -703,6 +744,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _resetForm() {
     _formKey.currentState?.reset();
+    _orderIdController.clear();
     _customerPhoneController.clear();
     _customerNameController.clear();
     _employeePhoneController.clear();
@@ -816,6 +858,23 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     const SizedBox(height: 24),
 
+                    // Order ID Section
+                    _buildSectionCard(
+                      title: l10n.orderIdOptional,
+                      icon: Icons.receipt_long,
+                      child: _buildTextField(
+                        controller: _orderIdController,
+                        label: l10n.orderId,
+                        prefixIcon: Icons.receipt_long,
+                        validator: (value) {
+                          // Order ID is optional, no validation needed
+                          return null;
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
                     // Customer Information
                     _buildSectionCard(
                       title: l10n.customerInformation,
@@ -882,6 +941,16 @@ class _OrderScreenState extends State<OrderScreen> {
                               if (value == null || value.trim().isEmpty) {
                                 return l10n.pleaseEnterCustomerName;
                               }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            controller: _customerAddressController,
+                            label: l10n.customerAddress,
+                            prefixIcon: Icons.location_on_outlined,
+                            validator: (value) {
+                              // Address is optional, no validation needed
                               return null;
                             },
                           ),

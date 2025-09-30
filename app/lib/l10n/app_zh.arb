@@ -69,7 +69,7 @@
   "phoneNumber": "电话号码",
   "employeePhone": "员工电话",
   "employeePassword": "员工密码",
-  "shopEmail": "店铺邮箱",
+  "shopName": "店铺名称",
   "pleaseEnterEmail": "请输入邮箱",
   "pleaseEnterShopName": "请输入店铺名称",
   "@pleaseEnterShopName": {
@@ -234,6 +234,7 @@
   "selectQRCode": "选择二维码",
   "changeLogo": "更改标志",
   "allEmployees": "所有员工",
+  "allCustomers": "所有客户",
   "allStatuses": "所有状态",
   "errorLoadingData": "加载数据错误：{error}",
   "addImage": "添加图片",
@@ -578,6 +579,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "选择员工",
+  "selectCustomer": "选择客户",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1134,6 +1139,10 @@
     "description": "Search field hint text"
   },
   "selectEmployee": "选择员工",
+  "selectCustomer": "选择客户",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Employee filter label"
   },
@@ -1321,6 +1330,22 @@
   "@invalidServiceData": {
     "description": "Invalid service data error"
   },
+  "orderId": "订单ID",
+  "@orderId": {
+    "description": "Order ID label"
+  },
+  "pleaseEnterOrderId": "请输入订单ID",
+  "@pleaseEnterOrderId": {
+    "description": "Order ID validation message"
+  },
+  "orderIdExists": "订单ID已存在。请输入不同的ID。",
+  "@orderIdExists": {
+    "description": "Order ID already exists error message"
+  },
+  "orderIdOptional": "订单ID（可选）",
+  "@orderIdOptional": {
+    "description": "Optional order ID label"
+  },
   "customerInformation": "客户信息",
   "@customerInformation": {
     "description": "Customer information section title"
@@ -1346,6 +1371,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "选择员工",
+  "selectCustomer": "选择客户",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1850,9 +1879,9 @@
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
-  "shopEmail": "店铺邮箱",
-  "@shopEmail": {
-    "description": "Shop email field label"
+  "shopName": "店铺名称",
+  "@shopName": {
+    "description": "Shop name field label"
   },
   "employeePhone": "员工电话",
   "@employeePhone": {
@@ -2230,5 +2259,93 @@
   "shippingFeeMustBeGreaterThan0": "运费必须大于或等于0",
   "shippingFeeAmount": "运费: {amount} VND",
   "shippingFeeLabel": "运费",
-  "shippingFeeAmountPositive": "+{amount} VND"
+  "shippingFeeAmountPositive": "+{amount} VND",
+  "exportReports": "导出报告",
+  "@exportReports": {
+    "description": "Export reports button text"
+  },
+  "exportReportsToPDF": "导出报告为PDF",
+  "@exportReportsToPDF": {
+    "description": "Export reports to PDF button text"
+  },
+  "exportingReports": "正在导出报告...",
+  "@exportingReports": {
+    "description": "Loading message when exporting reports"
+  },
+  "exportReportsSuccess": "报告导出成功",
+  "@exportReportsSuccess": {
+    "description": "Success message when reports are exported"
+  },
+  "exportReportsError": "导出报告错误: {error}",
+  "@exportReportsError": {
+    "description": "Error message when export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsPDFTitle": "收入报告",
+  "@reportsPDFTitle": {
+    "description": "Title for the reports PDF"
+  },
+  "billCode": "账单代码",
+  "@billCode": {
+    "description": "Bill code column header"
+  },
+  "customerName": "客户姓名",
+  "@customerName": {
+    "description": "Customer name column header"
+  },
+  "customerPhone": "客户电话",
+  "@customerPhone": {
+    "description": "Customer phone column header"
+  },
+  "customerAddress": "客户地址",
+  "@customerAddress": {
+    "description": "Customer address column header"
+  },
+  "totalAmount": "总金额",
+  "@totalAmount": {
+    "description": "Total amount column header"
+  },
+  "exportedOn": "导出日期: {date}",
+  "@exportedOn": {
+    "description": "Export date in PDF",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "totalOrders": "总订单数: {count}",
+  "@totalOrders": {
+    "description": "Total orders count in PDF",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalRevenue": "总收入: {amount}",
+  "@totalRevenue": {
+    "description": "Total revenue in PDF",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noOrdersToExport": "没有订单可导出",
+  "@noOrdersToExport": {
+    "description": "Message when there are no orders to export"
+  },
+  "summary": "摘要",
+  "@summary": {
+    "description": "Summary section title"
+  },
+  "exportDate": "导出日期",
+  "@exportDate": {
+    "description": "Export date column header"
+  }
 }

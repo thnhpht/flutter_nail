@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
+import '../ui/reports_pdf_generator.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key, required this.api});
@@ -17,9 +18,11 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   List<Order> _orders = [];
   List<Employee> _employees = [];
+  List<Customer> _customers = [];
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
   Employee? _selectedEmployee;
+  Customer? _selectedCustomer;
   String? _selectedPaymentStatus;
   String _searchQuery = '';
 
@@ -50,10 +53,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
     try {
       final orders = await widget.api.getOrders();
       final employees = await widget.api.getEmployees();
+      final customers = await widget.api.getCustomers();
 
       setState(() {
         _orders = orders;
         _employees = employees;
+        _customers = customers;
         _isLoading = false;
       });
 
@@ -112,6 +117,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (_selectedEmployee != null) {
       filtered = filtered.where((order) {
         return order.employeeIds.contains(_selectedEmployee!.id);
+      }).toList();
+    }
+
+    // Áp dụng lọc theo khách hàng
+    if (_selectedCustomer != null) {
+      filtered = filtered.where((order) {
+        return order.customerPhone == _selectedCustomer!.phone;
       }).toList();
     }
 
@@ -188,6 +200,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
       _calculateStatistics();
       setState(() {});
     }
+  }
+
+  Future<void> _exportReports() async {
+    final filteredOrders = _getFilteredOrders();
+
+    if (filteredOrders.isEmpty) {
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.noOrdersToExport,
+          type: MessageType.warning);
+      return;
+    }
+
+    await ReportsPdfGenerator.generateAndShareReports(
+      context: context,
+      orders: filteredOrders,
+      api: widget.api,
+    );
   }
 
   Future<void> _showDateFilterDialog() async {
@@ -611,28 +640,65 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         child: Scaffold(
           backgroundColor: Colors.grey[50],
-          floatingActionButton: Container(
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(AppTheme.controlHeight / 2),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryStart.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
+          floatingActionButton: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Export Reports Button
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.green[600]!, Colors.green[400]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(AppTheme.controlHeight / 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: FloatingActionButton(
-              onPressed: _showDateFilterDialog,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              child: const Icon(
-                Icons.calendar_month,
-                color: Colors.white,
-                size: 28,
+                child: FloatingActionButton(
+                  onPressed: _exportReports,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  child: const Icon(
+                    Icons.file_download,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
               ),
-            ),
+              // Date Filter Button
+              Container(
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius:
+                      BorderRadius.circular(AppTheme.controlHeight / 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryStart.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton(
+                  onPressed: _showDateFilterDialog,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  child: const Icon(
+                    Icons.calendar_month,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ],
           ),
           body: RefreshIndicator(
             onRefresh: refreshData,
@@ -720,6 +786,42 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       onChanged: (Employee? value) {
                         setState(() {
                           _selectedEmployee = value;
+                        });
+                        _updateFilters();
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: AppTheme.spacingL),
+
+                  // Customer Filter
+                  Container(
+                    decoration: AppTheme.cardDecoration(),
+                    child: DropdownButtonFormField<Customer>(
+                      decoration: AppTheme.inputDecoration(
+                        label: l10n.selectCustomer,
+                        prefixIcon: Icons.person_outline,
+                      ).copyWith(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                      ),
+                      value: _selectedCustomer,
+                      items: [
+                        DropdownMenuItem<Customer>(
+                          value: null,
+                          child:
+                              Text(AppLocalizations.of(context)!.allCustomers),
+                        ),
+                        ..._customers
+                            .map((customer) => DropdownMenuItem<Customer>(
+                                  value: customer,
+                                  child: Text(customer.name),
+                                )),
+                      ],
+                      onChanged: (Customer? value) {
+                        setState(() {
+                          _selectedCustomer = value;
                         });
                         _updateFilters();
                       },
@@ -894,7 +996,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           Expanded(
             child: _buildSummaryCard(
               title: l10n.revenue,
-              value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+              value: NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ')
                   .format(_totalRevenue),
               icon: Icons.attach_money,
               color: Colors.green,
@@ -1022,6 +1124,31 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               ),
                             ],
                           ),
+                          if (order.customerAddress != null &&
+                              order.customerAddress!.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 14,
+                                  color: Colors.grey[500],
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    order.customerAddress!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[500],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),

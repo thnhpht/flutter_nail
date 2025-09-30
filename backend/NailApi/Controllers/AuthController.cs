@@ -457,6 +457,7 @@ namespace NailApi.Controllers
                             [Id] nvarchar(450) NOT NULL,
                             [CustomerPhone] nvarchar(max) NOT NULL,
                             [CustomerName] nvarchar(max) NOT NULL,
+                            [CustomerAddress] nvarchar(max) NULL,
                             [EmployeeIds] nvarchar(max) NOT NULL,
                             [EmployeeNames] nvarchar(max) NOT NULL,
                             [ServiceIds] nvarchar(max) NOT NULL,
@@ -625,14 +626,14 @@ namespace NailApi.Controllers
         }
 
         [HttpGet("get-notifications")]
-        public async Task<ActionResult<object>> GetNotifications([FromQuery] string shopEmail)
+        public async Task<ActionResult<object>> GetNotifications([FromQuery] string shopName)
         {
             try
             {
-                Console.WriteLine($"Getting notifications for shop: {shopEmail}");
+                Console.WriteLine($"Getting notifications for shop: {shopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == shopEmail);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == shopName);
 
                 if (shopOwner == null)
                 {
@@ -641,7 +642,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = shopEmail;
+                var databaseName = shopName;
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop để lấy thông báo

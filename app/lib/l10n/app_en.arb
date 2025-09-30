@@ -69,7 +69,7 @@
   "phoneNumber": "Phone Number",
   "employeePhone": "Employee Phone",
   "employeePassword": "Employee Password",
-  "shopEmail": "Shop Email",
+  "shopName": "Shop Name",
   "pleaseEnterEmail": "Please enter email",
   "pleaseEnterShopName": "Please enter shop name",
   "@pleaseEnterShopName": {
@@ -234,6 +234,7 @@
   "selectQRCode": "Select QR Code",
   "changeLogo": "Change Logo",
   "allEmployees": "All Employees",
+  "allCustomers": "All Customers",
   "allStatuses": "All Statuses",
   "errorLoadingData": "Error loading data: {error}",
   "addImage": "Add Image",
@@ -578,6 +579,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "Select Employee",
+  "selectCustomer": "Select Customer",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1134,6 +1139,10 @@
     "description": "Search field hint text"
   },
   "selectEmployee": "Select Employee",
+  "selectCustomer": "Select Customer",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Employee filter label"
   },
@@ -1321,6 +1330,22 @@
   "@invalidServiceData": {
     "description": "Invalid service data error"
   },
+  "orderId": "Order ID",
+  "@orderId": {
+    "description": "Order ID label"
+  },
+  "pleaseEnterOrderId": "Please enter order ID",
+  "@pleaseEnterOrderId": {
+    "description": "Order ID validation message"
+  },
+  "orderIdExists": "Order ID already exists. Please enter a different ID.",
+  "@orderIdExists": {
+    "description": "Order ID already exists error message"
+  },
+  "orderIdOptional": "Order ID (optional)",
+  "@orderIdOptional": {
+    "description": "Optional order ID label"
+  },
   "customerInformation": "Customer Information",
   "@customerInformation": {
     "description": "Customer information section title"
@@ -1346,6 +1371,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "Select Employee",
+  "selectCustomer": "Select Customer",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -1820,9 +1849,9 @@
   "@accessItemsCreateOrdersAndBills": {
     "description": "Employee description"
   },
-  "shopEmail": "Shop Email",
-  "@shopEmail": {
-    "description": "Shop email field label"
+  "shopName": "Shop Name",
+  "@shopName": {
+    "description": "Shop name field label"
   },
   "employeePhone": "Employee Phone",
   "@employeePhone": {
@@ -2287,5 +2316,93 @@
   "shippingFeeMustBeGreaterThan0": "Shipping fee must be greater than or equal to 0",
   "shippingFeeAmount": "Shipping Fee: {amount} VND",
   "shippingFeeLabel": "Shipping Fee",
-  "shippingFeeAmountPositive": "+{amount} VND"
+  "shippingFeeAmountPositive": "+{amount} VND",
+  "exportReports": "Export Reports",
+  "@exportReports": {
+    "description": "Export reports button text"
+  },
+  "exportReportsToPDF": "Export Reports to PDF",
+  "@exportReportsToPDF": {
+    "description": "Export reports to PDF button text"
+  },
+  "exportingReports": "Exporting reports...",
+  "@exportingReports": {
+    "description": "Loading message when exporting reports"
+  },
+  "exportReportsSuccess": "Reports exported successfully",
+  "@exportReportsSuccess": {
+    "description": "Success message when reports are exported"
+  },
+  "exportReportsError": "Error exporting reports: {error}",
+  "@exportReportsError": {
+    "description": "Error message when export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsPDFTitle": "Revenue Reports",
+  "@reportsPDFTitle": {
+    "description": "Title for the reports PDF"
+  },
+  "billCode": "Bill Code",
+  "@billCode": {
+    "description": "Bill code column header"
+  },
+  "customerName": "Customer Name",
+  "@customerName": {
+    "description": "Customer name column header"
+  },
+  "customerPhone": "Customer Phone",
+  "@customerPhone": {
+    "description": "Customer phone column header"
+  },
+  "customerAddress": "Customer Address",
+  "@customerAddress": {
+    "description": "Customer address column header"
+  },
+  "totalAmount": "Total Amount",
+  "@totalAmount": {
+    "description": "Total amount column header"
+  },
+  "exportedOn": "Exported on: {date}",
+  "@exportedOn": {
+    "description": "Export date in PDF",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "totalOrders": "Total Orders: {count}",
+  "@totalOrders": {
+    "description": "Total orders count in PDF",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalRevenue": "Total Revenue: {amount}",
+  "@totalRevenue": {
+    "description": "Total revenue in PDF",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noOrdersToExport": "No orders to export",
+  "@noOrdersToExport": {
+    "description": "Message when there are no orders to export"
+  },
+  "summary": "Summary",
+  "@summary": {
+    "description": "Summary section title"
+  },
+  "exportDate": "Export Date",
+  "@exportDate": {
+    "description": "Export date column header"
+  }
 }

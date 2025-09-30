@@ -207,9 +207,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employeePassword => 'Employee Password';
 
   @override
-  String get shopEmail => 'Shop Email';
-
-  @override
   String get pleaseEnterEmail => 'Please enter email';
 
   @override
@@ -588,10 +585,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yearlyReport => 'Yearly Report';
 
   @override
-  String get totalRevenue => 'Total Revenue';
+  String totalRevenue(String amount) {
+    return 'Total Revenue: $amount';
+  }
 
   @override
-  String get totalOrders => 'Total Orders';
+  String totalOrders(int count) {
+    return 'Total Orders: $count';
+  }
 
   @override
   String get totalCustomers => 'Total Customers';
@@ -708,6 +709,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allEmployees => 'All Employees';
+
+  @override
+  String get allCustomers => 'All Customers';
 
   @override
   String get allStatuses => 'All Statuses';
@@ -971,6 +975,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectEmployee => 'Select Employee';
+
+  @override
+  String get selectCustomer => 'Select Customer';
 
   @override
   String employeesSelected(int count) {
@@ -1339,6 +1346,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get canOnlyUpdateTodayOrders => 'Can only update orders from today';
+
+  @override
+  String get orderId => 'Order ID';
+
+  @override
+  String get pleaseEnterOrderId => 'Please enter order ID';
+
+  @override
+  String get orderIdExists =>
+      'Order ID already exists. Please enter a different ID.';
+
+  @override
+  String get orderIdOptional => 'Order ID (optional)';
 
   @override
   String get customerPaidFully => 'Customer has paid in full';
@@ -1819,4 +1839,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String shippingFeeAmountPositive(String amount) {
     return '+$amount VND';
   }
+
+  @override
+  String get exportReports => 'Export Reports';
+
+  @override
+  String get exportReportsToPDF => 'Export Reports to PDF';
+
+  @override
+  String get exportingReports => 'Exporting reports...';
+
+  @override
+  String get exportReportsSuccess => 'Reports exported successfully';
+
+  @override
+  String exportReportsError(String error) {
+    return 'Error exporting reports: $error';
+  }
+
+  @override
+  String get reportsPDFTitle => 'Revenue Reports';
+
+  @override
+  String exportedOn(String date) {
+    return 'Exported on: $date';
+  }
+
+  @override
+  String get noOrdersToExport => 'No orders to export';
+
+  @override
+  String get summary => 'Summary';
+
+  @override
+  String get exportDate => 'Export Date';
 }

@@ -8,6 +8,7 @@ namespace NailApi.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string CustomerPhone { get; set; } = string.Empty;
         public string CustomerName { get; set; } = string.Empty;
+        public string? CustomerAddress { get; set; }
         public string EmployeeIds { get; set; } = string.Empty;
         public string EmployeeNames { get; set; } = string.Empty;
         public string ServiceIds { get; set; } = string.Empty;

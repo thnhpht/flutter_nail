@@ -709,6 +709,12 @@ class PdfBillGenerator {
                     context,
                     AppLocalizations.of(context)!.pdfCustomerPhone,
                     _formatPhoneNumber(order.customerPhone)),
+                if (order.customerAddress != null &&
+                    order.customerAddress!.isNotEmpty)
+                  _buildInfoRow(
+                      context,
+                      AppLocalizations.of(context)!.customerAddress,
+                      order.customerAddress!),
                 _buildInfoRow(
                     context,
                     AppLocalizations.of(context)!.pdfEmployeeServed,

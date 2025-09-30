@@ -264,9 +264,9 @@
   "@employeePassword": {
     "description": "Employee password"
   },
-  "shopEmail": "Email salon",
-  "@shopEmail": {
-    "description": "Shop email"
+  "shopName": "Tên salon",
+  "@shopName": {
+    "description": "Shop name"
   },
   "pleaseEnterEmail": "Vui lòng nhập email",
   "pleaseEnterShopName": "Vui lòng nhập tên shop",
@@ -919,6 +919,7 @@
     "description": "Change logo"
   },
   "allEmployees": "Tất cả nhân viên",
+  "allCustomers": "Tất cả khách hàng",
   "@allEmployees": {
     "description": "All employees"
   },
@@ -1479,6 +1480,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "Chọn nhân viên",
+  "selectCustomer": "Chọn khách hàng",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -2035,6 +2040,10 @@
     "description": "Search field hint text"
   },
   "selectEmployee": "Chọn nhân viên",
+  "selectCustomer": "Chọn khách hàng",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Employee filter label"
   },
@@ -2222,6 +2231,22 @@
   "@invalidServiceData": {
     "description": "Invalid item data error"
   },
+  "orderId": "Mã hóa đơn",
+  "@orderId": {
+    "description": "Order ID label"
+  },
+  "pleaseEnterOrderId": "Vui lòng nhập mã hóa đơn",
+  "@pleaseEnterOrderId": {
+    "description": "Order ID validation message"
+  },
+  "orderIdExists": "Mã hóa đơn đã tồn tại. Vui lòng nhập mã khác.",
+  "@orderIdExists": {
+    "description": "Order ID already exists error message"
+  },
+  "orderIdOptional": "Mã hóa đơn (tùy chọn)",
+  "@orderIdOptional": {
+    "description": "Optional order ID label"
+  },
   "customerInformation": "Thông tin khách hàng",
   "@customerInformation": {
     "description": "Customer information section title"
@@ -2247,6 +2272,10 @@
     "description": "Employee information section title"
   },
   "selectEmployee": "Chọn nhân viên",
+  "selectCustomer": "Chọn khách hàng",
+  "@selectCustomer": {
+    "description": "Select customer dropdown label"
+  },
   "@selectEmployee": {
     "description": "Select employee dropdown label"
   },
@@ -2751,9 +2780,9 @@
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
-  "shopEmail": "Email Salon",
-  "@shopEmail": {
-    "description": "Shop email field label"
+  "shopName": "Tên Salon",
+  "@shopName": {
+    "description": "Shop name field label"
   },
   "employeePhone": "Số điện thoại nhân viên",
   "@employeePhone": {
@@ -3070,5 +3099,93 @@
         "type": "String"
       }
     }
+  },
+  "exportReports": "Xuất báo cáo",
+  "@exportReports": {
+    "description": "Export reports button text"
+  },
+  "exportReportsToPDF": "Xuất báo cáo ra PDF",
+  "@exportReportsToPDF": {
+    "description": "Export reports to PDF button text"
+  },
+  "exportingReports": "Đang xuất báo cáo...",
+  "@exportingReports": {
+    "description": "Loading message when exporting reports"
+  },
+  "exportReportsSuccess": "Xuất báo cáo thành công",
+  "@exportReportsSuccess": {
+    "description": "Success message when reports are exported"
+  },
+  "exportReportsError": "Lỗi khi xuất báo cáo: {error}",
+  "@exportReportsError": {
+    "description": "Error message when export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsPDFTitle": "Báo cáo doanh thu",
+  "@reportsPDFTitle": {
+    "description": "Title for the reports PDF"
+  },
+  "billCode": "Mã hóa đơn",
+  "@billCode": {
+    "description": "Bill code column header"
+  },
+  "customerName": "Tên khách hàng",
+  "@customerName": {
+    "description": "Customer name column header"
+  },
+  "customerPhone": "Số điện thoại",
+  "@customerPhone": {
+    "description": "Customer phone column header"
+  },
+  "customerAddress": "Địa chỉ",
+  "@customerAddress": {
+    "description": "Customer address column header"
+  },
+  "totalAmount": "Tổng tiền",
+  "@totalAmount": {
+    "description": "Total amount column header"
+  },
+  "exportedOn": "Xuất ngày: {date}",
+  "@exportedOn": {
+    "description": "Export date in PDF",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "totalOrders": "Tổng số hóa đơn: {count}",
+  "@totalOrders": {
+    "description": "Total orders count in PDF",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalRevenue": "Tổng doanh thu: {amount}",
+  "@totalRevenue": {
+    "description": "Total revenue in PDF",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noOrdersToExport": "Không có hóa đơn để xuất",
+  "@noOrdersToExport": {
+    "description": "Message when there are no orders to export"
+  },
+  "summary": "Tóm tắt",
+  "@summary": {
+    "description": "Summary section title"
+  },
+  "exportDate": "Ngày xuất",
+  "@exportDate": {
+    "description": "Export date column header"
   }
 }

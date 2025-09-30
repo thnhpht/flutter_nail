@@ -266,6 +266,7 @@ class Order {
   final String id;
   final String customerPhone;
   final String customerName;
+  final String? customerAddress; // Địa chỉ khách hàng
   final List<String> employeeIds;
   final List<String> employeeNames;
   final List<String> serviceIds;
@@ -283,6 +284,7 @@ class Order {
     required this.id,
     required this.customerPhone,
     required this.customerName,
+    this.customerAddress,
     required this.employeeIds,
     required this.employeeNames,
     required this.serviceIds,
@@ -369,6 +371,7 @@ class Order {
       id: json['id'] as String,
       customerPhone: json['customerPhone'] as String,
       customerName: json['customerName'] as String,
+      customerAddress: json['customerAddress'] as String?,
       employeeIds: employeeIds,
       employeeNames: employeeNames,
       serviceIds: serviceIds,
@@ -388,6 +391,7 @@ class Order {
         'id': id,
         'customerPhone': customerPhone,
         'customerName': customerName,
+        'customerAddress': customerAddress,
         'employeeIds': employeeIds,
         'employeeNames': employeeNames,
         'serviceIds': serviceIds,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'design_system.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -333,105 +332,45 @@ class AppNavigationDrawer extends StatelessWidget {
   Widget _buildLanguageSelector() {
     return Builder(
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
-        return Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: AppTheme.getResponsiveSpacing(context,
-                mobile: AppTheme.spacingM, tablet: AppTheme.spacingL),
-            vertical: AppTheme.getResponsiveSpacing(context,
-                mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
-          ),
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.blue[200]!,
-              width: 1,
-            ),
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.language,
-                    color: Colors.blue[600],
-                    size: AppTheme.getResponsiveFontSize(
+        return Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: LanguageService.supportedLocales.map((locale) {
+            final isSelected =
+                languageService.isCurrentLanguage(locale.languageCode);
+            return GestureDetector(
+              onTap: () => languageService.setLanguage(locale.languageCode),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingS, tablet: AppTheme.spacingM),
+                  vertical: AppTheme.getResponsiveSpacing(context,
+                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS),
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.blue[600] : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Colors.blue[600]!,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  languageService.getLanguageName(locale.languageCode),
+                  style: TextStyle(
+                    fontSize: AppTheme.getResponsiveFontSize(
                       context,
-                      mobile: 14,
-                      tablet: 16,
-                      desktop: 18,
+                      mobile: 10,
+                      tablet: 11,
+                      desktop: 12,
                     ),
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.white : Colors.blue[600],
                   ),
-                  SizedBox(
-                      width: AppTheme.getResponsiveSpacing(context,
-                          mobile: AppTheme.spacingXS,
-                          tablet: AppTheme.spacingS)),
-                  Text(
-                    l10n.language,
-                    style: TextStyle(
-                      fontSize: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 12,
-                        tablet: 14,
-                        desktop: 16,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blue[600],
-                    ),
-                  ),
-                ],
+                ),
               ),
-              SizedBox(
-                  height: AppTheme.getResponsiveSpacing(context,
-                      mobile: AppTheme.spacingXS, tablet: AppTheme.spacingS)),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: LanguageService.supportedLocales.map((locale) {
-                  final isSelected =
-                      languageService.isCurrentLanguage(locale.languageCode);
-                  return GestureDetector(
-                    onTap: () =>
-                        languageService.setLanguage(locale.languageCode),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppTheme.getResponsiveSpacing(context,
-                            mobile: AppTheme.spacingS,
-                            tablet: AppTheme.spacingM),
-                        vertical: AppTheme.getResponsiveSpacing(context,
-                            mobile: AppTheme.spacingXS,
-                            tablet: AppTheme.spacingS),
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.blue[600] : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.blue[600]!,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        languageService.getLanguageName(locale.languageCode),
-                        style: TextStyle(
-                          fontSize: AppTheme.getResponsiveFontSize(
-                            context,
-                            mobile: 10,
-                            tablet: 11,
-                            desktop: 12,
-                          ),
-                          fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : Colors.blue[600],
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
+            );
+          }).toList(),
         );
       },
     );
@@ -607,10 +546,10 @@ class AppNavigationDrawer extends StatelessWidget {
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
+            color: Colors.red.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(100),
             border: Border.all(
-              color: Colors.red.withOpacity(0.3),
+              color: Colors.red.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -624,7 +563,7 @@ class AppNavigationDrawer extends StatelessWidget {
                   padding: EdgeInsets.all(AppTheme.getResponsiveSpacing(context,
                       mobile: 6, tablet: 8, desktop: 10)),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Icon(
