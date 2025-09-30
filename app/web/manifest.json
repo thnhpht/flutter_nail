@@ -1,11 +1,11 @@
 {
-    "name": "FShop",
-    "short_name": "FShop",
+    "name": "fshop",
+    "short_name": "fshop",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#9c27b0",
-    "theme_color": "#9c27b0",
-    "description": "FShop - A modern shop management app",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
