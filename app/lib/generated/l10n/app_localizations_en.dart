@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get shop => 'Shop';
+  String get salon => 'Salon';
 
   @override
   String get todayOverview => 'Today\'s Overview';
@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get information => 'Information';
 
   @override
-  String get shopInfo => 'Information';
+  String get salonInfo => 'Information';
 
   @override
   String get menu => 'Menu';
@@ -1791,19 +1791,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serviceNotFoundError => 'Item not found error';
 
   @override
-  String get pdfDownloadTitle => 'Download Bill';
-
-  @override
-  String get pdfDownloadReady => 'Bill is ready for download';
-
-  @override
-  String get pdfDownloadNow => 'Download Now';
-
-  @override
-  String pdfErrorDownloading(String error) {
-    return 'Error downloading file: $error';
+  String pdfDownloadSuccess(String fileName) {
+    return 'Downloaded successfully: $fileName';
   }
 
   @override
-  String get pdfWebOnlyFeature => 'This feature is only available on web';
+  String pdfErrorDownloadingWeb(String error) {
+    return 'Error downloading PDF on web: $error';
+  }
+
+  @override
+  String get shippingFee => 'Shipping Fee';
+
+  @override
+  String get shippingFeeMustBeGreaterThan0 =>
+      'Shipping fee must be greater than or equal to 0';
+
+  @override
+  String shippingFeeAmount(String amount) {
+    return 'Shipping Fee: $amount VND';
+  }
+
+  @override
+  String get shippingFeeLabel => 'Shipping Fee';
+
+  @override
+  String shippingFeeAmountPositive(String amount) {
+    return '+$amount VND';
+  }
 }

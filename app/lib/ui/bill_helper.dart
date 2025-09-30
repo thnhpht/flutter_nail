@@ -167,6 +167,7 @@ class BillHelper {
       children: [
         // Salon Info
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(AppTheme.spacingM),
           decoration: BoxDecoration(
             color: AppTheme.surfaceAlt,
@@ -181,6 +182,7 @@ class BillHelper {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 4),
               Text(
@@ -193,11 +195,12 @@ class BillHelper {
               ),
               const SizedBox(height: 4),
               Text(
-                '${AppLocalizations.of(context)!.phoneNumber} ${_formatPhoneNumber(displaySalonPhone)}',
+                _formatPhoneNumber(displaySalonPhone),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -293,7 +296,9 @@ class BillHelper {
                   order.customerName),
               _buildInfoRow(context, AppLocalizations.of(context)!.phoneNumber,
                   _formatPhoneNumber(order.customerPhone)),
-              _buildInfoRow(context, AppLocalizations.of(context)!.servingStaff,
+              _buildInfoRowWithWrap(
+                  context,
+                  AppLocalizations.of(context)!.servingStaff,
                   order.employeeNames.join(', ')),
             ],
           ),
@@ -598,6 +603,32 @@ class BillHelper {
                 ),
               ],
 
+              // Shipping Fee (if any)
+              if (order.shippingFee > 0) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.shippingFee + ":",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '+${_formatPrice(order.shippingFee)}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+
               const SizedBox(height: 8),
 
               // Final Total
@@ -774,6 +805,36 @@ class BillHelper {
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _buildInfoRowWithWrap(
+      BuildContext context, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.right,
             ),
           ),
         ],
@@ -968,20 +1029,24 @@ class BillHelper {
   }
 
   static double _getOriginalTotal(Order order) {
-    // Tính thành tiền gốc từ tổng thanh toán, giảm giá, tip và thuế
-    // totalPrice = (originalTotal * (1 - discountPercent/100) + tip) * (1 + taxPercent/100)
-    // originalTotal = ((totalPrice / (1 + taxPercent/100)) - tip) / (1 - discountPercent/100)
+    // Tính thành tiền gốc từ tổng thanh toán, giảm giá, tip, phí ship và thuế
+    // totalPrice = (originalTotal * (1 - discountPercent/100) + tip + shippingFee) * (1 + taxPercent/100)
+    // originalTotal = ((totalPrice / (1 + taxPercent/100)) - tip - shippingFee) / (1 - discountPercent/100)
     final subtotalAfterDiscount =
-        (order.totalPrice / (1 + order.taxPercent / 100)) - order.tip;
+        (order.totalPrice / (1 + order.taxPercent / 100)) -
+            order.tip -
+            order.shippingFee;
     return subtotalAfterDiscount / (1 - order.discountPercent / 100);
   }
 
   static double _getTaxAmount(Order order) {
     // Tính số tiền thuế
-    // taxAmount = (originalTotal * (1 - discountPercent/100) + tip) * taxPercent/100
+    // taxAmount = (originalTotal * (1 - discountPercent/100) + tip + shippingFee) * taxPercent/100
     final subtotalAfterDiscount =
         _getOriginalTotal(order) * (1 - order.discountPercent / 100);
-    return (subtotalAfterDiscount + order.tip) * order.taxPercent / 100;
+    return (subtotalAfterDiscount + order.tip + order.shippingFee) *
+        order.taxPercent /
+        100;
   }
 
   static String _formatPhoneNumber(String phoneNumber) {
@@ -1041,29 +1106,14 @@ class BillHelper {
           .toList();
     }
 
-    // Kiểm tra platform để sử dụng chức năng phù hợp
-    if (kIsWeb) {
-      // Trên web, sử dụng chức năng download trực tiếp
-      PdfBillGenerator.generateAndDownloadBill(
-        context: context,
-        order: order,
-        services: servicesForPdf,
-        api: _apiClient!,
-        salonName: salonName,
-        salonAddress: salonAddress,
-        salonPhone: salonPhone,
-      );
-    } else {
-      // Trên mobile/desktop, sử dụng chức năng chia sẻ qua Zalo như cũ
-      PdfBillGenerator.generateAndSendToZalo(
-        context: context,
-        order: order,
-        services: servicesForPdf,
-        api: _apiClient!,
-        salonName: salonName,
-        salonAddress: salonAddress,
-        salonPhone: salonPhone,
-      );
-    }
+    PdfBillGenerator.generateAndSendToZalo(
+      context: context,
+      order: order,
+      services: servicesForPdf,
+      api: _apiClient!,
+      salonName: salonName,
+      salonAddress: salonAddress,
+      salonPhone: salonPhone,
+    );
   }
 }

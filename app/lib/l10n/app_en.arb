@@ -1,6 +1,6 @@
 {
   "appTitle": "FShop",
-  "shop": "Shop",
+  "salon": "Salon",
   "todayOverview": "Today's Overview",
   "customers": "Customers",
   "bills": "Bills",
@@ -8,7 +8,7 @@
   "boss": "Boss",
   "employee": "Employee",
   "information": "Information",
-  "shopInfo": "Information",
+  "salonInfo": "Information",
   "menu": "Menu",
   "management": "Management",
   "employees": "Employees",
@@ -2265,29 +2265,27 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "pdfDownloadTitle": "Download Bill",
-  "@pdfDownloadTitle": {
-    "description": "PDF download dialog title"
+  "pdfDownloadSuccess": "Downloaded successfully: {fileName}",
+  "@pdfDownloadSuccess": {
+    "description": "PDF download success message",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
   },
-  "pdfDownloadReady": "Bill is ready for download",
-  "@pdfDownloadReady": {
-    "description": "PDF download ready message"
-  },
-  "pdfDownloadNow": "Download Now",
-  "@pdfDownloadNow": {
-    "description": "Download now button text"
-  },
-  "pdfErrorDownloading": "Error downloading file: {error}",
-  "@pdfErrorDownloading": {
-    "description": "Error downloading PDF file",
+  "pdfErrorDownloadingWeb": "Error downloading PDF on web: {error}",
+  "@pdfErrorDownloadingWeb": {
+    "description": "Error downloading PDF on web",
     "placeholders": {
       "error": {
         "type": "String"
       }
     }
   },
-  "pdfWebOnlyFeature": "This feature is only available on web",
-  "@pdfWebOnlyFeature": {
-    "description": "Web only feature message"
-  }
+  "shippingFee": "Shipping Fee",
+  "shippingFeeMustBeGreaterThan0": "Shipping fee must be greater than or equal to 0",
+  "shippingFeeAmount": "Shipping Fee: {amount} VND",
+  "shippingFeeLabel": "Shipping Fee",
+  "shippingFeeAmountPositive": "+{amount} VND"
 }

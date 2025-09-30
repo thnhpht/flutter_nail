@@ -3,7 +3,7 @@
   "@appTitle": {
     "description": "The title of the application"
   },
-  "shop": "Shop",
+  "salon": "Salon",
   "@salon": {
     "description": "Salon name"
   },
@@ -35,7 +35,7 @@
   "@information": {
     "description": "Information section"
   },
-  "shopInfo": "Thông tin",
+  "salonInfo": "Thông tin",
   "@salonInfo": {
     "description": "Salon information"
   },
@@ -3023,29 +3023,52 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "pdfDownloadTitle": "Tải hóa đơn",
-  "@pdfDownloadTitle": {
-    "description": "PDF download dialog title"
+  "pdfDownloadSuccess": "Đã tải xuống thành công: {fileName}",
+  "@pdfDownloadSuccess": {
+    "description": "PDF download success message",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
   },
-  "pdfDownloadReady": "Hóa đơn đã sẵn sàng để tải xuống",
-  "@pdfDownloadReady": {
-    "description": "PDF download ready message"
-  },
-  "pdfDownloadNow": "Tải xuống ngay",
-  "@pdfDownloadNow": {
-    "description": "Download now button text"
-  },
-  "pdfErrorDownloading": "Lỗi tải file: {error}",
-  "@pdfErrorDownloading": {
-    "description": "Error downloading PDF file",
+  "pdfErrorDownloadingWeb": "Lỗi khi tải PDF trên web: {error}",
+  "@pdfErrorDownloadingWeb": {
+    "description": "Error downloading PDF on web",
     "placeholders": {
       "error": {
         "type": "String"
       }
     }
   },
-  "pdfWebOnlyFeature": "Tính năng này chỉ khả dụng trên web",
-  "@pdfWebOnlyFeature": {
-    "description": "Web only feature message"
+  "shippingFee": "Phí ship",
+  "@shippingFee": {
+    "description": "Shipping fee section title"
+  },
+  "shippingFeeMustBeGreaterThan0": "Phí ship phải lớn hơn hoặc bằng 0",
+  "@shippingFeeMustBeGreaterThan0": {
+    "description": "Validation message for shipping fee amount"
+  },
+  "shippingFeeAmount": "Phí ship: {amount} VNĐ",
+  "@shippingFeeAmount": {
+    "description": "Shipping fee amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shippingFeeLabel": "Phí ship",
+  "@shippingFeeLabel": {
+    "description": "Shipping fee label"
+  },
+  "shippingFeeAmountPositive": "+{amount} VNĐ",
+  "@shippingFeeAmountPositive": {
+    "description": "Positive shipping fee amount display",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   }
 }

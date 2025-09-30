@@ -311,8 +311,24 @@ class _BillsScreenState extends State<BillsScreen> {
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: AppTheme.textPrimary,
+              secondary: AppTheme.primaryEnd,
+              onSecondary: Colors.white,
             ),
             dialogBackgroundColor: Colors.white,
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: AppTheme.primaryStart,
+              headerForegroundColor: Colors.white,
+              rangeSelectionBackgroundColor:
+                  AppTheme.primaryStart.withValues(alpha: 0.2),
+              rangeSelectionOverlayColor: WidgetStateProperty.all(
+                  AppTheme.primaryEnd.withValues(alpha: 0.1)),
+              rangePickerBackgroundColor: Colors.white,
+              rangePickerSurfaceTintColor: AppTheme.primaryStart,
+              rangePickerHeaderBackgroundColor: AppTheme.primaryStart,
+              rangePickerHeaderForegroundColor: Colors.white,
+              rangePickerHeaderHelpStyle: TextStyle(color: Colors.white70),
+            ),
           ),
           child: child!,
         );
@@ -345,189 +361,199 @@ class _BillsScreenState extends State<BillsScreen> {
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.calendar_month,
+                            color: Colors.white, size: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.filterByTime,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              l10n.selectTimeRangeToViewBills,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.calendar_month,
-                          color: Colors.white, size: 24),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.filterByTime,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            l10n.selectTimeRangeToViewBills,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    // Custom Date Range Button
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () async {
-                          Navigator.pop(context);
-                          await _selectDateRange();
-                        },
-                        borderRadius:
-                            BorderRadius.circular(AppTheme.radiusMedium),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(AppTheme.spacingM),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppTheme.primaryStart.withValues(alpha: 0.1),
-                                AppTheme.primaryStart.withValues(alpha: 0.05),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                // Content - Scrollable
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        // Custom Date Range Button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              Navigator.pop(context);
+                              await _selectDateRange();
+                            },
                             borderRadius:
                                 BorderRadius.circular(AppTheme.radiusMedium),
-                            border: Border.all(
-                              color:
-                                  AppTheme.primaryStart.withValues(alpha: 0.3),
-                              width: 1,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(AppTheme.spacingM),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppTheme.primaryStart
+                                        .withValues(alpha: 0.1),
+                                    AppTheme.primaryStart
+                                        .withValues(alpha: 0.05),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusMedium),
+                                border: Border.all(
+                                  color: AppTheme.primaryStart
+                                      .withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.primaryStart,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(
+                                      Icons.calendar_month,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppTheme.spacingM),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          l10n.selectCustomTimeRange,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppTheme.textPrimary,
+                                          ),
+                                        ),
+                                        Text(
+                                          l10n.selectStartAndEndDate,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryStart,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.calendar_month,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: AppTheme.spacingM),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l10n.selectCustomTimeRange,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppTheme.textPrimary,
-                                      ),
-                                    ),
-                                    Text(
-                                      l10n.selectStartAndEndDate,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
-                                color: Colors.grey[400],
-                              ),
-                            ],
-                          ),
                         ),
-                      ),
-                    ),
 
-                    const SizedBox(height: AppTheme.spacingM),
+                        const SizedBox(height: AppTheme.spacingM),
 
-                    // Preset Buttons
-                    Text(
-                      l10n.quickSelect,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-
-                    const SizedBox(height: AppTheme.spacingM),
-
-                    _buildPresetButtonsGrid(),
-                  ],
-                ),
-              ),
-
-              // Actions
-              Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey[300]!),
-                        ),
-                        child: Text(
-                          l10n.close,
+                        // Preset Buttons
+                        Text(
+                          l10n.quickSelect,
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+
+                        const SizedBox(height: AppTheme.spacingM),
+
+                        _buildPresetButtonsGrid(),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Actions
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          child: Text(
+                            l10n.close,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -1171,6 +1197,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
                 // Employee and Date
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
                       Icons.person_outline,
@@ -1178,14 +1205,16 @@ class _BillsScreenState extends State<BillsScreen> {
                       color: Colors.grey[600],
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      order.employeeNames.join(', '),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+                    Expanded(
+                      child: Text(
+                        order.employeeNames.join(', '),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [

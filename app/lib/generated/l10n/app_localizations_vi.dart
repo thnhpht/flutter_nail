@@ -12,7 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get shop => 'Shop';
+  String get salon => 'Salon';
 
   @override
   String get todayOverview => 'Tổng quan hôm nay';
@@ -36,7 +36,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get information => 'Thông tin';
 
   @override
-  String get shopInfo => 'Thông tin';
+  String get salonInfo => 'Thông tin';
 
   @override
   String get menu => 'Menu';
@@ -1805,19 +1805,32 @@ class AppLocalizationsVi extends AppLocalizations {
   String get serviceNotFoundError => 'Lỗi không tìm thấy chi tiết';
 
   @override
-  String get pdfDownloadTitle => 'Tải hóa đơn';
-
-  @override
-  String get pdfDownloadReady => 'Hóa đơn đã sẵn sàng để tải xuống';
-
-  @override
-  String get pdfDownloadNow => 'Tải xuống ngay';
-
-  @override
-  String pdfErrorDownloading(String error) {
-    return 'Lỗi tải file: $error';
+  String pdfDownloadSuccess(String fileName) {
+    return 'Đã tải xuống thành công: $fileName';
   }
 
   @override
-  String get pdfWebOnlyFeature => 'Tính năng này chỉ khả dụng trên web';
+  String pdfErrorDownloadingWeb(String error) {
+    return 'Lỗi khi tải PDF trên web: $error';
+  }
+
+  @override
+  String get shippingFee => 'Phí ship';
+
+  @override
+  String get shippingFeeMustBeGreaterThan0 =>
+      'Phí ship phải lớn hơn hoặc bằng 0';
+
+  @override
+  String shippingFeeAmount(String amount) {
+    return 'Phí ship: $amount VNĐ';
+  }
+
+  @override
+  String get shippingFeeLabel => 'Phí ship';
+
+  @override
+  String shippingFeeAmountPositive(String amount) {
+    return '+$amount VNĐ';
+  }
 }

@@ -2208,29 +2208,27 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "pdfDownloadTitle": "下载账单",
-  "@pdfDownloadTitle": {
-    "description": "PDF download dialog title"
+  "pdfDownloadSuccess": "下载成功: {fileName}",
+  "@pdfDownloadSuccess": {
+    "description": "PDF download success message",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
   },
-  "pdfDownloadReady": "账单已准备下载",
-  "@pdfDownloadReady": {
-    "description": "PDF download ready message"
-  },
-  "pdfDownloadNow": "立即下载",
-  "@pdfDownloadNow": {
-    "description": "Download now button text"
-  },
-  "pdfErrorDownloading": "下载文件错误: {error}",
-  "@pdfErrorDownloading": {
-    "description": "Error downloading PDF file",
+  "pdfErrorDownloadingWeb": "网页下载PDF错误: {error}",
+  "@pdfErrorDownloadingWeb": {
+    "description": "Error downloading PDF on web",
     "placeholders": {
       "error": {
         "type": "String"
       }
     }
   },
-  "pdfWebOnlyFeature": "此功能仅在网络上可用",
-  "@pdfWebOnlyFeature": {
-    "description": "Web only feature message"
-  }
+  "shippingFee": "运费",
+  "shippingFeeMustBeGreaterThan0": "运费必须大于或等于0",
+  "shippingFeeAmount": "运费: {amount} VND",
+  "shippingFeeLabel": "运费",
+  "shippingFeeAmountPositive": "+{amount} VND"
 }

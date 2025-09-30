@@ -275,6 +275,7 @@ class Order {
   final double discountPercent;
   final double tip;
   final double taxPercent;
+  final double shippingFee; // Phí ship
   final DateTime createdAt;
   final bool isPaid;
 
@@ -291,6 +292,7 @@ class Order {
     this.discountPercent = 0.0,
     this.tip = 0.0,
     this.taxPercent = 0.0,
+    this.shippingFee = 0.0, // Mặc định phí ship = 0
     required this.createdAt,
     this.isPaid = false,
   });
@@ -376,6 +378,7 @@ class Order {
       discountPercent: (json['discountPercent'] as num?)?.toDouble() ?? 0.0,
       tip: (json['tip'] as num?)?.toDouble() ?? 0.0,
       taxPercent: (json['taxPercent'] as num?)?.toDouble() ?? 0.0,
+      shippingFee: (json['shippingFee'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPaid: json['isPaid'] as bool? ?? false,
     );
@@ -395,6 +398,7 @@ class Order {
         'discountPercent': discountPercent,
         'tip': tip,
         'taxPercent': taxPercent,
+        'shippingFee': shippingFee,
         'createdAt': createdAt.toIso8601String(),
         'isPaid': isPaid,
       };

@@ -108,11 +108,11 @@ abstract class AppLocalizations {
   /// **'FShop'**
   String get appTitle;
 
-  /// No description provided for @shop.
+  /// Salon name
   ///
   /// In vi, this message translates to:
-  /// **'Shop'**
-  String get shop;
+  /// **'Salon'**
+  String get salon;
 
   /// Today's overview
   ///
@@ -156,11 +156,11 @@ abstract class AppLocalizations {
   /// **'Thông tin'**
   String get information;
 
-  /// No description provided for @shopInfo.
+  /// Salon information
   ///
   /// In vi, this message translates to:
   /// **'Thông tin'**
-  String get shopInfo;
+  String get salonInfo;
 
   /// Menu
   ///
@@ -3342,35 +3342,47 @@ abstract class AppLocalizations {
   /// **'Lỗi không tìm thấy chi tiết'**
   String get serviceNotFoundError;
 
-  /// PDF download dialog title
+  /// PDF download success message
   ///
   /// In vi, this message translates to:
-  /// **'Tải hóa đơn'**
-  String get pdfDownloadTitle;
+  /// **'Đã tải xuống thành công: {fileName}'**
+  String pdfDownloadSuccess(String fileName);
 
-  /// PDF download ready message
+  /// Error downloading PDF on web
   ///
   /// In vi, this message translates to:
-  /// **'Hóa đơn đã sẵn sàng để tải xuống'**
-  String get pdfDownloadReady;
+  /// **'Lỗi khi tải PDF trên web: {error}'**
+  String pdfErrorDownloadingWeb(String error);
 
-  /// Download now button text
+  /// Shipping fee section title
   ///
   /// In vi, this message translates to:
-  /// **'Tải xuống ngay'**
-  String get pdfDownloadNow;
+  /// **'Phí ship'**
+  String get shippingFee;
 
-  /// Error downloading PDF file
+  /// Validation message for shipping fee amount
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi tải file: {error}'**
-  String pdfErrorDownloading(String error);
+  /// **'Phí ship phải lớn hơn hoặc bằng 0'**
+  String get shippingFeeMustBeGreaterThan0;
 
-  /// Web only feature message
+  /// Shipping fee amount display
   ///
   /// In vi, this message translates to:
-  /// **'Tính năng này chỉ khả dụng trên web'**
-  String get pdfWebOnlyFeature;
+  /// **'Phí ship: {amount} VNĐ'**
+  String shippingFeeAmount(String amount);
+
+  /// Shipping fee label
+  ///
+  /// In vi, this message translates to:
+  /// **'Phí ship'**
+  String get shippingFeeLabel;
+
+  /// Positive shipping fee amount display
+  ///
+  /// In vi, this message translates to:
+  /// **'+{amount} VNĐ'**
+  String shippingFeeAmountPositive(String amount);
 }
 
 class _AppLocalizationsDelegate

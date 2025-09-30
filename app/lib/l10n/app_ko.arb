@@ -2208,29 +2208,27 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "pdfDownloadTitle": "청구서 다운로드",
-  "@pdfDownloadTitle": {
-    "description": "PDF download dialog title"
+  "pdfDownloadSuccess": "다운로드 성공: {fileName}",
+  "@pdfDownloadSuccess": {
+    "description": "PDF download success message",
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
   },
-  "pdfDownloadReady": "청구서가 다운로드 준비되었습니다",
-  "@pdfDownloadReady": {
-    "description": "PDF download ready message"
-  },
-  "pdfDownloadNow": "지금 다운로드",
-  "@pdfDownloadNow": {
-    "description": "Download now button text"
-  },
-  "pdfErrorDownloading": "파일 다운로드 오류: {error}",
-  "@pdfErrorDownloading": {
-    "description": "Error downloading PDF file",
+  "pdfErrorDownloadingWeb": "웹에서 PDF 다운로드 오류: {error}",
+  "@pdfErrorDownloadingWeb": {
+    "description": "Error downloading PDF on web",
     "placeholders": {
       "error": {
         "type": "String"
       }
     }
   },
-  "pdfWebOnlyFeature": "이 기능은 웹에서만 사용할 수 있습니다",
-  "@pdfWebOnlyFeature": {
-    "description": "Web only feature message"
-  }
+  "shippingFee": "배송비",
+  "shippingFeeMustBeGreaterThan0": "배송비는 0 이상이어야 합니다",
+  "shippingFeeAmount": "배송비: {amount} VND",
+  "shippingFeeLabel": "배송비",
+  "shippingFeeAmountPositive": "+{amount} VND"
 }

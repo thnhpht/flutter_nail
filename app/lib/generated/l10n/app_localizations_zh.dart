@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get shop => 'Shop';
+  String get salon => '沙龙';
 
   @override
   String get todayOverview => '今日概览';
@@ -36,7 +36,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get information => '信息';
 
   @override
-  String get shopInfo => 'Thông tin';
+  String get salonInfo => '信息';
 
   @override
   String get menu => '菜单';
@@ -1742,19 +1742,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get serviceNotFoundError => '找不到商品';
 
   @override
-  String get pdfDownloadTitle => '下载账单';
-
-  @override
-  String get pdfDownloadReady => '账单已准备下载';
-
-  @override
-  String get pdfDownloadNow => '立即下载';
-
-  @override
-  String pdfErrorDownloading(String error) {
-    return '下载文件错误: $error';
+  String pdfDownloadSuccess(String fileName) {
+    return '下载成功: $fileName';
   }
 
   @override
-  String get pdfWebOnlyFeature => '此功能仅在网络上可用';
+  String pdfErrorDownloadingWeb(String error) {
+    return '网页下载PDF错误: $error';
+  }
+
+  @override
+  String get shippingFee => '运费';
+
+  @override
+  String get shippingFeeMustBeGreaterThan0 => '运费必须大于或等于0';
+
+  @override
+  String shippingFeeAmount(String amount) {
+    return '运费: $amount VND';
+  }
+
+  @override
+  String get shippingFeeLabel => '运费';
+
+  @override
+  String shippingFeeAmountPositive(String amount) {
+    return '+$amount VND';
+  }
 }

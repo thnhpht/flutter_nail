@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NailApi.Data;
 
@@ -11,9 +12,11 @@ using NailApi.Data;
 namespace NailApi.Migrations
 {
     [DbContext(typeof(DynamicDbContext))]
-    partial class DynamicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250930021156_AddShippingFeeToOrders")]
+    partial class AddShippingFeeToOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

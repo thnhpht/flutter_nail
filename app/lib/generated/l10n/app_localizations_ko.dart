@@ -12,7 +12,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get shop => 'Shop';
+  String get salon => '살롱';
 
   @override
   String get todayOverview => '오늘의 개요';
@@ -36,7 +36,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get information => '정보';
 
   @override
-  String get shopInfo => 'Thông tin';
+  String get salonInfo => '정보';
 
   @override
   String get menu => '메뉴';
@@ -1753,19 +1753,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get serviceNotFoundError => '상품을 찾을 수 없습니다';
 
   @override
-  String get pdfDownloadTitle => '청구서 다운로드';
-
-  @override
-  String get pdfDownloadReady => '청구서가 다운로드 준비되었습니다';
-
-  @override
-  String get pdfDownloadNow => '지금 다운로드';
-
-  @override
-  String pdfErrorDownloading(String error) {
-    return '파일 다운로드 오류: $error';
+  String pdfDownloadSuccess(String fileName) {
+    return '다운로드 성공: $fileName';
   }
 
   @override
-  String get pdfWebOnlyFeature => '이 기능은 웹에서만 사용할 수 있습니다';
+  String pdfErrorDownloadingWeb(String error) {
+    return '웹에서 PDF 다운로드 오류: $error';
+  }
+
+  @override
+  String get shippingFee => '배송비';
+
+  @override
+  String get shippingFeeMustBeGreaterThan0 => '배송비는 0 이상이어야 합니다';
+
+  @override
+  String shippingFeeAmount(String amount) {
+    return '배송비: $amount VND';
+  }
+
+  @override
+  String get shippingFeeLabel => '배송비';
+
+  @override
+  String shippingFeeAmountPositive(String amount) {
+    return '+$amount VND';
+  }
 }

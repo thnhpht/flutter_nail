@@ -21,6 +21,8 @@ namespace NailApi.Models
         public decimal Tip { get; set; } = 0.0M;
         [Column(TypeName = "decimal(18,2)")]
         public decimal TaxPercent { get; set; } = 0.0M;
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ShippingFee { get; set; } = 0.0M;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool IsPaid { get; set; } = false;
     }
