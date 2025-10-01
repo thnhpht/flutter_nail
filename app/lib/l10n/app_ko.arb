@@ -2347,5 +2347,21 @@
   "exportDate": "내보낸 날짜",
   "@exportDate": {
     "description": "Export date column header"
+  },
+  "billInformation": "영수증 정보",
+  "@billInformation": {
+    "description": "Bill information section title"
+  },
+  "contact": "연락처",
+  "@contact": {
+    "description": "Contact information for bills"
+  },
+  "thankYouMessage": "감사 인사",
+  "@thankYouMessage": {
+    "description": "Thank you message for bills"
+  },
+  "pdfContactInfoTitle": "주문 연락처",
+  "@pdfContactInfoTitle": {
+    "description": "Contact information title for PDF"
   }
 }

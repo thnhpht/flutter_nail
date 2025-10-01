@@ -1822,4 +1822,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exportDate => '导出日期';
+
+  @override
+  String get billInformation => '账单信息';
+
+  @override
+  String get contact => '联系方式';
+
+  @override
+  String get thankYouMessage => '感谢信息';
+
+  @override
+  String get pdfContactInfoTitle => '订餐联系';
 }

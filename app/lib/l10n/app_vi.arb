@@ -2132,7 +2132,7 @@
   "@servingStaff": {
     "description": "Serving staff label"
   },
-  "itemDetails": "Chi tiết chi tiết",
+  "itemDetails": "Chi tiết",
   "@itemDetails": {
     "description": "Service details section title"
   },
@@ -3019,7 +3019,7 @@
   "@serviceDeletedSuccessfully": {
     "description": "Service deleted successfully message"
   },
-  "serviceDetails": "Chi tiết chi tiết",
+  "serviceDetails": "Chi tiết",
   "@serviceDetails": {
     "description": "Service details section title"
   },
@@ -3187,5 +3187,21 @@
   "exportDate": "Ngày xuất",
   "@exportDate": {
     "description": "Export date column header"
+  },
+  "billInformation": "Thông tin hoá đơn",
+  "@billInformation": {
+    "description": "Bill information section title"
+  },
+  "contact": "Liên hệ",
+  "@contact": {
+    "description": "Contact information for bills"
+  },
+  "thankYouMessage": "Lời cảm ơn",
+  "@thankYouMessage": {
+    "description": "Thank you message for bills"
+  },
+  "pdfContactInfoTitle": "Liên hệ đặt món",
+  "@pdfContactInfoTitle": {
+    "description": "Contact information title for PDF"
   }
 }

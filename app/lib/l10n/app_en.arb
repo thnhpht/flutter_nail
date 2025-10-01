@@ -2404,5 +2404,21 @@
   "exportDate": "Export Date",
   "@exportDate": {
     "description": "Export date column header"
+  },
+  "billInformation": "Bill Information",
+  "@billInformation": {
+    "description": "Bill information section title"
+  },
+  "contact": "Contact",
+  "@contact": {
+    "description": "Contact information for bills"
+  },
+  "thankYouMessage": "Thank You Message",
+  "@thankYouMessage": {
+    "description": "Thank you message for bills"
+  },
+  "pdfContactInfoTitle": "Contact for Ordering",
+  "@pdfContactInfoTitle": {
+    "description": "Contact information title for PDF"
   }
 }

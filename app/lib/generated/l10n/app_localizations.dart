@@ -2511,7 +2511,7 @@ abstract class AppLocalizations {
   /// Service details section title
   ///
   /// In vi, this message translates to:
-  /// **'Chi tiết chi tiết'**
+  /// **'Chi tiết'**
   String get itemDetails;
 
   /// QR Code payment section title
@@ -3333,7 +3333,7 @@ abstract class AppLocalizations {
   /// Service details section title
   ///
   /// In vi, this message translates to:
-  /// **'Chi tiết chi tiết'**
+  /// **'Chi tiết'**
   String get serviceDetails;
 
   /// Service info not found message
@@ -3473,6 +3473,30 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Ngày xuất'**
   String get exportDate;
+
+  /// Bill information section title
+  ///
+  /// In vi, this message translates to:
+  /// **'Thông tin hoá đơn'**
+  String get billInformation;
+
+  /// Contact information for bills
+  ///
+  /// In vi, this message translates to:
+  /// **'Liên hệ'**
+  String get contact;
+
+  /// Thank you message for bills
+  ///
+  /// In vi, this message translates to:
+  /// **'Lời cảm ơn'**
+  String get thankYouMessage;
+
+  /// Contact information title for PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'Liên hệ đặt món'**
+  String get pdfContactInfoTitle;
 }
 
 class _AppLocalizationsDelegate

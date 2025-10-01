@@ -1833,4 +1833,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get exportDate => '내보낸 날짜';
+
+  @override
+  String get billInformation => '영수증 정보';
+
+  @override
+  String get contact => '연락처';
+
+  @override
+  String get thankYouMessage => '감사 인사';
+
+  @override
+  String get pdfContactInfoTitle => '주문 연락처';
 }

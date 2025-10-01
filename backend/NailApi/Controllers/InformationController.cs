@@ -88,6 +88,8 @@ namespace NailApi.Controllers
                     existingInfo.Zalo = information.Zalo;
                     existingInfo.QRCode = information.QRCode;
                     existingInfo.Logo = information.Logo;
+                    existingInfo.Contact = information.Contact;
+                    existingInfo.ThankYouMessage = information.ThankYouMessage;
                     existingInfo.UpdatedAt = DateTime.UtcNow;
                 }
 

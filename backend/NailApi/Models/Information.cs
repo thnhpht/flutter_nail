@@ -35,6 +35,12 @@ namespace NailApi.Models
 
         public string QRCode { get; set; } = string.Empty; // Base64 encoded image or URL
 
+        [MaxLength(500)]
+        public string Contact { get; set; } = string.Empty; // Thông tin liên hệ cho hóa đơn
+
+        [MaxLength(1000)]
+        public string ThankYouMessage { get; set; } = string.Empty; // Lời cảm ơn cho hóa đơn
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

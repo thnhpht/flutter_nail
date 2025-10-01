@@ -420,6 +420,8 @@ class Information {
   final String zalo;
   final String logo;
   final String qrCode;
+  final String contact;
+  final String thankYouMessage;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -435,6 +437,8 @@ class Information {
     required this.zalo,
     required this.logo,
     required this.qrCode,
+    required this.contact,
+    required this.thankYouMessage,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -451,6 +455,8 @@ class Information {
         zalo: json['zalo'] as String? ?? '',
         logo: json['logo'] as String? ?? '',
         qrCode: json['qrCode'] as String? ?? '',
+        contact: json['contact'] as String? ?? '',
+        thankYouMessage: json['thankYouMessage'] as String? ?? '',
         createdAt: DateTime.parse(json['createdAt'] as String),
         updatedAt: DateTime.parse(json['updatedAt'] as String),
       );
@@ -467,6 +473,8 @@ class Information {
         'zalo': zalo,
         'logo': logo,
         'qrCode': qrCode,
+        'contact': contact,
+        'thankYouMessage': thankYouMessage,
         'createdAt': createdAt.toIso8601String(),
         'updatedAt': updatedAt.toIso8601String(),
       };
@@ -483,6 +491,8 @@ class Information {
     String? zalo,
     String? logo,
     String? qrCode,
+    String? contact,
+    String? thankYouMessage,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -498,6 +508,8 @@ class Information {
       zalo: zalo ?? this.zalo,
       logo: logo ?? this.logo,
       qrCode: qrCode ?? this.qrCode,
+      contact: contact ?? this.contact,
+      thankYouMessage: thankYouMessage ?? this.thankYouMessage,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

@@ -30,6 +30,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
   final _facebookController = TextEditingController();
   final _instagramController = TextEditingController();
   final _zaloController = TextEditingController();
+  final _contactController = TextEditingController();
+  final _thankYouMessageController = TextEditingController();
 
   Information? _information;
   bool _isLoading = true;
@@ -55,6 +57,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
     _facebookController.dispose();
     _instagramController.dispose();
     _zaloController.dispose();
+    _contactController.dispose();
+    _thankYouMessageController.dispose();
     super.dispose();
   }
 
@@ -75,6 +79,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         _facebookController.text = information.facebook;
         _instagramController.text = information.instagram;
         _zaloController.text = information.zalo;
+        _contactController.text = information.contact;
+        _thankYouMessageController.text = information.thankYouMessage;
         _logoUrl = information.logo;
         _qrCodeUrl = information.qrCode;
         _isLoading = false;
@@ -178,6 +184,8 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
         facebook: _facebookController.text.trim(),
         instagram: _instagramController.text.trim(),
         zalo: _zaloController.text.trim(),
+        contact: _contactController.text.trim(),
+        thankYouMessage: _thankYouMessageController.text.trim(),
         logo: logoUrl,
         qrCode: qrCodeUrl,
         createdAt: _information?.createdAt ?? DateTime.now(),
@@ -276,6 +284,13 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
                   _buildSectionTitle(AppLocalizations.of(context)!.socialMedia),
                   const SizedBox(height: AppTheme.spacingL),
                   _buildSocialMediaFields(),
+                  const SizedBox(height: AppTheme.spacingXL),
+
+                  // Bill Information
+                  _buildSectionTitle(
+                      AppLocalizations.of(context)!.billInformation),
+                  const SizedBox(height: AppTheme.spacingL),
+                  _buildBillInformationFields(),
                   const SizedBox(height: AppTheme.spacingXL),
 
                   // Save Button
@@ -716,6 +731,40 @@ class _SalonInfoScreenState extends State<SalonInfoScreen> {
             label: AppLocalizations.of(context)!.zaloLabel,
             icon: Icons.chat,
             keyboardType: TextInputType.url,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBillInformationFields() {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingL),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildTextField(
+            controller: _contactController,
+            label: AppLocalizations.of(context)!.contact,
+            icon: Icons.contact_phone,
+            maxLines: 3,
+          ),
+          const SizedBox(height: AppTheme.spacingL),
+          _buildTextField(
+            controller: _thankYouMessageController,
+            label: AppLocalizations.of(context)!.thankYouMessage,
+            icon: Icons.favorite,
+            maxLines: 3,
           ),
         ],
       ),

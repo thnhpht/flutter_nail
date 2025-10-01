@@ -1873,4 +1873,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportDate => 'Export Date';
+
+  @override
+  String get billInformation => 'Bill Information';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get thankYouMessage => 'Thank You Message';
+
+  @override
+  String get pdfContactInfoTitle => 'Contact for Ordering';
 }

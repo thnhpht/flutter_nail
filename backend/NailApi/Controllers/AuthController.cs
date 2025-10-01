@@ -485,6 +485,8 @@ namespace NailApi.Controllers
                             [Zalo] nvarchar(200) NULL DEFAULT '',
                             [Logo] nvarchar(max) NULL DEFAULT '',
                             [QRCode] nvarchar(max) NULL DEFAULT '',
+                            [Contact] nvarchar(500) NULL DEFAULT '',
+                            [ThankYouMessage] nvarchar(1000) NULL DEFAULT '',
                             [CreatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
                             [UpdatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
                             CONSTRAINT [PK_Information] PRIMARY KEY ([Id])

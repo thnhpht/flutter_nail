@@ -2347,5 +2347,21 @@
   "exportDate": "导出日期",
   "@exportDate": {
     "description": "Export date column header"
+  },
+  "billInformation": "账单信息",
+  "@billInformation": {
+    "description": "Bill information section title"
+  },
+  "contact": "联系方式",
+  "@contact": {
+    "description": "Contact information for bills"
+  },
+  "thankYouMessage": "感谢信息",
+  "@thankYouMessage": {
+    "description": "Thank you message for bills"
+  },
+  "pdfContactInfoTitle": "订餐联系",
+  "@pdfContactInfoTitle": {
+    "description": "Contact information title for PDF"
   }
 }

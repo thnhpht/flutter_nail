@@ -1328,7 +1328,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get servingStaff => 'Nhân viên phục vụ';
 
   @override
-  String get itemDetails => 'Chi tiết chi tiết';
+  String get itemDetails => 'Chi tiết';
 
   @override
   String get qrCodePayment => 'QR Code thanh toán';
@@ -1800,7 +1800,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get serviceDeletedSuccessfully => 'Xóa chi tiết thành công';
 
   @override
-  String get serviceDetails => 'Chi tiết chi tiết';
+  String get serviceDetails => 'Chi tiết';
 
   @override
   String get serviceInfoNotFound =>
@@ -1886,4 +1886,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get exportDate => 'Ngày xuất';
+
+  @override
+  String get billInformation => 'Thông tin hoá đơn';
+
+  @override
+  String get contact => 'Liên hệ';
+
+  @override
+  String get thankYouMessage => 'Lời cảm ơn';
+
+  @override
+  String get pdfContactInfoTitle => 'Liên hệ đặt món';
 }

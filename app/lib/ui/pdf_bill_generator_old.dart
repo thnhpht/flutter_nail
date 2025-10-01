@@ -66,8 +66,6 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
-        contact: salonInfo?.contact ?? '',
-        thankYouMessage: salonInfo?.thankYouMessage ?? '',
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -150,8 +148,6 @@ class PdfBillGenerator {
         salonName: displaySalonName,
         salonAddress: displaySalonAddress,
         salonPhone: displaySalonPhone,
-        contact: salonInfo?.contact ?? '',
-        thankYouMessage: salonInfo?.thankYouMessage ?? '',
       );
 
       // Lưu file PDF hoặc sử dụng bytes trực tiếp
@@ -501,8 +497,6 @@ class PdfBillGenerator {
     required String salonName,
     required String salonAddress,
     required String salonPhone,
-    required String contact,
-    required String thankYouMessage,
   }) async {
     // Load font hỗ trợ tiếng Việt
     await _loadVietnameseFont();
@@ -516,8 +510,12 @@ class PdfBillGenerator {
         build: (pw.Context pdfContext) {
           return [
             // Header - Salon Info
-            _buildSalonHeader(
-                context, salonName, salonAddress, salonPhone, order.id),
+            _buildSalonHeader(context, salonName, salonAddress, salonPhone),
+
+            pw.SizedBox(height: 20),
+
+            // Bill Info
+            _buildBillInfo(context, order),
 
             pw.SizedBox(height: 20),
 
@@ -527,7 +525,7 @@ class PdfBillGenerator {
             pw.SizedBox(height: 20),
 
             // Services - có thể cắt tự nhiên
-            _buildServicesTable(context, services, contact),
+            _buildServicesTable(context, services),
 
             pw.SizedBox(height: 20),
 
@@ -537,7 +535,7 @@ class PdfBillGenerator {
             pw.SizedBox(height: 20),
 
             // Footer
-            _buildFooter(context, thankYouMessage),
+            _buildFooter(context),
           ];
         },
       ),
@@ -547,294 +545,53 @@ class PdfBillGenerator {
   }
 
   static pw.Widget _buildSalonHeader(BuildContext context, String salonName,
-      String salonAddress, String salonPhone, String orderId) {
+      String salonAddress, String salonPhone) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(20),
-      child: pw.Column(
-        children: [
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-            children: [
-              pw.Expanded(
-                child: pw.Text(
-                  salonName,
-                  style: _getVietnameseTextStyle(
-                    fontSize: 24,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
-              ),
-              pw.Text(
-                _formatBillId(context, orderId),
-                style: _getVietnameseTextStyle(
-                  fontSize: 18,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.red700,
-                ),
-              ),
-            ],
-          ),
-        ],
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(8),
       ),
-    );
-  }
-
-  static pw.Widget _buildCustomerInfo(BuildContext context, Order order) {
-    return pw.Container(
-      width: double.infinity,
       child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          // Dòng đầu: TKH và SDT nằm cùng một hàng
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-            children: [
-              pw.RichText(
-                text: pw.TextSpan(
-                  children: [
-                    pw.TextSpan(
-                      text: 'TKH: ',
-                      style: _getVietnameseTextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text: order.customerName,
-                      style: _getVietnameseTextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              pw.RichText(
-                text: pw.TextSpan(
-                  children: [
-                    pw.TextSpan(
-                      text: 'SĐT: ',
-                      style: _getVietnameseTextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text: _formatPhoneNumber(order.customerPhone),
-                      style: _getVietnameseTextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          // Địa chỉ (nếu có)
-          if (order.customerAddress != null &&
-              order.customerAddress!.isNotEmpty) ...[
-            pw.SizedBox(height: 4),
-            pw.RichText(
-              text: pw.TextSpan(
-                children: [
-                  pw.TextSpan(
-                    text: 'Địa chỉ: ',
-                    style: _getVietnameseTextStyle(
-                      fontSize: 14,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                  ),
-                  pw.TextSpan(
-                    text: order.customerAddress!,
-                    style: _getVietnameseTextStyle(
-                      fontSize: 14,
-                      fontWeight: pw.FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+          pw.Text(
+            salonName,
+            style: _getVietnameseTextStyle(
+              fontSize: 24,
+              fontWeight: pw.FontWeight.bold,
             ),
-          ],
+            textAlign: pw.TextAlign.center,
+          ),
+          pw.SizedBox(height: 8),
+          pw.Text(
+            salonAddress,
+            style: _getVietnameseTextStyle(
+              fontSize: 14,
+              color: PdfColors.grey600,
+            ),
+            textAlign: pw.TextAlign.center,
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            _formatPhoneNumber(salonPhone),
+            style: _getVietnameseTextStyle(
+              fontSize: 14,
+              color: PdfColors.grey600,
+            ),
+            textAlign: pw.TextAlign.center,
+          ),
         ],
       ),
     );
   }
 
-  static pw.Widget _buildServicesTable(BuildContext context,
-      List<ServiceWithQuantity> services, String contact) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        // Bảng sản phẩm (không có cột liên hệ)
-        pw.Expanded(
-          flex: 5,
-          child: pw.Table(
-            border: pw.TableBorder.all(color: PdfColors.black, width: 1),
-            columnWidths: {
-              0: const pw.FixedColumnWidth(25), // TT
-              1: const pw.FixedColumnWidth(100), // Tên sản phẩm
-              2: const pw.FixedColumnWidth(40), // Số lượng
-              3: const pw.FixedColumnWidth(50), // Đơn giá
-              4: const pw.FixedColumnWidth(60), // Thành tiền
-            },
-            children: [
-              // Header row
-              pw.TableRow(
-                decoration: const pw.BoxDecoration(
-                  color: PdfColors.grey100,
-                ),
-                children: [
-                  _buildTableCell(
-                    'TT',
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    'Tên sản phẩm',
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    'Số lượng',
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    'Đơn giá',
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    'Thành tiền',
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                ],
-              ),
-              // Data rows
-              ...services.asMap().entries.map((entry) {
-                final index = entry.key;
-                final service = entry.value;
-
-                return pw.TableRow(
-                  children: [
-                    _buildTableCell(
-                      (index + 1).toString(),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      service.service.name,
-                      alignment: pw.TextAlign.left,
-                    ),
-                    _buildTableCell(
-                      service.quantity.toString(),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      _formatPrice(service.service.price),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      _formatPrice(service.totalPrice),
-                      alignment: pw.TextAlign.center,
-                      isBold: true,
-                    ),
-                  ],
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-        // Cột liên hệ (merge tất cả các dòng)
-        pw.Expanded(
-          flex: 2,
-          child: pw.Column(
-            children: [
-              // Header cho cột liên hệ
-              pw.Container(
-                width: double.infinity,
-                height: 48.6,
-                padding: const pw.EdgeInsets.all(8),
-                decoration: pw.BoxDecoration(
-                  color: PdfColors.grey100,
-                  border: pw.Border.all(color: PdfColors.black, width: 1),
-                ),
-                child: pw.Text(
-                  'Liên hệ',
-                  style: _getVietnameseTextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
-              ),
-              // Nội dung liên hệ (merge tất cả các dòng)
-              pw.Container(
-                width: double.infinity,
-                height: _calculateContactColumnHeight(
-                    services.length), // Chiều cao linh động
-                padding: const pw.EdgeInsets.all(6),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border(
-                    left: pw.BorderSide(color: PdfColors.black, width: 1),
-                    right: pw.BorderSide(color: PdfColors.black, width: 1),
-                    bottom: pw.BorderSide(color: PdfColors.black, width: 1),
-                  ),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      contact,
-                      style: _getVietnameseTextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  static double _calculateContactColumnHeight(int rowCount) {
-    // Công thức tính chiều cao linh động dựa trên số dòng
-    const double rowHeight = 32.4; // Chiều cao mỗi dòng
-    return (rowCount * rowHeight);
-  }
-
-  static pw.Widget _buildTableCell(
-    String text, {
-    bool isHeader = false,
-    pw.TextAlign alignment = pw.TextAlign.left,
-    bool isBold = false,
-  }) {
-    return pw.Container(
-      padding: const pw.EdgeInsets.all(8),
-      child: pw.Text(
-        text,
-        style: _getVietnameseTextStyle(
-          fontSize: 12,
-          fontWeight:
-              isHeader || isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
-        ),
-        textAlign: alignment,
-      ),
-    );
-  }
-
-  static pw.Widget _buildTotalSection(BuildContext context, Order order) {
+  static pw.Widget _buildBillInfo(BuildContext context, Order order) {
     return pw.Container(
       width: double.infinity,
       decoration: pw.BoxDecoration(
-        border: pw.Border.all(color: PdfColors.black),
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(8),
       ),
       child: pw.Column(
         children: [
@@ -844,7 +601,261 @@ class PdfBillGenerator {
             padding: const pw.EdgeInsets.all(15),
             decoration: pw.BoxDecoration(
               color: PdfColors.grey100,
-              border: pw.Border.all(color: PdfColors.black),
+              borderRadius: const pw.BorderRadius.only(
+                topLeft: pw.Radius.circular(8),
+                topRight: pw.Radius.circular(8),
+              ),
+            ),
+            child: pw.Text(
+              AppLocalizations.of(context)!.pdfBillInfoTitle,
+              style: _getVietnameseTextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.all(15),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      AppLocalizations.of(context)!.pdfBillCode,
+                      style: _getVietnameseTextStyle(
+                        fontSize: 12,
+                        color: PdfColors.grey600,
+                      ),
+                    ),
+                    pw.Text(
+                      '#${_formatBillId(context, order.id)}',
+                      style: _getVietnameseTextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Text(
+                      AppLocalizations.of(context)!.pdfCreatedDate,
+                      style: _getVietnameseTextStyle(
+                        fontSize: 12,
+                        color: PdfColors.grey600,
+                      ),
+                    ),
+                    pw.Text(
+                      _formatDate(order.createdAt),
+                      style: _getVietnameseTextStyle(
+                        fontSize: 14,
+                        fontWeight: pw.FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildCustomerInfo(BuildContext context, Order order) {
+    return pw.Container(
+      width: double.infinity,
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(8),
+      ),
+      child: pw.Column(
+        children: [
+          // Header
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.all(15),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey100,
+              borderRadius: const pw.BorderRadius.only(
+                topLeft: pw.Radius.circular(8),
+                topRight: pw.Radius.circular(8),
+              ),
+            ),
+            child: pw.Text(
+              AppLocalizations.of(context)!.pdfCustomerInfoTitle,
+              style: _getVietnameseTextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.all(15),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.SizedBox(height: 10),
+                _buildInfoRow(
+                    context,
+                    AppLocalizations.of(context)!.pdfCustomerName,
+                    order.customerName),
+                _buildInfoRow(
+                    context,
+                    AppLocalizations.of(context)!.pdfCustomerPhone,
+                    _formatPhoneNumber(order.customerPhone)),
+                if (order.customerAddress != null &&
+                    order.customerAddress!.isNotEmpty)
+                  _buildInfoRow(
+                      context,
+                      AppLocalizations.of(context)!.customerAddress,
+                      order.customerAddress!),
+                _buildInfoRow(
+                    context,
+                    AppLocalizations.of(context)!.pdfEmployeeServed,
+                    order.employeeNames.join(', ')),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildInfoRow(
+      BuildContext context, String label, String value) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 3),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(
+            label,
+            style: _getVietnameseTextStyle(
+              fontSize: 14,
+              color: PdfColors.grey600,
+            ),
+          ),
+          pw.Text(
+            value,
+            style: _getVietnameseTextStyle(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildServicesTable(
+      BuildContext context, List<ServiceWithQuantity> services) {
+    return pw.Column(
+      children: [
+        // Header
+        pw.Container(
+          width: double.infinity,
+          padding: const pw.EdgeInsets.all(15),
+          decoration: pw.BoxDecoration(
+            color: PdfColors.grey100,
+            borderRadius: const pw.BorderRadius.only(
+              topLeft: pw.Radius.circular(8),
+              topRight: pw.Radius.circular(8),
+            ),
+            border: pw.Border.all(color: PdfColors.grey300, width: 0.5),
+          ),
+          child: pw.Text(
+            AppLocalizations.of(context)!.pdfServicesDetailTitle,
+            style: _getVietnameseTextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        ),
+
+        // Services - mỗi service là một widget riêng để có thể break page
+        ...services.asMap().entries.map((entry) {
+          final index = entry.key;
+          final service = entry.value;
+          final isLast = index == services.length - 1;
+          return _buildServiceRow(context, service, isLast: isLast);
+        }).toList(),
+      ],
+    );
+  }
+
+  static pw.Widget _buildServiceRow(
+      BuildContext context, ServiceWithQuantity serviceWithQuantity,
+      {bool isLast = false}) {
+    return pw.Container(
+      width: double.infinity,
+      padding: const pw.EdgeInsets.all(15),
+      decoration: pw.BoxDecoration(
+        borderRadius: isLast
+            ? const pw.BorderRadius.only(
+                bottomLeft: pw.Radius.circular(8),
+                bottomRight: pw.Radius.circular(8),
+              )
+            : null,
+        border: pw.Border.all(color: PdfColors.grey300, width: 0.5),
+      ),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Expanded(
+            flex: 3,
+            child: pw.Text(
+              serviceWithQuantity.service.name +
+                  (serviceWithQuantity.quantity > 1
+                      ? ' ' +
+                          AppLocalizations.of(context)!
+                              .pdfServiceQuantity(serviceWithQuantity.quantity)
+                      : ''),
+              style: _getVietnameseTextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          pw.Expanded(
+            flex: 1,
+            child: pw.Text(
+              _formatPrice(serviceWithQuantity.totalPrice),
+              style: _getVietnameseTextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+              ),
+              textAlign: pw.TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildTotalSection(BuildContext context, Order order) {
+    return pw.Container(
+      width: double.infinity,
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(8),
+      ),
+      child: pw.Column(
+        children: [
+          // Header
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.all(15),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey100,
+              borderRadius: const pw.BorderRadius.only(
+                topLeft: pw.Radius.circular(8),
+                topRight: pw.Radius.circular(8),
+              ),
             ),
             child: pw.Text(
               AppLocalizations.of(context)!.pdfPaymentInfoTitle,
@@ -871,7 +882,7 @@ class PdfBillGenerator {
                       ),
                     ),
                     pw.Text(
-                      _formatPriceForPayment(_getOriginalTotal(order)),
+                      _formatPrice(_getOriginalTotal(order)),
                       style: _getVietnameseTextStyle(
                         fontSize: 16,
                         fontWeight: pw.FontWeight.normal,
@@ -895,7 +906,7 @@ class PdfBillGenerator {
                         ),
                       ),
                       pw.Text(
-                        '-${_formatPriceForPayment(_getOriginalTotal(order) * order.discountPercent / 100)}',
+                        '-${_formatPrice(_getOriginalTotal(order) * order.discountPercent / 100)}',
                         style: _getVietnameseTextStyle(
                           fontSize: 16,
                           fontWeight: pw.FontWeight.normal,
@@ -919,7 +930,7 @@ class PdfBillGenerator {
                         ),
                       ),
                       pw.Text(
-                        '+${_formatPriceForPayment(order.tip)}',
+                        '+${_formatPrice(order.tip)}',
                         style: _getVietnameseTextStyle(
                           fontSize: 16,
                           fontWeight: pw.FontWeight.normal,
@@ -967,7 +978,7 @@ class PdfBillGenerator {
                         ),
                       ),
                       pw.Text(
-                        '+${_formatPriceForPayment(order.shippingFee)}',
+                        '+${_formatPrice(order.shippingFee)}',
                         style: _getVietnameseTextStyle(
                           fontSize: 16,
                           fontWeight: pw.FontWeight.normal,
@@ -993,7 +1004,7 @@ class PdfBillGenerator {
                       ),
                     ),
                     pw.Text(
-                      _formatPriceForPayment(order.totalPrice),
+                      _formatPrice(order.totalPrice),
                       style: _getVietnameseTextStyle(
                         fontSize: 18,
                         fontWeight: pw.FontWeight.bold,
@@ -1009,19 +1020,31 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildFooter(BuildContext context, String thankYouMessage) {
+  static pw.Widget _buildFooter(BuildContext context) {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(15),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(8),
+      ),
       child: pw.Column(
         children: [
           pw.Text(
-            thankYouMessage.isNotEmpty
-                ? thankYouMessage
-                : 'Kính chào quý thực khách An Nhiên! Chân thành cảm ơn quý vị có rất nhiều sự ủng hộ đã dành cho Bếp HTB. Chúng tôi sẽ nỗ lực nhất định để mang đến những bữa cơm đầy thanh đạm của quý vị. Kính chúc quý vị...',
+            AppLocalizations.of(context)!.pdfThankYouMessage,
             style: _getVietnameseTextStyle(
-              fontSize: 12,
-              color: PdfColors.black,
+              fontSize: 14,
+              color: PdfColors.grey600,
+              fontStyle: pw.FontStyle.italic,
+            ),
+            textAlign: pw.TextAlign.center,
+          ),
+          pw.SizedBox(height: 8),
+          pw.Text(
+            AppLocalizations.of(context)!.pdfSeeYouAgainMessage,
+            style: _getVietnameseTextStyle(
+              fontSize: 14,
+              color: PdfColors.grey600,
               fontStyle: pw.FontStyle.italic,
             ),
             textAlign: pw.TextAlign.center,
@@ -1315,21 +1338,14 @@ class PdfBillGenerator {
   }
 
   static String _formatPrice(double price) {
-    // Chuyển đổi sang format k (40k, 200k)
-    if (price >= 1000) {
-      final kValue = (price / 1000).toStringAsFixed(0);
-      return '${kValue}k';
-    } else {
-      return '${price.toStringAsFixed(0)}';
-    }
-  }
-
-  static String _formatPriceForPayment(double price) {
-    // Format cũ cho phần thanh toán (40.000 VNĐ)
     return '${price.toStringAsFixed(0).replaceAllMapped(
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match match) => '${match[1]}.',
         )} ${SalonConfig.currency}';
+  }
+
+  static String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
   }
 
   static String _formatBillId(BuildContext context, String orderId) {
