@@ -1885,4 +1885,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pdfContactInfoTitle => 'Contact for Ordering';
+
+  @override
+  String get pdfPhoneLabel => 'Phone: ';
+
+  @override
+  String get pdfAddressLabel => 'Address: ';
+
+  @override
+  String get pdfSerialNumberHeader => 'No.';
+
+  @override
+  String get pdfProductNameHeader => 'Product Name';
+
+  @override
+  String get pdfQuantityHeader => 'Quantity';
+
+  @override
+  String get pdfUnitPriceHeader => 'Unit Price';
+
+  @override
+  String get pdfTotalAmountHeader => 'Total';
+
+  @override
+  String get pdfContactHeader => 'Contact';
+
+  @override
+  String get pdfDefaultThankYouMessage =>
+      'Dear valued customers! We sincerely thank you for your continued support of HTB Kitchen. We will do our best to bring you wholesome and nutritious meals. Best regards...';
+
+  @override
+  String get pleaseSelectAtLeastOneCategory =>
+      'Please select at least 1 category';
 }

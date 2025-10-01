@@ -3497,6 +3497,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Liên hệ đặt món'**
   String get pdfContactInfoTitle;
+
+  /// Phone number label in PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'SĐT: '**
+  String get pdfPhoneLabel;
+
+  /// Address label in PDF
+  ///
+  /// In vi, this message translates to:
+  /// **'Địa chỉ: '**
+  String get pdfAddressLabel;
+
+  /// Serial number header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'TT'**
+  String get pdfSerialNumberHeader;
+
+  /// Product name header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên sản phẩm'**
+  String get pdfProductNameHeader;
+
+  /// Quantity header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'Số lượng'**
+  String get pdfQuantityHeader;
+
+  /// Unit price header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn giá'**
+  String get pdfUnitPriceHeader;
+
+  /// Total amount header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'Thành tiền'**
+  String get pdfTotalAmountHeader;
+
+  /// Contact header in PDF table
+  ///
+  /// In vi, this message translates to:
+  /// **'Liên hệ'**
+  String get pdfContactHeader;
+
+  /// Default thank you message for PDF bills
+  ///
+  /// In vi, this message translates to:
+  /// **'Kính chào quý thực khách An Nhiên! Chân thành cảm ơn quý vị có rất nhiều sự ủng hộ đã dành cho Bếp HTB. Chúng tôi sẽ nỗ lực nhất định để mang đến những bữa cơm đầy thanh đạm của quý vị. Kính chúc quý vị...'**
+  String get pdfDefaultThankYouMessage;
+
+  /// Message asking user to select at least one category
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng chọn ít nhất 1 danh mục'**
+  String get pleaseSelectAtLeastOneCategory;
 }
 
 class _AppLocalizationsDelegate

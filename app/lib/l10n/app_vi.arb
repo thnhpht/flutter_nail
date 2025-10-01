@@ -3203,5 +3203,45 @@
   "pdfContactInfoTitle": "Liên hệ đặt món",
   "@pdfContactInfoTitle": {
     "description": "Contact information title for PDF"
+  },
+  "pdfPhoneLabel": "SĐT: ",
+  "@pdfPhoneLabel": {
+    "description": "Phone number label in PDF"
+  },
+  "pdfAddressLabel": "Địa chỉ: ",
+  "@pdfAddressLabel": {
+    "description": "Address label in PDF"
+  },
+  "pdfSerialNumberHeader": "TT",
+  "@pdfSerialNumberHeader": {
+    "description": "Serial number header in PDF table"
+  },
+  "pdfProductNameHeader": "Tên sản phẩm",
+  "@pdfProductNameHeader": {
+    "description": "Product name header in PDF table"
+  },
+  "pdfQuantityHeader": "Số lượng",
+  "@pdfQuantityHeader": {
+    "description": "Quantity header in PDF table"
+  },
+  "pdfUnitPriceHeader": "Đơn giá",
+  "@pdfUnitPriceHeader": {
+    "description": "Unit price header in PDF table"
+  },
+  "pdfTotalAmountHeader": "Thành tiền",
+  "@pdfTotalAmountHeader": {
+    "description": "Total amount header in PDF table"
+  },
+  "pdfContactHeader": "Liên hệ",
+  "@pdfContactHeader": {
+    "description": "Contact header in PDF table"
+  },
+  "pdfDefaultThankYouMessage": "Kính chào quý thực khách An Nhiên! Chân thành cảm ơn quý vị có rất nhiều sự ủng hộ đã dành cho Bếp HTB. Chúng tôi sẽ nỗ lực nhất định để mang đến những bữa cơm đầy thanh đạm của quý vị. Kính chúc quý vị...",
+  "@pdfDefaultThankYouMessage": {
+    "description": "Default thank you message for PDF bills"
+  },
+  "pleaseSelectAtLeastOneCategory": "Vui lòng chọn ít nhất 1 danh mục",
+  "@pleaseSelectAtLeastOneCategory": {
+    "description": "Message asking user to select at least one category"
   }
 }

@@ -615,7 +615,7 @@ class PdfBillGenerator {
                 text: pw.TextSpan(
                   children: [
                     pw.TextSpan(
-                      text: 'SĐT: ',
+                      text: AppLocalizations.of(context)!.pdfPhoneLabel,
                       style: _getVietnameseTextStyle(
                         fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
@@ -641,7 +641,7 @@ class PdfBillGenerator {
               text: pw.TextSpan(
                 children: [
                   pw.TextSpan(
-                    text: 'Địa chỉ: ',
+                    text: AppLocalizations.of(context)!.pdfAddressLabel,
                     style: _getVietnameseTextStyle(
                       fontSize: 14,
                       fontWeight: pw.FontWeight.bold,
@@ -688,27 +688,27 @@ class PdfBillGenerator {
                 ),
                 children: [
                   _buildTableCell(
-                    'TT',
+                    AppLocalizations.of(context)!.pdfSerialNumberHeader,
                     isHeader: true,
                     alignment: pw.TextAlign.center,
                   ),
                   _buildTableCell(
-                    'Tên sản phẩm',
+                    AppLocalizations.of(context)!.pdfProductNameHeader,
                     isHeader: true,
                     alignment: pw.TextAlign.center,
                   ),
                   _buildTableCell(
-                    'Số lượng',
+                    AppLocalizations.of(context)!.pdfQuantityHeader,
                     isHeader: true,
                     alignment: pw.TextAlign.center,
                   ),
                   _buildTableCell(
-                    'Đơn giá',
+                    AppLocalizations.of(context)!.pdfUnitPriceHeader,
                     isHeader: true,
                     alignment: pw.TextAlign.center,
                   ),
                   _buildTableCell(
-                    'Thành tiền',
+                    AppLocalizations.of(context)!.pdfTotalAmountHeader,
                     isHeader: true,
                     alignment: pw.TextAlign.center,
                   ),
@@ -763,7 +763,7 @@ class PdfBillGenerator {
                   border: pw.Border.all(color: PdfColors.black, width: 1),
                 ),
                 child: pw.Text(
-                  'Liên hệ',
+                  AppLocalizations.of(context)!.pdfContactHeader,
                   style: _getVietnameseTextStyle(
                     fontSize: 12,
                     fontWeight: pw.FontWeight.bold,
@@ -1018,7 +1018,7 @@ class PdfBillGenerator {
           pw.Text(
             thankYouMessage.isNotEmpty
                 ? thankYouMessage
-                : 'Kính chào quý thực khách An Nhiên! Chân thành cảm ơn quý vị có rất nhiều sự ủng hộ đã dành cho Bếp HTB. Chúng tôi sẽ nỗ lực nhất định để mang đến những bữa cơm đầy thanh đạm của quý vị. Kính chúc quý vị...',
+                : AppLocalizations.of(context)!.pdfDefaultThankYouMessage,
             style: _getVietnameseTextStyle(
               fontSize: 12,
               color: PdfColors.black,

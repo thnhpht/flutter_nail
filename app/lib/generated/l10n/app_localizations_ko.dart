@@ -1845,4 +1845,35 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pdfContactInfoTitle => '주문 연락처';
+
+  @override
+  String get pdfPhoneLabel => '전화번호: ';
+
+  @override
+  String get pdfAddressLabel => '주소: ';
+
+  @override
+  String get pdfSerialNumberHeader => '번호';
+
+  @override
+  String get pdfProductNameHeader => '상품명';
+
+  @override
+  String get pdfQuantityHeader => '수량';
+
+  @override
+  String get pdfUnitPriceHeader => '단가';
+
+  @override
+  String get pdfTotalAmountHeader => '금액';
+
+  @override
+  String get pdfContactHeader => '연락처';
+
+  @override
+  String get pdfDefaultThankYouMessage =>
+      '안녕하세요! HTB 주방을 이용해 주셔서 진심으로 감사합니다. 더욱 신선하고 맛있는 식사를 제공하도록 최선을 다하겠습니다. 감사합니다...';
+
+  @override
+  String get pleaseSelectAtLeastOneCategory => '최소 1개 카테고리를 선택해 주세요';
 }

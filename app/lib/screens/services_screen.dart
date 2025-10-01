@@ -1955,15 +1955,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          Icon(
-                                                            Icons.attach_money,
-                                                            size: 12,
-                                                            color: Colors.white,
-                                                          ),
                                                           const SizedBox(
                                                               width: 4),
                                                           Text(
-                                                            '${_formatPrice(s.price)} ${AppLocalizations.of(context)!.vnd}',
+                                                            s.unit != null
+                                                                ? '${_formatPrice(s.price)} ${AppLocalizations.of(context)!.vnd} / ${s.unit}'
+                                                                : '${_formatPrice(s.price)} ${AppLocalizations.of(context)!.vnd}',
                                                             style: TextStyle(
                                                               fontSize: 11,
                                                               fontWeight:
@@ -1976,81 +1973,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                         ],
                                                       ),
                                                     ),
-                                                    // Unit
-                                                    if (s.unit != null) ...[
-                                                      const SizedBox(height: 4),
-                                                      Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 8,
-                                                                vertical: 4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          gradient:
-                                                              LinearGradient(
-                                                            colors: [
-                                                              AppTheme
-                                                                  .primaryStart
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.9),
-                                                              AppTheme
-                                                                  .primaryEnd
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.9),
-                                                            ],
-                                                            begin: Alignment
-                                                                .topLeft,
-                                                            end: Alignment
-                                                                .bottomRight,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: AppTheme
-                                                                  .primaryStart
-                                                                  .withValues(
-                                                                      alpha:
-                                                                          0.3),
-                                                              blurRadius: 4,
-                                                              offset:
-                                                                  const Offset(
-                                                                      0, 2),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                              Icons.straighten,
-                                                              size: 12,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 4),
-                                                            Text(
-                                                              '${AppLocalizations.of(context)!.unit}: ${s.unit}',
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
                                                   ],
                                                 ),
                                               ),

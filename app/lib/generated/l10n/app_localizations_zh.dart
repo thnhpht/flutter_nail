@@ -1834,4 +1834,35 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pdfContactInfoTitle => '订餐联系';
+
+  @override
+  String get pdfPhoneLabel => '电话：';
+
+  @override
+  String get pdfAddressLabel => '地址：';
+
+  @override
+  String get pdfSerialNumberHeader => '序号';
+
+  @override
+  String get pdfProductNameHeader => '商品名称';
+
+  @override
+  String get pdfQuantityHeader => '数量';
+
+  @override
+  String get pdfUnitPriceHeader => '单价';
+
+  @override
+  String get pdfTotalAmountHeader => '金额';
+
+  @override
+  String get pdfContactHeader => '联系';
+
+  @override
+  String get pdfDefaultThankYouMessage =>
+      '尊敬的客户您好！感谢您对HTB厨房的大力支持。我们将竭尽全力为您提供新鲜美味的餐食。祝您用餐愉快...';
+
+  @override
+  String get pleaseSelectAtLeastOneCategory => '请至少选择1个分类';
 }

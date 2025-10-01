@@ -47,8 +47,6 @@ class _OrderScreenState extends State<OrderScreen> {
   double _shippingFee = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
-  bool _showCategoryDropdown = false;
-  bool _showServiceDropdown = false;
   bool _showEmployeeDropdown = false;
   String? _currentUserRole;
   String? _currentEmployeeId;
@@ -259,32 +257,9 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
-  void _toggleCategoryDropdown() {
-    setState(() {
-      _showCategoryDropdown = !_showCategoryDropdown;
-      if (_showCategoryDropdown) {
-        _showServiceDropdown = false;
-      }
-    });
-  }
-
-  void _toggleServiceDropdown() {
-    setState(() {
-      _showServiceDropdown = !_showServiceDropdown;
-      if (_showServiceDropdown) {
-        _showCategoryDropdown = false;
-        _showEmployeeDropdown = false;
-      }
-    });
-  }
-
   void _toggleEmployeeDropdown() {
     setState(() {
       _showEmployeeDropdown = !_showEmployeeDropdown;
-      if (_showEmployeeDropdown) {
-        _showCategoryDropdown = false;
-        _showServiceDropdown = false;
-      }
     });
   }
 
@@ -763,8 +738,6 @@ class _OrderScreenState extends State<OrderScreen> {
       _taxPercent = 0.0;
       _shippingFee = 0.0;
       _finalTotalPrice = 0.0;
-      _showCategoryDropdown = false;
-      _showServiceDropdown = false;
       _showEmployeeDropdown = false;
       _showCustomerDropdown = false;
     });
@@ -776,13 +749,8 @@ class _OrderScreenState extends State<OrderScreen> {
     return GestureDetector(
       onTap: () {
         // Close dropdowns when tapping outside
-        if (_showCategoryDropdown ||
-            _showServiceDropdown ||
-            _showEmployeeDropdown ||
-            _showCustomerDropdown) {
+        if (_showEmployeeDropdown || _showCustomerDropdown) {
           setState(() {
-            _showCategoryDropdown = false;
-            _showServiceDropdown = false;
             _showEmployeeDropdown = false;
             _showCustomerDropdown = false;
           });
@@ -985,19 +953,59 @@ class _OrderScreenState extends State<OrderScreen> {
                             ],
 
                             // Employee Dropdown
-                            _buildDropdownButton(
+                            GestureDetector(
                               onTap: _toggleEmployeeDropdown,
-                              label: _selectedEmployees.isEmpty
-                                  ? l10n.selectEmployee
-                                  : l10n.employeesSelected(
-                                      _selectedEmployees.length),
-                              isExpanded: _showEmployeeDropdown,
-                              selectText: l10n.select,
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey[300]!),
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.grey[50],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      _selectedEmployees.isEmpty
+                                          ? l10n.selectEmployee
+                                          : l10n.employeesSelected(
+                                              _selectedEmployees.length),
+                                      style: TextStyle(
+                                        color: _selectedEmployees.isEmpty
+                                            ? Colors.grey[600]
+                                            : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Icon(
+                                      _showEmployeeDropdown
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             if (_showEmployeeDropdown) ...[
                               const SizedBox(height: 8),
-                              _buildDropdownMenu(
-                                maxHeight: 200,
+                              Container(
+                                constraints:
+                                    const BoxConstraints(maxHeight: 200),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey[300]!),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.1),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: _employees.length,
@@ -1103,39 +1111,24 @@ class _OrderScreenState extends State<OrderScreen> {
                             const SizedBox(height: 16),
                           ],
 
-                          // Category Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleCategoryDropdown,
-                            label: _selectedCategories.isEmpty
-                                ? l10n.selectCategory
-                                : l10n.categoriesSelected(
-                                    _selectedCategories.length),
-                            isExpanded: _showCategoryDropdown,
-                            selectText: l10n.select,
-                          ),
-
-                          // Category Dropdown Menu
-                          if (_showCategoryDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _categories.length,
-                                itemBuilder: (context, index) {
-                                  final category = _categories[index];
-                                  final isSelected =
-                                      _selectedCategories.contains(category);
-                                  return _buildDropdownCategoryItem(
-                                    title: category.name,
-                                    isSelected: isSelected,
-                                    onTap: () => _onCategoryToggled(category),
-                                    image: category.image,
-                                  );
-                                },
-                              ),
+                          // Categories Carousel
+                          SizedBox(
+                            height: 120,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _categories.length,
+                              itemBuilder: (context, index) {
+                                final category = _categories[index];
+                                final isSelected =
+                                    _selectedCategories.contains(category);
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: _buildCompactCategoryCard(
+                                      category, isSelected),
+                                );
+                              },
                             ),
-                          ],
+                          ),
                         ],
                       ),
                     ),
@@ -1169,88 +1162,31 @@ class _OrderScreenState extends State<OrderScreen> {
                             const SizedBox(height: 16),
                           ],
 
-                          // Service Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleServiceDropdown,
-                            label: _selectedServices.isEmpty
-                                ? l10n.selectService
-                                : l10n.servicesSelectedCount(
-                                    _selectedServices.length),
-                            isExpanded: _showServiceDropdown,
-                            selectText: l10n.select,
-                          ),
-
-                          // Service Dropdown Menu
-                          if (_showServiceDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 300,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: (_selectedCategories.isEmpty
-                                        ? _categories
-                                        : _selectedCategories)
-                                    .length,
-                                itemBuilder: (context, categoryIndex) {
-                                  final visibleCategories =
-                                      _selectedCategories.isEmpty
-                                          ? _categories
-                                          : _selectedCategories;
-                                  final category =
-                                      visibleCategories[categoryIndex];
-                                  final categoryServices = _services
-                                      .where((service) =>
-                                          service.categoryId == category.id)
-                                      .toList()
-                                    ..sort(
-                                        (a, b) => a.price.compareTo(b.price));
-
-                                  if (categoryServices.isEmpty)
-                                    return const SizedBox.shrink();
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Category Header
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          category.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      // Services in this category
-                                      ...categoryServices.map((service) {
-                                        final isSelected = _selectedServices
-                                            .any((serviceWithQuantity) =>
-                                                serviceWithQuantity
-                                                    .service.id ==
-                                                service.id);
-                                        return _buildDropdownServiceItem(
-                                          title: service.name,
-                                          subtitle: l10n.subtotalAmount(
-                                              _formatPrice(service.price)),
-                                          isSelected: isSelected,
-                                          onTap: () =>
-                                              _onServiceToggled(service),
-                                          image: service.image,
-                                        );
-                                      }).toList(),
-                                    ],
-                                  );
-                                },
+                          // Services Grid - chỉ hiển thị khi đã chọn category
+                          if (_selectedCategories.isNotEmpty) ...[
+                            _buildCompactServicesGrid(),
+                          ] else ...[
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey[200]!),
+                              ),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .pleaseSelectAtLeastOneCategory,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -1979,171 +1915,6 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  Widget _buildDropdownButton({
-    required VoidCallback onTap,
-    required String label,
-    required bool isExpanded,
-    required String selectText,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.grey[50],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: label.contains(selectText)
-                    ? Colors.grey[600]
-                    : Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Icon(
-              isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: Colors.grey[600],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownMenu({
-    required double maxHeight,
-    required Widget child,
-  }) {
-    return Container(
-      constraints: BoxConstraints(maxHeight: maxHeight),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildDropdownCategoryItem({
-    required String title,
-    String? subtitle,
-    required bool isSelected,
-    required VoidCallback onTap,
-    String? image,
-  }) {
-    return ListTile(
-      leading: image != null && image.isNotEmpty
-          ? Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _buildImageWidget(image),
-              ),
-            )
-          : Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: Icon(
-                Icons.category,
-                color: Colors.grey[400],
-                size: 20,
-              ),
-            ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing:
-          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
-      tileColor:
-          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
-      onTap: onTap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-  }
-
-  Widget _buildDropdownServiceItem({
-    required String title,
-    String? subtitle,
-    required bool isSelected,
-    required VoidCallback onTap,
-    String? image,
-  }) {
-    return ListTile(
-      leading: image != null && image.isNotEmpty
-          ? Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _buildImageWidget(image),
-              ),
-            )
-          : Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.grey[400],
-                size: 20,
-              ),
-            ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing:
-          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
-      tileColor:
-          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
-      onTap: onTap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-  }
-
   Widget _buildDropdownEmployeeItem({
     required String title,
     String? subtitle,
@@ -2330,6 +2101,322 @@ class _OrderScreenState extends State<OrderScreen> {
       onTap: onTap,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
+  Widget _buildCompactCategoryCard(Category category, bool isSelected) {
+    return GestureDetector(
+      onTap: () => _onCategoryToggled(category),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 100,
+        height: 100,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              // Background
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isSelected
+                        ? [
+                            const Color(0xFF667eea),
+                            const Color(0xFF764ba2),
+                          ]
+                        : [
+                            Colors.grey[300]!,
+                            Colors.grey[400]!,
+                          ],
+                  ),
+                ),
+                child: category.image != null && category.image!.isNotEmpty
+                    ? _buildImageWidget(category.image!)
+                    : _buildCompactCategoryImagePlaceholder(),
+              ),
+
+              // Overlay for better text readability
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.3),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Category name
+              Positioned(
+                bottom: 8,
+                left: 8,
+                right: 8,
+                child: Text(
+                  category.name,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // Selection indicator
+              if (isSelected)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Color(0xFF667eea),
+                      size: 12,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactServicesGrid() {
+    // Filter services based on selected categories
+    List<Service> visibleServices = _services;
+    if (_selectedCategories.isNotEmpty) {
+      visibleServices = _services
+          .where((service) => _selectedCategories
+              .any((category) => category.id == service.categoryId))
+          .toList();
+    }
+
+    // Sort services by category name, then by price
+    visibleServices.sort((a, b) {
+      final categoryA = _categories.firstWhere(
+        (cat) => cat.id == a.categoryId,
+        orElse: () => Category(id: '', name: ''),
+      );
+      final categoryB = _categories.firstWhere(
+        (cat) => cat.id == b.categoryId,
+        orElse: () => Category(id: '', name: ''),
+      );
+
+      final categoryComparison = categoryA.name.compareTo(categoryB.name);
+      if (categoryComparison != 0) {
+        return categoryComparison;
+      }
+      return a.price.compareTo(b.price);
+    });
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 0.75, // Slightly taller to accommodate text
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: visibleServices.length,
+      itemBuilder: (context, index) {
+        final service = visibleServices[index];
+        final isSelected = _selectedServices.any((serviceWithQuantity) =>
+            serviceWithQuantity.service.id == service.id);
+        return _buildCompactServiceCard(service, isSelected);
+      },
+    );
+  }
+
+  Widget _buildCompactServiceCard(Service service, bool isSelected) {
+    final category = _categories.firstWhere(
+      (cat) => cat.id == service.categoryId,
+      orElse: () => Category(id: '', name: ''),
+    );
+
+    return GestureDetector(
+      onTap: () => _onServiceToggled(service),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF667eea) : Colors.grey[300]!,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? const Color(0xFF667eea).withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.05),
+              blurRadius: isSelected ? 8 : 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Service image
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: service.image != null && service.image!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                            ),
+                            child: _buildImageWidget(service.image!),
+                          )
+                        : _buildCompactServiceImagePlaceholder(),
+                  ),
+                ),
+
+                // Service info - Fixed height container to prevent overflow
+                Container(
+                  height: 65, // Fixed height to prevent overflow
+                  padding: const EdgeInsets.all(6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Service name - Limited space
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          service.name,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            height: 1.1,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      // Category name
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          category.name,
+                          style: TextStyle(
+                            fontSize: 8,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      // Price
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${_formatPrice(service.price)}₫',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? const Color(0xFF667eea)
+                                : Colors.grey[800],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // Selection indicator
+            if (isSelected)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF667eea),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: 10,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactCategoryImagePlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF667eea).withValues(alpha: 0.3),
+            const Color(0xFF764ba2).withValues(alpha: 0.3),
+          ],
+        ),
+      ),
+      child: const Icon(
+        Icons.category,
+        size: 24,
+        color: Colors.white70,
+      ),
+    );
+  }
+
+  Widget _buildCompactServiceImagePlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+      ),
+      child: Icon(
+        Icons.shopping_cart,
+        size: 20,
+        color: Colors.grey[400],
       ),
     );
   }

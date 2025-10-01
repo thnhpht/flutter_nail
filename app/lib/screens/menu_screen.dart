@@ -496,6 +496,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 200),
         width: 320,
         child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
           child: Stack(
             children: [
               // Background image or gradient
@@ -540,60 +541,37 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
 
               // Category name label
               Positioned(
-                bottom: 12,
-                left: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
+                bottom: 8,
+                left: 8,
+                right: 8,
+                child: Text(
+                  category.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
                   ),
-                  child: Text(
-                    category.name,
-                    style: TextStyle(
-                      fontSize: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 14,
-                        tablet: 16,
-                        desktop: 18,
-                      ),
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
 
               // Selection indicator
               if (isSelected)
                 Positioned(
-                  top: 12,
-                  right: 12,
+                  top: 8,
+                  right: 8,
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryStart,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Icon(
-                      Icons.check,
                       color: Colors.white,
-                      size: AppTheme.getResponsiveFontSize(
-                        context,
-                        mobile: 16,
-                        tablet: 18,
-                        desktop: 20,
-                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Color(0xFF667eea),
+                      size: 12,
                     ),
                   ),
                 ),
@@ -875,9 +853,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: AppTheme.isMobile(context) ? 2 : 3,
-                childAspectRatio: 0.6,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
+                childAspectRatio: 0.75, // Slightly taller to accommodate text
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
               itemCount: services.length,
               itemBuilder: (context, serviceIndex) {
@@ -913,95 +891,93 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Colors.grey[200]!,
-          width: 0.5,
+          color: Colors.grey[300]!,
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Service image
-          Container(
-            width: double.infinity,
-            height: 232,
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
+          Expanded(
+            flex: 3,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+              ),
+              child: service.image != null && service.image!.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: _buildImageWidget(service.image!),
+                    )
+                  : _buildServiceImagePlaceholder(),
             ),
-            child: service.image != null && service.image!.isNotEmpty
-                ? _buildImageWidget(service.image!)
-                : _buildServiceImagePlaceholder(),
           ),
 
-          // Service info
-          Padding(
-            padding: const EdgeInsets.all(12),
+          // Service info - Fixed height container to prevent overflow
+          Container(
+            height: 65, // Fixed height to prevent overflow
+            padding: const EdgeInsets.all(6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Service name
-                Text(
-                  service.name,
-                  style: TextStyle(
-                    fontSize: AppTheme.getResponsiveFontSize(
-                      context,
-                      mobile: 14,
-                      tablet: 16,
-                      desktop: 18,
+                // Service name - Limited space
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    service.name,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      height: 1.1,
                     ),
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[900],
-                    height: 1.2,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                SizedBox(
-                  height: AppTheme.getResponsiveSpacing(
-                    context,
-                    mobile: 6,
-                    tablet: 8,
-                    desktop: 10,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
 
                 // Category name
-                Text(
-                  category.name,
-                  style: TextStyle(
-                    fontSize: AppTheme.getResponsiveFontSize(
-                      context,
-                      mobile: 12,
-                      tablet: 14,
-                      desktop: 16,
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    category.name,
+                    style: const TextStyle(
+                      fontSize: 8,
                     ),
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-
-                SizedBox(
-                  height: AppTheme.getResponsiveSpacing(
-                    context,
-                    mobile: 8,
-                    tablet: 10,
-                    desktop: 12,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
 
                 // Price
-                Text(
-                  '${_formatPrice(service.price)}₫',
-                  style: TextStyle(
-                    fontSize: AppTheme.getResponsiveFontSize(
-                      context,
-                      mobile: 16,
-                      tablet: 18,
-                      desktop: 20,
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    '${_formatPrice(service.price)}₫',
+                    style: const TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
                     ),
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[900],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

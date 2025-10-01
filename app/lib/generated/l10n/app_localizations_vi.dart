@@ -1898,4 +1898,36 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pdfContactInfoTitle => 'Liên hệ đặt món';
+
+  @override
+  String get pdfPhoneLabel => 'SĐT: ';
+
+  @override
+  String get pdfAddressLabel => 'Địa chỉ: ';
+
+  @override
+  String get pdfSerialNumberHeader => 'TT';
+
+  @override
+  String get pdfProductNameHeader => 'Tên sản phẩm';
+
+  @override
+  String get pdfQuantityHeader => 'Số lượng';
+
+  @override
+  String get pdfUnitPriceHeader => 'Đơn giá';
+
+  @override
+  String get pdfTotalAmountHeader => 'Thành tiền';
+
+  @override
+  String get pdfContactHeader => 'Liên hệ';
+
+  @override
+  String get pdfDefaultThankYouMessage =>
+      'Kính chào quý thực khách An Nhiên! Chân thành cảm ơn quý vị có rất nhiều sự ủng hộ đã dành cho Bếp HTB. Chúng tôi sẽ nỗ lực nhất định để mang đến những bữa cơm đầy thanh đạm của quý vị. Kính chúc quý vị...';
+
+  @override
+  String get pleaseSelectAtLeastOneCategory =>
+      'Vui lòng chọn ít nhất 1 danh mục';
 }
