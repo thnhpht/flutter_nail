@@ -1693,7 +1693,7 @@
   "@pdfItemsDetailTitle": {
     "description": "Items detail section title in PDF"
   },
-  "pdfPaymentInfoTitle": "PAYMENT INFORMATION",
+  "pdfPaymentInfoTitle": "Payment Information",
   "@pdfPaymentInfoTitle": {
     "description": "Payment information section title in PDF"
   },
@@ -1714,7 +1714,7 @@
   "@pdfTip": {
     "description": "Tip label in PDF"
   },
-  "pdfTotalPayment": "TOTAL PAYMENT",
+  "pdfTotalPayment": "Total Payment",
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },

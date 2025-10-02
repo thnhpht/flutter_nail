@@ -405,9 +405,8 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {
       if (_selectedCategories.contains(category)) {
         _selectedCategories.remove(category);
-        // Remove all services from this category
-        _selectedServices.removeWhere((serviceWithQuantity) =>
-            serviceWithQuantity.service.categoryId == category.id);
+        // Không tự động xóa các dịch vụ đã chọn khi bỏ chọn danh mục
+        // Người dùng có thể tự xóa dịch vụ thông qua chip hoặc chọn lại danh mục
       } else {
         _selectedCategories.add(category);
       }
@@ -440,9 +439,6 @@ class _OrderScreenState extends State<OrderScreen> {
   void _removeSelectedCategory(Category category) {
     setState(() {
       _selectedCategories.remove(category);
-      // Remove all services from this category
-      _selectedServices.removeWhere((serviceWithQuantity) =>
-          serviceWithQuantity.service.categoryId == category.id);
       _calculateTotal();
     });
   }
@@ -2227,11 +2223,16 @@ class _OrderScreenState extends State<OrderScreen> {
       return a.price.compareTo(b.price);
     });
 
+    // Use maxCrossAxisExtent to maintain consistent item size across all devices
+    // This ensures service items maintain mobile-like size on tablet/desktop
+    const double maxItemWidth =
+        120.0; // Maximum width for each service item (mobile-like size)
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: maxItemWidth, // Maximum width for each item
         childAspectRatio: 0.75, // Slightly taller to accommodate text
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,

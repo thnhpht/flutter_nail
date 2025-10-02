@@ -1493,7 +1493,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfServicesDetailTitle => 'ITEM DETAILS';
 
   @override
-  String get pdfPaymentInfoTitle => 'PAYMENT INFORMATION';
+  String get pdfPaymentInfoTitle => 'Payment Information';
 
   @override
   String get pdfSubtotal => 'Subtotal';
@@ -1507,7 +1507,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfTip => 'Tip';
 
   @override
-  String get pdfTotalPayment => 'TOTAL PAYMENT';
+  String get pdfTotalPayment => 'Total Payment';
 
   @override
   String get pdfThankYouMessage => 'Thank you for using our service!';

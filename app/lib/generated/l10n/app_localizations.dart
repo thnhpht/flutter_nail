@@ -2805,7 +2805,7 @@ abstract class AppLocalizations {
   /// Payment information section title in PDF
   ///
   /// In vi, this message translates to:
-  /// **'THÔNG TIN THANH TOÁN'**
+  /// **'Thông tin thanh toán'**
   String get pdfPaymentInfoTitle;
 
   /// Subtotal label in PDF
@@ -2829,7 +2829,7 @@ abstract class AppLocalizations {
   /// Total payment label in PDF
   ///
   /// In vi, this message translates to:
-  /// **'TỔNG THANH TOÁN'**
+  /// **'Tổng thanh toán'**
   String get pdfTotalPayment;
 
   /// Thank you message in PDF footer

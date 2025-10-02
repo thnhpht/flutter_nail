@@ -1502,7 +1502,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfServicesDetailTitle => 'CHI TIẾT';
 
   @override
-  String get pdfPaymentInfoTitle => 'THÔNG TIN THANH TOÁN';
+  String get pdfPaymentInfoTitle => 'Thông tin thanh toán';
 
   @override
   String get pdfSubtotal => 'Thành tiền';
@@ -1516,7 +1516,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfTip => 'Tiền bo';
 
   @override
-  String get pdfTotalPayment => 'TỔNG THANH TOÁN';
+  String get pdfTotalPayment => 'Tổng thanh toán';
 
   @override
   String get pdfThankYouMessage => 'Cảm ơn quý khách đã sử dụng chi tiết!';

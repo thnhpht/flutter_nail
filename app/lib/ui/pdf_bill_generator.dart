@@ -519,25 +519,25 @@ class PdfBillGenerator {
             _buildSalonHeader(
                 context, salonName, salonAddress, salonPhone, order.id),
 
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 6),
 
             // Customer Info
             _buildCustomerInfo(context, order),
 
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 12),
 
             // Services - có thể cắt tự nhiên
-            _buildServicesTable(context, services, contact),
+            _buildServicesTable(context, services),
 
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 12),
 
             // Total
             _buildTotalSection(context, order),
 
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: 12),
 
-            // Footer
-            _buildFooter(context, thankYouMessage),
+            // Contact Information
+            _buildContactSection(context, contact, thankYouMessage),
           ];
         },
       ),
@@ -550,22 +550,23 @@ class PdfBillGenerator {
       String salonAddress, String salonPhone, String orderId) {
     return pw.Container(
       width: double.infinity,
-      padding: const pw.EdgeInsets.all(20),
+      padding: const pw.EdgeInsets.fromLTRB(20, 20, 20, 10),
       child: pw.Column(
         children: [
+          // Title luôn nằm giữa
+          pw.Text(
+            salonName,
+            style: _getVietnameseTextStyle(
+              fontSize: 24,
+              fontWeight: pw.FontWeight.bold,
+            ),
+            textAlign: pw.TextAlign.center,
+          ),
+          // Order ID nằm ở dòng riêng, căn phải
+          pw.SizedBox(height: 2),
           pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
-              pw.Expanded(
-                child: pw.Text(
-                  salonName,
-                  style: _getVietnameseTextStyle(
-                    fontSize: 24,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
-              ),
               pw.Text(
                 _formatBillId(context, orderId),
                 style: _getVietnameseTextStyle(
@@ -663,151 +664,84 @@ class PdfBillGenerator {
     );
   }
 
-  static pw.Widget _buildServicesTable(BuildContext context,
-      List<ServiceWithQuantity> services, String contact) {
-    return pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
+  static pw.Widget _buildServicesTable(
+      BuildContext context, List<ServiceWithQuantity> services) {
+    return pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.black, width: 1),
+      columnWidths: {
+        0: const pw.FixedColumnWidth(25), // TT
+        1: const pw.FixedColumnWidth(200), // Tên sản phẩm (mở rộng)
+        2: const pw.FixedColumnWidth(60), // Số lượng
+        3: const pw.FixedColumnWidth(80), // Đơn giá
+        4: const pw.FixedColumnWidth(80), // Thành tiền
+      },
       children: [
-        // Bảng sản phẩm (không có cột liên hệ)
-        pw.Expanded(
-          flex: 5,
-          child: pw.Table(
-            border: pw.TableBorder.all(color: PdfColors.black, width: 1),
-            columnWidths: {
-              0: const pw.FixedColumnWidth(25), // TT
-              1: const pw.FixedColumnWidth(100), // Tên sản phẩm
-              2: const pw.FixedColumnWidth(40), // Số lượng
-              3: const pw.FixedColumnWidth(50), // Đơn giá
-              4: const pw.FixedColumnWidth(60), // Thành tiền
-            },
-            children: [
-              // Header row
-              pw.TableRow(
-                decoration: const pw.BoxDecoration(
-                  color: PdfColors.grey100,
-                ),
-                children: [
-                  _buildTableCell(
-                    AppLocalizations.of(context)!.pdfSerialNumberHeader,
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    AppLocalizations.of(context)!.pdfProductNameHeader,
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    AppLocalizations.of(context)!.pdfQuantityHeader,
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    AppLocalizations.of(context)!.pdfUnitPriceHeader,
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                  _buildTableCell(
-                    AppLocalizations.of(context)!.pdfTotalAmountHeader,
-                    isHeader: true,
-                    alignment: pw.TextAlign.center,
-                  ),
-                ],
-              ),
-              // Data rows
-              ...services.asMap().entries.map((entry) {
-                final index = entry.key;
-                final service = entry.value;
+        // Header row
+        pw.TableRow(
+          decoration: const pw.BoxDecoration(
+            color: PdfColors.grey100,
+          ),
+          children: [
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfSerialNumberHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfProductNameHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfQuantityHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfUnitPriceHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfTotalAmountHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+          ],
+        ),
+        // Data rows
+        ...services.asMap().entries.map((entry) {
+          final index = entry.key;
+          final service = entry.value;
 
-                return pw.TableRow(
-                  children: [
-                    _buildTableCell(
-                      (index + 1).toString(),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      service.service.name,
-                      alignment: pw.TextAlign.left,
-                    ),
-                    _buildTableCell(
-                      service.quantity.toString(),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      _formatPrice(service.service.price),
-                      alignment: pw.TextAlign.center,
-                    ),
-                    _buildTableCell(
-                      _formatPrice(service.totalPrice),
-                      alignment: pw.TextAlign.center,
-                      isBold: true,
-                    ),
-                  ],
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-        // Cột liên hệ (merge tất cả các dòng)
-        pw.Expanded(
-          flex: 2,
-          child: pw.Column(
+          return pw.TableRow(
             children: [
-              // Header cho cột liên hệ
-              pw.Container(
-                width: double.infinity,
-                height: 48.6,
-                padding: const pw.EdgeInsets.all(8),
-                decoration: pw.BoxDecoration(
-                  color: PdfColors.grey100,
-                  border: pw.Border.all(color: PdfColors.black, width: 1),
-                ),
-                child: pw.Text(
-                  AppLocalizations.of(context)!.pdfContactHeader,
-                  style: _getVietnameseTextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  textAlign: pw.TextAlign.center,
-                ),
+              _buildTableCell(
+                (index + 1).toString(),
+                alignment: pw.TextAlign.center,
               ),
-              // Nội dung liên hệ (merge tất cả các dòng)
-              pw.Container(
-                width: double.infinity,
-                height: _calculateContactColumnHeight(
-                    services.length), // Chiều cao linh động
-                padding: const pw.EdgeInsets.all(6),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border(
-                    left: pw.BorderSide(color: PdfColors.black, width: 1),
-                    right: pw.BorderSide(color: PdfColors.black, width: 1),
-                    bottom: pw.BorderSide(color: PdfColors.black, width: 1),
-                  ),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      contact,
-                      style: _getVietnameseTextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
+              _buildTableCell(
+                service.service.name,
+                alignment: pw.TextAlign.left,
+              ),
+              _buildTableCell(
+                service.quantity.toString(),
+                alignment: pw.TextAlign.center,
+              ),
+              _buildTableCell(
+                _formatPrice(service.service.price),
+                alignment: pw.TextAlign.center,
+              ),
+              _buildTableCell(
+                _formatPrice(service.totalPrice),
+                alignment: pw.TextAlign.center,
+                isBold: true,
               ),
             ],
-          ),
-        ),
+          );
+        }).toList(),
       ],
     );
-  }
-
-  static double _calculateContactColumnHeight(int rowCount) {
-    // Công thức tính chiều cao linh động dựa trên số dòng
-    const double rowHeight = 32.4; // Chiều cao mỗi dòng
-    return (rowCount * rowHeight);
   }
 
   static pw.Widget _buildTableCell(
@@ -815,6 +749,7 @@ class PdfBillGenerator {
     bool isHeader = false,
     pw.TextAlign alignment = pw.TextAlign.left,
     bool isBold = false,
+    bool isItalic = false,
   }) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(8),
@@ -824,6 +759,7 @@ class PdfBillGenerator {
           fontSize: 12,
           fontWeight:
               isHeader || isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
+          fontStyle: isItalic ? pw.FontStyle.italic : pw.FontStyle.normal,
         ),
         textAlign: alignment,
       ),
@@ -836,198 +772,208 @@ class PdfBillGenerator {
       decoration: pw.BoxDecoration(
         border: pw.Border.all(color: PdfColors.black),
       ),
-      child: pw.Column(
-        children: [
-          // Header
-          pw.Container(
-            width: double.infinity,
-            padding: const pw.EdgeInsets.all(15),
-            decoration: pw.BoxDecoration(
-              color: PdfColors.grey100,
-              border: pw.Border.all(color: PdfColors.black),
-            ),
-            child: pw.Text(
-              AppLocalizations.of(context)!.pdfPaymentInfoTitle,
-              style: _getVietnameseTextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-              ),
-            ),
-          ),
-          pw.Container(
-            width: double.infinity,
-            padding: const pw.EdgeInsets.all(20),
-            child: pw.Column(
+      child: pw.Container(
+        width: double.infinity,
+        padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+        child: pw.Column(
+          children: [
+            // Original Total
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                // Original Total
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(
-                      AppLocalizations.of(context)!.pdfSubtotal,
-                      style: _getVietnameseTextStyle(
-                        fontSize: 16,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                    pw.Text(
-                      _formatPriceForPayment(_getOriginalTotal(order)),
-                      style: _getVietnameseTextStyle(
-                        fontSize: 16,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                  ],
+                pw.Text(
+                  AppLocalizations.of(context)!.pdfSubtotal,
+                  style: _getVietnameseTextStyle(
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.normal,
+                  ),
                 ),
-
-                // Discount (if any)
-                if (order.discountPercent > 0) ...[
-                  pw.SizedBox(height: 8),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        AppLocalizations.of(context)!.pdfDiscount(
-                            order.discountPercent.toStringAsFixed(0)),
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                      pw.Text(
-                        '-${_formatPriceForPayment(_getOriginalTotal(order) * order.discountPercent / 100)}',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                    ],
+                pw.Text(
+                  _formatPriceForPayment(_getOriginalTotal(order)),
+                  style: _getVietnameseTextStyle(
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.normal,
                   ),
-                ],
-
-                // Tip (if any)
-                if (order.tip > 0) ...[
-                  pw.SizedBox(height: 8),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        AppLocalizations.of(context)!.pdfTip,
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                      pw.Text(
-                        '+${_formatPriceForPayment(order.tip)}',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-                // Tax (if any)
-                if (order.taxPercent > 0) ...[
-                  pw.SizedBox(height: 8),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        AppLocalizations.of(context)!.tax,
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                      pw.Text(
-                        '+${_formatPrice(_getTaxAmount(order))}',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-                // Shipping Fee (if any)
-                if (order.shippingFee > 0) ...[
-                  pw.SizedBox(height: 8),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        AppLocalizations.of(context)!.shippingFee,
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                      pw.Text(
-                        '+${_formatPriceForPayment(order.shippingFee)}',
-                        style: _getVietnameseTextStyle(
-                          fontSize: 16,
-                          fontWeight: pw.FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-                pw.SizedBox(height: 8),
-                pw.Divider(color: PdfColors.grey400),
-                pw.SizedBox(height: 8),
-
-                // Final Total
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(
-                      AppLocalizations.of(context)!.pdfTotalPayment,
-                      style: _getVietnameseTextStyle(
-                        fontSize: 18,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.Text(
-                      _formatPriceForPayment(order.totalPrice),
-                      style: _getVietnameseTextStyle(
-                        fontSize: 18,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+
+            // Discount (if any)
+            if (order.discountPercent > 0) ...[
+              pw.SizedBox(height: 1),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    AppLocalizations.of(context)!
+                        .pdfDiscount(order.discountPercent.toStringAsFixed(0)),
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                  pw.Text(
+                    '-${_formatPriceForPayment(_getOriginalTotal(order) * order.discountPercent / 100)}',
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Tip (if any)
+            if (order.tip > 0) ...[
+              pw.SizedBox(height: 1),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    AppLocalizations.of(context)!.pdfTip,
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                  pw.Text(
+                    '+${_formatPriceForPayment(order.tip)}',
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Tax (if any)
+            if (order.taxPercent > 0) ...[
+              pw.SizedBox(height: 1),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    AppLocalizations.of(context)!.tax,
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                  pw.Text(
+                    '+${_formatPrice(_getTaxAmount(order))}',
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Shipping Fee (if any)
+            if (order.shippingFee > 0) ...[
+              pw.SizedBox(height: 1),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    AppLocalizations.of(context)!.shippingFee,
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                  pw.Text(
+                    '+${_formatPriceForPayment(order.shippingFee)}',
+                    style: _getVietnameseTextStyle(
+                      fontSize: 12,
+                      fontWeight: pw.FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            pw.Container(
+              margin: const pw.EdgeInsets.symmetric(vertical: 2),
+              child: pw.Divider(color: PdfColors.grey400, thickness: 1),
+            ),
+
+            // Final Total
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text(
+                  AppLocalizations.of(context)!.pdfTotalPayment,
+                  style: _getVietnameseTextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.Text(
+                  _formatPriceForPayment(order.totalPrice),
+                  style: _getVietnameseTextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  static pw.Widget _buildFooter(BuildContext context, String thankYouMessage) {
-    return pw.Container(
-      width: double.infinity,
-      padding: const pw.EdgeInsets.all(15),
-      child: pw.Column(
-        children: [
-          pw.Text(
-            thankYouMessage.isNotEmpty
-                ? thankYouMessage
-                : AppLocalizations.of(context)!.pdfDefaultThankYouMessage,
-            style: _getVietnameseTextStyle(
-              fontSize: 12,
-              color: PdfColors.black,
-              fontStyle: pw.FontStyle.italic,
-            ),
-            textAlign: pw.TextAlign.center,
+  static pw.Widget _buildContactSection(
+      BuildContext context, String contact, String thankYouMessage) {
+    if (contact.isEmpty && thankYouMessage.isEmpty) {
+      return pw.SizedBox.shrink();
+    }
+
+    return pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.black, width: 1),
+      columnWidths: {
+        0: const pw.FlexColumnWidth(1), // Contact column
+        1: const pw.FlexColumnWidth(1), // Thank you column
+      },
+      children: [
+        // Header row
+        pw.TableRow(
+          decoration: const pw.BoxDecoration(
+            color: PdfColors.grey100,
           ),
-        ],
-      ),
+          children: [
+            _buildTableCell(
+              AppLocalizations.of(context)!.pdfContactHeader,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+            _buildTableCell(
+              AppLocalizations.of(context)!.thankYouMessage,
+              isHeader: true,
+              alignment: pw.TextAlign.center,
+            ),
+          ],
+        ),
+        // Content row
+        pw.TableRow(
+          children: [
+            _buildTableCell(
+              contact.isNotEmpty ? contact : '',
+              alignment: pw.TextAlign.left,
+            ),
+            _buildTableCell(
+              thankYouMessage.isNotEmpty
+                  ? thankYouMessage
+                  : AppLocalizations.of(context)!.pdfDefaultThankYouMessage,
+              alignment: pw.TextAlign.left,
+              isItalic: true,
+            ),
+          ],
+        ),
+      ],
     );
   }
 

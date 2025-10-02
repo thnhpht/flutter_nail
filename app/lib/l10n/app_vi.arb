@@ -2624,7 +2624,7 @@
   "@pdfServicesDetailTitle": {
     "description": "Services detail section title in PDF"
   },
-  "pdfPaymentInfoTitle": "THÔNG TIN THANH TOÁN",
+  "pdfPaymentInfoTitle": "Thông tin thanh toán",
   "@pdfPaymentInfoTitle": {
     "description": "Payment information section title in PDF"
   },
@@ -2645,7 +2645,7 @@
   "@pdfTip": {
     "description": "Tip label in PDF"
   },
-  "pdfTotalPayment": "TỔNG THANH TOÁN",
+  "pdfTotalPayment": "Tổng thanh toán",
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
