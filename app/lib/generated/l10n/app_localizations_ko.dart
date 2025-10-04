@@ -1876,4 +1876,106 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pleaseSelectAtLeastOneCategory => '최소 1개 카테고리를 선택해 주세요';
+
+  @override
+  String get booking => '예약';
+
+  @override
+  String get bookingUser => '예약 사용자';
+
+  @override
+  String get bookingDescription => '살롱에서 서비스 예약';
+
+  @override
+  String get enterSalonName => '살롱 이름 입력';
+
+  @override
+  String get connectToSalon => '살롱에 연결';
+
+  @override
+  String get connecting => '연결 중...';
+
+  @override
+  String get connectionSuccessful => '연결 성공!';
+
+  @override
+  String get connectionFailed => '연결 실패';
+
+  @override
+  String get salonNotFound => '살롱을 찾을 수 없습니다';
+
+  @override
+  String get pleaseEnterSalonName => '살롱 이름을 입력해 주세요';
+
+  @override
+  String get deliveryOption => '배송 옵션';
+
+  @override
+  String get homeDelivery => '택배 배송';
+
+  @override
+  String get pickupAtSalon => '살롱에서 픽업';
+
+  @override
+  String get selectDeliveryOption => '배송 옵션을 선택해 주세요';
+
+  @override
+  String get bookingSuccessful => '예약 성공!';
+
+  @override
+  String get bookingFailed => '예약 실패';
+
+  @override
+  String get createBooking => '예약 생성';
+
+  @override
+  String get bookingDetails => '예약 상세';
+
+  @override
+  String get bookingId => '예약 ID';
+
+  @override
+  String get bookingDate => '예약 날짜';
+
+  @override
+  String get deliveryMethod => '배송 방법';
+
+  @override
+  String get bookingTotal => '예약 총액';
+
+  @override
+  String get thankYouForBooking => '예약해 주셔서 감사합니다!';
+
+  @override
+  String get bookingConfirmation => '예약 확인';
+
+  @override
+  String get yourBookingHasBeenConfirmed => '예약이 확인되었습니다';
+
+  @override
+  String get bookingReference => '예약 참조 번호';
+
+  @override
+  String get estimatedTime => '예상 시간';
+
+  @override
+  String get contactSalon => '살롱 연락';
+
+  @override
+  String get backToMenu => '메뉴로 돌아가기';
+
+  @override
+  String get newBooking => '새 예약';
+
+  @override
+  String get bookingScreenTitle => '예약';
+
+  @override
+  String get bookingButton => '예약';
+
+  @override
+  String get bookingScreenDetails => '예약 상세';
+
+  @override
+  String get bookingCustomerInfo => '정보';
 }

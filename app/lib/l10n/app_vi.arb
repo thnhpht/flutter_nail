@@ -3243,5 +3243,146 @@
   "pleaseSelectAtLeastOneCategory": "Vui lòng chọn ít nhất 1 danh mục",
   "@pleaseSelectAtLeastOneCategory": {
     "description": "Message asking user to select at least one category"
+  },
+  
+  "booking": "Đặt lịch",
+  "@booking": {
+    "description": "Tùy chọn đặt lịch trong màn hình đăng nhập"
+  },
+  "bookingUser": "Người đặt lịch",
+  "@bookingUser": {
+    "description": "Vai trò người đặt lịch"
+  },
+  "bookingDescription": "Đặt lịch dịch vụ tại các salon",
+  "@bookingDescription": {
+    "description": "Mô tả cho vai trò người đặt lịch"
+  },
+  "salonName": "Tên Salon",
+  "@salonName": {
+    "description": "Nhãn cho ô nhập tên salon"
+  },
+  "enterSalonName": "Nhập tên salon",
+  "@enterSalonName": {
+    "description": "Placeholder cho ô nhập tên salon"
+  },
+  "connectToSalon": "Kết nối đến Salon",
+  "@connectToSalon": {
+    "description": "Text nút kết nối đến salon"
+  },
+  "connecting": "Đang kết nối...",
+  "@connecting": {
+    "description": "Text loading khi đang kết nối"
+  },
+  "connectionSuccessful": "Kết nối thành công!",
+  "@connectionSuccessful": {
+    "description": "Thông báo thành công khi kết nối thành công"
+  },
+  "connectionFailed": "Kết nối thất bại",
+  "@connectionFailed": {
+    "description": "Thông báo lỗi khi kết nối thất bại"
+  },
+  "salonNotFound": "Không tìm thấy salon",
+  "@salonNotFound": {
+    "description": "Thông báo lỗi khi không tìm thấy salon"
+  },
+  "pleaseEnterSalonName": "Vui lòng nhập tên salon",
+  "@pleaseEnterSalonName": {
+    "description": "Thông báo validation cho tên salon"
+  },
+  "deliveryOption": "Tùy chọn giao hàng",
+  "@deliveryOption": {
+    "description": "Nhãn cho lựa chọn tùy chọn giao hàng"
+  },
+  "homeDelivery": "Giao hàng tận nhà",
+  "@homeDelivery": {
+    "description": "Tùy chọn giao hàng tận nhà"
+  },
+  "pickupAtSalon": "Lấy tại chỗ",
+  "@pickupAtSalon": {
+    "description": "Tùy chọn lấy tại salon"
+  },
+  "selectDeliveryOption": "Chọn tùy chọn giao hàng",
+  "@selectDeliveryOption": {
+    "description": "Thông báo validation cho tùy chọn giao hàng"
+  },
+  "bookingSuccessful": "Đặt lịch thành công!",
+  "@bookingSuccessful": {
+    "description": "Thông báo thành công khi đặt lịch thành công"
+  },
+  "bookingFailed": "Đặt lịch thất bại",
+  "@bookingFailed": {
+    "description": "Thông báo lỗi khi đặt lịch thất bại"
+  },
+  "createBooking": "Tạo đặt lịch",
+  "@createBooking": {
+    "description": "Text nút tạo đặt lịch"
+  },
+  "bookingDetails": "Chi tiết đặt lịch",
+  "@bookingDetails": {
+    "description": "Tiêu đề cho phần chi tiết đặt lịch"
+  },
+  "bookingId": "Mã đặt lịch",
+  "@bookingId": {
+    "description": "Nhãn cho mã đặt lịch"
+  },
+  "bookingDate": "Ngày đặt lịch",
+  "@bookingDate": {
+    "description": "Nhãn cho ngày đặt lịch"
+  },
+  "deliveryMethod": "Phương thức giao hàng",
+  "@deliveryMethod": {
+    "description": "Nhãn cho phương thức giao hàng"
+  },
+  "bookingTotal": "Tổng tiền đặt lịch",
+  "@bookingTotal": {
+    "description": "Nhãn cho tổng tiền đặt lịch"
+  },
+  "thankYouForBooking": "Cảm ơn bạn đã đặt lịch!",
+  "@thankYouForBooking": {
+    "description": "Lời cảm ơn sau khi đặt lịch"
+  },
+  "bookingConfirmation": "Xác nhận đặt lịch",
+  "@bookingConfirmation": {
+    "description": "Tiêu đề cho xác nhận đặt lịch"
+  },
+  "yourBookingHasBeenConfirmed": "Đặt lịch của bạn đã được xác nhận",
+  "@yourBookingHasBeenConfirmed": {
+    "description": "Thông báo xác nhận"
+  },
+  "bookingReference": "Mã tham chiếu đặt lịch",
+  "@bookingReference": {
+    "description": "Nhãn cho mã tham chiếu đặt lịch"
+  },
+  "estimatedTime": "Thời gian ước tính",
+  "@estimatedTime": {
+    "description": "Nhãn cho thời gian ước tính"
+  },
+  "contactSalon": "Liên hệ Salon",
+  "@contactSalon": {
+    "description": "Text nút liên hệ salon"
+  },
+  "backToMenu": "Quay lại Menu",
+  "@backToMenu": {
+    "description": "Text nút quay lại menu"
+  },
+  "newBooking": "Đặt lịch mới",
+  "@newBooking": {
+    "description": "Text nút tạo đặt lịch mới"
+  },
+  "bookingScreenTitle": "Booking",
+  "@bookingScreenTitle": {
+    "description": "Tiêu đề màn hình booking"
+  },
+  "bookingButton": "Booking",
+  "@bookingButton": {
+    "description": "Text nút booking"
+  },
+  "bookingScreenDetails": "Chi tiết booking",
+  "@bookingScreenDetails": {
+    "description": "Tiêu đề chi tiết booking"
+  },
+  "bookingCustomerInfo": "Thông tin",
+  "@bookingCustomerInfo": {
+    "description": "Tiêu đề thông tin khách hàng trong booking"
   }
 }

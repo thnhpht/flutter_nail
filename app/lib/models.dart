@@ -279,6 +279,8 @@ class Order {
   final double shippingFee; // Phí ship
   final DateTime createdAt;
   final bool isPaid;
+  final bool isBooking; // true if created from booking, false if from order
+  final String deliveryMethod; // "pickup" or "delivery"
 
   Order({
     required this.id,
@@ -297,6 +299,8 @@ class Order {
     this.shippingFee = 0.0, // Mặc định phí ship = 0
     required this.createdAt,
     this.isPaid = false,
+    this.isBooking = false, // Mặc định là order (false)
+    this.deliveryMethod = 'pickup', // Mặc định là lấy tại chỗ
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -384,6 +388,8 @@ class Order {
       shippingFee: (json['shippingFee'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPaid: json['isPaid'] as bool? ?? false,
+      isBooking: json['isBooking'] as bool? ?? false,
+      deliveryMethod: json['deliveryMethod'] as String? ?? 'pickup',
     );
   }
 
@@ -405,6 +411,8 @@ class Order {
         'shippingFee': shippingFee,
         'createdAt': createdAt.toIso8601String(),
         'isPaid': isPaid,
+        'isBooking': isBooking,
+        'deliveryMethod': deliveryMethod,
       };
 }
 

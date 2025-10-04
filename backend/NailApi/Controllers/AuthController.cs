@@ -470,6 +470,8 @@ namespace NailApi.Controllers
                             [ShippingFee] decimal(18,2) NOT NULL DEFAULT 0.0,
                             [CreatedAt] datetime2 NOT NULL,
                             [IsPaid] bit NOT NULL DEFAULT 0,
+                            [IsBooking] bit NOT NULL DEFAULT 0,
+                            [DeliveryMethod] nvarchar(max) NOT NULL DEFAULT 'pickup',
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
                         );",
 
@@ -876,6 +878,32 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
 
                 return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi xóa tất cả thông báo." });
+            }
+        }
+
+        [HttpGet("check-salon")]
+        public async Task<ActionResult<object>> CheckSalon([FromQuery] string salonName)
+        {
+            try
+            {
+                Console.WriteLine($"Checking salon existence: {salonName}");
+
+                // Kiểm tra tên salon có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == salonName);
+
+                if (shopOwner != null)
+                {
+                    return Ok(new { exists = true, message = "Salon tồn tại trong hệ thống" });
+                }
+                else
+                {
+                    return Ok(new { exists = false, message = "Salon không tồn tại trong hệ thống" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Check salon error: {ex.Message}");
+                return StatusCode(500, new { exists = false, message = "Không thể kiểm tra salon. Vui lòng thử lại sau." });
             }
         }
     }

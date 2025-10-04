@@ -2460,5 +2460,146 @@
   "pleaseSelectAtLeastOneCategory": "Please select at least 1 category",
   "@pleaseSelectAtLeastOneCategory": {
     "description": "Message asking user to select at least one category"
+  },
+  
+  "booking": "Booking",
+  "@booking": {
+    "description": "Booking option in login screen"
+  },
+  "bookingUser": "Booking User",
+  "@bookingUser": {
+    "description": "Booking user role"
+  },
+  "bookingDescription": "Book services at salons",
+  "@bookingDescription": {
+    "description": "Description for booking user role"
+  },
+  "salonName": "Salon Name",
+  "@salonName": {
+    "description": "Label for salon name input"
+  },
+  "enterSalonName": "Enter salon name",
+  "@enterSalonName": {
+    "description": "Placeholder for salon name input"
+  },
+  "connectToSalon": "Connect to Salon",
+  "@connectToSalon": {
+    "description": "Button text to connect to salon"
+  },
+  "connecting": "Connecting...",
+  "@connecting": {
+    "description": "Loading text when connecting"
+  },
+  "connectionSuccessful": "Connection successful!",
+  "@connectionSuccessful": {
+    "description": "Success message when connection is successful"
+  },
+  "connectionFailed": "Connection failed",
+  "@connectionFailed": {
+    "description": "Error message when connection fails"
+  },
+  "salonNotFound": "Salon not found",
+  "@salonNotFound": {
+    "description": "Error message when salon is not found"
+  },
+  "pleaseEnterSalonName": "Please enter salon name",
+  "@pleaseEnterSalonName": {
+    "description": "Validation message for salon name"
+  },
+  "deliveryOption": "Delivery Option",
+  "@deliveryOption": {
+    "description": "Label for delivery option selection"
+  },
+  "homeDelivery": "Home Delivery",
+  "@homeDelivery": {
+    "description": "Home delivery option"
+  },
+  "pickupAtSalon": "Pickup at Salon",
+  "@pickupAtSalon": {
+    "description": "Pickup at salon option"
+  },
+  "selectDeliveryOption": "Select delivery option",
+  "@selectDeliveryOption": {
+    "description": "Validation message for delivery option"
+  },
+  "bookingSuccessful": "Booking successful!",
+  "@bookingSuccessful": {
+    "description": "Success message when booking is successful"
+  },
+  "bookingFailed": "Booking failed",
+  "@bookingFailed": {
+    "description": "Error message when booking fails"
+  },
+  "createBooking": "Create Booking",
+  "@createBooking": {
+    "description": "Button text to create booking"
+  },
+  "bookingDetails": "Booking Details",
+  "@bookingDetails": {
+    "description": "Title for booking details section"
+  },
+  "bookingId": "Booking ID",
+  "@bookingId": {
+    "description": "Label for booking ID"
+  },
+  "bookingDate": "Booking Date",
+  "@bookingDate": {
+    "description": "Label for booking date"
+  },
+  "deliveryMethod": "Delivery Method",
+  "@deliveryMethod": {
+    "description": "Label for delivery method"
+  },
+  "bookingTotal": "Booking Total",
+  "@bookingTotal": {
+    "description": "Label for booking total amount"
+  },
+  "thankYouForBooking": "Thank you for your booking!",
+  "@thankYouForBooking": {
+    "description": "Thank you message after booking"
+  },
+  "bookingConfirmation": "Booking Confirmation",
+  "@bookingConfirmation": {
+    "description": "Title for booking confirmation"
+  },
+  "yourBookingHasBeenConfirmed": "Your booking has been confirmed",
+  "@yourBookingHasBeenConfirmed": {
+    "description": "Confirmation message"
+  },
+  "bookingReference": "Booking Reference",
+  "@bookingReference": {
+    "description": "Label for booking reference number"
+  },
+  "estimatedTime": "Estimated Time",
+  "@estimatedTime": {
+    "description": "Label for estimated time"
+  },
+  "contactSalon": "Contact Salon",
+  "@contactSalon": {
+    "description": "Button text to contact salon"
+  },
+  "backToMenu": "Back to Menu",
+  "@backToMenu": {
+    "description": "Button text to go back to menu"
+  },
+  "newBooking": "New Booking",
+  "@newBooking": {
+    "description": "Button text to create new booking"
+  },
+  "bookingScreenTitle": "Booking",
+  "@bookingScreenTitle": {
+    "description": "Booking screen title"
+  },
+  "bookingButton": "Booking",
+  "@bookingButton": {
+    "description": "Booking button text"
+  },
+  "bookingScreenDetails": "Booking Details",
+  "@bookingScreenDetails": {
+    "description": "Booking screen details title"
+  },
+  "bookingCustomerInfo": "Information",
+  "@bookingCustomerInfo": {
+    "description": "Booking customer information title"
   }
 }

@@ -1917,4 +1917,106 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pleaseSelectAtLeastOneCategory =>
       'Please select at least 1 category';
+
+  @override
+  String get booking => 'Booking';
+
+  @override
+  String get bookingUser => 'Booking User';
+
+  @override
+  String get bookingDescription => 'Book services at salons';
+
+  @override
+  String get enterSalonName => 'Enter salon name';
+
+  @override
+  String get connectToSalon => 'Connect to Salon';
+
+  @override
+  String get connecting => 'Connecting...';
+
+  @override
+  String get connectionSuccessful => 'Connection successful!';
+
+  @override
+  String get connectionFailed => 'Connection failed';
+
+  @override
+  String get salonNotFound => 'Salon not found';
+
+  @override
+  String get pleaseEnterSalonName => 'Please enter salon name';
+
+  @override
+  String get deliveryOption => 'Delivery Option';
+
+  @override
+  String get homeDelivery => 'Home Delivery';
+
+  @override
+  String get pickupAtSalon => 'Pickup at Salon';
+
+  @override
+  String get selectDeliveryOption => 'Select delivery option';
+
+  @override
+  String get bookingSuccessful => 'Booking successful!';
+
+  @override
+  String get bookingFailed => 'Booking failed';
+
+  @override
+  String get createBooking => 'Create Booking';
+
+  @override
+  String get bookingDetails => 'Booking Details';
+
+  @override
+  String get bookingId => 'Booking ID';
+
+  @override
+  String get bookingDate => 'Booking Date';
+
+  @override
+  String get deliveryMethod => 'Delivery Method';
+
+  @override
+  String get bookingTotal => 'Booking Total';
+
+  @override
+  String get thankYouForBooking => 'Thank you for your booking!';
+
+  @override
+  String get bookingConfirmation => 'Booking Confirmation';
+
+  @override
+  String get yourBookingHasBeenConfirmed => 'Your booking has been confirmed';
+
+  @override
+  String get bookingReference => 'Booking Reference';
+
+  @override
+  String get estimatedTime => 'Estimated Time';
+
+  @override
+  String get contactSalon => 'Contact Salon';
+
+  @override
+  String get backToMenu => 'Back to Menu';
+
+  @override
+  String get newBooking => 'New Booking';
+
+  @override
+  String get bookingScreenTitle => 'Booking';
+
+  @override
+  String get bookingButton => 'Booking';
+
+  @override
+  String get bookingScreenDetails => 'Booking Details';
+
+  @override
+  String get bookingCustomerInfo => 'Information';
 }

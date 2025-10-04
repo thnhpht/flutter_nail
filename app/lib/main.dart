@@ -14,6 +14,7 @@ import 'screens/employees_screen.dart';
 import 'screens/categories_screen.dart';
 import 'screens/services_screen.dart';
 import 'screens/menu_screen.dart';
+import 'screens/menu_booking_screen.dart' as booking;
 import 'screens/bills_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/salon_info_screen.dart';
@@ -99,23 +100,41 @@ class _NailAppState extends State<NailApp> {
 
   Future<void> _checkLoginStatus() async {
     final isLoggedIn = await api.isLoggedIn();
+    print('_checkLoginStatus: isLoggedIn = $isLoggedIn');
+
     if (isLoggedIn) {
       // Get user role from SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       final userRole = prefs.getString('user_role') ?? 'shop_owner';
+      print('_checkLoginStatus: userRole from SharedPreferences = $userRole');
+
       setState(() {
         _isLoggedIn = isLoggedIn;
         _userRole = userRole;
       });
-      _loadTodayStats();
-      _loadSalonInfo(); // Load salon info when checking login status
-      // Load employee name with the correct userRole
-      if (userRole == 'employee') {
-        _loadEmployeeName();
+
+      print('_checkLoginStatus: _userRole set to $_userRole');
+
+      // Only load authenticated data for real users (not booking users)
+      if (userRole != 'booking') {
+        _loadTodayStats();
+        _loadSalonInfo(); // Load salon info when checking login status
+        // Load employee name with the correct userRole
+        if (userRole == 'employee') {
+          _loadEmployeeName();
+        } else {
+          setState(() {
+            _employeeName = null;
+            _isLoadingEmployeeName = false;
+          });
+        }
       } else {
+        // For booking users, load salon info using booking-specific API
+        _loadSalonInfoForBooking();
         setState(() {
           _employeeName = null;
           _isLoadingEmployeeName = false;
+          _isLoadingStats = false; // Don't load stats for booking users
         });
       }
     } else {
@@ -129,6 +148,18 @@ class _NailAppState extends State<NailApp> {
   }
 
   Future<void> _loadTodayStats() async {
+    // Debug: Check user role before loading stats
+    print('_loadTodayStats called with userRole: $_userRole');
+
+    // Don't load stats for booking users
+    if (_userRole == 'booking') {
+      print('Skipping stats loading for booking user');
+      setState(() {
+        _isLoadingStats = false;
+      });
+      return;
+    }
+
     try {
       setState(() {
         _isLoadingStats = true;
@@ -146,6 +177,16 @@ class _NailAppState extends State<NailApp> {
   }
 
   Future<void> _loadSalonInfo() async {
+    // Debug: Check user role before loading salon info
+    print('_loadSalonInfo called with userRole: $_userRole');
+
+    // Don't load salon info for booking users (they should use _loadSalonInfoForBooking)
+    if (_userRole == 'booking') {
+      print('Skipping authenticated salon info loading for booking user');
+      _loadSalonInfoForBooking();
+      return;
+    }
+
     try {
       setState(() {
         _isLoadingSalonInfo = true;
@@ -156,6 +197,39 @@ class _NailAppState extends State<NailApp> {
         _isLoadingSalonInfo = false;
         _hasLoadedSalonInfo = true;
       });
+    } catch (e) {
+      setState(() {
+        _isLoadingSalonInfo = false;
+        _hasLoadedSalonInfo = true;
+      });
+      // Salon info loading failed, but don't show error to user
+      // The app will use fallback values
+    }
+  }
+
+  Future<void> _loadSalonInfoForBooking() async {
+    try {
+      setState(() {
+        _isLoadingSalonInfo = true;
+      });
+
+      // Get salon name from SharedPreferences for booking user
+      final prefs = await SharedPreferences.getInstance();
+      final salonName = prefs.getString('salon_name') ?? '';
+
+      if (salonName.isNotEmpty) {
+        final salonInfo = await api.getInformationForBooking(salonName);
+        setState(() {
+          _salonInfo = salonInfo;
+          _isLoadingSalonInfo = false;
+          _hasLoadedSalonInfo = true;
+        });
+      } else {
+        setState(() {
+          _isLoadingSalonInfo = false;
+          _hasLoadedSalonInfo = true;
+        });
+      }
     } catch (e) {
       setState(() {
         _isLoadingSalonInfo = false;
@@ -201,6 +275,14 @@ class _NailAppState extends State<NailApp> {
 
   Future<void> _calculateLocalStats() async {
     try {
+      // Don't calculate stats for booking users
+      if (_userRole == 'booking') {
+        setState(() {
+          _isLoadingStats = false;
+        });
+        return;
+      }
+
       final orders = await api.getOrders();
 
       final today = DateTime.now();
@@ -263,16 +345,26 @@ class _NailAppState extends State<NailApp> {
     _notificationService.newNotificationNotifier
         .addListener(_onNewNotification);
 
-    _loadTodayStats();
-    _loadSalonInfo();
-
-    // Load employee name with the correct userRole
-    if (userRole == 'employee') {
-      _loadEmployeeName();
+    // Only load authenticated data for real users (not booking users)
+    if (userRole != 'booking') {
+      _loadTodayStats();
+      _loadSalonInfo();
+      // Load employee name with the correct userRole
+      if (userRole == 'employee') {
+        _loadEmployeeName();
+      } else {
+        setState(() {
+          _employeeName = null;
+          _isLoadingEmployeeName = false;
+        });
+      }
     } else {
+      // For booking users, load salon info using booking-specific API
+      _loadSalonInfoForBooking();
       setState(() {
         _employeeName = null;
         _isLoadingEmployeeName = false;
+        _isLoadingStats = false; // Don't load stats for booking users
       });
     }
   }
@@ -283,8 +375,10 @@ class _NailAppState extends State<NailApp> {
       _view = _HomeView.bills;
     });
 
-    // Refresh stats as well
-    _loadTodayStats();
+    // Refresh stats as well (only for authenticated users)
+    if (_userRole != 'booking') {
+      _loadTodayStats();
+    }
 
     // Add a small delay to ensure the screen is loaded
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -296,7 +390,11 @@ class _NailAppState extends State<NailApp> {
 
   void _refreshSalonInfo() {
     // Refresh salon info when updated from salon info screen
-    _loadSalonInfo();
+    if (_userRole != 'booking') {
+      _loadSalonInfo();
+    } else {
+      _loadSalonInfoForBooking();
+    }
   }
 
   void _navigateToUpdateOrder(Order order) {
@@ -346,7 +444,9 @@ class _NailAppState extends State<NailApp> {
             ),
           ),
           home: _isLoggedIn
-              ? _buildMainScreen()
+              ? (_userRole == 'booking'
+                  ? _buildBookingScreen()
+                  : _buildMainScreen())
               : LoginScreen(
                   api: api,
                   onLoginSuccess: _onLoginSuccess,
@@ -365,6 +465,11 @@ class _NailAppState extends State<NailApp> {
         );
       },
     );
+  }
+
+  Widget _buildBookingScreen() {
+    // Booking user gets direct access to menu booking screen without navigation
+    return booking.MenuScreen(api: api, onLogout: _handleLogout);
   }
 
   Widget _buildMainScreen() {

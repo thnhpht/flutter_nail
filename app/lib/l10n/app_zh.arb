@@ -2403,5 +2403,146 @@
   "pleaseSelectAtLeastOneCategory": "请至少选择1个分类",
   "@pleaseSelectAtLeastOneCategory": {
     "description": "Message asking user to select at least one category"
+  },
+  
+  "booking": "预约",
+  "@booking": {
+    "description": "登录界面的预约选项"
+  },
+  "bookingUser": "预约用户",
+  "@bookingUser": {
+    "description": "预约用户角色"
+  },
+  "bookingDescription": "在沙龙预约服务",
+  "@bookingDescription": {
+    "description": "预约用户角色描述"
+  },
+  "salonName": "沙龙名称",
+  "@salonName": {
+    "description": "沙龙名称输入标签"
+  },
+  "enterSalonName": "输入沙龙名称",
+  "@enterSalonName": {
+    "description": "沙龙名称输入占位符"
+  },
+  "connectToSalon": "连接到沙龙",
+  "@connectToSalon": {
+    "description": "连接沙龙按钮文本"
+  },
+  "connecting": "连接中...",
+  "@connecting": {
+    "description": "连接时的加载文本"
+  },
+  "connectionSuccessful": "连接成功！",
+  "@connectionSuccessful": {
+    "description": "连接成功消息"
+  },
+  "connectionFailed": "连接失败",
+  "@connectionFailed": {
+    "description": "连接失败错误消息"
+  },
+  "salonNotFound": "未找到沙龙",
+  "@salonNotFound": {
+    "description": "未找到沙龙时的错误消息"
+  },
+  "pleaseEnterSalonName": "请输入沙龙名称",
+  "@pleaseEnterSalonName": {
+    "description": "沙龙名称验证消息"
+  },
+  "deliveryOption": "配送选项",
+  "@deliveryOption": {
+    "description": "配送选项选择标签"
+  },
+  "homeDelivery": "送货上门",
+  "@homeDelivery": {
+    "description": "送货上门选项"
+  },
+  "pickupAtSalon": "到店自取",
+  "@pickupAtSalon": {
+    "description": "到店自取选项"
+  },
+  "selectDeliveryOption": "请选择配送选项",
+  "@selectDeliveryOption": {
+    "description": "配送选项验证消息"
+  },
+  "bookingSuccessful": "预约成功！",
+  "@bookingSuccessful": {
+    "description": "预约成功消息"
+  },
+  "bookingFailed": "预约失败",
+  "@bookingFailed": {
+    "description": "预约失败错误消息"
+  },
+  "createBooking": "创建预约",
+  "@createBooking": {
+    "description": "创建预约按钮文本"
+  },
+  "bookingDetails": "预约详情",
+  "@bookingDetails": {
+    "description": "预约详情部分标题"
+  },
+  "bookingId": "预约ID",
+  "@bookingId": {
+    "description": "预约ID标签"
+  },
+  "bookingDate": "预约日期",
+  "@bookingDate": {
+    "description": "预约日期标签"
+  },
+  "deliveryMethod": "配送方式",
+  "@deliveryMethod": {
+    "description": "配送方式标签"
+  },
+  "bookingTotal": "预约总额",
+  "@bookingTotal": {
+    "description": "预约总额标签"
+  },
+  "thankYouForBooking": "感谢您的预约！",
+  "@thankYouForBooking": {
+    "description": "预约后的感谢消息"
+  },
+  "bookingConfirmation": "预约确认",
+  "@bookingConfirmation": {
+    "description": "预约确认标题"
+  },
+  "yourBookingHasBeenConfirmed": "您的预约已确认",
+  "@yourBookingHasBeenConfirmed": {
+    "description": "确认消息"
+  },
+  "bookingReference": "预约参考号",
+  "@bookingReference": {
+    "description": "预约参考号标签"
+  },
+  "estimatedTime": "预计时间",
+  "@estimatedTime": {
+    "description": "预计时间标签"
+  },
+  "contactSalon": "联系沙龙",
+  "@contactSalon": {
+    "description": "联系沙龙按钮文本"
+  },
+  "backToMenu": "返回菜单",
+  "@backToMenu": {
+    "description": "返回菜单按钮文本"
+  },
+  "newBooking": "新预约",
+  "@newBooking": {
+    "description": "创建新预约按钮文本"
+  },
+  "bookingScreenTitle": "预约",
+  "@bookingScreenTitle": {
+    "description": "预约屏幕标题"
+  },
+  "bookingButton": "预约",
+  "@bookingButton": {
+    "description": "预约按钮文本"
+  },
+  "bookingScreenDetails": "预约详情",
+  "@bookingScreenDetails": {
+    "description": "预约屏幕详情标题"
+  },
+  "bookingCustomerInfo": "信息",
+  "@bookingCustomerInfo": {
+    "description": "预约客户信息标题"
   }
 }

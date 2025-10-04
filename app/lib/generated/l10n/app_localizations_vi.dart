@@ -603,7 +603,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get averageOrderValue => 'Giá trị đơn hàng trung bình';
 
   @override
-  String get salonName => 'Tên salon';
+  String get salonName => 'Tên Salon';
 
   @override
   String get salonAddress => 'Địa chỉ salon';
@@ -1930,4 +1930,106 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get pleaseSelectAtLeastOneCategory =>
       'Vui lòng chọn ít nhất 1 danh mục';
+
+  @override
+  String get booking => 'Đặt lịch';
+
+  @override
+  String get bookingUser => 'Người đặt lịch';
+
+  @override
+  String get bookingDescription => 'Đặt lịch dịch vụ tại các salon';
+
+  @override
+  String get enterSalonName => 'Nhập tên salon';
+
+  @override
+  String get connectToSalon => 'Kết nối đến Salon';
+
+  @override
+  String get connecting => 'Đang kết nối...';
+
+  @override
+  String get connectionSuccessful => 'Kết nối thành công!';
+
+  @override
+  String get connectionFailed => 'Kết nối thất bại';
+
+  @override
+  String get salonNotFound => 'Không tìm thấy salon';
+
+  @override
+  String get pleaseEnterSalonName => 'Vui lòng nhập tên salon';
+
+  @override
+  String get deliveryOption => 'Tùy chọn giao hàng';
+
+  @override
+  String get homeDelivery => 'Giao hàng tận nhà';
+
+  @override
+  String get pickupAtSalon => 'Lấy tại chỗ';
+
+  @override
+  String get selectDeliveryOption => 'Chọn tùy chọn giao hàng';
+
+  @override
+  String get bookingSuccessful => 'Đặt lịch thành công!';
+
+  @override
+  String get bookingFailed => 'Đặt lịch thất bại';
+
+  @override
+  String get createBooking => 'Tạo đặt lịch';
+
+  @override
+  String get bookingDetails => 'Chi tiết đặt lịch';
+
+  @override
+  String get bookingId => 'Mã đặt lịch';
+
+  @override
+  String get bookingDate => 'Ngày đặt lịch';
+
+  @override
+  String get deliveryMethod => 'Phương thức giao hàng';
+
+  @override
+  String get bookingTotal => 'Tổng tiền đặt lịch';
+
+  @override
+  String get thankYouForBooking => 'Cảm ơn bạn đã đặt lịch!';
+
+  @override
+  String get bookingConfirmation => 'Xác nhận đặt lịch';
+
+  @override
+  String get yourBookingHasBeenConfirmed => 'Đặt lịch của bạn đã được xác nhận';
+
+  @override
+  String get bookingReference => 'Mã tham chiếu đặt lịch';
+
+  @override
+  String get estimatedTime => 'Thời gian ước tính';
+
+  @override
+  String get contactSalon => 'Liên hệ Salon';
+
+  @override
+  String get backToMenu => 'Quay lại Menu';
+
+  @override
+  String get newBooking => 'Đặt lịch mới';
+
+  @override
+  String get bookingScreenTitle => 'Booking';
+
+  @override
+  String get bookingButton => 'Booking';
+
+  @override
+  String get bookingScreenDetails => 'Chi tiết booking';
+
+  @override
+  String get bookingCustomerInfo => 'Thông tin';
 }

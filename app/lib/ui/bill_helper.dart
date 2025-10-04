@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models.dart';
 import '../config/salon_config.dart';
 import 'design_system.dart';
@@ -12,6 +13,19 @@ class BillHelper {
   static List<Service>? _currentServices;
   static List<ServiceWithQuantity>? _currentServicesWithQuantity;
   static ApiClient? _apiClient;
+
+  // Helper method to check if current user is a booking user
+  static Future<bool> _isBookingUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userRole = prefs.getString('user_role') ?? '';
+    return userRole == 'booking';
+  }
+
+  // Helper method to get salon name for booking users
+  static Future<String> _getSalonName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('salon_name') ?? '';
+  }
 
   static Future<void> showBillDialog({
     required BuildContext context,
@@ -32,7 +46,15 @@ class BillHelper {
     // Lấy thông tin salon từ database
     Information? salonInfo;
     try {
-      salonInfo = await api.getInformation();
+      final isBooking = await _isBookingUser();
+      if (isBooking) {
+        final salonName = await _getSalonName();
+        if (salonName.isNotEmpty) {
+          salonInfo = await api.getInformationForBooking(salonName);
+        }
+      } else {
+        salonInfo = await api.getInformation();
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error loading salon info: $e');
@@ -45,6 +67,9 @@ class BillHelper {
         salonInfo?.address ?? salonAddress ?? SalonConfig.salonAddress;
     final phone = salonInfo?.phone ?? salonPhone ?? SalonConfig.salonPhone;
     final qrCode = salonInfo?.qrCode ?? salonQRCode;
+
+    // Check if user is booking user to conditionally show print button
+    final isBooking = await _isBookingUser();
 
     return showDialog(
       context: context,
@@ -115,29 +140,30 @@ class BillHelper {
                   ),
                 ),
 
-                // Action Buttons
-                Container(
-                  padding: const EdgeInsets.all(AppTheme.spacingM),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceAlt,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(AppTheme.radiusLarge),
-                      bottomRight: Radius.circular(AppTheme.radiusLarge),
+                // Action Buttons - Only show for non-booking users
+                if (!isBooking)
+                  Container(
+                    padding: const EdgeInsets.all(AppTheme.spacingM),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceAlt,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(AppTheme.radiusLarge),
+                        bottomRight: Radius.circular(AppTheme.radiusLarge),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildActionButton(
+                            onPressed: () => _printBill(context, order),
+                            label: AppLocalizations.of(context)!.print,
+                            icon: Icons.print,
+                            color: AppTheme.primaryEnd,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildActionButton(
-                          onPressed: () => _printBill(context, order),
-                          label: AppLocalizations.of(context)!.print,
-                          icon: Icons.print,
-                          color: AppTheme.primaryEnd,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -1090,10 +1116,21 @@ class BillHelper {
     Information? salonInfo;
     try {
       if (_apiClient != null) {
-        salonInfo = await _apiClient!.getInformation();
+        final isBooking = await _isBookingUser();
+        if (isBooking) {
+          final salonName = await _getSalonName();
+          if (salonName.isNotEmpty) {
+            salonInfo = await _apiClient!.getInformationForBooking(salonName);
+          }
+        } else {
+          salonInfo = await _apiClient!.getInformation();
+        }
       }
     } catch (e) {
-      return;
+      if (kDebugMode) {
+        print('Error loading salon info for print: $e');
+      }
+      // Don't return early, continue with fallback values
     }
 
     final salonName = salonInfo?.salonName;

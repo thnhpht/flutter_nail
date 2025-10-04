@@ -2403,5 +2403,146 @@
   "pleaseSelectAtLeastOneCategory": "최소 1개 카테고리를 선택해 주세요",
   "@pleaseSelectAtLeastOneCategory": {
     "description": "Message asking user to select at least one category"
+  },
+  
+  "booking": "예약",
+  "@booking": {
+    "description": "로그인 화면의 예약 옵션"
+  },
+  "bookingUser": "예약 사용자",
+  "@bookingUser": {
+    "description": "예약 사용자 역할"
+  },
+  "bookingDescription": "살롱에서 서비스 예약",
+  "@bookingDescription": {
+    "description": "예약 사용자 역할 설명"
+  },
+  "salonName": "살롱 이름",
+  "@salonName": {
+    "description": "살롱 이름 입력 라벨"
+  },
+  "enterSalonName": "살롱 이름 입력",
+  "@enterSalonName": {
+    "description": "살롱 이름 입력 플레이스홀더"
+  },
+  "connectToSalon": "살롱에 연결",
+  "@connectToSalon": {
+    "description": "살롱 연결 버튼 텍스트"
+  },
+  "connecting": "연결 중...",
+  "@connecting": {
+    "description": "연결 중 로딩 텍스트"
+  },
+  "connectionSuccessful": "연결 성공!",
+  "@connectionSuccessful": {
+    "description": "연결 성공 메시지"
+  },
+  "connectionFailed": "연결 실패",
+  "@connectionFailed": {
+    "description": "연결 실패 오류 메시지"
+  },
+  "salonNotFound": "살롱을 찾을 수 없습니다",
+  "@salonNotFound": {
+    "description": "살롱을 찾을 수 없을 때 오류 메시지"
+  },
+  "pleaseEnterSalonName": "살롱 이름을 입력해 주세요",
+  "@pleaseEnterSalonName": {
+    "description": "살롱 이름 유효성 검사 메시지"
+  },
+  "deliveryOption": "배송 옵션",
+  "@deliveryOption": {
+    "description": "배송 옵션 선택 라벨"
+  },
+  "homeDelivery": "택배 배송",
+  "@homeDelivery": {
+    "description": "택배 배송 옵션"
+  },
+  "pickupAtSalon": "살롱에서 픽업",
+  "@pickupAtSalon": {
+    "description": "살롱 픽업 옵션"
+  },
+  "selectDeliveryOption": "배송 옵션을 선택해 주세요",
+  "@selectDeliveryOption": {
+    "description": "배송 옵션 유효성 검사 메시지"
+  },
+  "bookingSuccessful": "예약 성공!",
+  "@bookingSuccessful": {
+    "description": "예약 성공 메시지"
+  },
+  "bookingFailed": "예약 실패",
+  "@bookingFailed": {
+    "description": "예약 실패 오류 메시지"
+  },
+  "createBooking": "예약 생성",
+  "@createBooking": {
+    "description": "예약 생성 버튼 텍스트"
+  },
+  "bookingDetails": "예약 상세",
+  "@bookingDetails": {
+    "description": "예약 상세 섹션 제목"
+  },
+  "bookingId": "예약 ID",
+  "@bookingId": {
+    "description": "예약 ID 라벨"
+  },
+  "bookingDate": "예약 날짜",
+  "@bookingDate": {
+    "description": "예약 날짜 라벨"
+  },
+  "deliveryMethod": "배송 방법",
+  "@deliveryMethod": {
+    "description": "배송 방법 라벨"
+  },
+  "bookingTotal": "예약 총액",
+  "@bookingTotal": {
+    "description": "예약 총액 라벨"
+  },
+  "thankYouForBooking": "예약해 주셔서 감사합니다!",
+  "@thankYouForBooking": {
+    "description": "예약 후 감사 메시지"
+  },
+  "bookingConfirmation": "예약 확인",
+  "@bookingConfirmation": {
+    "description": "예약 확인 제목"
+  },
+  "yourBookingHasBeenConfirmed": "예약이 확인되었습니다",
+  "@yourBookingHasBeenConfirmed": {
+    "description": "확인 메시지"
+  },
+  "bookingReference": "예약 참조 번호",
+  "@bookingReference": {
+    "description": "예약 참조 번호 라벨"
+  },
+  "estimatedTime": "예상 시간",
+  "@estimatedTime": {
+    "description": "예상 시간 라벨"
+  },
+  "contactSalon": "살롱 연락",
+  "@contactSalon": {
+    "description": "살롱 연락 버튼 텍스트"
+  },
+  "backToMenu": "메뉴로 돌아가기",
+  "@backToMenu": {
+    "description": "메뉴로 돌아가기 버튼 텍스트"
+  },
+  "newBooking": "새 예약",
+  "@newBooking": {
+    "description": "새 예약 생성 버튼 텍스트"
+  },
+  "bookingScreenTitle": "예약",
+  "@bookingScreenTitle": {
+    "description": "예약 화면 제목"
+  },
+  "bookingButton": "예약",
+  "@bookingButton": {
+    "description": "예약 버튼 텍스트"
+  },
+  "bookingScreenDetails": "예약 상세",
+  "@bookingScreenDetails": {
+    "description": "예약 화면 상세 제목"
+  },
+  "bookingCustomerInfo": "정보",
+  "@bookingCustomerInfo": {
+    "description": "예약 고객 정보 제목"
   }
 }

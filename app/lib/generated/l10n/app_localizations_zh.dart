@@ -1865,4 +1865,106 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pleaseSelectAtLeastOneCategory => '请至少选择1个分类';
+
+  @override
+  String get booking => '预约';
+
+  @override
+  String get bookingUser => '预约用户';
+
+  @override
+  String get bookingDescription => '在沙龙预约服务';
+
+  @override
+  String get enterSalonName => '输入沙龙名称';
+
+  @override
+  String get connectToSalon => '连接到沙龙';
+
+  @override
+  String get connecting => '连接中...';
+
+  @override
+  String get connectionSuccessful => '连接成功！';
+
+  @override
+  String get connectionFailed => '连接失败';
+
+  @override
+  String get salonNotFound => '未找到沙龙';
+
+  @override
+  String get pleaseEnterSalonName => '请输入沙龙名称';
+
+  @override
+  String get deliveryOption => '配送选项';
+
+  @override
+  String get homeDelivery => '送货上门';
+
+  @override
+  String get pickupAtSalon => '到店自取';
+
+  @override
+  String get selectDeliveryOption => '请选择配送选项';
+
+  @override
+  String get bookingSuccessful => '预约成功！';
+
+  @override
+  String get bookingFailed => '预约失败';
+
+  @override
+  String get createBooking => '创建预约';
+
+  @override
+  String get bookingDetails => '预约详情';
+
+  @override
+  String get bookingId => '预约ID';
+
+  @override
+  String get bookingDate => '预约日期';
+
+  @override
+  String get deliveryMethod => '配送方式';
+
+  @override
+  String get bookingTotal => '预约总额';
+
+  @override
+  String get thankYouForBooking => '感谢您的预约！';
+
+  @override
+  String get bookingConfirmation => '预约确认';
+
+  @override
+  String get yourBookingHasBeenConfirmed => '您的预约已确认';
+
+  @override
+  String get bookingReference => '预约参考号';
+
+  @override
+  String get estimatedTime => '预计时间';
+
+  @override
+  String get contactSalon => '联系沙龙';
+
+  @override
+  String get backToMenu => '返回菜单';
+
+  @override
+  String get newBooking => '新预约';
+
+  @override
+  String get bookingScreenTitle => '预约';
+
+  @override
+  String get bookingButton => '预约';
+
+  @override
+  String get bookingScreenDetails => '预约详情';
+
+  @override
+  String get bookingCustomerInfo => '信息';
 }

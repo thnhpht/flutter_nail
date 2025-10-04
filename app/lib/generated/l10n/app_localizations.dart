@@ -1230,10 +1230,10 @@ abstract class AppLocalizations {
   /// **'Giá trị đơn hàng trung bình'**
   String get averageOrderValue;
 
-  /// Salon name
+  /// Nhãn cho ô nhập tên salon
   ///
   /// In vi, this message translates to:
-  /// **'Tên salon'**
+  /// **'Tên Salon'**
   String get salonName;
 
   /// Salon address
@@ -3557,6 +3557,210 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Vui lòng chọn ít nhất 1 danh mục'**
   String get pleaseSelectAtLeastOneCategory;
+
+  /// Tùy chọn đặt lịch trong màn hình đăng nhập
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch'**
+  String get booking;
+
+  /// Vai trò người đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Người đặt lịch'**
+  String get bookingUser;
+
+  /// Mô tả cho vai trò người đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch dịch vụ tại các salon'**
+  String get bookingDescription;
+
+  /// Placeholder cho ô nhập tên salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập tên salon'**
+  String get enterSalonName;
+
+  /// Text nút kết nối đến salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối đến Salon'**
+  String get connectToSalon;
+
+  /// Text loading khi đang kết nối
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang kết nối...'**
+  String get connecting;
+
+  /// Thông báo thành công khi kết nối thành công
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối thành công!'**
+  String get connectionSuccessful;
+
+  /// Thông báo lỗi khi kết nối thất bại
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết nối thất bại'**
+  String get connectionFailed;
+
+  /// Thông báo lỗi khi không tìm thấy salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy salon'**
+  String get salonNotFound;
+
+  /// Thông báo validation cho tên salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập tên salon'**
+  String get pleaseEnterSalonName;
+
+  /// Nhãn cho lựa chọn tùy chọn giao hàng
+  ///
+  /// In vi, this message translates to:
+  /// **'Tùy chọn giao hàng'**
+  String get deliveryOption;
+
+  /// Tùy chọn giao hàng tận nhà
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao hàng tận nhà'**
+  String get homeDelivery;
+
+  /// Tùy chọn lấy tại salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Lấy tại chỗ'**
+  String get pickupAtSalon;
+
+  /// Thông báo validation cho tùy chọn giao hàng
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn tùy chọn giao hàng'**
+  String get selectDeliveryOption;
+
+  /// Thông báo thành công khi đặt lịch thành công
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch thành công!'**
+  String get bookingSuccessful;
+
+  /// Thông báo lỗi khi đặt lịch thất bại
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch thất bại'**
+  String get bookingFailed;
+
+  /// Text nút tạo đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạo đặt lịch'**
+  String get createBooking;
+
+  /// Tiêu đề cho phần chi tiết đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết đặt lịch'**
+  String get bookingDetails;
+
+  /// Nhãn cho mã đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã đặt lịch'**
+  String get bookingId;
+
+  /// Nhãn cho ngày đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngày đặt lịch'**
+  String get bookingDate;
+
+  /// Nhãn cho phương thức giao hàng
+  ///
+  /// In vi, this message translates to:
+  /// **'Phương thức giao hàng'**
+  String get deliveryMethod;
+
+  /// Nhãn cho tổng tiền đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng tiền đặt lịch'**
+  String get bookingTotal;
+
+  /// Lời cảm ơn sau khi đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Cảm ơn bạn đã đặt lịch!'**
+  String get thankYouForBooking;
+
+  /// Tiêu đề cho xác nhận đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận đặt lịch'**
+  String get bookingConfirmation;
+
+  /// Thông báo xác nhận
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch của bạn đã được xác nhận'**
+  String get yourBookingHasBeenConfirmed;
+
+  /// Nhãn cho mã tham chiếu đặt lịch
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã tham chiếu đặt lịch'**
+  String get bookingReference;
+
+  /// Nhãn cho thời gian ước tính
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian ước tính'**
+  String get estimatedTime;
+
+  /// Text nút liên hệ salon
+  ///
+  /// In vi, this message translates to:
+  /// **'Liên hệ Salon'**
+  String get contactSalon;
+
+  /// Text nút quay lại menu
+  ///
+  /// In vi, this message translates to:
+  /// **'Quay lại Menu'**
+  String get backToMenu;
+
+  /// Text nút tạo đặt lịch mới
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lịch mới'**
+  String get newBooking;
+
+  /// Tiêu đề màn hình booking
+  ///
+  /// In vi, this message translates to:
+  /// **'Booking'**
+  String get bookingScreenTitle;
+
+  /// Text nút booking
+  ///
+  /// In vi, this message translates to:
+  /// **'Booking'**
+  String get bookingButton;
+
+  /// Tiêu đề chi tiết booking
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết booking'**
+  String get bookingScreenDetails;
+
+  /// Tiêu đề thông tin khách hàng trong booking
+  ///
+  /// In vi, this message translates to:
+  /// **'Thông tin'**
+  String get bookingCustomerInfo;
 }
 
 class _AppLocalizationsDelegate

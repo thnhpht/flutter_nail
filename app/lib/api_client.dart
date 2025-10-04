@@ -72,6 +72,113 @@ class ApiClient {
     await prefs.remove('user_role');
     await prefs.remove('employee_id');
     await prefs.remove('shop_name');
+    await prefs.remove('salon_name'); // For booking users
+  }
+
+  // Booking methods
+  Future<bool> checkSalonExists(String salonName) async {
+    try {
+      final r = await _client
+          .get(_u(
+              '/auth/check-salon?salonName=${Uri.encodeComponent(salonName)}'))
+          .timeout(_timeout);
+
+      if (r.statusCode == 200) {
+        final response = jsonDecode(r.body);
+        return response['exists'] == true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> saveBookingUserInfo(String salonName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_role', 'booking');
+    await prefs.setString('salon_name', salonName);
+
+    // For booking users, create a temporary JWT token using salon name as email
+    // This is a workaround since backend doesn't have public booking endpoints
+    await prefs.setString('jwt_token', 'booking_temp_token');
+    await prefs.setString('database_name', salonName);
+  }
+
+  // Booking-specific API methods (no authentication required)
+  Future<List<Category>> getCategoriesForBooking(String salonName) async {
+    final r = await _client
+        .get(_u(
+            '/booking/categories?salonName=${Uri.encodeComponent(salonName)}'))
+        .timeout(_timeout);
+    _checkBooking(r);
+    final List<dynamic> data = jsonDecode(r.body);
+    return data.map((json) => Category.fromJson(json)).toList();
+  }
+
+  Future<List<Service>> getServicesForBooking(String salonName) async {
+    final r = await _client
+        .get(
+            _u('/booking/services?salonName=${Uri.encodeComponent(salonName)}'))
+        .timeout(_timeout);
+    _checkBooking(r);
+    final List<dynamic> data = jsonDecode(r.body);
+    return data.map((json) => Service.fromJson(json)).toList();
+  }
+
+  Future<Information> getInformationForBooking(String salonName) async {
+    final r = await _client
+        .get(_u(
+            '/booking/information?salonName=${Uri.encodeComponent(salonName)}'))
+        .timeout(_timeout);
+    _checkBooking(r);
+    return Information.fromJson(jsonDecode(r.body));
+  }
+
+  Future<List<Customer>> getCustomersForBooking(String salonName) async {
+    final r = await _client
+        .get(_u(
+            '/booking/customers?salonName=${Uri.encodeComponent(salonName)}'))
+        .timeout(_timeout);
+    _checkBooking(r);
+    final List<dynamic> data = jsonDecode(r.body);
+    return data.map((json) => Customer.fromJson(json)).toList();
+  }
+
+  Future<Customer?> findCustomerByPhoneForBooking(
+      String phone, String salonName) async {
+    try {
+      final r = await _client
+          .get(_u(
+              '/booking/customers/$phone?salonName=${Uri.encodeComponent(salonName)}'))
+          .timeout(_timeout);
+      _checkBooking(r);
+      return Customer.fromJson(jsonDecode(r.body));
+    } catch (e) {
+      return null; // Customer not found
+    }
+  }
+
+  Future<Order> createBookingOrder(Order order, String salonName) async {
+    // Create booking order request
+    final bookingRequest = {
+      'salonName': salonName,
+      'customerPhone': order.customerPhone,
+      'customerName': order.customerName,
+      'customerAddress': order.customerAddress,
+      'serviceIds': order.serviceIds,
+      'serviceNames': order.serviceNames,
+      'serviceQuantities': order.serviceQuantities,
+      'totalPrice': order.totalPrice,
+      'deliveryMethod': order.deliveryMethod,
+    };
+
+    final r = await _client
+        .post(_u('/booking/orders'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(bookingRequest))
+        .timeout(_timeout);
+    _checkBooking(r, expect201: true);
+    return Order.fromJson(jsonDecode(r.body));
   }
 
   // Notification methods
@@ -688,6 +795,18 @@ class ApiClient {
       if (r.statusCode == 401) {
         logout();
       }
+      throw Exception('HTTP ${r.statusCode}: ${r.body}');
+    }
+  }
+
+  void _checkBooking(http.Response r,
+      {bool expect201 = false, bool expect204 = false}) {
+    final ok = expect201
+        ? r.statusCode == 201
+        : expect204
+            ? r.statusCode == 204
+            : (r.statusCode >= 200 && r.statusCode < 300);
+    if (!ok) {
       throw Exception('HTTP ${r.statusCode}: ${r.body}');
     }
   }

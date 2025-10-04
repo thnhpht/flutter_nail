@@ -27,14 +27,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _shopNameController = TextEditingController();
   final _employeePhoneController = TextEditingController();
   final _employeePasswordController = TextEditingController();
+  final _salonNameController = TextEditingController();
 
   bool _isLoading = false;
   bool _emailChecked = false;
   bool _emailExists = false;
   String _databaseName = '';
   String _currentStep =
-      'role_selection'; // 'role_selection', 'email', 'login', 'create_account', 'employee_login'
-  String _selectedRole = 'shop_owner'; // 'shop_owner' or 'employee'
+      'role_selection'; // 'role_selection', 'email', 'login', 'create_account', 'employee_login', 'booking_connection'
+  String _selectedRole = 'shop_owner'; // 'shop_owner', 'employee', or 'booking'
 
   @override
   void initState() {
@@ -59,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _shopNameController.dispose();
     _employeePhoneController.dispose();
     _employeePasswordController.dispose();
+    _salonNameController.dispose();
     super.dispose();
   }
 
@@ -174,8 +176,10 @@ class _LoginScreenState extends State<LoginScreen> {
       _selectedRole = role;
       if (role == 'shop_owner') {
         _currentStep = 'email';
-      } else {
+      } else if (role == 'employee') {
         _currentStep = 'employee_login';
+      } else if (role == 'booking') {
+        _currentStep = 'booking_connection';
       }
     });
   }
@@ -188,6 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _currentStep = 'role_selection';
       } else if (_currentStep == 'employee_login') {
         _currentStep = 'role_selection';
+      } else if (_currentStep == 'booking_connection') {
+        _currentStep = 'role_selection';
       } else {
         _currentStep = 'email';
       }
@@ -198,6 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _shopNameController.clear();
       _employeePhoneController.clear();
       _employeePasswordController.clear();
+      _salonNameController.clear();
       _databaseName = '';
     });
   }
@@ -255,6 +262,59 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleBookingConnection() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final salonName = _salonNameController.text.trim();
+
+      // Check if salon exists using the new booking API
+      final exists = await widget.api.checkSalonExists(salonName);
+
+      if (exists) {
+        // Save booking user info using the new method
+        await widget.api.saveBookingUserInfo(salonName);
+
+        if (mounted) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.connectionSuccessful,
+            type: MessageType.success,
+          );
+        }
+
+        // Navigate to booking screen
+        widget.onLoginSuccess();
+      } else {
+        if (mounted) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.salonNotFound,
+            type: MessageType.error,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        AppWidgets.showFlushbar(
+          context,
+          AppLocalizations.of(context)!.connectionFailed,
+          type: MessageType.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   String _getUserFriendlyErrorMessage(String error) {
     final l10n = AppLocalizations.of(context)!;
     // Chuyển đổi lỗi API thành thông báo thân thiện với người dùng
@@ -299,6 +359,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return _handleLogin;
       case 'employee_login':
         return _handleEmployeeLogin;
+      case 'booking_connection':
+        return _handleBookingConnection;
       default:
         return null;
     }
@@ -317,6 +379,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return l10n.createAccount;
       case 'employee_login':
         return l10n.loginButton;
+      case 'booking_connection':
+        return l10n.connectToSalon;
       default:
         return l10n.continueText;
     }
@@ -465,6 +529,76 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+
+        // Booking Option
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _selectRole('booking'),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'booking'
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedRole == 'booking'
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: _selectedRole == 'booking'
+                          ? Colors.white
+                          : Colors.white70,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.bookingUser,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedRole == 'booking'
+                                  ? Colors.white
+                                  : Colors.white70,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.bookingDescription,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _selectedRole == 'booking'
+                                  ? Colors.white
+                                  : Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_selectedRole == 'booking')
+                      const Icon(Icons.check_circle,
+                          color: Colors.white, size: 24),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -506,7 +640,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? l10n.login
                                 : _currentStep == 'create_account'
                                     ? l10n.createAccount
-                                    : l10n.employeeLogin,
+                                    : _currentStep == 'employee_login'
+                                        ? l10n.employeeLogin
+                                        : l10n.connectToSalon,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -526,7 +662,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? _emailChecked && !_emailExists
                                         ? '${l10n.createNewAccountFor} $_databaseName'
                                         : l10n.createNewAccount
-                                    : l10n.enterEmployeeLoginInfo,
+                                    : _currentStep == 'employee_login'
+                                        ? l10n.enterEmployeeLoginInfo
+                                        : l10n.enterSalonName,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -744,6 +882,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ],
                             ),
+
+                          // Booking connection form
+                          if (_currentStep == 'booking_connection') ...[
+                            TextFormField(
+                              controller: _salonNameController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: l10n.salonName,
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.business,
+                                    color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.pleaseEnterSalonName;
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
 
                           // Database login fields (visible for shop owner login steps)
                           if (_currentStep == 'login' ||

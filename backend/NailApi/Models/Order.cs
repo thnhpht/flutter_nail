@@ -26,5 +26,7 @@ namespace NailApi.Models
         public decimal ShippingFee { get; set; } = 0.0M;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool IsPaid { get; set; } = false;
+        public bool IsBooking { get; set; } = false; // true if created from booking, false if from order
+        public string DeliveryMethod { get; set; } = "pickup"; // "pickup" or "delivery"
     }
 }
