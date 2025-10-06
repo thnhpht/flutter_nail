@@ -3558,10 +3558,10 @@ abstract class AppLocalizations {
   /// **'Vui lòng chọn ít nhất 1 danh mục'**
   String get pleaseSelectAtLeastOneCategory;
 
-  /// Tùy chọn đặt hàng trong màn hình đăng nhập
+  /// Booking label for serving staff section
   ///
   /// In vi, this message translates to:
-  /// **'Đặt hàng'**
+  /// **'Booking'**
   String get booking;
 
   /// Vai trò người đặt hàng
@@ -3624,7 +3624,7 @@ abstract class AppLocalizations {
   /// **'Tùy chọn giao hàng'**
   String get deliveryOption;
 
-  /// Tùy chọn giao hàng tận nhà
+  /// Home delivery option
   ///
   /// In vi, this message translates to:
   /// **'Giao hàng tận nhà'**
@@ -3761,6 +3761,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Thông tin'**
   String get bookingCustomerInfo;
+
+  /// Pick up at store delivery option
+  ///
+  /// In vi, this message translates to:
+  /// **'Lấy tại chỗ'**
+  String get pickupAtStore;
 }
 
 class _AppLocalizationsDelegate

@@ -1202,19 +1202,25 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                 const SizedBox(height: AppTheme.spacingS),
 
-                // Employee and Date
+                // Employee/Booking and Date
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.person_outline,
+                      order.isBooking
+                          ? Icons.shopping_bag_outlined
+                          : Icons.person_outline,
                       size: 16,
                       color: Colors.grey[600],
                     ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        order.employeeNames.join(', '),
+                        order.isBooking
+                            ? (order.deliveryMethod == 'pickup'
+                                ? AppLocalizations.of(context)!.pickupAtStore
+                                : AppLocalizations.of(context)!.homeDelivery)
+                            : order.employeeNames.join(', '),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

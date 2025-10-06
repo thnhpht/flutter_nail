@@ -1952,7 +1952,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deliveryOption => 'Delivery Option';
 
   @override
-  String get homeDelivery => 'Home Delivery';
+  String get homeDelivery => 'Home delivery';
 
   @override
   String get pickupAtSalon => 'Pickup at Salon';
@@ -2019,4 +2019,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookingCustomerInfo => 'Information';
+
+  @override
+  String get pickupAtStore => 'Pick up at store';
 }

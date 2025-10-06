@@ -328,10 +328,19 @@ class BillHelper {
                     context,
                     AppLocalizations.of(context)!.customerAddress,
                     order.customerAddress!),
-              _buildInfoRowWithWrap(
-                  context,
-                  AppLocalizations.of(context)!.servingStaff,
-                  order.employeeNames.join(', ')),
+              // Show booking info for booking orders, employee info for regular orders
+              if (order.isBooking)
+                _buildInfoRowWithWrap(
+                    context,
+                    AppLocalizations.of(context)!.booking,
+                    order.deliveryMethod == 'pickup'
+                        ? AppLocalizations.of(context)!.pickupAtStore
+                        : AppLocalizations.of(context)!.homeDelivery)
+              else
+                _buildInfoRowWithWrap(
+                    context,
+                    AppLocalizations.of(context)!.servingStaff,
+                    order.employeeNames.join(', ')),
             ],
           ),
         ),

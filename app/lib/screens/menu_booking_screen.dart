@@ -483,12 +483,38 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       return;
     }
 
-    if (_customerNameController.text.trim().isEmpty ||
-        _customerPhoneController.text.trim().isEmpty) {
-      AppWidgets.showFlushbar(
-          context, AppLocalizations.of(context)!.pleaseEnterCustomerName,
-          type: MessageType.warning);
-      return;
+    // Handle customer info based on delivery method
+    String customerName = _customerNameController.text.trim();
+    String customerPhone = _customerPhoneController.text.trim();
+
+    if (_deliveryOption == 'delivery') {
+      // For delivery, require full customer information
+      if (customerName.isEmpty ||
+          customerPhone.isEmpty ||
+          _customerAddressController.text.trim().isEmpty) {
+        AppWidgets.showFlushbar(context,
+            'Vui lòng nhập đầy đủ thông tin khách hàng (tên, số điện thoại, địa chỉ) để giao hàng tại nhà',
+            type: MessageType.warning);
+        return;
+      }
+    } else {
+      // For pickup, generate fake customer info if name or phone is empty
+      if (customerName.isEmpty || customerPhone.isEmpty) {
+        // Generate fake customer info
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        customerName = customerName.isEmpty
+            ? 'Khách hàng ${timestamp.toString().substring(8)}'
+            : customerName;
+        customerPhone = customerPhone.isEmpty
+            ? '0${timestamp.toString().substring(5, 12)}'
+            : customerPhone;
+
+        // Update the text fields to show the generated info
+        setState(() {
+          _customerNameController.text = customerName;
+          _customerPhoneController.text = customerPhone;
+        });
+      }
     }
 
     setState(() {
@@ -522,8 +548,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       // Create booking order
       final order = Order(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        customerName: _customerNameController.text.trim(),
-        customerPhone: _customerPhoneController.text.trim(),
+        customerName: customerName,
+        customerPhone: customerPhone,
         customerAddress: _customerAddressController.text.trim().isNotEmpty
             ? _customerAddressController.text.trim()
             : null,
@@ -1873,6 +1899,10 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                           onChanged: (value) {
                             setState(() {
                               _deliveryOption = value!;
+                              // Clear customer info when switching to pickup
+                              _customerNameController.clear();
+                              _customerPhoneController.clear();
+                              _customerAddressController.clear();
                             });
                           },
                           activeColor: AppTheme.primaryStart,

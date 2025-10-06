@@ -1911,7 +1911,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deliveryOption => '배송 옵션';
 
   @override
-  String get homeDelivery => '택배 배송';
+  String get homeDelivery => '홈 배송';
 
   @override
   String get pickupAtSalon => '살롱에서 픽업';
@@ -1978,4 +1978,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get bookingCustomerInfo => '정보';
+
+  @override
+  String get pickupAtStore => '매장 픽업';
 }

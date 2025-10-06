@@ -1967,4 +1967,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get bookingCustomerInfo => '信息';
+
+  @override
+  String get pickupAtStore => '店内取货';
 }

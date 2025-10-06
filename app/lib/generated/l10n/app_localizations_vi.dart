@@ -1931,7 +1931,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Vui lòng chọn ít nhất 1 danh mục';
 
   @override
-  String get booking => 'Đặt hàng';
+  String get booking => 'Booking';
 
   @override
   String get bookingUser => 'Booking';
@@ -2031,4 +2031,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get bookingCustomerInfo => 'Thông tin';
+
+  @override
+  String get pickupAtStore => 'Lấy tại chỗ';
 }

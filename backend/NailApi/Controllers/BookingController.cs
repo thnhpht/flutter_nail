@@ -290,7 +290,7 @@ namespace NailApi.Controllers
 
                     // Create the order
                     var orderId = Guid.NewGuid().ToString();
-                    var createdAt = DateTime.UtcNow;
+                    var createdAt = DateTime.Now;
 
                     var insertCommand = new SqlCommand(@"
                         INSERT INTO Orders (Id, CustomerPhone, CustomerName, CustomerAddress, EmployeeIds, EmployeeNames, 

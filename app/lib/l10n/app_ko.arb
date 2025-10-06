@@ -2544,5 +2544,17 @@
   "bookingCustomerInfo": "정보",
   "@bookingCustomerInfo": {
     "description": "예약 고객 정보 제목"
+  },
+  "booking": "예약",
+  "@booking": {
+    "description": "서비스 직원 섹션용 예약 라벨"
+  },
+  "pickupAtStore": "매장 픽업",
+  "@pickupAtStore": {
+    "description": "매장 픽업 배송 옵션"
+  },
+  "homeDelivery": "홈 배송",
+  "@homeDelivery": {
+    "description": "홈 배송 옵션"
   }
 }

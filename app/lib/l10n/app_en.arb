@@ -2601,5 +2601,17 @@
   "bookingCustomerInfo": "Information",
   "@bookingCustomerInfo": {
     "description": "Booking customer information title"
+  },
+  "booking": "Booking",
+  "@booking": {
+    "description": "Booking label for serving staff section"
+  },
+  "pickupAtStore": "Pick up at store",
+  "@pickupAtStore": {
+    "description": "Pick up at store delivery option"
+  },
+  "homeDelivery": "Home delivery",
+  "@homeDelivery": {
+    "description": "Home delivery option"
   }
 }

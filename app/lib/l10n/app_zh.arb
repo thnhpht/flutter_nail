@@ -2544,5 +2544,17 @@
   "bookingCustomerInfo": "信息",
   "@bookingCustomerInfo": {
     "description": "预约客户信息标题"
+  },
+  "booking": "预约",
+  "@booking": {
+    "description": "预约标签用于服务人员部分"
+  },
+  "pickupAtStore": "店内取货",
+  "@pickupAtStore": {
+    "description": "店内取货配送选项"
+  },
+  "homeDelivery": "送货上门",
+  "@homeDelivery": {
+    "description": "送货上门选项"
   }
 }

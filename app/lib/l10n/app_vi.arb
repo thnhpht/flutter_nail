@@ -3384,5 +3384,17 @@
   "bookingCustomerInfo": "Thông tin",
   "@bookingCustomerInfo": {
     "description": "Tiêu đề thông tin khách hàng trong booking"
+  },
+  "booking": "Booking",
+  "@booking": {
+    "description": "Booking label for serving staff section"
+  },
+  "pickupAtStore": "Lấy tại chỗ",
+  "@pickupAtStore": {
+    "description": "Pick up at store delivery option"
+  },
+  "homeDelivery": "Giao hàng tận nhà",
+  "@homeDelivery": {
+    "description": "Home delivery option"
   }
 }
