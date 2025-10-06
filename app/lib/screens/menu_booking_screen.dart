@@ -13,8 +13,10 @@ import '../services/notification_service.dart';
 class MenuScreen extends StatefulWidget {
   final ApiClient api;
   final VoidCallback? onLogout;
+  final VoidCallback? onOrderCreated;
 
-  const MenuScreen({super.key, required this.api, this.onLogout});
+  const MenuScreen(
+      {super.key, required this.api, this.onLogout, this.onOrderCreated});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -591,6 +593,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         servicesWithQuantity: _selectedServices,
         api: widget.api,
       );
+
+      // Call the callback to refresh dashboard stats
+      widget.onOrderCreated?.call();
 
       // Reset form
       _resetBookingForm();

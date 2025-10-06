@@ -86,6 +86,13 @@ class _NailAppState extends State<NailApp> {
   // Update order
   Order? _orderToUpdate;
 
+  // Callback function to refresh dashboard stats
+  void Function()? _onOrderCreated;
+
+  // Debounce mechanism to prevent too frequent refreshes
+  DateTime? _lastRefreshTime;
+  static const Duration _refreshDebounceTime = Duration(seconds: 2);
+
   @override
   void initState() {
     super.initState();
@@ -98,6 +105,11 @@ class _NailAppState extends State<NailApp> {
     // Listen for new notifications
     _notificationService.newNotificationNotifier
         .addListener(_onNewNotification);
+
+    // Set up callback for order creation
+    _onOrderCreated = () {
+      _debouncedRefreshStats();
+    };
 
     // Listen for language changes
     _languageService.addListener(_onLanguageChanged);
@@ -475,7 +487,8 @@ class _NailAppState extends State<NailApp> {
 
   Widget _buildBookingScreen() {
     // Booking user gets direct access to menu booking screen without navigation
-    return booking.MenuScreen(api: api, onLogout: _handleLogout);
+    return booking.MenuScreen(
+        api: api, onLogout: _handleLogout, onOrderCreated: _onOrderCreated);
   }
 
   Widget _buildMainScreen() {
@@ -794,6 +807,25 @@ class _NailAppState extends State<NailApp> {
       _audioService.playNotificationSound();
       // Just clear the notification - no Flushbar needed
       _notificationService.clearNewNotification();
+
+      // Auto refresh today's stats when new notification arrives
+      // This ensures dashboard updates when new orders are created
+      // Only refresh if notification is about orders (order_created, booking_created, order_paid)
+      if (newNotification.type == 'order_created' ||
+          newNotification.type == 'booking_created' ||
+          newNotification.type == 'order_paid') {
+        _debouncedRefreshStats();
+      }
+    }
+  }
+
+  /// Debounced refresh to prevent too frequent API calls
+  void _debouncedRefreshStats() {
+    final now = DateTime.now();
+    if (_lastRefreshTime == null ||
+        now.difference(_lastRefreshTime!) > _refreshDebounceTime) {
+      _lastRefreshTime = now;
+      _loadTodayStats();
     }
   }
 
@@ -835,7 +867,7 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.services:
           return ServicesScreen(api: api);
         case _HomeView.orders:
-          return OrderScreen(api: api, onOrderCreated: _refreshBills);
+          return OrderScreen(api: api, onOrderCreated: _onOrderCreated);
         case _HomeView.bills:
           return BillsScreen(
               api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
@@ -878,7 +910,7 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.menu:
           return MenuScreen(api: api);
         case _HomeView.orders:
-          return OrderScreen(api: api, onOrderCreated: _refreshBills);
+          return OrderScreen(api: api, onOrderCreated: _onOrderCreated);
         case _HomeView.bills:
           return BillsScreen(
               api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
