@@ -505,9 +505,16 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         customerName = customerName.isEmpty
             ? 'Khách hàng ${timestamp.toString().substring(8)}'
             : customerName;
-        customerPhone = customerPhone.isEmpty
-            ? '0${timestamp.toString().substring(5, 12)}'
-            : customerPhone;
+        // Generate a 10-digit phone number starting with '0'
+        if (customerPhone.isEmpty) {
+          // Ensure the generated number is always 10 digits
+          final timestampStr = timestamp.toString();
+          // Take the last 9 digits of the timestamp (pad left if needed)
+          final last9Digits = timestampStr.length >= 9
+              ? timestampStr.substring(timestampStr.length - 9)
+              : timestampStr.padLeft(9, '0');
+          customerPhone = '0$last9Digits';
+        }
 
         // Update the text fields to show the generated info
         setState(() {
