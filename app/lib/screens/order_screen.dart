@@ -8,7 +8,6 @@ import '../api_client.dart';
 import '../models.dart';
 import '../ui/bill_helper.dart';
 import '../ui/design_system.dart';
-import '../services/notification_service.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key, required this.api, this.onOrderCreated});
@@ -50,7 +49,6 @@ class _OrderScreenState extends State<OrderScreen> {
   bool _showEmployeeDropdown = false;
   String? _currentUserRole;
   String? _currentEmployeeId;
-  final NotificationService _notificationService = NotificationService();
 
   // Customer phone dropdown
   List<Customer> _allCustomers = [];
@@ -648,22 +646,8 @@ class _OrderScreenState extends State<OrderScreen> {
           context, AppLocalizations.of(context)!.orderCreatedSuccessfully,
           type: MessageType.success);
 
-      // Send notification to shop owner if employee created the order
-      if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
-        try {
-          await _notificationService.createOrderCreatedNotification(
-            orderId: createdOrders.first.id,
-            customerName: customerName,
-            customerPhone: customerPhone,
-            employeeName: _selectedEmployees.first.name,
-            totalPrice: _finalTotalPrice,
-            context: context,
-            currentUserRole: _currentUserRole,
-          );
-        } catch (e) {
-          // Handle notification error silently
-        }
-      }
+      // Notification is automatically created by backend when order is created
+      // No need to send notification from client side
 
       // Create a backup of selected services before showing bills
       final selectedServicesBackup =

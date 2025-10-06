@@ -212,7 +212,7 @@
   "@roleSelection": {
     "description": "Role selection"
   },
-  "shopOwner": "Chủ salon",
+  "shopOwner": "Chủ shop",
   "@shopOwner": {
     "description": "Shop owner"
   },
@@ -2772,11 +2772,11 @@
   "@continueText": {
     "description": "Continue button text"
   },
-  "manageEntireSystem": "Quản lý toàn bộ hệ thống",
+  "manageEntireSystem": "",
   "@manageEntireSystem": {
     "description": "Shop owner description"
   },
-  "accessServicesCreateOrdersAndBills": "Truy cập chi tiết, tạo đơn và hóa đơn",
+  "accessServicesCreateOrdersAndBills": "",
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
@@ -3249,11 +3249,11 @@
   "@booking": {
     "description": "Tùy chọn đặt lịch trong màn hình đăng nhập"
   },
-  "bookingUser": "Người đặt lịch",
+  "bookingUser": "Booking",
   "@bookingUser": {
     "description": "Vai trò người đặt lịch"
   },
-  "bookingDescription": "Đặt lịch dịch vụ tại các salon",
+  "bookingDescription": "",
   "@bookingDescription": {
     "description": "Mô tả cho vai trò người đặt lịch"
   },

@@ -429,7 +429,7 @@ abstract class AppLocalizations {
   /// Shop owner
   ///
   /// In vi, this message translates to:
-  /// **'Chủ salon'**
+  /// **'Chủ shop'**
   String get shopOwner;
 
   /// Email field label
@@ -3003,13 +3003,13 @@ abstract class AppLocalizations {
   /// Shop owner description
   ///
   /// In vi, this message translates to:
-  /// **'Quản lý toàn bộ hệ thống'**
+  /// **''**
   String get manageEntireSystem;
 
   /// Employee description
   ///
   /// In vi, this message translates to:
-  /// **'Truy cập chi tiết, tạo đơn và hóa đơn'**
+  /// **''**
   String get accessServicesCreateOrdersAndBills;
 
   /// Please enter your email validation message
@@ -3567,13 +3567,13 @@ abstract class AppLocalizations {
   /// Vai trò người đặt lịch
   ///
   /// In vi, this message translates to:
-  /// **'Người đặt lịch'**
+  /// **'Booking'**
   String get bookingUser;
 
   /// Mô tả cho vai trò người đặt lịch
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch dịch vụ tại các salon'**
+  /// **''**
   String get bookingDescription;
 
   /// Placeholder cho ô nhập tên salon

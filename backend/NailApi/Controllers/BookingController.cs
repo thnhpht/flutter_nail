@@ -321,6 +321,32 @@ namespace NailApi.Controllers
 
                     await insertCommand.ExecuteNonQueryAsync();
 
+                    // Create notification for booking order
+                    var notificationId = Guid.NewGuid().ToString();
+                    var notificationData = JsonSerializer.Serialize(new
+                    {
+                        orderId = orderId,
+                        customerName = request.CustomerName,
+                        customerPhone = request.CustomerPhone,
+                        totalPrice = request.TotalPrice
+                    });
+
+                    var notificationCommand = new SqlCommand(@"
+                        INSERT INTO [Notifications] (Id, Title, Message, Type, CreatedAt, IsRead, Data)
+                        VALUES (@id, @title, @message, @type, @createdAt, @isRead, @data)", connection);
+
+                    notificationCommand.Parameters.AddWithValue("@id", notificationId);
+                    notificationCommand.Parameters.AddWithValue("@title", "Đơn đặt hàng mới");
+                    notificationCommand.Parameters.AddWithValue("@message", 
+                        $"Khách hàng {request.CustomerName} ({request.CustomerPhone}) đã tạo đơn đặt hàng với tổng tiền {request.TotalPrice:N0} VNĐ");
+                    notificationCommand.Parameters.AddWithValue("@type", "booking_created");
+                    notificationCommand.Parameters.AddWithValue("@createdAt", DateTime.Now);
+                    notificationCommand.Parameters.AddWithValue("@isRead", false);
+                    notificationCommand.Parameters.AddWithValue("@data", notificationData);
+
+                    await notificationCommand.ExecuteNonQueryAsync();
+                    Console.WriteLine($"Booking notification created with ID: {notificationId}");
+
                     // Return the created order
                     var order = new Order
                     {

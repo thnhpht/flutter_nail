@@ -34,6 +34,7 @@ namespace NailApi.Data
         public DbSet<Service> Services => Set<Service>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<Information> Information => Set<Information>();
+        public DbSet<Notification> Notifications => Set<Notification>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -79,6 +80,18 @@ namespace NailApi.Data
                 entity.Property(e => e.Logo).HasMaxLength(500);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETDATE()");
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).IsRequired().HasMaxLength(450);
+                entity.Property(e => e.Title).IsRequired();
+                entity.Property(e => e.Message).IsRequired();
+                entity.Property(e => e.Type).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
+                entity.Property(e => e.IsRead).IsRequired().HasDefaultValue(false);
+                entity.Property(e => e.Data).HasMaxLength(4000);
             });
         }
     }

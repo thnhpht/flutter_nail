@@ -8,6 +8,7 @@ import '../models.dart';
 import '../ui/design_system.dart';
 import '../ui/bill_helper.dart';
 import '../generated/l10n/app_localizations.dart';
+import '../services/notification_service.dart';
 
 class MenuScreen extends StatefulWidget {
   final ApiClient api;
@@ -46,6 +47,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   List<Customer> _filteredCustomers = [];
   bool _showCustomerDropdown = false;
 
+  // Notification service
+  final NotificationService _notificationService = NotificationService();
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +66,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     ));
     _loadData();
     _loadCustomers();
+    // Initialize notification service with API client
+    _notificationService.initialize(apiClient: widget.api);
     // Add listener for auto-search
     _customerPhoneController.addListener(_onCustomerPhoneChanged);
   }
@@ -541,6 +547,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       AppWidgets.showFlushbar(
           context, AppLocalizations.of(context)!.bookingSuccessful,
           type: MessageType.success);
+
+      // Notification is automatically created by backend when booking order is created
+      // No need to send notification from client side
 
       // Show bill dialog instead of confirmation
       await BillHelper.showBillDialog(

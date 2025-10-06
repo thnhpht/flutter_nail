@@ -437,16 +437,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : Colors.white70,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.manageEntireSystem,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _selectedRole == 'shop_owner'
-                                  ? Colors.white
-                                  : Colors.white70,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -507,16 +497,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : Colors.white70,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.accessServicesCreateOrdersAndBills,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _selectedRole == 'employee'
-                                  ? Colors.white
-                                  : Colors.white70,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -572,16 +552,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: _selectedRole == 'booking'
-                                  ? Colors.white
-                                  : Colors.white70,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.bookingDescription,
-                            style: TextStyle(
-                              fontSize: 14,
                               color: _selectedRole == 'booking'
                                   ? Colors.white
                                   : Colors.white70,

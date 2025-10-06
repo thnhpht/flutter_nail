@@ -231,7 +231,7 @@ namespace NailApi.Controllers
                                     Success = true,
                                     Message = $"Đăng nhập thành công! Chào mừng {employeeName}",
                                     DatabaseName = databaseName,
-                                    Token = _jwtService.GenerateToken(request.ShopName, shopOwner.UserLogin, "employee", employeeId),
+                                    Token = _jwtService.GenerateToken(request.ShopName, shopOwner.UserLogin, "employee", employeeId, employeeName),
                                     UserRole = "employee",
                                     EmployeeId = employeeId
                                 });

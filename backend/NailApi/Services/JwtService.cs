@@ -7,7 +7,7 @@ namespace NailApi.Services
 {
     public interface IJwtService
     {
-        string GenerateToken(string email, string userLogin, string? userRole = null, string? employeeId = null);
+        string GenerateToken(string email, string userLogin, string? userRole = null, string? employeeId = null, string? employeeName = null);
         ClaimsPrincipal? ValidateToken(string token);
     }
 
@@ -20,7 +20,7 @@ namespace NailApi.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(string email, string userLogin, string? userRole = null, string? employeeId = null)
+        public string GenerateToken(string email, string userLogin, string? userRole = null, string? employeeId = null, string? employeeName = null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured"));
@@ -43,6 +43,12 @@ namespace NailApi.Services
             if (!string.IsNullOrEmpty(employeeId))
             {
                 claims.Add(new Claim("employee_id", employeeId));
+            }
+
+            // Thêm employee_name nếu có
+            if (!string.IsNullOrEmpty(employeeName))
+            {
+                claims.Add(new Claim("employee_name", employeeName));
             }
 
             var tokenDescriptor = new SecurityTokenDescriptor

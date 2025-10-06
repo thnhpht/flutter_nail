@@ -171,7 +171,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get roleSelection => 'Chọn vai trò';
 
   @override
-  String get shopOwner => 'Chủ salon';
+  String get shopOwner => 'Chủ shop';
 
   @override
   String get email => 'Email';
@@ -1610,11 +1610,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get continueText => 'Tiếp tục';
 
   @override
-  String get manageEntireSystem => 'Quản lý toàn bộ hệ thống';
+  String get manageEntireSystem => '';
 
   @override
-  String get accessServicesCreateOrdersAndBills =>
-      'Truy cập chi tiết, tạo đơn và hóa đơn';
+  String get accessServicesCreateOrdersAndBills => '';
 
   @override
   String get pleaseEnterYourEmail => 'Vui lòng nhập email của bạn';
@@ -1935,10 +1934,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get booking => 'Đặt lịch';
 
   @override
-  String get bookingUser => 'Người đặt lịch';
+  String get bookingUser => 'Booking';
 
   @override
-  String get bookingDescription => 'Đặt lịch dịch vụ tại các salon';
+  String get bookingDescription => '';
 
   @override
   String get enterSalonName => 'Nhập tên salon';

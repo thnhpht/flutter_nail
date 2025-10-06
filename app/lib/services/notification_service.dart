@@ -69,8 +69,9 @@ class NotificationService {
       // Try to load from API first if available
       if (_apiClient != null) {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           try {
@@ -96,7 +97,13 @@ class NotificationService {
               notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
               _notificationsNotifier.value = notifications;
+
+              // Update unread count
+              final unreadCount = notifications.where((n) => !n.isRead).length;
+              _unreadCountNotifier.value = unreadCount;
+
               await _saveNotifications(); // Cache locally
+              await _saveUnreadCount(); // Save unread count
               return;
             }
           } catch (e) {
@@ -120,8 +127,13 @@ class NotificationService {
         notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
         _notificationsNotifier.value = notifications;
+
+        // Update unread count
+        final unreadCount = notifications.where((n) => !n.isRead).length;
+        _unreadCountNotifier.value = unreadCount;
       } else {
         _notificationsNotifier.value = [];
+        _unreadCountNotifier.value = 0;
       }
     } catch (e) {
       _notificationsNotifier.value = [];
@@ -182,8 +194,9 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.markNotificationRead(
@@ -240,8 +253,9 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           final response = await _apiClient!.deleteNotification(
@@ -287,8 +301,9 @@ class NotificationService {
     if (_apiClient != null) {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           final response = await _apiClient!.clearAllNotifications(
@@ -362,8 +377,9 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
@@ -382,28 +398,28 @@ class NotificationService {
           // Refresh notifications from API
           await _loadNotifications();
 
-          // Show local notification as well
-          const uuid = Uuid();
-          final localNotification = models.Notification(
-            id: uuid.v4(),
-            title: 'Đơn hàng mới',
-            message:
-                'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
-            type: 'order_created',
-            createdAt: DateTime.now(),
-            data: {
-              'orderId': orderId,
-              'customerName': customerName,
-              'customerPhone': customerPhone,
-              'employeeName': employeeName,
-              'totalPrice': totalPrice,
-            },
-          );
-          await addNotification(localNotification);
-
           // Show Flushbar only for shop owners if context is available
           if (context != null && currentUserRole == 'shop_owner') {
-            showNotification(context, localNotification);
+            // Find the notification that was just created from API
+            final newNotification = _notificationsNotifier.value.firstWhere(
+              (n) => n.type == 'order_created' && n.data?['orderId'] == orderId,
+              orElse: () => models.Notification(
+                id: '',
+                title: 'Đơn hàng mới',
+                message:
+                    'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
+                type: 'order_created',
+                createdAt: DateTime.now(),
+                data: {
+                  'orderId': orderId,
+                  'customerName': customerName,
+                  'customerPhone': customerPhone,
+                  'employeeName': employeeName,
+                  'totalPrice': totalPrice,
+                },
+              ),
+            );
+            showNotification(context, newNotification);
           }
           return;
         } else {
@@ -468,8 +484,9 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
@@ -512,6 +529,120 @@ class NotificationService {
     await addNotification(notification);
   }
 
+  /// Create a notification for booking created
+  Future<void> createBookingCreatedNotification({
+    required String orderId,
+    required String customerName,
+    required String customerPhone,
+    required double totalPrice,
+    bool isDemo = false,
+    BuildContext? context,
+    String? currentUserRole, // Add user role parameter
+  }) async {
+    if (isDemo) {
+      // Demo mode: only create local notification
+      const uuid = Uuid();
+      final notification = models.Notification(
+        id: uuid.v4(),
+        title: 'Đơn đặt hàng mới',
+        message:
+            'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+        type: 'booking_created',
+        createdAt: DateTime.now(),
+        data: {
+          'orderId': orderId,
+          'customerName': customerName,
+          'customerPhone': customerPhone,
+          'totalPrice': totalPrice,
+        },
+      );
+      await addNotification(notification);
+
+      // Show Flushbar only for shop owners if context is available
+      if (context != null && currentUserRole == 'shop_owner') {
+        showNotification(context, notification);
+      }
+      return;
+    }
+
+    // Real mode: send via API first, then create local notification
+    // Always send notification to shop owner for booking orders
+    if (_apiClient != null) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
+
+        if (shopName != null && shopName.isNotEmpty) {
+          await _apiClient!.sendNotification(
+            shopName: shopName,
+            title: 'Đơn đặt hàng mới',
+            message:
+                'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+            type: 'booking_created',
+            orderId: orderId,
+            customerName: customerName,
+            customerPhone: customerPhone,
+            employeeName: '', // No employee for booking
+            totalPrice: totalPrice,
+          );
+
+          // Refresh notifications from API
+          await _loadNotifications();
+
+          // Show Flushbar only for shop owners if context is available
+          if (context != null && currentUserRole == 'shop_owner') {
+            // Find the notification that was just created from API
+            final newNotification = _notificationsNotifier.value.firstWhere(
+              (n) =>
+                  n.type == 'booking_created' && n.data?['orderId'] == orderId,
+              orElse: () => models.Notification(
+                id: '',
+                title: 'Đơn đặt hàng mới',
+                message:
+                    'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+                type: 'booking_created',
+                createdAt: DateTime.now(),
+                data: {
+                  'orderId': orderId,
+                  'customerName': customerName,
+                  'customerPhone': customerPhone,
+                  'totalPrice': totalPrice,
+                },
+              ),
+            );
+            showNotification(context, newNotification);
+          }
+          return;
+        } else {
+          // Fall back to local notification if API fails
+        }
+      } catch (e) {
+        // Fall back to local notification if API fails
+      }
+    }
+
+    // Fall back to local notification
+    const uuid = Uuid();
+    final notification = models.Notification(
+      id: uuid.v4(),
+      title: 'Đơn đặt hàng mới',
+      message:
+          'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+      type: 'booking_created',
+      createdAt: DateTime.now(),
+      data: {
+        'orderId': orderId,
+        'customerName': customerName,
+        'customerPhone': customerPhone,
+        'totalPrice': totalPrice,
+      },
+    );
+
+    await addNotification(notification);
+  }
+
   /// Create a notification for order paid
   Future<void> createOrderPaidNotification({
     required String orderId,
@@ -545,8 +676,9 @@ class NotificationService {
     if (_apiClient != null && currentUserRole == 'employee') {
       try {
         final prefs = await SharedPreferences.getInstance();
-        final shopName =
-            prefs.getString('shop_email') ?? prefs.getString('user_email');
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
 
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
@@ -599,6 +731,9 @@ class NotificationService {
 
     switch (notification.type) {
       case 'order_created':
+        messageType = MessageType.success;
+        break;
+      case 'booking_created':
         messageType = MessageType.success;
         break;
       case 'order_updated':

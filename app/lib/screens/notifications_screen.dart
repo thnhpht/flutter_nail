@@ -77,6 +77,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     switch (type) {
       case 'order_created':
         return Icons.add_shopping_cart;
+      case 'booking_created':
+        return Icons.shopping_cart;
       case 'order_updated':
         return Icons.edit;
       case 'order_paid':
@@ -90,6 +92,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     switch (type) {
       case 'order_created':
         return Colors.green;
+      case 'booking_created':
+        return Colors.purple;
       case 'order_updated':
         return Colors.blue;
       case 'order_paid':

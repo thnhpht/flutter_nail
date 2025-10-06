@@ -5,6 +5,7 @@ using NailApi.Models;
 using NailApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace NailApi.Controllers
 {
@@ -79,6 +80,34 @@ namespace NailApi.Controllers
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 dbContext.Orders.Add(input);
                 await dbContext.SaveChangesAsync();
+
+                // Create notification for order created by employee
+                var notificationId = Guid.NewGuid().ToString();
+                var employeeName = User.FindFirst("employee_name")?.Value ?? User.FindFirst(ClaimTypes.Name)?.Value;
+                var notificationData = JsonSerializer.Serialize(new
+                {
+                    orderId = input.Id,
+                    customerName = input.CustomerName,
+                    customerPhone = input.CustomerPhone,
+                    employeeName = employeeName,
+                    totalPrice = input.TotalPrice
+                });
+
+                var notification = new Notification
+                {
+                    Id = notificationId,
+                    Title = "Đơn hàng mới",
+                    Message = $"Nhân viên {employeeName} đã tạo đơn cho khách hàng {input.CustomerName} ({input.CustomerPhone}) với tổng tiền {input.TotalPrice:N0} VNĐ",
+                    Type = "order_created",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false,
+                    Data = notificationData
+                };
+
+                dbContext.Notifications.Add(notification);
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine($"Order notification created with ID: {notificationId}");
+
                 return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
             }
             catch (Exception ex)
