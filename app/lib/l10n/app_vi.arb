@@ -3245,17 +3245,17 @@
     "description": "Message asking user to select at least one category"
   },
   
-  "booking": "Đặt lịch",
+  "booking": "Đặt hàng",
   "@booking": {
-    "description": "Tùy chọn đặt lịch trong màn hình đăng nhập"
+    "description": "Tùy chọn đặt hàng trong màn hình đăng nhập"
   },
   "bookingUser": "Booking",
   "@bookingUser": {
-    "description": "Vai trò người đặt lịch"
+    "description": "Vai trò người đặt hàng"
   },
   "bookingDescription": "",
   "@bookingDescription": {
-    "description": "Mô tả cho vai trò người đặt lịch"
+    "description": "Mô tả cho vai trò người đặt hàng"
   },
   "salonName": "Tên Salon",
   "@salonName": {
@@ -3305,53 +3305,53 @@
   "@selectDeliveryOption": {
     "description": "Thông báo validation cho tùy chọn giao hàng"
   },
-  "bookingSuccessful": "Đặt lịch thành công!",
+  "bookingSuccessful": "Đặt hàng thành công!",
   "@bookingSuccessful": {
-    "description": "Thông báo thành công khi đặt lịch thành công"
+    "description": "Thông báo thành công khi đặt hàng thành công"
   },
-  "bookingFailed": "Đặt lịch thất bại",
+  "bookingFailed": "Đặt hàng thất bại",
   "@bookingFailed": {
-    "description": "Thông báo lỗi khi đặt lịch thất bại"
+    "description": "Thông báo lỗi khi đặt hàng thất bại"
   },
-  "createBooking": "Tạo đặt lịch",
+  "createBooking": "Tạo đặt hàng",
   "@createBooking": {
-    "description": "Text nút tạo đặt lịch"
+    "description": "Text nút tạo đặt hàng"
   },
-  "bookingDetails": "Chi tiết đặt lịch",
+  "bookingDetails": "Chi tiết đặt hàng",
   "@bookingDetails": {
-    "description": "Tiêu đề cho phần chi tiết đặt lịch"
+    "description": "Tiêu đề cho phần chi tiết đặt hàng"
   },
-  "bookingId": "Mã đặt lịch",
+  "bookingId": "Mã đặt hàng",
   "@bookingId": {
-    "description": "Nhãn cho mã đặt lịch"
+    "description": "Nhãn cho mã đặt hàng"
   },
-  "bookingDate": "Ngày đặt lịch",
+  "bookingDate": "Ngày đặt hàng",
   "@bookingDate": {
-    "description": "Nhãn cho ngày đặt lịch"
+    "description": "Nhãn cho ngày đặt hàng"
   },
   "deliveryMethod": "Phương thức giao hàng",
   "@deliveryMethod": {
     "description": "Nhãn cho phương thức giao hàng"
   },
-  "bookingTotal": "Tổng tiền đặt lịch",
+  "bookingTotal": "Tổng tiền đặt hàng",
   "@bookingTotal": {
-    "description": "Nhãn cho tổng tiền đặt lịch"
+    "description": "Nhãn cho tổng tiền đặt hàng"
   },
-  "thankYouForBooking": "Cảm ơn bạn đã đặt lịch!",
+  "thankYouForBooking": "Cảm ơn bạn đã đặt hàng!",
   "@thankYouForBooking": {
-    "description": "Lời cảm ơn sau khi đặt lịch"
+    "description": "Lời cảm ơn sau khi đặt hàng"
   },
-  "bookingConfirmation": "Xác nhận đặt lịch",
+  "bookingConfirmation": "Xác nhận đặt hàng",
   "@bookingConfirmation": {
-    "description": "Tiêu đề cho xác nhận đặt lịch"
+    "description": "Tiêu đề cho xác nhận đặt hàng"
   },
-  "yourBookingHasBeenConfirmed": "Đặt lịch của bạn đã được xác nhận",
+  "yourBookingHasBeenConfirmed": "Đặt hàng của bạn đã được xác nhận",
   "@yourBookingHasBeenConfirmed": {
     "description": "Thông báo xác nhận"
   },
-  "bookingReference": "Mã tham chiếu đặt lịch",
+  "bookingReference": "Mã tham chiếu đặt hàng",
   "@bookingReference": {
-    "description": "Nhãn cho mã tham chiếu đặt lịch"
+    "description": "Nhãn cho mã tham chiếu đặt hàng"
   },
   "estimatedTime": "Thời gian ước tính",
   "@estimatedTime": {
@@ -3365,9 +3365,9 @@
   "@backToMenu": {
     "description": "Text nút quay lại menu"
   },
-  "newBooking": "Đặt lịch mới",
+  "newBooking": "Đặt hàng mới",
   "@newBooking": {
-    "description": "Text nút tạo đặt lịch mới"
+    "description": "Text nút tạo đặt hàng mới"
   },
   "bookingScreenTitle": "Booking",
   "@bookingScreenTitle": {

@@ -6,6 +6,8 @@ import '../models.dart' as models;
 import '../ui/design_system.dart';
 import '../api_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'audio_service.dart';
 
 class NotificationService {
   static const String _notificationsKey = 'notifications';
@@ -16,6 +18,7 @@ class NotificationService {
   NotificationService._internal();
 
   ApiClient? _apiClient;
+  final AudioService _audioService = AudioService();
 
   // Stream controller for real-time updates
   final ValueNotifier<List<models.Notification>> _notificationsNotifier =
@@ -41,6 +44,9 @@ class NotificationService {
     _apiClient = apiClient;
     await _loadNotifications();
     await _loadUnreadCount();
+
+    // Initialize audio service
+    await _audioService.initialize();
 
     // Start polling for real-time updates if API client is available
     if (_apiClient != null) {
@@ -368,6 +374,8 @@ class NotificationService {
       // Show Flushbar only for shop owners if context is available
       if (context != null && currentUserRole == 'shop_owner') {
         showNotification(context, notification);
+        // Play notification sound for shop owner
+        _audioService.playNotificationSound();
       }
       return;
     }
@@ -420,6 +428,8 @@ class NotificationService {
               ),
             );
             showNotification(context, newNotification);
+            // Play notification sound for shop owner
+            _audioService.playNotificationSound();
           }
           return;
         } else {
@@ -561,6 +571,8 @@ class NotificationService {
       // Show Flushbar only for shop owners if context is available
       if (context != null && currentUserRole == 'shop_owner') {
         showNotification(context, notification);
+        // Play notification sound for shop owner
+        _audioService.playNotificationSound();
       }
       return;
     }
@@ -613,6 +625,8 @@ class NotificationService {
               ),
             );
             showNotification(context, newNotification);
+            // Play notification sound for shop owner
+            _audioService.playNotificationSound();
           }
           return;
         } else {
@@ -849,6 +863,8 @@ class NotificationService {
             // Notify UI about new notification
             if (newestNotification != null) {
               _newNotificationNotifier.value = newestNotification;
+              // Play notification sound for new notifications (only for shop owners)
+              // Note: We can't check user role here as this is polling, but the main app will handle this
             }
           }
         }

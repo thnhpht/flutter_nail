@@ -3558,19 +3558,19 @@ abstract class AppLocalizations {
   /// **'Vui lòng chọn ít nhất 1 danh mục'**
   String get pleaseSelectAtLeastOneCategory;
 
-  /// Tùy chọn đặt lịch trong màn hình đăng nhập
+  /// Tùy chọn đặt hàng trong màn hình đăng nhập
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch'**
+  /// **'Đặt hàng'**
   String get booking;
 
-  /// Vai trò người đặt lịch
+  /// Vai trò người đặt hàng
   ///
   /// In vi, this message translates to:
   /// **'Booking'**
   String get bookingUser;
 
-  /// Mô tả cho vai trò người đặt lịch
+  /// Mô tả cho vai trò người đặt hàng
   ///
   /// In vi, this message translates to:
   /// **''**
@@ -3642,40 +3642,40 @@ abstract class AppLocalizations {
   /// **'Chọn tùy chọn giao hàng'**
   String get selectDeliveryOption;
 
-  /// Thông báo thành công khi đặt lịch thành công
+  /// Thông báo thành công khi đặt hàng thành công
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch thành công!'**
+  /// **'Đặt hàng thành công!'**
   String get bookingSuccessful;
 
-  /// Thông báo lỗi khi đặt lịch thất bại
+  /// Thông báo lỗi khi đặt hàng thất bại
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch thất bại'**
+  /// **'Đặt hàng thất bại'**
   String get bookingFailed;
 
-  /// Text nút tạo đặt lịch
+  /// Text nút tạo đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Tạo đặt lịch'**
+  /// **'Tạo đặt hàng'**
   String get createBooking;
 
-  /// Tiêu đề cho phần chi tiết đặt lịch
+  /// Tiêu đề cho phần chi tiết đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Chi tiết đặt lịch'**
+  /// **'Chi tiết đặt hàng'**
   String get bookingDetails;
 
-  /// Nhãn cho mã đặt lịch
+  /// Nhãn cho mã đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Mã đặt lịch'**
+  /// **'Mã đặt hàng'**
   String get bookingId;
 
-  /// Nhãn cho ngày đặt lịch
+  /// Nhãn cho ngày đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Ngày đặt lịch'**
+  /// **'Ngày đặt hàng'**
   String get bookingDate;
 
   /// Nhãn cho phương thức giao hàng
@@ -3684,34 +3684,34 @@ abstract class AppLocalizations {
   /// **'Phương thức giao hàng'**
   String get deliveryMethod;
 
-  /// Nhãn cho tổng tiền đặt lịch
+  /// Nhãn cho tổng tiền đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Tổng tiền đặt lịch'**
+  /// **'Tổng tiền đặt hàng'**
   String get bookingTotal;
 
-  /// Lời cảm ơn sau khi đặt lịch
+  /// Lời cảm ơn sau khi đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Cảm ơn bạn đã đặt lịch!'**
+  /// **'Cảm ơn bạn đã đặt hàng!'**
   String get thankYouForBooking;
 
-  /// Tiêu đề cho xác nhận đặt lịch
+  /// Tiêu đề cho xác nhận đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Xác nhận đặt lịch'**
+  /// **'Xác nhận đặt hàng'**
   String get bookingConfirmation;
 
   /// Thông báo xác nhận
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch của bạn đã được xác nhận'**
+  /// **'Đặt hàng của bạn đã được xác nhận'**
   String get yourBookingHasBeenConfirmed;
 
-  /// Nhãn cho mã tham chiếu đặt lịch
+  /// Nhãn cho mã tham chiếu đặt hàng
   ///
   /// In vi, this message translates to:
-  /// **'Mã tham chiếu đặt lịch'**
+  /// **'Mã tham chiếu đặt hàng'**
   String get bookingReference;
 
   /// Nhãn cho thời gian ước tính
@@ -3732,10 +3732,10 @@ abstract class AppLocalizations {
   /// **'Quay lại Menu'**
   String get backToMenu;
 
-  /// Text nút tạo đặt lịch mới
+  /// Text nút tạo đặt hàng mới
   ///
   /// In vi, this message translates to:
-  /// **'Đặt lịch mới'**
+  /// **'Đặt hàng mới'**
   String get newBooking;
 
   /// Tiêu đề màn hình booking

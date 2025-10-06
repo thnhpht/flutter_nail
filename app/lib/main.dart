@@ -24,6 +24,7 @@ import 'ui/design_system.dart';
 import 'ui/notification_button.dart';
 import 'services/notification_service.dart';
 import 'services/language_service.dart';
+import 'services/audio_service.dart';
 import 'generated/l10n/app_localizations.dart';
 
 enum _HomeView {
@@ -63,6 +64,7 @@ class _NailAppState extends State<NailApp> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final NotificationService _notificationService = NotificationService();
   final LanguageService _languageService = LanguageService();
+  final AudioService _audioService = AudioService();
 
   // Dashboard stats
   Map<String, dynamic> _todayStats = {
@@ -89,6 +91,9 @@ class _NailAppState extends State<NailApp> {
     super.initState();
     _checkLoginStatus();
     _notificationService.initialize(apiClient: api);
+
+    // Initialize audio service
+    _audioService.initialize();
 
     // Listen for new notifications
     _notificationService.newNotificationNotifier
@@ -415,6 +420,7 @@ class _NailAppState extends State<NailApp> {
     _notificationService.newNotificationNotifier
         .removeListener(_onNewNotification);
     _languageService.removeListener(_onLanguageChanged);
+    _audioService.dispose();
     super.dispose();
   }
 
@@ -784,6 +790,8 @@ class _NailAppState extends State<NailApp> {
     final newNotification = _notificationService.newNotificationNotifier.value;
 
     if (newNotification != null && _userRole == 'shop_owner' && mounted) {
+      // Play notification sound for shop owner when receiving new notification from polling
+      _audioService.playNotificationSound();
       // Just clear the notification - no Flushbar needed
       _notificationService.clearNewNotification();
     }

@@ -25,6 +25,7 @@ dependencies:
   url_launcher: ^6.2.2
   qr_flutter: ^4.1.0
   package_info_plus: ^8.0.0
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +40,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/fonts/
+    - assets/sounds/
 
 flutter_launcher_icons:
   android: "launcher_icon"

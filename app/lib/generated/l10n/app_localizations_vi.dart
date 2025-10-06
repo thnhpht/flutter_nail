@@ -1931,7 +1931,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Vui lòng chọn ít nhất 1 danh mục';
 
   @override
-  String get booking => 'Đặt lịch';
+  String get booking => 'Đặt hàng';
 
   @override
   String get bookingUser => 'Booking';
@@ -1973,40 +1973,40 @@ class AppLocalizationsVi extends AppLocalizations {
   String get selectDeliveryOption => 'Chọn tùy chọn giao hàng';
 
   @override
-  String get bookingSuccessful => 'Đặt lịch thành công!';
+  String get bookingSuccessful => 'Đặt hàng thành công!';
 
   @override
-  String get bookingFailed => 'Đặt lịch thất bại';
+  String get bookingFailed => 'Đặt hàng thất bại';
 
   @override
-  String get createBooking => 'Tạo đặt lịch';
+  String get createBooking => 'Tạo đặt hàng';
 
   @override
-  String get bookingDetails => 'Chi tiết đặt lịch';
+  String get bookingDetails => 'Chi tiết đặt hàng';
 
   @override
-  String get bookingId => 'Mã đặt lịch';
+  String get bookingId => 'Mã đặt hàng';
 
   @override
-  String get bookingDate => 'Ngày đặt lịch';
+  String get bookingDate => 'Ngày đặt hàng';
 
   @override
   String get deliveryMethod => 'Phương thức giao hàng';
 
   @override
-  String get bookingTotal => 'Tổng tiền đặt lịch';
+  String get bookingTotal => 'Tổng tiền đặt hàng';
 
   @override
-  String get thankYouForBooking => 'Cảm ơn bạn đã đặt lịch!';
+  String get thankYouForBooking => 'Cảm ơn bạn đã đặt hàng!';
 
   @override
-  String get bookingConfirmation => 'Xác nhận đặt lịch';
+  String get bookingConfirmation => 'Xác nhận đặt hàng';
 
   @override
-  String get yourBookingHasBeenConfirmed => 'Đặt lịch của bạn đã được xác nhận';
+  String get yourBookingHasBeenConfirmed => 'Đặt hàng của bạn đã được xác nhận';
 
   @override
-  String get bookingReference => 'Mã tham chiếu đặt lịch';
+  String get bookingReference => 'Mã tham chiếu đặt hàng';
 
   @override
   String get estimatedTime => 'Thời gian ước tính';
@@ -2018,7 +2018,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get backToMenu => 'Quay lại Menu';
 
   @override
-  String get newBooking => 'Đặt lịch mới';
+  String get newBooking => 'Đặt hàng mới';
 
   @override
   String get bookingScreenTitle => 'Booking';
