@@ -1,6 +1,6 @@
 {
   "appTitle": "FShop",
-  "salon": "Salon",
+  "salon": "Shop",
   "todayOverview": "Today's Overview",
   "customers": "Customers",
   "bills": "Bills",
@@ -199,15 +199,15 @@
   "totalOrders": "Total Orders",
   "totalCustomers": "Total Customers",
   "averageOrderValue": "Average Order Value",
-  "salonName": "Salon Name",
-  "salonAddress": "Salon Address",
-  "salonPhone": "Salon Phone",
-  "salonEmail": "Salon Email",
-  "salonDescription": "Salon Description",
-  "salonHours": "Salon Hours",
-  "updateSalonInfo": "Update Salon Info",
-  "salonInfoUpdatedSuccessfully": "Salon info updated successfully",
-  "errorUpdatingSalonInfo": "Error updating salon info",
+  "salonName": "Shop Name",
+  "salonAddress": "Shop Address",
+  "salonPhone": "Shop Phone",
+  "salonEmail": "Shop Email",
+  "salonDescription": "Shop Description",
+  "salonHours": "Shop Hours",
+  "updateSalonInfo": "Update Shop Info",
+  "salonInfoUpdatedSuccessfully": "Shop info updated successfully",
+  "errorUpdatingSalonInfo": "Error updating shop info",
   "notifications": "Notifications",
   "noNotifications": "No notifications",
   "markAsRead": "Mark as read",
@@ -278,7 +278,7 @@
   "errorCreatingOrder": "Error creating order: {error}",
   "errorUploadingLogo": "Error uploading logo to server",
   "errorUploadingQRCode": "Error uploading QR code to server",
-  "salonInfoSavedSuccessfully": "Salon information saved successfully!",
+  "salonInfoSavedSuccessfully": "Shop information saved successfully!",
   "fullName": "Full Name",
   "databaseUsername": "Database Username",
   "databasePassword": "Database Password",
@@ -359,9 +359,9 @@
   "@employeeInfoUpdatedSuccessfully": {
     "description": "Employee information updated successfully"
   },
-  "manageSalonEmployees": "Manage salon employees",
+  "manageSalonEmployees": "Manage shop employees",
   "@manageSalonEmployees": {
-    "description": "Manage salon employees"
+    "description": "Manage shop employees"
   },
   "searchEmployees": "Search employees...",
   "@searchEmployees": {
@@ -770,17 +770,17 @@
   "@select": {
     "description": "Select text for dropdowns"
   },
-  "cannotLoadSalonInfo": "Cannot load salon information. Please check network connection and try again.",
+  "cannotLoadSalonInfo": "Cannot load shop information. Please check network connection and try again.",
   "@cannotLoadSalonInfo": {
-    "description": "Error message when cannot load salon information"
+    "description": "Error message when cannot load shop information"
   },
   "cannotSelectImage": "Cannot select image. Please check photo library access permissions and try again.",
   "@cannotSelectImage": {
     "description": "Error message when cannot select image"
   },
-  "cannotSaveSalonInfo": "Cannot save salon information. Please check network connection and try again.",
+  "cannotSaveSalonInfo": "Cannot save shop information. Please check network connection and try again.",
   "@cannotSaveSalonInfo": {
-    "description": "Error message when cannot save salon information"
+    "description": "Error message when cannot save shop information"
   },
   "basicInformation": "Basic Information",
   "@basicInformation": {
@@ -792,11 +792,11 @@
   },
   "salonInformation": "Information",
   "@salonInformation": {
-    "description": "Salon information title"
+    "description": "Shop information title"
   },
   "manageSalonInfoAndContact": "Manage information and contact",
   "@manageSalonInfoAndContact": {
-    "description": "Description for salon information management"
+    "description": "Description for shop information management"
   },
   "qrCode": "QR Code",
   "@qrCode": {
@@ -814,9 +814,9 @@
   "@selectLogo": {
     "description": "Select Logo button text"
   },
-  "salonNameLabel": "Salon Name",
+  "salonNameLabel": "Shop Name",
   "@salonNameLabel": {
-    "description": "Salon name field label"
+    "description": "Shop name field label"
   },
   "addressLabel": "Address",
   "@addressLabel": {
@@ -1641,7 +1641,7 @@
   },
   "pdfBillFrom": "Bill from {salonName}",
   "@pdfBillFrom": {
-    "description": "Bill sharing text with salon name",
+    "description": "Bill sharing text with shop name",
     "placeholders": {
       "salonName": {
         "type": "String"
@@ -2470,21 +2470,21 @@
   "@bookingUser": {
     "description": "Booking user role"
   },
-  "bookingDescription": "Book services at salons",
+  "bookingDescription": "Book services at shops",
   "@bookingDescription": {
     "description": "Description for booking user role"
   },
-  "salonName": "Salon Name",
+  "salonName": "Shop Name",
   "@salonName": {
-    "description": "Label for salon name input"
+    "description": "Label for shop name input"
   },
-  "enterSalonName": "Enter salon name",
+  "enterSalonName": "Enter shop name",
   "@enterSalonName": {
-    "description": "Placeholder for salon name input"
+    "description": "Placeholder for shop name input"
   },
-  "connectToSalon": "Connect to Salon",
+  "connectToSalon": "Connect to Shop",
   "@connectToSalon": {
-    "description": "Button text to connect to salon"
+    "description": "Button text to connect to shop"
   },
   "connecting": "Connecting...",
   "@connecting": {
@@ -2498,13 +2498,13 @@
   "@connectionFailed": {
     "description": "Error message when connection fails"
   },
-  "salonNotFound": "Salon not found",
+  "salonNotFound": "Shop not found",
   "@salonNotFound": {
-    "description": "Error message when salon is not found"
+    "description": "Error message when shop is not found"
   },
-  "pleaseEnterSalonName": "Please enter salon name",
+  "pleaseEnterSalonName": "Please enter shop name",
   "@pleaseEnterSalonName": {
-    "description": "Validation message for salon name"
+    "description": "Validation message for shop name"
   },
   "deliveryOption": "Delivery Option",
   "@deliveryOption": {
@@ -2514,9 +2514,9 @@
   "@homeDelivery": {
     "description": "Home delivery option"
   },
-  "pickupAtSalon": "Pickup at Salon",
+  "pickupAtSalon": "Pickup at Shop",
   "@pickupAtSalon": {
-    "description": "Pickup at salon option"
+    "description": "Pickup at shop option"
   },
   "selectDeliveryOption": "Select delivery option",
   "@selectDeliveryOption": {
@@ -2574,9 +2574,9 @@
   "@estimatedTime": {
     "description": "Label for estimated time"
   },
-  "contactSalon": "Contact Salon",
+  "contactSalon": "Contact Shop",
   "@contactSalon": {
-    "description": "Button text to contact salon"
+    "description": "Button text to contact shop"
   },
   "backToMenu": "Back to Menu",
   "@backToMenu": {

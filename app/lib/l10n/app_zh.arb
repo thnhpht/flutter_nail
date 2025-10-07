@@ -1,6 +1,6 @@
 {
   "appTitle": "FShop",
-  "salon": "沙龙",
+  "salon": "商店",
   "todayOverview": "今日概览",
   "customers": "客户",
   "bills": "账单",
@@ -199,15 +199,15 @@
   "totalOrders": "总订单数",
   "totalCustomers": "总客户数",
   "averageOrderValue": "平均订单价值",
-  "salonName": "沙龙名称",
-  "salonAddress": "沙龙地址",
-  "salonPhone": "沙龙电话",
-  "salonEmail": "沙龙邮箱",
-  "salonDescription": "沙龙描述",
+  "salonName": "商店名称",
+  "salonAddress": "商店地址",
+  "salonPhone": "商店电话",
+  "salonEmail": "商店邮箱",
+  "salonDescription": "商店描述",
   "salonHours": "营业时间",
-  "updateSalonInfo": "更新沙龙信息",
-  "salonInfoUpdatedSuccessfully": "沙龙信息更新成功",
-  "errorUpdatingSalonInfo": "更新沙龙信息时出错",
+  "updateSalonInfo": "更新商店信息",
+  "salonInfoUpdatedSuccessfully": "商店信息更新成功",
+  "errorUpdatingSalonInfo": "更新商店信息时出错",
   "notifications": "通知",
   "noNotifications": "无通知",
   "markAsRead": "标记为已读",
@@ -278,7 +278,7 @@
   "errorCreatingOrder": "创建订单时出错：{error}",
   "errorUploadingLogo": "上传标志到商品器时出错",
   "errorUploadingQRCode": "上传二维码到商品器时出错",
-  "salonInfoSavedSuccessfully": "沙龙信息保存成功！",
+  "salonInfoSavedSuccessfully": "商店信息保存成功！",
   "fullName": "全名",
   "databaseUsername": "数据库用户名",
   "databasePassword": "数据库密码",
@@ -359,9 +359,9 @@
   "@employeeInfoUpdatedSuccessfully": {
     "description": "Employee information updated successfully"
   },
-  "manageSalonEmployees": "管理沙龙员工",
+  "manageSalonEmployees": "管理商店员工",
   "@manageSalonEmployees": {
-    "description": "Manage salon employees"
+    "description": "Manage shop employees"
   },
   "searchEmployees": "搜索员工...",
   "@searchEmployees": {
@@ -770,17 +770,17 @@
   "@select": {
     "description": "Select text for dropdowns"
   },
-  "cannotLoadSalonInfo": "无法加载沙龙信息。请检查网络连接并重试。",
+  "cannotLoadSalonInfo": "无法加载商店信息。请检查网络连接并重试。",
   "@cannotLoadSalonInfo": {
-    "description": "Error message when cannot load salon information"
+    "description": "Error message when cannot load shop information"
   },
   "cannotSelectImage": "无法选择图片。请检查照片库访问权限并重试。",
   "@cannotSelectImage": {
     "description": "Error message when cannot select image"
   },
-  "cannotSaveSalonInfo": "无法保存沙龙信息。请检查网络连接并重试。",
+  "cannotSaveSalonInfo": "无法保存商店信息。请检查网络连接并重试。",
   "@cannotSaveSalonInfo": {
-    "description": "Error message when cannot save salon information"
+    "description": "Error message when cannot save shop information"
   },
   "basicInformation": "基本信息",
   "@basicInformation": {
@@ -792,11 +792,11 @@
   },
   "salonInformation": "信息",
   "@salonInformation": {
-    "description": "Salon information title"
+    "description": "Shop information title"
   },
   "manageSalonInfoAndContact": "管理信息和联系方式",
   "@manageSalonInfoAndContact": {
-    "description": "Description for salon information management"
+    "description": "Description for shop information management"
   },
   "qrCode": "二维码",
   "@qrCode": {
@@ -814,9 +814,9 @@
   "@selectLogo": {
     "description": "Select Logo button text"
   },
-  "salonNameLabel": "沙龙名称",
+  "salonNameLabel": "商店名称",
   "@salonNameLabel": {
-    "description": "Salon name field label"
+    "description": "Shop name field label"
   },
   "addressLabel": "地址",
   "@addressLabel": {
@@ -1671,7 +1671,7 @@
   },
   "pdfBillFrom": "来自{salonName}的账单",
   "@pdfBillFrom": {
-    "description": "Bill sharing text with salon name",
+    "description": "Bill sharing text with shop name",
     "placeholders": {
       "salonName": {
         "type": "String"
@@ -2413,21 +2413,21 @@
   "@bookingUser": {
     "description": "预约用户角色"
   },
-  "bookingDescription": "在沙龙预约服务",
+  "bookingDescription": "在商店预约服务",
   "@bookingDescription": {
     "description": "预约用户角色描述"
   },
-  "salonName": "沙龙名称",
+  "salonName": "商店名称",
   "@salonName": {
-    "description": "沙龙名称输入标签"
+    "description": "商店名称输入标签"
   },
-  "enterSalonName": "输入沙龙名称",
+  "enterSalonName": "输入商店名称",
   "@enterSalonName": {
-    "description": "沙龙名称输入占位符"
+    "description": "商店名称输入占位符"
   },
-  "connectToSalon": "连接到沙龙",
+  "connectToSalon": "连接到商店",
   "@connectToSalon": {
-    "description": "连接沙龙按钮文本"
+    "description": "连接商店按钮文本"
   },
   "connecting": "连接中...",
   "@connecting": {
@@ -2441,13 +2441,13 @@
   "@connectionFailed": {
     "description": "连接失败错误消息"
   },
-  "salonNotFound": "未找到沙龙",
+  "salonNotFound": "未找到商店",
   "@salonNotFound": {
-    "description": "未找到沙龙时的错误消息"
+    "description": "未找到商店时的错误消息"
   },
-  "pleaseEnterSalonName": "请输入沙龙名称",
+  "pleaseEnterSalonName": "请输入商店名称",
   "@pleaseEnterSalonName": {
-    "description": "沙龙名称验证消息"
+    "description": "商店名称验证消息"
   },
   "deliveryOption": "配送选项",
   "@deliveryOption": {
@@ -2517,9 +2517,9 @@
   "@estimatedTime": {
     "description": "预计时间标签"
   },
-  "contactSalon": "联系沙龙",
+  "contactSalon": "联系商店",
   "@contactSalon": {
-    "description": "联系沙龙按钮文本"
+    "description": "联系商店按钮文本"
   },
   "backToMenu": "返回菜单",
   "@backToMenu": {

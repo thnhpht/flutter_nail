@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => '沙龙';
+  String get salon => '商店';
 
   @override
   String get todayOverview => '今日概览';
@@ -591,31 +591,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get averageOrderValue => '平均订单价值';
 
   @override
-  String get salonName => '沙龙名称';
+  String get salonName => '商店名称';
 
   @override
-  String get salonAddress => '沙龙地址';
+  String get salonAddress => '商店地址';
 
   @override
-  String get salonPhone => '沙龙电话';
+  String get salonPhone => '商店电话';
 
   @override
-  String get salonEmail => '沙龙邮箱';
+  String get salonEmail => '商店邮箱';
 
   @override
-  String get salonDescription => '沙龙描述';
+  String get salonDescription => '商店描述';
 
   @override
   String get salonHours => '营业时间';
 
   @override
-  String get updateSalonInfo => '更新沙龙信息';
+  String get updateSalonInfo => '更新商店信息';
 
   @override
-  String get salonInfoUpdatedSuccessfully => '沙龙信息更新成功';
+  String get salonInfoUpdatedSuccessfully => '商店信息更新成功';
 
   @override
-  String get errorUpdatingSalonInfo => '更新沙龙信息时出错';
+  String get errorUpdatingSalonInfo => '更新商店信息时出错';
 
   @override
   String get notifications => '通知';
@@ -769,7 +769,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get errorUploadingQRCode => '上传二维码到商品器时出错';
 
   @override
-  String get salonInfoSavedSuccessfully => '沙龙信息保存成功！';
+  String get salonInfoSavedSuccessfully => '商店信息保存成功！';
 
   @override
   String get fullName => '全名';
@@ -852,7 +852,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get employeeInfoUpdatedSuccessfully => '员工信息更新成功';
 
   @override
-  String get manageSalonEmployees => '管理沙龙员工';
+  String get manageSalonEmployees => '管理商店员工';
 
   @override
   String get searchEmployees => '搜索员工...';
@@ -1059,10 +1059,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get select => '选择';
 
   @override
-  String get cannotLoadSalonInfo => '无法加载沙龙信息。请检查网络连接并重试。';
+  String get cannotLoadSalonInfo => '无法加载商店信息。请检查网络连接并重试。';
 
   @override
-  String get cannotSaveSalonInfo => '无法保存沙龙信息。请检查网络连接并重试。';
+  String get cannotSaveSalonInfo => '无法保存商店信息。请检查网络连接并重试。';
 
   @override
   String get basicInformation => '基本信息';
@@ -1086,7 +1086,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectLogo => '选择标志';
 
   @override
-  String get salonNameLabel => '沙龙名称';
+  String get salonNameLabel => '商店名称';
 
   @override
   String get addressLabel => '地址';
@@ -1873,13 +1873,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bookingUser => '预约用户';
 
   @override
-  String get bookingDescription => '在沙龙预约服务';
+  String get bookingDescription => '在商店预约服务';
 
   @override
-  String get enterSalonName => '输入沙龙名称';
+  String get enterSalonName => '输入商店名称';
 
   @override
-  String get connectToSalon => '连接到沙龙';
+  String get connectToSalon => '连接到商店';
 
   @override
   String get connecting => '连接中...';
@@ -1891,10 +1891,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get connectionFailed => '连接失败';
 
   @override
-  String get salonNotFound => '未找到沙龙';
+  String get salonNotFound => '未找到商店';
 
   @override
-  String get pleaseEnterSalonName => '请输入沙龙名称';
+  String get pleaseEnterSalonName => '请输入商店名称';
 
   @override
   String get deliveryOption => '配送选项';
@@ -1948,7 +1948,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get estimatedTime => '预计时间';
 
   @override
-  String get contactSalon => '联系沙龙';
+  String get contactSalon => '联系商店';
 
   @override
   String get backToMenu => '返回菜单';

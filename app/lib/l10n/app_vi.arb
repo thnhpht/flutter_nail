@@ -3,9 +3,9 @@
   "@appTitle": {
     "description": "The title of the application"
   },
-  "salon": "Salon",
+  "salon": "Shop",
   "@salon": {
-    "description": "Salon name"
+    "description": "Shop name"
   },
   "todayOverview": "Tổng quan hôm nay",
   "@todayOverview": {
@@ -37,7 +37,7 @@
   },
   "salonInfo": "Thông tin",
   "@salonInfo": {
-    "description": "Salon information"
+    "description": "Shop information"
   },
   "menu": "Menu",
   "@menu": {
@@ -264,7 +264,7 @@
   "@employeePassword": {
     "description": "Employee password"
   },
-  "shopName": "Tên salon",
+  "shopName": "Tên shop",
   "@shopName": {
     "description": "Shop name"
   },
@@ -772,41 +772,41 @@
   "@averageOrderValue": {
     "description": "Average order value"
   },
-  "salonName": "Tên salon",
+  "salonName": "Tên shop",
   "@salonName": {
-    "description": "Salon name"
+    "description": "Shop name"
   },
-  "salonAddress": "Địa chỉ salon",
+  "salonAddress": "Địa chỉ shop",
   "@salonAddress": {
-    "description": "Salon address"
+    "description": "Shop address"
   },
-  "salonPhone": "Số điện thoại salon",
+  "salonPhone": "Số điện thoại shop",
   "@salonPhone": {
-    "description": "Salon phone"
+    "description": "Shop phone"
   },
-  "salonEmail": "Email salon",
+  "salonEmail": "Email shop",
   "@salonEmail": {
-    "description": "Salon email"
+    "description": "Shop email"
   },
-  "salonDescription": "Mô tả salon",
+  "salonDescription": "Mô tả shop",
   "@salonDescription": {
-    "description": "Salon description"
+    "description": "Shop description"
   },
   "salonHours": "Giờ hoạt động",
   "@salonHours": {
-    "description": "Salon hours"
+    "description": "Shop hours"
   },
-  "updateSalonInfo": "Cập nhật thông tin salon",
+  "updateSalonInfo": "Cập nhật thông tin shop",
   "@updateSalonInfo": {
-    "description": "Update salon info"
+    "description": "Update shop info"
   },
-  "salonInfoUpdatedSuccessfully": "Thông tin salon đã được cập nhật thành công",
+  "salonInfoUpdatedSuccessfully": "Thông tin shop đã được cập nhật thành công",
   "@salonInfoUpdatedSuccessfully": {
-    "description": "Salon info updated successfully"
+    "description": "Shop info updated successfully"
   },
-  "errorUpdatingSalonInfo": "Lỗi cập nhật thông tin salon",
+  "errorUpdatingSalonInfo": "Lỗi cập nhật thông tin shop",
   "@errorUpdatingSalonInfo": {
-    "description": "Error updating salon info"
+    "description": "Error updating shop info"
   },
   "notifications": "Thông báo",
   "@notifications": {
@@ -1145,9 +1145,9 @@
   "@errorUploadingQRCode": {
     "description": "Error uploading QR code to server"
   },
-  "salonInfoSavedSuccessfully": "Lưu thông tin salon thành công!",
+  "salonInfoSavedSuccessfully": "Lưu thông tin shop thành công!",
   "@salonInfoSavedSuccessfully": {
-    "description": "Salon information saved successfully"
+    "description": "Shop information saved successfully"
   },
   "fullName": "Họ và tên",
   "@fullName": {
@@ -1260,9 +1260,9 @@
   "@employeeInfoUpdatedSuccessfully": {
     "description": "Employee information updated successfully"
   },
-  "manageSalonEmployees": "Quản lý nhân viên salon",
+  "manageSalonEmployees": "Quản lý nhân viên shop",
   "@manageSalonEmployees": {
-    "description": "Manage salon employees"
+    "description": "Manage shop employees"
   },
   "searchEmployees": "Tìm kiếm nhân viên...",
   "@searchEmployees": {
@@ -1671,17 +1671,17 @@
   "@select": {
     "description": "Select text for dropdowns"
   },
-  "cannotLoadSalonInfo": "Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "cannotLoadSalonInfo": "Không thể tải thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.",
   "@cannotLoadSalonInfo": {
-    "description": "Error message when cannot load salon information"
+    "description": "Error message when cannot load shop information"
   },
   "cannotSelectImage": "Không thể chọn hình ảnh. Vui lòng kiểm tra quyền truy cập thư viện ảnh và thử lại.",
   "@cannotSelectImage": {
     "description": "Error message when cannot select image"
   },
-  "cannotSaveSalonInfo": "Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "cannotSaveSalonInfo": "Không thể lưu thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.",
   "@cannotSaveSalonInfo": {
-    "description": "Error message when cannot save salon information"
+    "description": "Error message when cannot save shop information"
   },
   "basicInformation": "Thông tin cơ bản",
   "@basicInformation": {
@@ -1693,11 +1693,11 @@
   },
   "salonInformation": "Thông tin",
   "@salonInformation": {
-    "description": "Salon information title"
+    "description": "Shop information title"
   },
   "manageSalonInfoAndContact": "Quản lý thông tin và liên hệ",
   "@manageSalonInfoAndContact": {
-    "description": "Description for salon information management"
+    "description": "Description for shop information management"
   },
   "qrCode": "QR Code",
   "@qrCode": {
@@ -1715,9 +1715,9 @@
   "@selectLogo": {
     "description": "Select Logo button text"
   },
-  "salonNameLabel": "Tên Salon",
+  "salonNameLabel": "Tên Shop",
   "@salonNameLabel": {
-    "description": "Salon name field label"
+    "description": "Shop name field label"
   },
   "addressLabel": "Địa chỉ",
   "@addressLabel": {
@@ -2572,7 +2572,7 @@
   },
   "pdfBillFrom": "Hóa đơn từ {salonName}",
   "@pdfBillFrom": {
-    "description": "Bill sharing text with salon name",
+    "description": "Bill sharing text with shop name",
     "placeholders": {
       "salonName": {
         "type": "String"
@@ -2780,7 +2780,7 @@
   "@accessServicesCreateOrdersAndBills": {
     "description": "Employee description"
   },
-  "shopName": "Tên Salon",
+  "shopName": "Tên Shop",
   "@shopName": {
     "description": "Shop name field label"
   },
@@ -3257,17 +3257,17 @@
   "@bookingDescription": {
     "description": "Mô tả cho vai trò người đặt hàng"
   },
-  "salonName": "Tên Salon",
+  "salonName": "Tên Shop",
   "@salonName": {
-    "description": "Nhãn cho ô nhập tên salon"
+    "description": "Nhãn cho ô nhập tên shop"
   },
-  "enterSalonName": "Nhập tên salon",
+  "enterSalonName": "Nhập tên shop",
   "@enterSalonName": {
-    "description": "Placeholder cho ô nhập tên salon"
+    "description": "Placeholder cho ô nhập tên shop"
   },
-  "connectToSalon": "Kết nối đến Salon",
+  "connectToSalon": "Kết nối đến Shop",
   "@connectToSalon": {
-    "description": "Text nút kết nối đến salon"
+    "description": "Text nút kết nối đến shop"
   },
   "connecting": "Đang kết nối...",
   "@connecting": {
@@ -3285,9 +3285,9 @@
   "@salonNotFound": {
     "description": "Thông báo lỗi khi không tìm thấy shop"
   },
-  "pleaseEnterSalonName": "Vui lòng nhập tên salon",
+  "pleaseEnterSalonName": "Vui lòng nhập tên shop",
   "@pleaseEnterSalonName": {
-    "description": "Thông báo validation cho tên salon"
+    "description": "Thông báo validation cho tên shop"
   },
   "deliveryOption": "Tùy chọn giao hàng",
   "@deliveryOption": {
@@ -3299,7 +3299,7 @@
   },
   "pickupAtSalon": "Lấy tại chỗ",
   "@pickupAtSalon": {
-    "description": "Tùy chọn lấy tại salon"
+    "description": "Tùy chọn lấy tại shop"
   },
   "selectDeliveryOption": "Chọn tùy chọn giao hàng",
   "@selectDeliveryOption": {
@@ -3357,9 +3357,9 @@
   "@estimatedTime": {
     "description": "Nhãn cho thời gian ước tính"
   },
-  "contactSalon": "Liên hệ Salon",
+  "contactSalon": "Liên hệ Shop",
   "@contactSalon": {
-    "description": "Text nút liên hệ salon"
+    "description": "Text nút liên hệ shop"
   },
   "backToMenu": "Quay lại Menu",
   "@backToMenu": {

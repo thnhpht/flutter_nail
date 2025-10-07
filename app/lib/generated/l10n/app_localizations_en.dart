@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => 'Salon';
+  String get salon => 'Shop';
 
   @override
   String get todayOverview => 'Today\'s Overview';
@@ -601,31 +601,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get averageOrderValue => 'Average Order Value';
 
   @override
-  String get salonName => 'Salon Name';
+  String get salonName => 'Shop Name';
 
   @override
-  String get salonAddress => 'Salon Address';
+  String get salonAddress => 'Shop Address';
 
   @override
-  String get salonPhone => 'Salon Phone';
+  String get salonPhone => 'Shop Phone';
 
   @override
-  String get salonEmail => 'Salon Email';
+  String get salonEmail => 'Shop Email';
 
   @override
-  String get salonDescription => 'Salon Description';
+  String get salonDescription => 'Shop Description';
 
   @override
-  String get salonHours => 'Salon Hours';
+  String get salonHours => 'Shop Hours';
 
   @override
-  String get updateSalonInfo => 'Update Salon Info';
+  String get updateSalonInfo => 'Update Shop Info';
 
   @override
-  String get salonInfoUpdatedSuccessfully => 'Salon info updated successfully';
+  String get salonInfoUpdatedSuccessfully => 'Shop info updated successfully';
 
   @override
-  String get errorUpdatingSalonInfo => 'Error updating salon info';
+  String get errorUpdatingSalonInfo => 'Error updating shop info';
 
   @override
   String get notifications => 'Notifications';
@@ -781,7 +781,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get salonInfoSavedSuccessfully =>
-      'Salon information saved successfully!';
+      'Shop information saved successfully!';
 
   @override
   String get fullName => 'Full Name';
@@ -867,7 +867,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Employee information updated successfully';
 
   @override
-  String get manageSalonEmployees => 'Manage salon employees';
+  String get manageSalonEmployees => 'Manage shop employees';
 
   @override
   String get searchEmployees => 'Search employees...';
@@ -1078,11 +1078,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannotLoadSalonInfo =>
-      'Cannot load salon information. Please check network connection and try again.';
+      'Cannot load shop information. Please check network connection and try again.';
 
   @override
   String get cannotSaveSalonInfo =>
-      'Cannot save salon information. Please check network connection and try again.';
+      'Cannot save shop information. Please check network connection and try again.';
 
   @override
   String get basicInformation => 'Basic Information';
@@ -1106,7 +1106,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectLogo => 'Select Logo';
 
   @override
-  String get salonNameLabel => 'Salon Name';
+  String get salonNameLabel => 'Shop Name';
 
   @override
   String get addressLabel => 'Address';
@@ -1925,13 +1925,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bookingUser => 'Booking User';
 
   @override
-  String get bookingDescription => 'Book services at salons';
+  String get bookingDescription => 'Book services at shops';
 
   @override
-  String get enterSalonName => 'Enter salon name';
+  String get enterSalonName => 'Enter shop name';
 
   @override
-  String get connectToSalon => 'Connect to Salon';
+  String get connectToSalon => 'Connect to Shop';
 
   @override
   String get connecting => 'Connecting...';
@@ -1943,10 +1943,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectionFailed => 'Connection failed';
 
   @override
-  String get salonNotFound => 'Salon not found';
+  String get salonNotFound => 'Shop not found';
 
   @override
-  String get pleaseEnterSalonName => 'Please enter salon name';
+  String get pleaseEnterSalonName => 'Please enter shop name';
 
   @override
   String get deliveryOption => 'Delivery Option';
@@ -1955,7 +1955,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeDelivery => 'Home delivery';
 
   @override
-  String get pickupAtSalon => 'Pickup at Salon';
+  String get pickupAtSalon => 'Pickup at Shop';
 
   @override
   String get selectDeliveryOption => 'Select delivery option';
@@ -2000,7 +2000,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get estimatedTime => 'Estimated Time';
 
   @override
-  String get contactSalon => 'Contact Salon';
+  String get contactSalon => 'Contact Shop';
 
   @override
   String get backToMenu => 'Back to Menu';

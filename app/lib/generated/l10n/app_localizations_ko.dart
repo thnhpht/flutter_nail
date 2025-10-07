@@ -12,7 +12,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => '살롱';
+  String get salon => '상점';
 
   @override
   String get todayOverview => '오늘의 개요';
@@ -592,31 +592,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get averageOrderValue => '평균 주문 가치';
 
   @override
-  String get salonName => '살롱 이름';
+  String get salonName => '상점 이름';
 
   @override
-  String get salonAddress => '살롱 주소';
+  String get salonAddress => '상점 주소';
 
   @override
-  String get salonPhone => '살롱 전화번호';
+  String get salonPhone => '상점 전화번호';
 
   @override
-  String get salonEmail => '살롱 이메일';
+  String get salonEmail => '상점 이메일';
 
   @override
-  String get salonDescription => '살롱 설명';
+  String get salonDescription => '상점 설명';
 
   @override
   String get salonHours => '영업 시간';
 
   @override
-  String get updateSalonInfo => '살롱 정보 업데이트';
+  String get updateSalonInfo => '상점 정보 업데이트';
 
   @override
-  String get salonInfoUpdatedSuccessfully => '살롱 정보가 성공적으로 업데이트되었습니다';
+  String get salonInfoUpdatedSuccessfully => '상점 정보가 성공적으로 업데이트되었습니다';
 
   @override
-  String get errorUpdatingSalonInfo => '살롱 정보 업데이트 오류';
+  String get errorUpdatingSalonInfo => '상점 정보 업데이트 오류';
 
   @override
   String get notifications => '알림';
@@ -770,7 +770,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get errorUploadingQRCode => '서버에 QR 코드 업로드 중 오류';
 
   @override
-  String get salonInfoSavedSuccessfully => '살롱 정보가 성공적으로 저장되었습니다!';
+  String get salonInfoSavedSuccessfully => '상점 정보가 성공적으로 저장되었습니다!';
 
   @override
   String get fullName => '전체 이름';
@@ -853,7 +853,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get employeeInfoUpdatedSuccessfully => '직원 정보가 성공적으로 업데이트되었습니다';
 
   @override
-  String get manageSalonEmployees => '살롱 직원 관리';
+  String get manageSalonEmployees => '상점 직원 관리';
 
   @override
   String get searchEmployees => '직원 검색...';
@@ -1061,11 +1061,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get cannotLoadSalonInfo =>
-      '살롱 정보를 불러올 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.';
+      '상점 정보를 불러올 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.';
 
   @override
   String get cannotSaveSalonInfo =>
-      '살롱 정보를 저장할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.';
+      '상점 정보를 저장할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.';
 
   @override
   String get basicInformation => '기본 정보';
@@ -1089,7 +1089,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get selectLogo => '로고 선택';
 
   @override
-  String get salonNameLabel => '살롱 이름';
+  String get salonNameLabel => '상점 이름';
 
   @override
   String get addressLabel => '주소';
@@ -1884,13 +1884,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bookingUser => '예약 사용자';
 
   @override
-  String get bookingDescription => '살롱에서 서비스 예약';
+  String get bookingDescription => '상점에서 서비스 예약';
 
   @override
-  String get enterSalonName => '살롱 이름 입력';
+  String get enterSalonName => '상점 이름 입력';
 
   @override
-  String get connectToSalon => '살롱에 연결';
+  String get connectToSalon => '상점에 연결';
 
   @override
   String get connecting => '연결 중...';
@@ -1902,10 +1902,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get connectionFailed => '연결 실패';
 
   @override
-  String get salonNotFound => '살롱을 찾을 수 없습니다';
+  String get salonNotFound => '상점을 찾을 수 없습니다';
 
   @override
-  String get pleaseEnterSalonName => '살롱 이름을 입력해 주세요';
+  String get pleaseEnterSalonName => '상점 이름을 입력해 주세요';
 
   @override
   String get deliveryOption => '배송 옵션';
@@ -1914,7 +1914,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeDelivery => '홈 배송';
 
   @override
-  String get pickupAtSalon => '살롱에서 픽업';
+  String get pickupAtSalon => '상점에서 픽업';
 
   @override
   String get selectDeliveryOption => '배송 옵션을 선택해 주세요';
@@ -1959,7 +1959,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get estimatedTime => '예상 시간';
 
   @override
-  String get contactSalon => '살롱 연락';
+  String get contactSalon => '상점 연락';
 
   @override
   String get backToMenu => '메뉴로 돌아가기';

@@ -1,6 +1,6 @@
 {
   "appTitle": "FShop",
-  "salon": "살롱",
+  "salon": "상점",
   "todayOverview": "오늘의 개요",
   "customers": "고객",
   "bills": "청구서",
@@ -199,15 +199,15 @@
   "totalOrders": "총 주문 수",
   "totalCustomers": "총 고객 수",
   "averageOrderValue": "평균 주문 가치",
-  "salonName": "살롱 이름",
-  "salonAddress": "살롱 주소",
-  "salonPhone": "살롱 전화번호",
-  "salonEmail": "살롱 이메일",
-  "salonDescription": "살롱 설명",
+  "salonName": "상점 이름",
+  "salonAddress": "상점 주소",
+  "salonPhone": "상점 전화번호",
+  "salonEmail": "상점 이메일",
+  "salonDescription": "상점 설명",
   "salonHours": "영업 시간",
-  "updateSalonInfo": "살롱 정보 업데이트",
-  "salonInfoUpdatedSuccessfully": "살롱 정보가 성공적으로 업데이트되었습니다",
-  "errorUpdatingSalonInfo": "살롱 정보 업데이트 오류",
+  "updateSalonInfo": "상점 정보 업데이트",
+  "salonInfoUpdatedSuccessfully": "상점 정보가 성공적으로 업데이트되었습니다",
+  "errorUpdatingSalonInfo": "상점 정보 업데이트 오류",
   "notifications": "알림",
   "noNotifications": "알림 없음",
   "markAsRead": "읽음으로 표시",
@@ -278,7 +278,7 @@
   "errorCreatingOrder": "주문 생성 중 오류: {error}",
   "errorUploadingLogo": "서버에 로고 업로드 중 오류",
   "errorUploadingQRCode": "서버에 QR 코드 업로드 중 오류",
-  "salonInfoSavedSuccessfully": "살롱 정보가 성공적으로 저장되었습니다!",
+  "salonInfoSavedSuccessfully": "상점 정보가 성공적으로 저장되었습니다!",
   "fullName": "전체 이름",
   "databaseUsername": "데이터베이스 사용자명",
   "databasePassword": "데이터베이스 비밀번호",
@@ -359,9 +359,9 @@
   "@employeeInfoUpdatedSuccessfully": {
     "description": "Employee information updated successfully"
   },
-  "manageSalonEmployees": "살롱 직원 관리",
+  "manageSalonEmployees": "상점 직원 관리",
   "@manageSalonEmployees": {
-    "description": "Manage salon employees"
+    "description": "Manage shop employees"
   },
   "searchEmployees": "직원 검색...",
   "@searchEmployees": {
@@ -770,17 +770,17 @@
   "@select": {
     "description": "Select text for dropdowns"
   },
-  "cannotLoadSalonInfo": "살롱 정보를 불러올 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
+  "cannotLoadSalonInfo": "상점 정보를 불러올 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
   "@cannotLoadSalonInfo": {
-    "description": "Error message when cannot load salon information"
+    "description": "Error message when cannot load shop information"
   },
   "cannotSelectImage": "이미지를 선택할 수 없습니다. 사진 라이브러리 접근 권한을 확인하고 다시 시도하세요.",
   "@cannotSelectImage": {
     "description": "Error message when cannot select image"
   },
-  "cannotSaveSalonInfo": "살롱 정보를 저장할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
+  "cannotSaveSalonInfo": "상점 정보를 저장할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.",
   "@cannotSaveSalonInfo": {
-    "description": "Error message when cannot save salon information"
+    "description": "Error message when cannot save shop information"
   },
   "basicInformation": "기본 정보",
   "@basicInformation": {
@@ -792,11 +792,11 @@
   },
   "salonInformation": "정보",
   "@salonInformation": {
-    "description": "Salon information title"
+    "description": "Shop information title"
   },
   "manageSalonInfoAndContact": "정보 및 연락처 관리",
   "@manageSalonInfoAndContact": {
-    "description": "Description for salon information management"
+    "description": "Description for shop information management"
   },
   "qrCode": "QR 코드",
   "@qrCode": {
@@ -814,9 +814,9 @@
   "@selectLogo": {
     "description": "Select Logo button text"
   },
-  "salonNameLabel": "살롱 이름",
+  "salonNameLabel": "상점 이름",
   "@salonNameLabel": {
-    "description": "Salon name field label"
+    "description": "Shop name field label"
   },
   "addressLabel": "주소",
   "@addressLabel": {
@@ -1671,7 +1671,7 @@
   },
   "pdfBillFrom": "{salonName}의 청구서",
   "@pdfBillFrom": {
-    "description": "Bill sharing text with salon name",
+    "description": "Bill sharing text with shop name",
     "placeholders": {
       "salonName": {
         "type": "String"
@@ -2413,21 +2413,21 @@
   "@bookingUser": {
     "description": "예약 사용자 역할"
   },
-  "bookingDescription": "살롱에서 서비스 예약",
+  "bookingDescription": "상점에서 서비스 예약",
   "@bookingDescription": {
     "description": "예약 사용자 역할 설명"
   },
-  "salonName": "살롱 이름",
+  "salonName": "상점 이름",
   "@salonName": {
-    "description": "살롱 이름 입력 라벨"
+    "description": "상점 이름 입력 라벨"
   },
-  "enterSalonName": "살롱 이름 입력",
+  "enterSalonName": "상점 이름 입력",
   "@enterSalonName": {
-    "description": "살롱 이름 입력 플레이스홀더"
+    "description": "상점 이름 입력 플레이스홀더"
   },
-  "connectToSalon": "살롱에 연결",
+  "connectToSalon": "상점에 연결",
   "@connectToSalon": {
-    "description": "살롱 연결 버튼 텍스트"
+    "description": "상점 연결 버튼 텍스트"
   },
   "connecting": "연결 중...",
   "@connecting": {
@@ -2441,13 +2441,13 @@
   "@connectionFailed": {
     "description": "연결 실패 오류 메시지"
   },
-  "salonNotFound": "살롱을 찾을 수 없습니다",
+  "salonNotFound": "상점을 찾을 수 없습니다",
   "@salonNotFound": {
-    "description": "살롱을 찾을 수 없을 때 오류 메시지"
+    "description": "상점을 찾을 수 없을 때 오류 메시지"
   },
-  "pleaseEnterSalonName": "살롱 이름을 입력해 주세요",
+  "pleaseEnterSalonName": "상점 이름을 입력해 주세요",
   "@pleaseEnterSalonName": {
-    "description": "살롱 이름 유효성 검사 메시지"
+    "description": "상점 이름 유효성 검사 메시지"
   },
   "deliveryOption": "배송 옵션",
   "@deliveryOption": {
@@ -2457,9 +2457,9 @@
   "@homeDelivery": {
     "description": "택배 배송 옵션"
   },
-  "pickupAtSalon": "살롱에서 픽업",
+  "pickupAtSalon": "상점에서 픽업",
   "@pickupAtSalon": {
-    "description": "살롱 픽업 옵션"
+    "description": "상점 픽업 옵션"
   },
   "selectDeliveryOption": "배송 옵션을 선택해 주세요",
   "@selectDeliveryOption": {
@@ -2517,9 +2517,9 @@
   "@estimatedTime": {
     "description": "예상 시간 라벨"
   },
-  "contactSalon": "살롱 연락",
+  "contactSalon": "상점 연락",
   "@contactSalon": {
-    "description": "살롱 연락 버튼 텍스트"
+    "description": "상점 연락 버튼 텍스트"
   },
   "backToMenu": "메뉴로 돌아가기",
   "@backToMenu": {

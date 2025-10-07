@@ -108,10 +108,10 @@ abstract class AppLocalizations {
   /// **'FShop'**
   String get appTitle;
 
-  /// Salon name
+  /// Shop name
   ///
   /// In vi, this message translates to:
-  /// **'Salon'**
+  /// **'Shop'**
   String get salon;
 
   /// Today's overview
@@ -156,7 +156,7 @@ abstract class AppLocalizations {
   /// **'Thông tin'**
   String get information;
 
-  /// Salon information
+  /// Shop information
   ///
   /// In vi, this message translates to:
   /// **'Thông tin'**
@@ -441,7 +441,7 @@ abstract class AppLocalizations {
   /// Shop name field label
   ///
   /// In vi, this message translates to:
-  /// **'Tên Salon'**
+  /// **'Tên Shop'**
   String get shopName;
 
   /// Check email
@@ -1230,58 +1230,58 @@ abstract class AppLocalizations {
   /// **'Giá trị đơn hàng trung bình'**
   String get averageOrderValue;
 
-  /// Nhãn cho ô nhập tên salon
+  /// Nhãn cho ô nhập tên shop
   ///
   /// In vi, this message translates to:
-  /// **'Tên Salon'**
+  /// **'Tên Shop'**
   String get salonName;
 
-  /// Salon address
+  /// Shop address
   ///
   /// In vi, this message translates to:
-  /// **'Địa chỉ salon'**
+  /// **'Địa chỉ shop'**
   String get salonAddress;
 
-  /// Salon phone
+  /// Shop phone
   ///
   /// In vi, this message translates to:
-  /// **'Số điện thoại salon'**
+  /// **'Số điện thoại shop'**
   String get salonPhone;
 
-  /// Salon email
+  /// Shop email
   ///
   /// In vi, this message translates to:
-  /// **'Email salon'**
+  /// **'Email shop'**
   String get salonEmail;
 
-  /// Salon description
+  /// Shop description
   ///
   /// In vi, this message translates to:
-  /// **'Mô tả salon'**
+  /// **'Mô tả shop'**
   String get salonDescription;
 
-  /// Salon hours
+  /// Shop hours
   ///
   /// In vi, this message translates to:
   /// **'Giờ hoạt động'**
   String get salonHours;
 
-  /// Update salon info
+  /// Update shop info
   ///
   /// In vi, this message translates to:
-  /// **'Cập nhật thông tin salon'**
+  /// **'Cập nhật thông tin shop'**
   String get updateSalonInfo;
 
-  /// Salon info updated successfully
+  /// Shop info updated successfully
   ///
   /// In vi, this message translates to:
-  /// **'Thông tin salon đã được cập nhật thành công'**
+  /// **'Thông tin shop đã được cập nhật thành công'**
   String get salonInfoUpdatedSuccessfully;
 
-  /// Error updating salon info
+  /// Error updating shop info
   ///
   /// In vi, this message translates to:
-  /// **'Lỗi cập nhật thông tin salon'**
+  /// **'Lỗi cập nhật thông tin shop'**
   String get errorUpdatingSalonInfo;
 
   /// Notifications
@@ -1566,10 +1566,10 @@ abstract class AppLocalizations {
   /// **'Lỗi khi upload QR code lên server'**
   String get errorUploadingQRCode;
 
-  /// Salon information saved successfully
+  /// Shop information saved successfully
   ///
   /// In vi, this message translates to:
-  /// **'Lưu thông tin salon thành công!'**
+  /// **'Lưu thông tin shop thành công!'**
   String get salonInfoSavedSuccessfully;
 
   /// Full name
@@ -1716,10 +1716,10 @@ abstract class AppLocalizations {
   /// **'Thay đổi thông tin nhân viên thành công'**
   String get employeeInfoUpdatedSuccessfully;
 
-  /// Manage salon employees
+  /// Manage shop employees
   ///
   /// In vi, this message translates to:
-  /// **'Quản lý nhân viên salon'**
+  /// **'Quản lý nhân viên shop'**
   String get manageSalonEmployees;
 
   /// Search employees
@@ -2058,16 +2058,16 @@ abstract class AppLocalizations {
   /// **'Chọn'**
   String get select;
 
-  /// Error message when cannot load salon information
+  /// Error message when cannot load shop information
   ///
   /// In vi, this message translates to:
-  /// **'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.'**
+  /// **'Không thể tải thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.'**
   String get cannotLoadSalonInfo;
 
-  /// Error message when cannot save salon information
+  /// Error message when cannot save shop information
   ///
   /// In vi, this message translates to:
-  /// **'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.'**
+  /// **'Không thể lưu thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.'**
   String get cannotSaveSalonInfo;
 
   /// Basic information section title
@@ -2082,13 +2082,13 @@ abstract class AppLocalizations {
   /// **'Mạng xã hội'**
   String get socialMedia;
 
-  /// Salon information title
+  /// Shop information title
   ///
   /// In vi, this message translates to:
   /// **'Thông tin'**
   String get salonInformation;
 
-  /// Description for salon information management
+  /// Description for shop information management
   ///
   /// In vi, this message translates to:
   /// **'Quản lý thông tin và liên hệ'**
@@ -2112,10 +2112,10 @@ abstract class AppLocalizations {
   /// **'Chọn Logo'**
   String get selectLogo;
 
-  /// Salon name field label
+  /// Shop name field label
   ///
   /// In vi, this message translates to:
-  /// **'Tên Salon'**
+  /// **'Tên Shop'**
   String get salonNameLabel;
 
   /// Address field label
@@ -2736,7 +2736,7 @@ abstract class AppLocalizations {
   /// **'Zalo đã mở! Vui lòng chọn Zalo trong menu chia sẻ để gửi hóa đơn.'**
   String get pdfZaloOpened;
 
-  /// Bill sharing text with salon name
+  /// Bill sharing text with shop name
   ///
   /// In vi, this message translates to:
   /// **'Hóa đơn từ {salonName}'**
@@ -3576,16 +3576,16 @@ abstract class AppLocalizations {
   /// **''**
   String get bookingDescription;
 
-  /// Placeholder cho ô nhập tên salon
+  /// Placeholder cho ô nhập tên shop
   ///
   /// In vi, this message translates to:
-  /// **'Nhập tên salon'**
+  /// **'Nhập tên shop'**
   String get enterSalonName;
 
-  /// Text nút kết nối đến salon
+  /// Text nút kết nối đến shop
   ///
   /// In vi, this message translates to:
-  /// **'Kết nối đến Salon'**
+  /// **'Kết nối đến Shop'**
   String get connectToSalon;
 
   /// Text loading khi đang kết nối
@@ -3612,10 +3612,10 @@ abstract class AppLocalizations {
   /// **'Không tìm thấy shop'**
   String get salonNotFound;
 
-  /// Thông báo validation cho tên salon
+  /// Thông báo validation cho tên shop
   ///
   /// In vi, this message translates to:
-  /// **'Vui lòng nhập tên salon'**
+  /// **'Vui lòng nhập tên shop'**
   String get pleaseEnterSalonName;
 
   /// Nhãn cho lựa chọn tùy chọn giao hàng
@@ -3630,7 +3630,7 @@ abstract class AppLocalizations {
   /// **'Giao hàng tận nhà'**
   String get homeDelivery;
 
-  /// Tùy chọn lấy tại salon
+  /// Tùy chọn lấy tại shop
   ///
   /// In vi, this message translates to:
   /// **'Lấy tại chỗ'**
@@ -3720,10 +3720,10 @@ abstract class AppLocalizations {
   /// **'Thời gian ước tính'**
   String get estimatedTime;
 
-  /// Text nút liên hệ salon
+  /// Text nút liên hệ shop
   ///
   /// In vi, this message translates to:
-  /// **'Liên hệ Salon'**
+  /// **'Liên hệ Shop'**
   String get contactSalon;
 
   /// Text nút quay lại menu

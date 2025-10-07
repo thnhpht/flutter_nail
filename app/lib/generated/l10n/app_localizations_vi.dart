@@ -12,7 +12,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'FShop';
 
   @override
-  String get salon => 'Salon';
+  String get salon => 'Shop';
 
   @override
   String get todayOverview => 'Tổng quan hôm nay';
@@ -177,7 +177,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get shopName => 'Tên Salon';
+  String get shopName => 'Tên Shop';
 
   @override
   String get checkEmail => 'Kiểm tra email';
@@ -603,32 +603,32 @@ class AppLocalizationsVi extends AppLocalizations {
   String get averageOrderValue => 'Giá trị đơn hàng trung bình';
 
   @override
-  String get salonName => 'Tên Salon';
+  String get salonName => 'Tên Shop';
 
   @override
-  String get salonAddress => 'Địa chỉ salon';
+  String get salonAddress => 'Địa chỉ shop';
 
   @override
-  String get salonPhone => 'Số điện thoại salon';
+  String get salonPhone => 'Số điện thoại shop';
 
   @override
-  String get salonEmail => 'Email salon';
+  String get salonEmail => 'Email shop';
 
   @override
-  String get salonDescription => 'Mô tả salon';
+  String get salonDescription => 'Mô tả shop';
 
   @override
   String get salonHours => 'Giờ hoạt động';
 
   @override
-  String get updateSalonInfo => 'Cập nhật thông tin salon';
+  String get updateSalonInfo => 'Cập nhật thông tin shop';
 
   @override
   String get salonInfoUpdatedSuccessfully =>
-      'Thông tin salon đã được cập nhật thành công';
+      'Thông tin shop đã được cập nhật thành công';
 
   @override
-  String get errorUpdatingSalonInfo => 'Lỗi cập nhật thông tin salon';
+  String get errorUpdatingSalonInfo => 'Lỗi cập nhật thông tin shop';
 
   @override
   String get notifications => 'Thông báo';
@@ -783,7 +783,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorUploadingQRCode => 'Lỗi khi upload QR code lên server';
 
   @override
-  String get salonInfoSavedSuccessfully => 'Lưu thông tin salon thành công!';
+  String get salonInfoSavedSuccessfully => 'Lưu thông tin shop thành công!';
 
   @override
   String get fullName => 'Họ và tên';
@@ -868,7 +868,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Thay đổi thông tin nhân viên thành công';
 
   @override
-  String get manageSalonEmployees => 'Quản lý nhân viên salon';
+  String get manageSalonEmployees => 'Quản lý nhân viên shop';
 
   @override
   String get searchEmployees => 'Tìm kiếm nhân viên...';
@@ -1079,11 +1079,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get cannotLoadSalonInfo =>
-      'Không thể tải thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.';
+      'Không thể tải thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.';
 
   @override
   String get cannotSaveSalonInfo =>
-      'Không thể lưu thông tin salon. Vui lòng kiểm tra kết nối mạng và thử lại.';
+      'Không thể lưu thông tin shop. Vui lòng kiểm tra kết nối mạng và thử lại.';
 
   @override
   String get basicInformation => 'Thông tin cơ bản';
@@ -1107,7 +1107,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get selectLogo => 'Chọn Logo';
 
   @override
-  String get salonNameLabel => 'Tên Salon';
+  String get salonNameLabel => 'Tên Shop';
 
   @override
   String get addressLabel => 'Địa chỉ';
@@ -1940,10 +1940,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get bookingDescription => '';
 
   @override
-  String get enterSalonName => 'Nhập tên salon';
+  String get enterSalonName => 'Nhập tên shop';
 
   @override
-  String get connectToSalon => 'Kết nối đến Salon';
+  String get connectToSalon => 'Kết nối đến Shop';
 
   @override
   String get connecting => 'Đang kết nối...';
@@ -1958,7 +1958,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get salonNotFound => 'Không tìm thấy shop';
 
   @override
-  String get pleaseEnterSalonName => 'Vui lòng nhập tên salon';
+  String get pleaseEnterSalonName => 'Vui lòng nhập tên shop';
 
   @override
   String get deliveryOption => 'Tùy chọn giao hàng';
@@ -2012,7 +2012,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get estimatedTime => 'Thời gian ước tính';
 
   @override
-  String get contactSalon => 'Liên hệ Salon';
+  String get contactSalon => 'Liên hệ Shop';
 
   @override
   String get backToMenu => 'Quay lại Menu';
