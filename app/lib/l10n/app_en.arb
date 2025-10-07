@@ -2613,5 +2613,103 @@
   "homeDelivery": "Home delivery",
   "@homeDelivery": {
     "description": "Home delivery option"
+  },
+  "importItem": "Import Item",
+  "@importItem": {
+    "description": "Import item button text"
+  },
+  "importItemDetails": "Import Item Details",
+  "@importItemDetails": {
+    "description": "Import item details dialog title"
+  },
+  "enterImportDetails": "Enter import item details",
+  "@enterImportDetails": {
+    "description": "Import item details dialog subtitle"
+  },
+  "importQuantity": "Import Quantity",
+  "@importQuantity": {
+    "description": "Import quantity field label"
+  },
+  "importPrice": "Import Price",
+  "@importPrice": {
+    "description": "Import price field label"
+  },
+  "importNotes": "Import Notes",
+  "@importNotes": {
+    "description": "Import notes field label"
+  },
+  "pleaseEnterImportQuantity": "Please enter import quantity",
+  "@pleaseEnterImportQuantity": {
+    "description": "Import quantity validation message"
+  },
+  "pleaseEnterImportPrice": "Please enter import price",
+  "@pleaseEnterImportPrice": {
+    "description": "Import price validation message"
+  },
+  "importQuantityMustBeGreaterThan0": "Import quantity must be greater than 0",
+  "@importQuantityMustBeGreaterThan0": {
+    "description": "Import quantity validation message"
+  },
+  "importPriceMustBeGreaterThan0": "Import price must be greater than 0",
+  "@importPriceMustBeGreaterThan0": {
+    "description": "Import price validation message"
+  },
+  "importItemSuccessfully": "Import item successfully",
+  "@importItemSuccessfully": {
+    "description": "Import item success message"
+  },
+  "errorImportingItem": "Error importing item",
+  "@errorImportingItem": {
+    "description": "Import item error message"
+  },
+  "totalImported": "Total Imported",
+  "@totalImported": {
+    "description": "Total imported quantity label"
+  },
+  "remainingQuantity": "Remaining",
+  "@remainingQuantity": {
+    "description": "Remaining quantity label"
+  },
+  "outOfStock": "Out of Stock",
+  "@outOfStock": {
+    "description": "Out of stock status"
+  },
+  "inStock": "In Stock",
+  "@inStock": {
+    "description": "In stock status"
+  },
+  "serviceOutOfStock": "{serviceName} is out of stock!",
+  "@serviceOutOfStock": {
+    "description": "Message when service is out of stock",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOutOfStockCannotIncrease": "{serviceName} is out of stock, cannot increase quantity!",
+  "@serviceOutOfStockCannotIncrease": {
+    "description": "Message when trying to increase quantity of out of stock service",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOnlyRemaining": "{serviceName} only has {remainingQuantity} items left!",
+  "@serviceOnlyRemaining": {
+    "description": "Message when service has limited remaining quantity",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      },
+      "remainingQuantity": {
+        "type": "int",
+        "description": "Remaining quantity"
+      }
+    }
   }
 }

@@ -1970,4 +1970,69 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pickupAtStore => '店内取货';
+
+  @override
+  String get importItem => '商品入库';
+
+  @override
+  String get importItemDetails => '商品入库详情';
+
+  @override
+  String get enterImportDetails => '输入商品入库详情';
+
+  @override
+  String get importQuantity => '入库数量';
+
+  @override
+  String get importPrice => '入库价格';
+
+  @override
+  String get importNotes => '入库备注';
+
+  @override
+  String get pleaseEnterImportQuantity => '请输入入库数量';
+
+  @override
+  String get pleaseEnterImportPrice => '请输入入库价格';
+
+  @override
+  String get pleaseEnterValidImportQuantity =>
+      'Vui lòng nhập số lượng hợp lệ (lớn hơn 0)';
+
+  @override
+  String get pleaseEnterValidImportPrice =>
+      'Vui lòng nhập giá hợp lệ (lớn hơn 0)';
+
+  @override
+  String get importItemSuccessfully => '商品入库成功';
+
+  @override
+  String get errorImportingItem => '商品入库错误';
+
+  @override
+  String get totalImported => '总入库量';
+
+  @override
+  String get remainingQuantity => '剩余数量';
+
+  @override
+  String get outOfStock => '缺货';
+
+  @override
+  String get inStock => '有库存';
+
+  @override
+  String serviceOutOfStock(String serviceName) {
+    return '$serviceName 缺货！';
+  }
+
+  @override
+  String serviceOutOfStockCannotIncrease(String serviceName) {
+    return '$serviceName 缺货，无法增加数量！';
+  }
+
+  @override
+  String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
+    return '$serviceName 只剩 $remainingQuantity 件！';
+  }
 }

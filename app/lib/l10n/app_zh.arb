@@ -2556,5 +2556,103 @@
   "homeDelivery": "送货上门",
   "@homeDelivery": {
     "description": "送货上门选项"
+  },
+  "importItem": "商品入库",
+  "@importItem": {
+    "description": "商品入库按钮文本"
+  },
+  "importItemDetails": "商品入库详情",
+  "@importItemDetails": {
+    "description": "商品入库详情对话框标题"
+  },
+  "enterImportDetails": "输入商品入库详情",
+  "@enterImportDetails": {
+    "description": "商品入库详情对话框副标题"
+  },
+  "importQuantity": "入库数量",
+  "@importQuantity": {
+    "description": "入库数量字段标签"
+  },
+  "importPrice": "入库价格",
+  "@importPrice": {
+    "description": "入库价格字段标签"
+  },
+  "importNotes": "入库备注",
+  "@importNotes": {
+    "description": "入库备注字段标签"
+  },
+  "pleaseEnterImportQuantity": "请输入入库数量",
+  "@pleaseEnterImportQuantity": {
+    "description": "入库数量验证消息"
+  },
+  "pleaseEnterImportPrice": "请输入入库价格",
+  "@pleaseEnterImportPrice": {
+    "description": "入库价格验证消息"
+  },
+  "importQuantityMustBeGreaterThan0": "入库数量必须大于0",
+  "@importQuantityMustBeGreaterThan0": {
+    "description": "入库数量验证消息"
+  },
+  "importPriceMustBeGreaterThan0": "入库价格必须大于0",
+  "@importPriceMustBeGreaterThan0": {
+    "description": "入库价格验证消息"
+  },
+  "importItemSuccessfully": "商品入库成功",
+  "@importItemSuccessfully": {
+    "description": "商品入库成功消息"
+  },
+  "errorImportingItem": "商品入库错误",
+  "@errorImportingItem": {
+    "description": "商品入库错误消息"
+  },
+  "totalImported": "总入库量",
+  "@totalImported": {
+    "description": "Total imported quantity label"
+  },
+  "remainingQuantity": "剩余数量",
+  "@remainingQuantity": {
+    "description": "Remaining quantity label"
+  },
+  "outOfStock": "缺货",
+  "@outOfStock": {
+    "description": "Out of stock status"
+  },
+  "inStock": "有库存",
+  "@inStock": {
+    "description": "In stock status"
+  },
+  "serviceOutOfStock": "{serviceName} 缺货！",
+  "@serviceOutOfStock": {
+    "description": "Message when service is out of stock",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOutOfStockCannotIncrease": "{serviceName} 缺货，无法增加数量！",
+  "@serviceOutOfStockCannotIncrease": {
+    "description": "Message when trying to increase quantity of out of stock service",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOnlyRemaining": "{serviceName} 只剩 {remainingQuantity} 件！",
+  "@serviceOnlyRemaining": {
+    "description": "Message when service has limited remaining quantity",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      },
+      "remainingQuantity": {
+        "type": "int",
+        "description": "Remaining quantity"
+      }
+    }
   }
 }

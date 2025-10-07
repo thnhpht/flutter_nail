@@ -32,6 +32,7 @@ namespace NailApi.Data
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Service> Services => Set<Service>();
+        public DbSet<ServiceDetails> ServiceDetails => Set<ServiceDetails>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<Information> Information => Set<Information>();
         public DbSet<Notification> Notifications => Set<Notification>();
@@ -60,6 +61,16 @@ namespace NailApi.Data
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Services)
                 .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ServiceDetails>()
+                .Property(sd => sd.Id)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<ServiceDetails>()
+                .HasOne(sd => sd.Service)
+                .WithMany()
+                .HasForeignKey(sd => sd.ServiceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>()

@@ -39,6 +39,7 @@ class _OrderScreenState extends State<OrderScreen> {
   List<Category> _selectedCategories = [];
   List<Employee> _employees = [];
   List<Employee> _selectedEmployees = [];
+  Map<String, ServiceInventory> _inventoryMap = {};
   double _totalPrice = 0.0;
   double _discountPercent = 0.0;
   double _tip = 0.0;
@@ -61,6 +62,7 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadCurrentUserInfo();
     _loadCategories();
     _loadServices();
+    _loadInventory();
     _loadEmployees();
     _loadInformation();
     _loadCustomers();
@@ -148,6 +150,21 @@ class _OrderScreenState extends State<OrderScreen> {
       AppWidgets.showFlushbar(context,
           AppLocalizations.of(context)!.errorLoadingServices(e.toString()),
           type: MessageType.error);
+    }
+  }
+
+  Future<void> _loadInventory() async {
+    try {
+      final inventory = await widget.api.getServiceInventory();
+      setState(() {
+        _inventoryMap = {for (var inv in inventory) inv.serviceId: inv};
+      });
+    } catch (e) {
+      // Inventory might fail if no ServiceDetails exist yet, that's okay
+      print('Inventory load failed: $e');
+      setState(() {
+        _inventoryMap = {};
+      });
     }
   }
 
@@ -421,6 +438,17 @@ class _OrderScreenState extends State<OrderScreen> {
       if (existingServiceIndex != -1) {
         _selectedServices.removeAt(existingServiceIndex);
       } else {
+        // Check inventory before adding service
+        final inventory = _inventoryMap[service.id];
+        if (inventory != null && inventory.isOutOfStock) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOutOfStock(service.name),
+            type: MessageType.warning,
+          );
+          return;
+        }
+
         _selectedServices
             .add(ServiceWithQuantity(service: service, quantity: 1));
         // Add category if not already selected
@@ -450,6 +478,30 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _increaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
     setState(() {
+      // Check inventory before increasing quantity
+      final inventory = _inventoryMap[serviceWithQuantity.service.id];
+      if (inventory != null) {
+        if (inventory.isOutOfStock) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOutOfStockCannotIncrease(
+                serviceWithQuantity.service.name),
+            type: MessageType.warning,
+          );
+          return;
+        }
+
+        if (serviceWithQuantity.quantity >= inventory.remainingQuantity) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOnlyRemaining(
+                serviceWithQuantity.service.name, inventory.remainingQuantity),
+            type: MessageType.warning,
+          );
+          return;
+        }
+      }
+
       serviceWithQuantity.quantity++;
       _calculateTotal();
     });
@@ -2237,15 +2289,20 @@ class _OrderScreenState extends State<OrderScreen> {
       orElse: () => Category(id: '', name: ''),
     );
 
+    final inventory = _inventoryMap[service.id];
+    final isOutOfStock = inventory?.isOutOfStock ?? false;
+
     return GestureDetector(
-      onTap: () => _onServiceToggled(service),
+      onTap: isOutOfStock ? null : () => _onServiceToggled(service),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isOutOfStock ? Colors.grey[200] : Colors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? const Color(0xFF667eea) : Colors.grey[300]!,
+            color: isOutOfStock
+                ? Colors.red[300]!
+                : (isSelected ? const Color(0xFF667eea) : Colors.grey[300]!),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
@@ -2360,6 +2417,35 @@ class _OrderScreenState extends State<OrderScreen> {
                     Icons.check,
                     color: Colors.white,
                     size: 10,
+                  ),
+                ),
+              ),
+
+            // Out of Stock overlay
+            if (isOutOfStock)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.outOfStock,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

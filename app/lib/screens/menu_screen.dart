@@ -26,6 +26,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   final TextEditingController _searchController = TextEditingController();
+  Map<String, ServiceInventory> _inventoryMap = {};
 
   @override
   void initState() {
@@ -73,6 +74,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         _isLoading = false;
       });
 
+      // Load inventory data
+      await _loadInventory();
+
       _animationController.forward();
     } catch (e) {
       setState(() {
@@ -87,6 +91,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           ),
         );
       }
+    }
+  }
+
+  Future<void> _loadInventory() async {
+    try {
+      final inventory = await widget.api.getServiceInventory();
+      setState(() {
+        _inventoryMap = {for (var inv in inventory) inv.serviceId: inv};
+      });
+    } catch (e) {
+      // Inventory might fail if no ServiceDetails exist yet, that's okay
+      print('Inventory load failed: $e');
+      setState(() {
+        _inventoryMap = {};
+      });
     }
   }
 
@@ -853,7 +872,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: AppTheme.isMobile(context) ? 2 : 3,
-                childAspectRatio: 0.75, // Slightly taller to accommodate text
+                childAspectRatio: 0.7, // Adjusted for inventory info
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
@@ -888,6 +907,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           Category(id: '', name: AppLocalizations.of(context)!.unknownCategory),
     );
 
+    final inventory = _inventoryMap[service.id];
+    final isOutOfStock = inventory?.isOutOfStock ?? false;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -904,84 +926,107 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // Service image
-          Expanded(
-            flex: 3,
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Service image
+              Expanded(
+                flex: 3,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                    ),
+                  ),
+                  child: service.image != null && service.image!.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                          ),
+                          child: _buildImageWidget(service.image!),
+                        )
+                      : _buildServiceImagePlaceholder(),
                 ),
               ),
-              child: service.image != null && service.image!.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
+
+              // Service info - Fixed height container to prevent overflow
+              Container(
+                height: 80, // Increased height to accommodate inventory info
+                padding: const EdgeInsets.all(6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Service name - Limited space
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        service.name,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          height: 1.1,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      child: _buildImageWidget(service.image!),
-                    )
-                  : _buildServiceImagePlaceholder(),
-            ),
-          ),
-
-          // Service info - Fixed height container to prevent overflow
-          Container(
-            height: 65, // Fixed height to prevent overflow
-            padding: const EdgeInsets.all(6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Service name - Limited space
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    service.name,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
 
-                // Category name
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    category.name,
-                    style: const TextStyle(
-                      fontSize: 8,
+                    // Category name
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        category.name,
+                        style: const TextStyle(
+                          fontSize: 8,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
 
-                // Price
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    '${_formatPrice(service.price)}₫',
-                    style: const TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
+                    // Inventory status
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        isOutOfStock
+                            ? AppLocalizations.of(context)!.outOfStock
+                            : '${AppLocalizations.of(context)!.remainingQuantity}: ${inventory?.remainingQuantity ?? 0}',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w500,
+                          color: isOutOfStock
+                              ? Colors.red[600]
+                              : Colors.green[600],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+
+                    // Price
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '${_formatPrice(service.price)}₫',
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

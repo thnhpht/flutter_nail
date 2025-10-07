@@ -271,6 +271,127 @@ namespace NailApi.Controllers
             }
         }
 
+        [HttpGet("servicedetails/inventory")]
+        public async Task<ActionResult<IEnumerable<object>>> GetServiceInventory([FromQuery] string salonName)
+        {
+            try
+            {
+                Console.WriteLine($"Getting service inventory for salon: {salonName}");
+
+                var (shopOwner, connectionString) = await GetSalonConnectionAsync(salonName);
+                if (shopOwner == null)
+                {
+                    return BadRequest("Salon không tồn tại trong hệ thống");
+                }
+
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Get all services
+                    var services = new List<Service>();
+                    var servicesCommand = new SqlCommand("SELECT Id, Name, Price, CategoryId, Image, Code, Unit FROM Services", connection);
+
+                    using (var reader = await servicesCommand.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            services.Add(new Service
+                            {
+                                Id = reader["Id"].ToString() ?? "",
+                                Name = reader["Name"].ToString() ?? "",
+                                Price = Convert.ToDecimal(reader["Price"]),
+                                CategoryId = reader["CategoryId"].ToString() ?? "",
+                                Image = reader["Image"].ToString(),
+                                Code = Convert.ToInt32(reader["Code"]),
+                                Unit = reader["Unit"].ToString()
+                            });
+                        }
+                    }
+
+                    var inventory = new List<object>();
+
+                    foreach (var service in services)
+                    {
+                        try
+                        {
+                            // Calculate total imported quantity
+                            var totalImportedCommand = new SqlCommand(
+                                "SELECT ISNULL(SUM(Quantity), 0) FROM ServiceDetails WHERE ServiceId = @ServiceId", 
+                                connection);
+                            totalImportedCommand.Parameters.AddWithValue("@ServiceId", service.Id);
+                            var totalImported = Convert.ToInt32(await totalImportedCommand.ExecuteScalarAsync());
+
+                            // Calculate total ordered quantity
+                            // This is a simplified approach - we'll get all orders and calculate in C#
+                            var totalOrdered = 0;
+                            var ordersCommand = new SqlCommand("SELECT ServiceIds, ServiceQuantities FROM Orders WHERE ServiceIds LIKE '%' + @ServiceId + '%'", connection);
+                            ordersCommand.Parameters.AddWithValue("@ServiceId", service.Id);
+                            
+                            using (var ordersReader = await ordersCommand.ExecuteReaderAsync())
+                            {
+                                while (await ordersReader.ReadAsync())
+                                {
+                                    try
+                                    {
+                                        var serviceIdsJson = ordersReader["ServiceIds"].ToString() ?? "[]";
+                                        var serviceQuantitiesJson = ordersReader["ServiceQuantities"].ToString() ?? "[]";
+                                        
+                                        var serviceIds = JsonSerializer.Deserialize<List<string>>(serviceIdsJson) ?? new List<string>();
+                                        var serviceQuantities = JsonSerializer.Deserialize<List<int>>(serviceQuantitiesJson) ?? new List<int>();
+                                        
+                                        // Find the index of the service in the serviceIds array
+                                        var serviceIndex = serviceIds.IndexOf(service.Id);
+                                        if (serviceIndex >= 0 && serviceIndex < serviceQuantities.Count)
+                                        {
+                                            totalOrdered += serviceQuantities[serviceIndex];
+                                        }
+                                    }
+                                    catch (Exception jsonEx)
+                                    {
+                                        Console.WriteLine($"Error parsing order JSON for service {service.Id}: {jsonEx.Message}");
+                                    }
+                                }
+                            }
+
+                            var remainingQuantity = totalImported - totalOrdered;
+                            var isOutOfStock = remainingQuantity <= 0;
+
+                            inventory.Add(new
+                            {
+                                serviceId = service.Id,
+                                totalImported = totalImported,
+                                totalOrdered = totalOrdered,
+                                remainingQuantity = remainingQuantity,
+                                isOutOfStock = isOutOfStock
+                            });
+                        }
+                        catch (Exception serviceEx)
+                        {
+                            Console.WriteLine($"Error calculating inventory for service {service.Id}: {serviceEx.Message}");
+                            // If individual service calculation fails, add default values
+                            inventory.Add(new
+                            {
+                                serviceId = service.Id,
+                                totalImported = 0,
+                                totalOrdered = 0,
+                                remainingQuantity = 0,
+                                isOutOfStock = true
+                            });
+                        }
+                    }
+
+                    return Ok(inventory);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Get service inventory error: {ex.Message}");
+                // Return empty inventory list instead of error to prevent blocking services
+                return Ok(new List<object>());
+            }
+        }
+
         [HttpPost("orders")]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] BookingOrderRequest request)
         {

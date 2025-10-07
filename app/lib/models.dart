@@ -524,6 +524,75 @@ class Information {
   }
 }
 
+class ServiceDetails {
+  final String id;
+  final int quantity;
+  final String serviceId;
+  final DateTime importDate;
+  final double importPrice;
+  final String? notes;
+
+  ServiceDetails({
+    required this.id,
+    required this.quantity,
+    required this.serviceId,
+    required this.importDate,
+    required this.importPrice,
+    this.notes,
+  });
+
+  factory ServiceDetails.fromJson(Map<String, dynamic> json) => ServiceDetails(
+        id: json['id'] as String,
+        quantity: json['quantity'] as int,
+        serviceId: json['serviceId'] as String,
+        importDate: DateTime.parse(json['importDate'] as String),
+        importPrice: (json['importPrice'] as num).toDouble(),
+        notes: json['notes'] as String?,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'quantity': quantity,
+        'serviceId': serviceId,
+        'importDate': importDate.toIso8601String(),
+        'importPrice': importPrice,
+        'notes': notes,
+      };
+}
+
+class ServiceInventory {
+  final String serviceId;
+  final int totalImported;
+  final int totalOrdered;
+  final int remainingQuantity;
+  final bool isOutOfStock;
+
+  ServiceInventory({
+    required this.serviceId,
+    required this.totalImported,
+    required this.totalOrdered,
+    required this.remainingQuantity,
+    required this.isOutOfStock,
+  });
+
+  factory ServiceInventory.fromJson(Map<String, dynamic> json) =>
+      ServiceInventory(
+        serviceId: json['serviceId'] as String,
+        totalImported: json['totalImported'] as int,
+        totalOrdered: json['totalOrdered'] as int,
+        remainingQuantity: json['remainingQuantity'] as int,
+        isOutOfStock: json['isOutOfStock'] as bool,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'serviceId': serviceId,
+        'totalImported': totalImported,
+        'totalOrdered': totalOrdered,
+        'remainingQuantity': remainingQuantity,
+        'isOutOfStock': isOutOfStock,
+      };
+}
+
 class Notification {
   final String id;
   final String title;

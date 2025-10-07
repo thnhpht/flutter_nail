@@ -26,6 +26,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   List<Category> _categories = [];
   List<Service> _services = [];
   List<Service> _filteredServices = [];
+  Map<String, ServiceInventory> _inventoryMap = {};
   String _searchQuery = '';
   String? _selectedCategoryId;
   bool _isLoading = true;
@@ -67,6 +68,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
     ));
     _loadData();
+    _loadInventory();
     _loadCustomers();
     // Initialize notification service with API client
     _notificationService.initialize(apiClient: widget.api);
@@ -130,6 +132,31 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           ),
         );
       }
+    }
+  }
+
+  Future<void> _loadInventory() async {
+    try {
+      // Get salon name from SharedPreferences for booking user
+      final prefs = await SharedPreferences.getInstance();
+      final salonName = prefs.getString('salon_name') ?? '';
+
+      if (salonName.isEmpty) {
+        throw Exception('Salon name not found');
+      }
+
+      // Use booking-specific API method for booking user
+      final inventory =
+          await widget.api.getServiceInventoryForBooking(salonName);
+      setState(() {
+        _inventoryMap = {for (var inv in inventory) inv.serviceId: inv};
+      });
+    } catch (e) {
+      // Inventory might fail if no ServiceDetails exist yet, that's okay
+      print('Inventory load failed: $e');
+      setState(() {
+        _inventoryMap = {};
+      });
     }
   }
 
@@ -434,6 +461,17 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       if (existingServiceIndex != -1) {
         _selectedServices.removeAt(existingServiceIndex);
       } else {
+        // Check inventory before adding service
+        final inventory = _inventoryMap[service.id];
+        if (inventory != null && inventory.isOutOfStock) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOutOfStock(service.name),
+            type: MessageType.warning,
+          );
+          return;
+        }
+
         _selectedServices
             .add(ServiceWithQuantity(service: service, quantity: 1));
       }
@@ -447,6 +485,30 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
 
   void _increaseServiceQuantity(ServiceWithQuantity serviceWithQuantity) {
     setState(() {
+      // Check inventory before increasing quantity
+      final inventory = _inventoryMap[serviceWithQuantity.service.id];
+      if (inventory != null) {
+        if (inventory.isOutOfStock) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOutOfStockCannotIncrease(
+                serviceWithQuantity.service.name),
+            type: MessageType.warning,
+          );
+          return;
+        }
+
+        if (serviceWithQuantity.quantity >= inventory.remainingQuantity) {
+          AppWidgets.showFlushbar(
+            context,
+            AppLocalizations.of(context)!.serviceOnlyRemaining(
+                serviceWithQuantity.service.name, inventory.remainingQuantity),
+            type: MessageType.warning,
+          );
+          return;
+        }
+      }
+
       serviceWithQuantity.quantity++;
     });
   }
@@ -1367,14 +1429,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     final isSelected = _selectedServices.any(
         (serviceWithQuantity) => serviceWithQuantity.service.id == service.id);
 
+    final inventory = _inventoryMap[service.id];
+    final isOutOfStock = inventory?.isOutOfStock ?? false;
+
     return GestureDetector(
-      onTap: () => _onServiceToggled(service),
+      onTap: isOutOfStock ? null : () => _onServiceToggled(service),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isOutOfStock ? Colors.grey[100] : Colors.white,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryStart : Colors.grey[300]!,
+            color: isOutOfStock
+                ? Colors.grey[400]!
+                : isSelected
+                    ? AppTheme.primaryStart
+                    : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
@@ -1484,6 +1553,37 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                     Icons.check,
                     color: Colors.white,
                     size: 12,
+                  ),
+                ),
+              ),
+
+            // Out of stock indicator
+            if (isOutOfStock)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        'Hết hàng',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

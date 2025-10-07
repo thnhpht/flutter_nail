@@ -2022,4 +2022,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pickupAtStore => 'Pick up at store';
+
+  @override
+  String get importItem => 'Import Item';
+
+  @override
+  String get importItemDetails => 'Import Item Details';
+
+  @override
+  String get enterImportDetails => 'Enter import item details';
+
+  @override
+  String get importQuantity => 'Import Quantity';
+
+  @override
+  String get importPrice => 'Import Price';
+
+  @override
+  String get importNotes => 'Import Notes';
+
+  @override
+  String get pleaseEnterImportQuantity => 'Please enter import quantity';
+
+  @override
+  String get pleaseEnterImportPrice => 'Please enter import price';
+
+  @override
+  String get pleaseEnterValidImportQuantity =>
+      'Vui lòng nhập số lượng hợp lệ (lớn hơn 0)';
+
+  @override
+  String get pleaseEnterValidImportPrice =>
+      'Vui lòng nhập giá hợp lệ (lớn hơn 0)';
+
+  @override
+  String get importItemSuccessfully => 'Import item successfully';
+
+  @override
+  String get errorImportingItem => 'Error importing item';
+
+  @override
+  String get totalImported => 'Total Imported';
+
+  @override
+  String get remainingQuantity => 'Remaining';
+
+  @override
+  String get outOfStock => 'Out of Stock';
+
+  @override
+  String get inStock => 'In Stock';
+
+  @override
+  String serviceOutOfStock(String serviceName) {
+    return '$serviceName is out of stock!';
+  }
+
+  @override
+  String serviceOutOfStockCannotIncrease(String serviceName) {
+    return '$serviceName is out of stock, cannot increase quantity!';
+  }
+
+  @override
+  String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
+    return '$serviceName only has $remainingQuantity items left!';
+  }
 }

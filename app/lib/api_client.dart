@@ -158,6 +158,17 @@ class ApiClient {
     }
   }
 
+  Future<List<ServiceInventory>> getServiceInventoryForBooking(
+      String salonName) async {
+    final r = await _client
+        .get(_u(
+            '/booking/servicedetails/inventory?salonName=${Uri.encodeComponent(salonName)}'))
+        .timeout(_timeout);
+    _checkBooking(r);
+    final List<dynamic> data = jsonDecode(r.body);
+    return data.map((json) => ServiceInventory.fromJson(json)).toList();
+  }
+
   Future<Order> createBookingOrder(Order order, String salonName) async {
     // Create booking order request
     final bookingRequest = {
@@ -251,6 +262,24 @@ class ApiClient {
 
     final r = await _client
         .post(_u('/auth/delete-notification'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(requestBody))
+        .timeout(_timeout);
+    _check(r);
+    return jsonDecode(r.body);
+  }
+
+  Future<Map<String, dynamic>> markAllNotificationsRead({
+    required String shopName,
+  }) async {
+    final requestBody = {
+      'shopName': shopName,
+      'notificationId':
+          '', // Not used for this endpoint, but required by the request model
+    };
+
+    final r = await _client
+        .post(_u('/auth/mark-all-notifications-read'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(requestBody))
         .timeout(_timeout);
@@ -600,6 +629,87 @@ class ApiClient {
 
     final responseData = jsonDecode(response.body);
     return responseData['imageUrl'] as String;
+  }
+
+  // ServiceDetails methods
+  Future<List<ServiceDetails>> getServiceDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r = await http.get(_u('/servicedetails'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list
+        .map((e) => ServiceDetails.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<ServiceDetails>> getServiceDetailsByServiceId(
+      String serviceId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r =
+        await http.get(_u('/servicedetails/service/$serviceId'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list
+        .map((e) => ServiceDetails.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<ServiceDetails> createServiceDetails(
+      ServiceDetails serviceDetails) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r = await http.post(_u('/servicedetails'),
+        headers: {
+          'Authorization': 'Bearer $jwtToken',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(serviceDetails.toJson()));
+    _check(r, expect201: true);
+    return ServiceDetails.fromJson(jsonDecode(r.body));
+  }
+
+  // Service Inventory
+  Future<List<ServiceInventory>> getServiceInventory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r = await http.get(_u('/servicedetails/inventory'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list
+        .map((e) => ServiceInventory.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<ServiceInventory?> getServiceInventoryByServiceId(
+      String serviceId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r =
+        await http.get(_u('/servicedetails/inventory/$serviceId'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final inventoryJson = jsonDecode(r.body) as Map<String, dynamic>?;
+    return inventoryJson != null
+        ? ServiceInventory.fromJson(inventoryJson)
+        : null;
   }
 
   // Orders

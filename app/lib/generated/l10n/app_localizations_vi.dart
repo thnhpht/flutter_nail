@@ -1955,7 +1955,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get connectionFailed => 'Kết nối thất bại';
 
   @override
-  String get salonNotFound => 'Không tìm thấy salon';
+  String get salonNotFound => 'Không tìm thấy shop';
 
   @override
   String get pleaseEnterSalonName => 'Vui lòng nhập tên salon';
@@ -2034,4 +2034,69 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pickupAtStore => 'Lấy tại chỗ';
+
+  @override
+  String get importItem => 'Nhập hàng';
+
+  @override
+  String get importItemDetails => 'Chi tiết nhập hàng';
+
+  @override
+  String get enterImportDetails => 'Nhập thông tin chi tiết nhập hàng';
+
+  @override
+  String get importQuantity => 'Số lượng nhập';
+
+  @override
+  String get importPrice => 'Giá nhập';
+
+  @override
+  String get importNotes => 'Ghi chú nhập hàng';
+
+  @override
+  String get pleaseEnterImportQuantity => 'Vui lòng nhập số lượng nhập';
+
+  @override
+  String get pleaseEnterImportPrice => 'Vui lòng nhập giá nhập';
+
+  @override
+  String get pleaseEnterValidImportQuantity =>
+      'Vui lòng nhập số lượng hợp lệ (lớn hơn 0)';
+
+  @override
+  String get pleaseEnterValidImportPrice =>
+      'Vui lòng nhập giá hợp lệ (lớn hơn 0)';
+
+  @override
+  String get importItemSuccessfully => 'Nhập hàng thành công';
+
+  @override
+  String get errorImportingItem => 'Lỗi khi nhập hàng';
+
+  @override
+  String get totalImported => 'Tổng nhập';
+
+  @override
+  String get remainingQuantity => 'Còn lại';
+
+  @override
+  String get outOfStock => 'Hết hàng';
+
+  @override
+  String get inStock => 'Còn hàng';
+
+  @override
+  String serviceOutOfStock(String serviceName) {
+    return '$serviceName đã hết hàng!';
+  }
+
+  @override
+  String serviceOutOfStockCannotIncrease(String serviceName) {
+    return '$serviceName đã hết hàng, không thể thêm số lượng!';
+  }
+
+  @override
+  String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
+    return '$serviceName chỉ còn $remainingQuantity sản phẩm!';
+  }
 }

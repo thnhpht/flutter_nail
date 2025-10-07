@@ -222,7 +222,7 @@ namespace NailApi.Controllers
                             Console.WriteLine($"Employee found: {employeeName} ({employeePhone})");
 
                             // Kiểm tra mật khẩu nhân viên
-                            if (_passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
+                            if (!string.IsNullOrEmpty(employeePassword) && _passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
                             {
                                 Console.WriteLine("Employee password verified successfully");
 
@@ -505,6 +505,17 @@ namespace NailApi.Controllers
                             [IsRead] bit NOT NULL DEFAULT 0,
                             [Data] nvarchar(max) NULL,
                             CONSTRAINT [PK_Notifications] PRIMARY KEY ([Id])
+                        );",
+
+                        @"CREATE TABLE [ServiceDetails] (
+                            [Id] nvarchar(450) NOT NULL,
+                            [Quantity] int NOT NULL,
+                            [ServiceId] nvarchar(450) NOT NULL,
+                            [ImportDate] datetime2 NOT NULL,
+                            [ImportPrice] decimal(18,2) NOT NULL,
+                            [Notes] nvarchar(max) NULL,
+                            CONSTRAINT [PK_ServiceDetails] PRIMARY KEY ([Id]),
+                            CONSTRAINT [FK_ServiceDetails_Services_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [Services] ([Id]) ON DELETE CASCADE
                         );"
                     };
 
@@ -793,7 +804,7 @@ namespace NailApi.Controllers
                     // Kiểm tra bảng Notifications có tồn tại không
                     var checkTableCommand = new SqlCommand(@"
                         SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
-                    var tableExists = (int)await checkTableCommand.ExecuteScalarAsync();
+                    var tableExists = (int)(await checkTableCommand.ExecuteScalarAsync() ?? 0);
 
                     if (tableExists == 0)
                     {
@@ -828,6 +839,62 @@ namespace NailApi.Controllers
             }
         }
 
+        [HttpPost("mark-all-notifications-read")]
+        public async Task<ActionResult<object>> MarkAllNotificationsRead([FromBody] MarkNotificationReadRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Marking all notifications as read for shop: {request.ShopName}");
+
+                // Kiểm tra email chủ shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+
+                if (shopOwner == null)
+                {
+                    return BadRequest(new { success = false, message = "Tên shop không tồn tại trong hệ thống." });
+                }
+
+                // Tạo database name từ email chủ shop
+                var databaseName = request.ShopName;
+
+                // Kết nối đến database của chủ shop
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Kiểm tra bảng Notifications có tồn tại không
+                    var checkTableCommand = new SqlCommand(@"
+                        SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
+                    var tableExists = (int)(await checkTableCommand.ExecuteScalarAsync() ?? 0);
+
+                    if (tableExists == 0)
+                    {
+                        return Ok(new { success = true, message = "Không có thông báo nào để đánh dấu" });
+                    }
+
+                    // Đánh dấu tất cả notifications là đã đọc
+                    var updateAllCommand = new SqlCommand(@"
+                        UPDATE [Notifications] 
+                        SET IsRead = 1 
+                        WHERE IsRead = 0", connection);
+
+                    var rowsAffected = await updateAllCommand.ExecuteNonQueryAsync();
+
+                    Console.WriteLine($"Marked {rowsAffected} notifications as read");
+                    return Ok(new { success = true, message = $"Đã đánh dấu {rowsAffected} thông báo là đã đọc" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Mark all notifications read error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                return StatusCode(500, new { success = false, message = "Đã xảy ra lỗi hệ thống khi đánh dấu tất cả thông báo." });
+            }
+        }
+
         [HttpPost("clear-all-notifications")]
         public async Task<ActionResult<object>> ClearAllNotifications([FromBody] MarkNotificationReadRequest request)
         {
@@ -856,7 +923,7 @@ namespace NailApi.Controllers
                     // Kiểm tra bảng Notifications có tồn tại không
                     var checkTableCommand = new SqlCommand(@"
                         SELECT COUNT(*) FROM sysobjects WHERE name='Notifications' AND xtype='U'", connection);
-                    var tableExists = (int)await checkTableCommand.ExecuteScalarAsync();
+                    var tableExists = (int)(await checkTableCommand.ExecuteScalarAsync() ?? 0);
 
                     if (tableExists == 0)
                     {

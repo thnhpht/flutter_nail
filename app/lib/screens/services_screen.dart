@@ -33,6 +33,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
   String? _selectedSortOption;
   String? _appliedSortOption;
 
+  // Inventory state
+  Map<String, ServiceInventory> _inventoryMap = {};
+
   // Sorting options will be created dynamically with localization
   Map<String, String> _getSortOptions(BuildContext context) {
     return {
@@ -149,17 +152,55 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   Future<void> _load() async {
-    final cats = await widget.api.getCategories();
+    // Load services first (most important)
     setState(() {
-      _categories = cats;
       _future = widget.api.getServices();
     });
+
+    // Load categories and inventory in parallel, but don't let them block services
+    try {
+      final cats = await widget.api.getCategories();
+      setState(() {
+        _categories = cats;
+      });
+    } catch (e) {
+      print('Categories load failed: $e');
+      setState(() {
+        _categories = [];
+      });
+    }
+
+    try {
+      final inventory = await widget.api.getServiceInventory();
+      setState(() {
+        _inventoryMap = {for (var inv in inventory) inv.serviceId: inv};
+      });
+    } catch (e) {
+      print('Inventory load failed (this is normal for new databases): $e');
+      setState(() {
+        _inventoryMap = {};
+      });
+    }
   }
 
   Future<void> _reload() async {
+    // Reload services first (most important)
     setState(() {
       _future = widget.api.getServices();
     });
+
+    // Reload inventory data, but don't let it block services
+    try {
+      final inventory = await widget.api.getServiceInventory();
+      setState(() {
+        _inventoryMap = {for (var inv in inventory) inv.serviceId: inv};
+      });
+    } catch (e) {
+      print('Inventory reload failed (this is normal for new databases): $e');
+      setState(() {
+        _inventoryMap = {};
+      });
+    }
   }
 
   // Filter methods
@@ -1225,6 +1266,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
           TextButton.icon(
             onPressed: () {
               Navigator.pop(context);
+              _showImportDialog(s);
+            },
+            icon: const Icon(Icons.inventory, color: Colors.blue),
+            label: Text(AppLocalizations.of(context)!.importItem),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
               _delete(s);
             },
             icon: const Icon(Icons.delete, color: Colors.red),
@@ -1233,6 +1282,356 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _showImportDialog(Service s) async {
+    final quantityCtrl = TextEditingController();
+    final priceCtrl = TextEditingController();
+    final notesCtrl = TextEditingController();
+    final importFormKey = GlobalKey<FormState>();
+
+    final ok = await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+              maxWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.inventory,
+                            color: Colors.white, size: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.importItemDetails,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              AppLocalizations.of(context)!.enterImportDetails,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: importFormKey,
+                      child: Column(
+                        children: [
+                          // Service Info
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey[200]!),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.shopping_cart,
+                                    color: AppTheme.primaryStart, size: 20),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .serviceName,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        s.name,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Quantity Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.grey[200]!),
+                            ),
+                            child: TextFormField(
+                              controller: quantityCtrl,
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .importQuantity,
+                                prefixIcon: const Icon(Icons.inventory_2,
+                                    color: AppTheme.primaryStart),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(16),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2),
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .pleaseEnterImportQuantity;
+                                }
+                                final quantity = int.tryParse(value.trim());
+                                if (quantity == null || quantity <= 0) {
+                                  return AppLocalizations.of(context)!
+                                      .pleaseEnterValidImportQuantity;
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // Price Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.grey[200]!),
+                            ),
+                            child: TextFormField(
+                              controller: priceCtrl,
+                              decoration: InputDecoration(
+                                labelText:
+                                    '${AppLocalizations.of(context)!.importPrice} (${AppLocalizations.of(context)!.vnd})',
+                                prefixIcon: const Icon(Icons.attach_money,
+                                    color: AppTheme.primaryStart),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(16),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2),
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .pleaseEnterImportPrice;
+                                }
+                                final price = double.tryParse(value.trim());
+                                if (price == null || price <= 0) {
+                                  return AppLocalizations.of(context)!
+                                      .pleaseEnterValidImportPrice;
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // Notes Field
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.grey[200]!),
+                            ),
+                            child: TextFormField(
+                              controller: notesCtrl,
+                              decoration: InputDecoration(
+                                labelText:
+                                    AppLocalizations.of(context)!.importNotes,
+                                prefixIcon: const Icon(Icons.note,
+                                    color: AppTheme.primaryStart),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(16),
+                              ),
+                              maxLines: 3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Actions
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.primaryGradient,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryStart
+                                    .withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (importFormKey.currentState!.validate()) {
+                                Navigator.pop(context, true);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (ok == true) {
+      final quantity = int.tryParse(quantityCtrl.text.trim()) ?? 0;
+      final price = double.tryParse(priceCtrl.text.trim()) ?? 0;
+      final notes =
+          notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim();
+
+      try {
+        final serviceDetails = ServiceDetails(
+          id: '', // Will be generated by the server
+          quantity: quantity,
+          serviceId: s.id,
+          importDate: DateTime.now(), // Will be set by the server
+          importPrice: price,
+          notes: notes,
+        );
+
+        await widget.api.createServiceDetails(serviceDetails);
+        await _reload(); // Refresh both services and inventory data
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.importItemSuccessfully,
+            type: MessageType.success);
+      } catch (e) {
+        AppWidgets.showFlushbar(
+            context, AppLocalizations.of(context)!.errorImportingItem,
+            type: MessageType.error);
+      }
+    }
   }
 
   Widget _buildImageWidget(String imageUrl) {
@@ -1973,6 +2372,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                                         ],
                                                       ),
                                                     ),
+                                                    const SizedBox(height: 4),
+                                                    // Inventory Information
+                                                    _buildInventoryInfo(s),
                                                   ],
                                                 ),
                                               ),
@@ -2032,6 +2434,87 @@ class _ServicesScreenState extends State<ServicesScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInventoryInfo(Service service) {
+    final inventory = _inventoryMap[service.id];
+
+    // If no inventory data, show "In Stock" as default
+    if (inventory == null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.green.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.inStock,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    // If out of stock, show only "Out of Stock"
+    if (inventory.isOutOfStock) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.outOfStock,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    // If in stock, show both total imported and remaining quantity on the same line
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Total Imported (left)
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.blue.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Text(
+            '${AppLocalizations.of(context)!.totalImported}: ${inventory.totalImported}',
+            style: const TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        // Remaining Quantity (right)
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Text(
+            '${AppLocalizations.of(context)!.remainingQuantity}: ${inventory.remainingQuantity}',
+            style: const TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

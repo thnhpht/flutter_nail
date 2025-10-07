@@ -3606,10 +3606,10 @@ abstract class AppLocalizations {
   /// **'Kết nối thất bại'**
   String get connectionFailed;
 
-  /// Thông báo lỗi khi không tìm thấy salon
+  /// Thông báo lỗi khi không tìm thấy shop
   ///
   /// In vi, this message translates to:
-  /// **'Không tìm thấy salon'**
+  /// **'Không tìm thấy shop'**
   String get salonNotFound;
 
   /// Thông báo validation cho tên salon
@@ -3767,6 +3767,120 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Lấy tại chỗ'**
   String get pickupAtStore;
+
+  /// Import item button text
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập hàng'**
+  String get importItem;
+
+  /// Import item details dialog title
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết nhập hàng'**
+  String get importItemDetails;
+
+  /// Import item details dialog subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập thông tin chi tiết nhập hàng'**
+  String get enterImportDetails;
+
+  /// Import quantity field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Số lượng nhập'**
+  String get importQuantity;
+
+  /// Import price field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Giá nhập'**
+  String get importPrice;
+
+  /// Import notes field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Ghi chú nhập hàng'**
+  String get importNotes;
+
+  /// Validation message for import quantity
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập số lượng nhập'**
+  String get pleaseEnterImportQuantity;
+
+  /// Validation message for import price
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập giá nhập'**
+  String get pleaseEnterImportPrice;
+
+  /// Validation message for valid import quantity
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập số lượng hợp lệ (lớn hơn 0)'**
+  String get pleaseEnterValidImportQuantity;
+
+  /// Validation message for valid import price
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập giá hợp lệ (lớn hơn 0)'**
+  String get pleaseEnterValidImportPrice;
+
+  /// Success message when import item is successful
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập hàng thành công'**
+  String get importItemSuccessfully;
+
+  /// Error message when importing item fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi khi nhập hàng'**
+  String get errorImportingItem;
+
+  /// Total imported quantity label
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng nhập'**
+  String get totalImported;
+
+  /// Remaining quantity label
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn lại'**
+  String get remainingQuantity;
+
+  /// Out of stock status
+  ///
+  /// In vi, this message translates to:
+  /// **'Hết hàng'**
+  String get outOfStock;
+
+  /// In stock status
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn hàng'**
+  String get inStock;
+
+  /// Message when service is out of stock
+  ///
+  /// In vi, this message translates to:
+  /// **'{serviceName} đã hết hàng!'**
+  String serviceOutOfStock(String serviceName);
+
+  /// Message when trying to increase quantity of out of stock service
+  ///
+  /// In vi, this message translates to:
+  /// **'{serviceName} đã hết hàng, không thể thêm số lượng!'**
+  String serviceOutOfStockCannotIncrease(String serviceName);
+
+  /// Message when service has limited remaining quantity
+  ///
+  /// In vi, this message translates to:
+  /// **'{serviceName} chỉ còn {remainingQuantity} sản phẩm!'**
+  String serviceOnlyRemaining(String serviceName, int remainingQuantity);
 }
 
 class _AppLocalizationsDelegate

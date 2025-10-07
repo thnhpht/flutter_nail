@@ -3281,9 +3281,9 @@
   "@connectionFailed": {
     "description": "Thông báo lỗi khi kết nối thất bại"
   },
-  "salonNotFound": "Không tìm thấy salon",
+  "salonNotFound": "Không tìm thấy shop",
   "@salonNotFound": {
-    "description": "Thông báo lỗi khi không tìm thấy salon"
+    "description": "Thông báo lỗi khi không tìm thấy shop"
   },
   "pleaseEnterSalonName": "Vui lòng nhập tên salon",
   "@pleaseEnterSalonName": {
@@ -3396,5 +3396,103 @@
   "homeDelivery": "Giao hàng tận nhà",
   "@homeDelivery": {
     "description": "Home delivery option"
+  },
+  "importItem": "Nhập hàng",
+  "@importItem": {
+    "description": "Import item button text"
+  },
+  "importItemDetails": "Chi tiết nhập hàng",
+  "@importItemDetails": {
+    "description": "Import item details dialog title"
+  },
+  "enterImportDetails": "Nhập thông tin chi tiết nhập hàng",
+  "@enterImportDetails": {
+    "description": "Import item details dialog subtitle"
+  },
+  "importQuantity": "Số lượng nhập",
+  "@importQuantity": {
+    "description": "Import quantity field label"
+  },
+  "importPrice": "Giá nhập",
+  "@importPrice": {
+    "description": "Import price field label"
+  },
+  "importNotes": "Ghi chú nhập hàng",
+  "@importNotes": {
+    "description": "Import notes field label"
+  },
+  "pleaseEnterImportQuantity": "Vui lòng nhập số lượng nhập",
+  "@pleaseEnterImportQuantity": {
+    "description": "Validation message for import quantity"
+  },
+  "pleaseEnterImportPrice": "Vui lòng nhập giá nhập",
+  "@pleaseEnterImportPrice": {
+    "description": "Validation message for import price"
+  },
+  "pleaseEnterValidImportQuantity": "Vui lòng nhập số lượng hợp lệ (lớn hơn 0)",
+  "@pleaseEnterValidImportQuantity": {
+    "description": "Validation message for valid import quantity"
+  },
+  "pleaseEnterValidImportPrice": "Vui lòng nhập giá hợp lệ (lớn hơn 0)",
+  "@pleaseEnterValidImportPrice": {
+    "description": "Validation message for valid import price"
+  },
+  "importItemSuccessfully": "Nhập hàng thành công",
+  "@importItemSuccessfully": {
+    "description": "Success message when import item is successful"
+  },
+  "errorImportingItem": "Lỗi khi nhập hàng",
+  "@errorImportingItem": {
+    "description": "Error message when importing item fails"
+  },
+  "totalImported": "Tổng nhập",
+  "@totalImported": {
+    "description": "Total imported quantity label"
+  },
+  "remainingQuantity": "Còn lại",
+  "@remainingQuantity": {
+    "description": "Remaining quantity label"
+  },
+  "outOfStock": "Hết hàng",
+  "@outOfStock": {
+    "description": "Out of stock status"
+  },
+  "inStock": "Còn hàng",
+  "@inStock": {
+    "description": "In stock status"
+  },
+  "serviceOutOfStock": "{serviceName} đã hết hàng!",
+  "@serviceOutOfStock": {
+    "description": "Message when service is out of stock",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOutOfStockCannotIncrease": "{serviceName} đã hết hàng, không thể thêm số lượng!",
+  "@serviceOutOfStockCannotIncrease": {
+    "description": "Message when trying to increase quantity of out of stock service",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      }
+    }
+  },
+  "serviceOnlyRemaining": "{serviceName} chỉ còn {remainingQuantity} sản phẩm!",
+  "@serviceOnlyRemaining": {
+    "description": "Message when service has limited remaining quantity",
+    "placeholders": {
+      "serviceName": {
+        "type": "String",
+        "description": "Name of the service"
+      },
+      "remainingQuantity": {
+        "type": "int",
+        "description": "Remaining quantity"
+      }
+    }
   }
 }

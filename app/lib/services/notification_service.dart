@@ -236,6 +236,23 @@ class NotificationService {
 
   /// Mark all notifications as read
   Future<void> markAllAsRead() async {
+    // Try to mark all as read via API first
+    if (_apiClient != null) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
+
+        if (shopName != null && shopName.isNotEmpty) {
+          await _apiClient!.markAllNotificationsRead(shopName: shopName);
+        }
+      } catch (e) {
+        // Fall back to local update if API fails
+      }
+    }
+
+    // Update local state
     final updatedNotifications =
         _notificationsNotifier.value.map((notification) {
       return notification.copyWith(isRead: true);
