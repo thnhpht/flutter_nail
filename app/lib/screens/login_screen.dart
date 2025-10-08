@@ -46,9 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onEmailChanged() {
     final email = _emailController.text;
     setState(() {
-      _databaseName = email;
-      // Tự động điền tên shop vào trường tên đăng nhập database
-      _userLoginController.text = email;
+      _databaseName = email.toLowerCase();
+      // Tự động điền tên shop vào trường tên đăng nhập database (lowercase)
+      _userLoginController.text = email.toLowerCase();
     });
   }
 
@@ -78,8 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final response =
-          await widget.api.checkEmail(_emailController.text.trim());
+      // Chuyển tên shop thành lowercase trước khi gửi đến API
+      final shopName = _emailController.text.trim().toLowerCase();
+      final response = await widget.api.checkEmail(shopName);
 
       setState(() {
         _emailChecked = true;
@@ -126,8 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final request = LoginRequest(
-        email: _emailController.text.trim(),
-        userLogin: _userLoginController.text.trim(),
+        email: _emailController.text.trim().toLowerCase(),
+        userLogin: _userLoginController.text.trim().toLowerCase(),
         passwordLogin: _passwordLoginController.text,
       );
 
@@ -138,8 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('jwt_token', response.token);
         await prefs.setString('database_name', response.databaseName);
-        await prefs.setString('user_email', _emailController.text.trim());
-        await prefs.setString('user_login', _userLoginController.text.trim());
+        await prefs.setString(
+            'user_email', _emailController.text.trim()); // Lưu email gốc
+        await prefs.setString(
+            'user_login', _userLoginController.text.trim()); // Lưu username gốc
         await prefs.setString('password_login', _passwordLoginController.text);
         await prefs.setString('user_role', response.userRole ?? 'shop_owner');
 

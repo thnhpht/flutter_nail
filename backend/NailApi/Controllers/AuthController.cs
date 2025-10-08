@@ -31,7 +31,7 @@ namespace NailApi.Controllers
         {
             try
             {
-                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
 
                 if (existingUser != null)
                 {
@@ -68,7 +68,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Login attempt for email: {request.Email}");
 
                 // Kiểm tra email có tồn tại không
-                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
 
                 if (existingUser == null)
                 {
@@ -76,8 +76,8 @@ namespace NailApi.Controllers
                     // Tạo user mới với PasswordLogin đã mã hóa (bỏ password đầu tiên)
                     var newUser = new User
                     {
-                        Email = request.Email,
-                        UserLogin = request.UserLogin,
+                        Email = request.Email.ToLower(), // Lưu email thành lowercase
+                        UserLogin = request.UserLogin.ToLower(), // Lưu username thành lowercase
                         PasswordLogin = _passwordService.EncryptPasswordLogin(request.PasswordLogin) // Mã hóa PasswordLogin
                     };
 
@@ -85,10 +85,10 @@ namespace NailApi.Controllers
                     await _context.SaveChangesAsync();
                     Console.WriteLine("New user created successfully");
 
-                    // Tạo database động cho user mới - sử dụng email gốc
-                    var databaseName = request.Email;
+                    // Tạo database động cho user mới - sử dụng email lowercase
+                    var databaseName = request.Email.ToLower();
                     Console.WriteLine($"Creating dynamic database: {databaseName}");
-                    var success = await CreateDynamicDatabase(databaseName, request.UserLogin, request.PasswordLogin);
+                    var success = await CreateDynamicDatabase(databaseName, request.UserLogin.ToLower(), request.PasswordLogin);
 
                     if (!success)
                     {
@@ -119,8 +119,8 @@ namespace NailApi.Controllers
                     Console.WriteLine("User exists, verifying credentials...");
                     // Bỏ kiểm tra password đầu tiên, chỉ kiểm tra thông tin database
                     
-                    // Kiểm tra thông tin database
-                    var userLoginMatch = existingUser.UserLogin == request.UserLogin;
+                    // Kiểm tra thông tin database (chuyển thành lowercase để so sánh)
+                    var userLoginMatch = existingUser.UserLogin.ToLower() == request.UserLogin.ToLower();
                     var passwordLoginMatch = request.PasswordLogin == _passwordService.DecryptPasswordLogin(existingUser.PasswordLogin); // Giải mã PasswordLogin để so sánh
 
                     Console.WriteLine($"User login match: {userLoginMatch}, Password login match: {passwordLoginMatch}");
@@ -182,7 +182,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Employee login attempt for shop name: {request.ShopName}");
 
                 // Kiểm tra tên shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -195,7 +195,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ tên shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop để tìm nhân viên
@@ -567,7 +567,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Sending notification for shop: {request.ShopName}");
 
                 // Kiểm tra tên shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -576,7 +576,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop để lưu thông báo
@@ -725,7 +725,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Marking notification as read: {request.NotificationId} for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -734,7 +734,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
                 Console.WriteLine($"Connecting to shop database: {databaseName}");
 
                 // Kết nối đến database của chủ shop
@@ -784,7 +784,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Deleting notification: {request.NotificationId} for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -792,7 +792,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
 
                 // Kết nối đến database của chủ shop
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
@@ -847,7 +847,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Marking all notifications as read for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -855,7 +855,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
 
                 // Kết nối đến database của chủ shop
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
@@ -903,7 +903,7 @@ namespace NailApi.Controllers
                 Console.WriteLine($"Clearing all notifications for shop: {request.ShopName}");
 
                 // Kiểm tra email chủ shop có tồn tại không
-                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.ShopName);
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
 
                 if (shopOwner == null)
                 {
@@ -911,7 +911,7 @@ namespace NailApi.Controllers
                 }
 
                 // Tạo database name từ email chủ shop
-                var databaseName = request.ShopName;
+                var databaseName = request.ShopName.ToLower();
 
                 // Kết nối đến database của chủ shop
                 var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
