@@ -1275,7 +1275,7 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "Thank you for using our items!",
+  "billFooter": "Thank you!",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -1718,7 +1718,7 @@
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
-  "pdfThankYouMessage": "Thank you for using our service!",
+  "pdfThankYouMessage": "Thank you!",
   "@pdfThankYouMessage": {
     "description": "Thank you message in PDF footer"
   },
@@ -2709,6 +2709,60 @@
       "remainingQuantity": {
         "type": "int",
         "description": "Remaining quantity"
+      }
+    }
+  },
+  "group": "Group",
+  "@group": {
+    "description": "Group field label"
+  },
+  "selectGroup": "Select Group",
+  "@selectGroup": {
+    "description": "Select group dropdown label"
+  },
+  "allGroups": "All Groups",
+  "@allGroups": {
+    "description": "All groups filter option"
+  },
+  "noGroup": "No Group",
+  "@noGroup": {
+    "description": "No group option"
+  },
+  "pleaseEnterGroup": "Please enter group",
+  "@pleaseEnterGroup": {
+    "description": "Please enter group validation message"
+  },
+  "groupFilter": "Filter by Group",
+  "@groupFilter": {
+    "description": "Group filter label"
+  },
+  "selectGroupToFilter": "Select group to filter customers",
+  "@selectGroupToFilter": {
+    "description": "Select group to filter customers description"
+  },
+  "groupsSelected": "{count} groups selected",
+  "@groupsSelected": {
+    "description": "Number of groups selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearGroupFilter": "Clear Group Filter",
+  "@clearGroupFilter": {
+    "description": "Clear group filter button text"
+  },
+  "customerGroup": "Customer Group",
+  "@customerGroup": {
+    "description": "Customer group label"
+  },
+  "groupLabel": "Group: {group}",
+  "@groupLabel": {
+    "description": "Group label with value",
+    "placeholders": {
+      "group": {
+        "type": "String"
       }
     }
   }

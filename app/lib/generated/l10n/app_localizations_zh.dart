@@ -1314,7 +1314,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get itemNotFoundError => '找不到商品';
 
   @override
-  String get billFooter => '感谢您使用我们的商品！';
+  String get billFooter => '谢谢！';
 
   @override
   String get billFooter2 => '期待再次为您商品！';
@@ -1479,7 +1479,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pdfTotalPayment => '总付款：';
 
   @override
-  String get pdfThankYouMessage => '感谢您使用我们的商品！';
+  String get pdfThankYouMessage => '谢谢！';
 
   @override
   String get pdfSeeYouAgainMessage => '期待再次为您商品！';
@@ -2034,5 +2034,42 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
     return '$serviceName 只剩 $remainingQuantity 件！';
+  }
+
+  @override
+  String get group => '组别';
+
+  @override
+  String get selectGroup => '选择组别';
+
+  @override
+  String get allGroups => '所有组别';
+
+  @override
+  String get noGroup => '无组别';
+
+  @override
+  String get pleaseEnterGroup => '请输入组别';
+
+  @override
+  String get groupFilter => '按组别筛选';
+
+  @override
+  String get selectGroupToFilter => '选择组别来筛选客户';
+
+  @override
+  String groupsSelected(int count) {
+    return '已选择 $count 个组别';
+  }
+
+  @override
+  String get clearGroupFilter => '清除组别筛选';
+
+  @override
+  String get customerGroup => '客户组别';
+
+  @override
+  String groupLabel(String group) {
+    return '组别: $group';
   }
 }

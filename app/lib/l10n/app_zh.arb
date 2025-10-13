@@ -1275,7 +1275,7 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "感谢您使用我们的商品！",
+  "billFooter": "谢谢！",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -1748,7 +1748,7 @@
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
-  "pdfThankYouMessage": "感谢您使用我们的商品！",
+  "pdfThankYouMessage": "谢谢！",
   "@pdfThankYouMessage": {
     "description": "Thank you message in PDF footer"
   },
@@ -2652,6 +2652,60 @@
       "remainingQuantity": {
         "type": "int",
         "description": "Remaining quantity"
+      }
+    }
+  },
+  "group": "组别",
+  "@group": {
+    "description": "Group field label"
+  },
+  "selectGroup": "选择组别",
+  "@selectGroup": {
+    "description": "Select group dropdown label"
+  },
+  "allGroups": "所有组别",
+  "@allGroups": {
+    "description": "All groups filter option"
+  },
+  "noGroup": "无组别",
+  "@noGroup": {
+    "description": "No group option"
+  },
+  "pleaseEnterGroup": "请输入组别",
+  "@pleaseEnterGroup": {
+    "description": "Please enter group validation message"
+  },
+  "groupFilter": "按组别筛选",
+  "@groupFilter": {
+    "description": "Group filter label"
+  },
+  "selectGroupToFilter": "选择组别来筛选客户",
+  "@selectGroupToFilter": {
+    "description": "Select group to filter customers description"
+  },
+  "groupsSelected": "已选择 {count} 个组别",
+  "@groupsSelected": {
+    "description": "Number of groups selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearGroupFilter": "清除组别筛选",
+  "@clearGroupFilter": {
+    "description": "Clear group filter button text"
+  },
+  "customerGroup": "客户组别",
+  "@customerGroup": {
+    "description": "Customer group label"
+  },
+  "groupLabel": "组别: {group}",
+  "@groupLabel": {
+    "description": "Group label with value",
+    "placeholders": {
+      "group": {
+        "type": "String"
       }
     }
   }

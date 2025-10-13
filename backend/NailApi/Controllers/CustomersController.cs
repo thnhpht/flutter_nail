@@ -79,12 +79,13 @@ namespace NailApi.Controllers
                 var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
                 
                 // Code sẽ được tự động tăng bởi IDENTITY, không cần set
-                // Chỉ set Name, Phone, Address
+                // Chỉ set Name, Phone, Address, Group
                 var newCustomer = new Customer
                 {
                     Phone = input.Phone,
                     Name = input.Name,
-                    Address = input.Address
+                    Address = input.Address,
+                    Group = input.Group
                     // Code sẽ được database tự động tạo
                 };
                 
@@ -115,9 +116,10 @@ namespace NailApi.Controllers
                 var exists = await dbContext.Customers.FindAsync(phone);
                 if (exists == null) return NotFound();
                 
-                // Chỉ cập nhật Name và Address, giữ nguyên Code
+                // Chỉ cập nhật Name, Address và Group, giữ nguyên Code
                 exists.Name = input.Name;
                 exists.Address = input.Address;
+                exists.Group = input.Group;
                 
                 await dbContext.SaveChangesAsync();
                 return NoContent();
@@ -145,6 +147,33 @@ namespace NailApi.Controllers
                 dbContext.Customers.Remove(entity);
                 await dbContext.SaveChangesAsync();
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Không thể kết nối database: {ex.Message}");
+            }
+        }
+
+        [HttpGet("groups")]
+        public async Task<ActionResult<IEnumerable<string>>> GetGroups()
+        {
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var userLogin = User.FindFirst(ClaimTypes.Name)?.Value;
+                
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userLogin))
+                    return Unauthorized("Thông tin xác thực không hợp lệ");
+                
+                var dbContext = await _databaseService.GetDynamicDbContextAsync(email, userLogin, "");
+                var groups = await dbContext.Customers
+                    .Where(c => !string.IsNullOrEmpty(c.Group))
+                    .Select(c => c.Group)
+                    .Distinct()
+                    .OrderBy(g => g)
+                    .ToListAsync();
+                
+                return Ok(groups);
             }
             catch (Exception ex)
             {

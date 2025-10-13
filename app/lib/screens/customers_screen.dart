@@ -36,6 +36,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     final phoneCtrl = TextEditingController();
     final nameCtrl = TextEditingController();
     final addressCtrl = TextEditingController();
+    final groupCtrl = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -217,6 +218,35 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             // Address is optional, no validator needed
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: groupCtrl,
+                            decoration: InputDecoration(
+                              labelText: l10n.group,
+                              prefixIcon: Icon(Icons.group,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            // Group is optional, no validator needed
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -299,6 +329,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
       final phone = phoneCtrl.text.trim();
       final name = nameCtrl.text.trim();
       final address = addressCtrl.text.trim();
+      final group = groupCtrl.text.trim();
 
       try {
         // Check if phone exists
@@ -315,6 +346,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
           name: name,
           phone: phone,
           address: address.isEmpty ? null : address,
+          group: group.isEmpty ? null : group,
         ));
         await _reload();
         AppWidgets.showFlushbar(context, l10n.customerAddedSuccessfully,
@@ -330,6 +362,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: c.name);
     final addressCtrl = TextEditingController(text: c.address ?? '');
+    final groupCtrl = TextEditingController(text: c.group ?? '');
     final ok = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -497,6 +530,35 @@ class _CustomersScreenState extends State<CustomersScreen> {
                             // Address is optional, no validator needed
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: TextFormField(
+                            controller: groupCtrl,
+                            decoration: InputDecoration(
+                              labelText: l10n.group,
+                              prefixIcon: const Icon(Icons.group,
+                                  color: AppTheme.primaryStart),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(16),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2),
+                              ),
+                            ),
+                            // Group is optional, no validator needed
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -578,6 +640,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     if (ok == true) {
       final name = nameCtrl.text.trim();
       final address = addressCtrl.text.trim();
+      final group = groupCtrl.text.trim();
 
       try {
         await widget.api.updateCustomer(Customer(
@@ -585,6 +648,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
           name: name,
           code: c.code,
           address: address.isEmpty ? null : address,
+          group: group.isEmpty ? null : group,
         ));
         await _reload();
         AppWidgets.showFlushbar(context, l10n.customerUpdatedSuccessfully,
@@ -765,19 +829,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
                         );
                       }
                       final data = snapshot.data ?? [];
-                      final filtered = data
-                          .where((c) =>
-                              c.name
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()) ||
-                              c.phone
-                                  .toLowerCase()
-                                  .contains(_search.toLowerCase()) ||
-                              (c.address != null &&
-                                  c.address!
-                                      .toLowerCase()
-                                      .contains(_search.toLowerCase())))
-                          .toList()
+                      final filtered = data.where((c) {
+                        // Search filter
+                        final matchesSearch = _search.isEmpty ||
+                            c.name
+                                .toLowerCase()
+                                .contains(_search.toLowerCase()) ||
+                            c.phone
+                                .toLowerCase()
+                                .contains(_search.toLowerCase()) ||
+                            (c.address != null &&
+                                c.address!
+                                    .toLowerCase()
+                                    .contains(_search.toLowerCase()));
+
+                        return matchesSearch;
+                      }).toList()
                         ..sort((a, b) => a.name
                             .toLowerCase()
                             .compareTo(b.name.toLowerCase()));
@@ -1019,6 +1086,66 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                                                       .w500,
                                                             ),
                                                             maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                if (c.group != null &&
+                                                    c.group!.isNotEmpty) ...[
+                                                  const SizedBox(height: 4),
+                                                  Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 6,
+                                                        vertical: 2),
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          Colors.blue
+                                                              .withValues(
+                                                                  alpha: 0.1),
+                                                          Colors.blue
+                                                              .withValues(
+                                                                  alpha: 0.05),
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.group,
+                                                          size: 12,
+                                                          color:
+                                                              Colors.blue[700],
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 4),
+                                                        Expanded(
+                                                          child: Text(
+                                                            c.group!,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .blue[700],
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            maxLines: 1,
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,

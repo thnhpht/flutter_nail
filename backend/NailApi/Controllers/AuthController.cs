@@ -422,6 +422,7 @@ namespace NailApi.Controllers
                             [Name] nvarchar(max) NOT NULL,
                             [Code] int IDENTITY(1,1) NOT NULL,
                             [Address] nvarchar(max) NULL,
+                            [Group] nvarchar(max) NULL,
                             CONSTRAINT [PK_Customers] PRIMARY KEY ([Phone])
                         );",
 

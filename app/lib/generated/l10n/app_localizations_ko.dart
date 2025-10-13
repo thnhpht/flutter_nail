@@ -1318,7 +1318,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get itemNotFoundError => '상품을 찾을 수 없습니다';
 
   @override
-  String get billFooter => '저희 상품를 이용해 주셔서 감사합니다!';
+  String get billFooter => '감사합니다!';
 
   @override
   String get billFooter2 => '다시 만나뵐 수 있기를 기대합니다!';
@@ -1483,7 +1483,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pdfTotalPayment => '총 결제금액';
 
   @override
-  String get pdfThankYouMessage => '상품를 이용해 주셔서 감사합니다!';
+  String get pdfThankYouMessage => '감사합니다!';
 
   @override
   String get pdfSeeYouAgainMessage => '다시 만나요!';
@@ -2045,5 +2045,42 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
     return '$serviceName $remainingQuantity개만 남았습니다!';
+  }
+
+  @override
+  String get group => '그룹';
+
+  @override
+  String get selectGroup => '그룹 선택';
+
+  @override
+  String get allGroups => '모든 그룹';
+
+  @override
+  String get noGroup => '그룹 없음';
+
+  @override
+  String get pleaseEnterGroup => '그룹을 입력해주세요';
+
+  @override
+  String get groupFilter => '그룹별 필터';
+
+  @override
+  String get selectGroupToFilter => '고객을 필터링할 그룹을 선택하세요';
+
+  @override
+  String groupsSelected(int count) {
+    return '$count개 그룹 선택됨';
+  }
+
+  @override
+  String get clearGroupFilter => '그룹 필터 지우기';
+
+  @override
+  String get customerGroup => '고객 그룹';
+
+  @override
+  String groupLabel(String group) {
+    return '그룹: $group';
   }
 }

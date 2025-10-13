@@ -381,6 +381,19 @@ class ApiClient {
     _check(r, expect204: true);
   }
 
+  Future<List<String>> getCustomerGroups() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    final r = await http.get(_u('/customers/groups'), headers: {
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'application/json',
+    });
+    _check(r);
+    final list = jsonDecode(r.body) as List<dynamic>;
+    return list.cast<String>();
+  }
+
   // Employees
   Future<List<Employee>> getEmployees() async {
     final prefs = await SharedPreferences.getInstance();

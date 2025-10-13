@@ -12,5 +12,6 @@ namespace NailApi.Models
         public int Code { get; set; } // Auto-increment code
         
         public string? Address { get; set; } // Optional address
+        public string? Group { get; set; } // Optional group
     }
 }

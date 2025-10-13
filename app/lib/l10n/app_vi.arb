@@ -2176,7 +2176,7 @@
   "@itemNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "Cảm ơn quý khách đã sử dụng chi tiết!",
+  "billFooter": "Cảm ơn quý khách!",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -2649,7 +2649,7 @@
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
-  "pdfThankYouMessage": "Cảm ơn quý khách đã sử dụng chi tiết!",
+  "pdfThankYouMessage": "Cảm ơn quý khách!",
   "@pdfThankYouMessage": {
     "description": "Thank you message in PDF footer"
   },
@@ -3492,6 +3492,60 @@
       "remainingQuantity": {
         "type": "int",
         "description": "Remaining quantity"
+      }
+    }
+  },
+  "group": "Nhóm",
+  "@group": {
+    "description": "Group field label"
+  },
+  "selectGroup": "Chọn nhóm",
+  "@selectGroup": {
+    "description": "Select group dropdown label"
+  },
+  "allGroups": "Tất cả nhóm",
+  "@allGroups": {
+    "description": "All groups filter option"
+  },
+  "noGroup": "Không có nhóm",
+  "@noGroup": {
+    "description": "No group option"
+  },
+  "pleaseEnterGroup": "Vui lòng nhập nhóm",
+  "@pleaseEnterGroup": {
+    "description": "Please enter group validation message"
+  },
+  "groupFilter": "Chọn nhóm",
+  "@groupFilter": {
+    "description": "Group filter label"
+  },
+  "selectGroupToFilter": "Chọn nhóm để lọc khách hàng",
+  "@selectGroupToFilter": {
+    "description": "Select group to filter customers description"
+  },
+  "groupsSelected": "{count} nhóm được chọn",
+  "@groupsSelected": {
+    "description": "Number of groups selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearGroupFilter": "Xóa bộ lọc nhóm",
+  "@clearGroupFilter": {
+    "description": "Clear group filter button text"
+  },
+  "customerGroup": "Nhóm khách hàng",
+  "@customerGroup": {
+    "description": "Customer group label"
+  },
+  "groupLabel": "Nhóm: {group}",
+  "@groupLabel": {
+    "description": "Group label with value",
+    "placeholders": {
+      "group": {
+        "type": "String"
       }
     }
   }

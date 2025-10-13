@@ -1275,7 +1275,7 @@
   "@serviceNotFoundError": {
     "description": "Service not found error message"
   },
-  "billFooter": "저희 상품를 이용해 주셔서 감사합니다!",
+  "billFooter": "감사합니다!",
   "@billFooter": {
     "description": "Bill footer message"
   },
@@ -1748,7 +1748,7 @@
   "@pdfTotalPayment": {
     "description": "Total payment label in PDF"
   },
-  "pdfThankYouMessage": "상품를 이용해 주셔서 감사합니다!",
+  "pdfThankYouMessage": "감사합니다!",
   "@pdfThankYouMessage": {
     "description": "Thank you message in PDF footer"
   },
@@ -2652,6 +2652,60 @@
       "remainingQuantity": {
         "type": "int",
         "description": "Remaining quantity"
+      }
+    }
+  },
+  "group": "그룹",
+  "@group": {
+    "description": "Group field label"
+  },
+  "selectGroup": "그룹 선택",
+  "@selectGroup": {
+    "description": "Select group dropdown label"
+  },
+  "allGroups": "모든 그룹",
+  "@allGroups": {
+    "description": "All groups filter option"
+  },
+  "noGroup": "그룹 없음",
+  "@noGroup": {
+    "description": "No group option"
+  },
+  "pleaseEnterGroup": "그룹을 입력해주세요",
+  "@pleaseEnterGroup": {
+    "description": "Please enter group validation message"
+  },
+  "groupFilter": "그룹별 필터",
+  "@groupFilter": {
+    "description": "Group filter label"
+  },
+  "selectGroupToFilter": "고객을 필터링할 그룹을 선택하세요",
+  "@selectGroupToFilter": {
+    "description": "Select group to filter customers description"
+  },
+  "groupsSelected": "{count}개 그룹 선택됨",
+  "@groupsSelected": {
+    "description": "Number of groups selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clearGroupFilter": "그룹 필터 지우기",
+  "@clearGroupFilter": {
+    "description": "Clear group filter button text"
+  },
+  "customerGroup": "고객 그룹",
+  "@customerGroup": {
+    "description": "Customer group label"
+  },
+  "groupLabel": "그룹: {group}",
+  "@groupLabel": {
+    "description": "Group label with value",
+    "placeholders": {
+      "group": {
+        "type": "String"
       }
     }
   }

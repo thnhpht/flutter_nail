@@ -1347,7 +1347,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Không tìm thấy thông tin chi tiết cho đơn hàng này';
 
   @override
-  String get billFooter => 'Cảm ơn quý khách đã sử dụng chi tiết!';
+  String get billFooter => 'Cảm ơn quý khách!';
 
   @override
   String get billFooter2 => 'Hẹn gặp lại quý khách!';
@@ -1519,7 +1519,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdfTotalPayment => 'Tổng thanh toán';
 
   @override
-  String get pdfThankYouMessage => 'Cảm ơn quý khách đã sử dụng chi tiết!';
+  String get pdfThankYouMessage => 'Cảm ơn quý khách!';
 
   @override
   String get pdfSeeYouAgainMessage => 'Hẹn gặp lại quý khách!';
@@ -2098,5 +2098,42 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
     return '$serviceName chỉ còn $remainingQuantity sản phẩm!';
+  }
+
+  @override
+  String get group => 'Nhóm';
+
+  @override
+  String get selectGroup => 'Chọn nhóm';
+
+  @override
+  String get allGroups => 'Tất cả nhóm';
+
+  @override
+  String get noGroup => 'Không có nhóm';
+
+  @override
+  String get pleaseEnterGroup => 'Vui lòng nhập nhóm';
+
+  @override
+  String get groupFilter => 'Chọn nhóm';
+
+  @override
+  String get selectGroupToFilter => 'Chọn nhóm để lọc khách hàng';
+
+  @override
+  String groupsSelected(int count) {
+    return '$count nhóm được chọn';
+  }
+
+  @override
+  String get clearGroupFilter => 'Xóa bộ lọc nhóm';
+
+  @override
+  String get customerGroup => 'Nhóm khách hàng';
+
+  @override
+  String groupLabel(String group) {
+    return 'Nhóm: $group';
   }
 }

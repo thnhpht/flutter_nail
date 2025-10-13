@@ -19,11 +19,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
   List<Order> _orders = [];
   List<Employee> _employees = [];
   List<Customer> _customers = [];
+  List<String> _customerGroups = [];
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
   Employee? _selectedEmployee;
   Customer? _selectedCustomer;
   String? _selectedPaymentStatus;
+  String? _selectedGroup;
   String _searchQuery = '';
 
   // Thống kê
@@ -54,11 +56,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final orders = await widget.api.getOrders();
       final employees = await widget.api.getEmployees();
       final customers = await widget.api.getCustomers();
+      final groups = await widget.api.getCustomerGroups();
 
       setState(() {
         _orders = orders;
         _employees = employees;
         _customers = customers;
+        _customerGroups = groups;
         _isLoading = false;
       });
 
@@ -136,6 +140,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
           return !order.isPaid;
         }
         return true; // 'all' - hiển thị tất cả
+      }).toList();
+    }
+
+    // Áp dụng lọc theo nhóm khách hàng
+    if (_selectedGroup != null) {
+      filtered = filtered.where((order) {
+        // Tìm customer tương ứng với order
+        final customer = _customers.firstWhere(
+          (c) => c.phone == order.customerPhone,
+          orElse: () => Customer(phone: '', name: ''),
+        );
+        return customer.group == _selectedGroup;
       }).toList();
     }
 
@@ -613,6 +629,290 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
+  Widget _buildSearchableEmployeeDropdown(AppLocalizations l10n) {
+    return Autocomplete<Employee>(
+      displayStringForOption: (Employee employee) => employee.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return _employees;
+        }
+        return _employees.where((Employee employee) => employee.name
+            .toLowerCase()
+            .contains(textEditingValue.text.toLowerCase()));
+      },
+      onSelected: (Employee selection) {
+        setState(() {
+          _selectedEmployee = selection;
+        });
+        _updateFilters();
+      },
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: AppTheme.inputDecoration(
+            label: l10n.selectEmployee,
+            prefixIcon: Icons.person,
+          ).copyWith(
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            suffixIcon: _selectedEmployee != null
+                ? IconButton(
+                    icon: Icon(Icons.clear, color: Colors.grey[600]),
+                    onPressed: () {
+                      setState(() {
+                        _selectedEmployee = null;
+                        textEditingController.clear();
+                      });
+                      _updateFilters();
+                    },
+                  )
+                : null,
+          ),
+        );
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<Employee> onSelected,
+          Iterable<Employee> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length + 1, // +1 for "All" option
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      leading: Icon(Icons.people, color: Colors.grey[600]),
+                      title: Text(AppLocalizations.of(context)!.allEmployees),
+                      onTap: () {
+                        setState(() {
+                          _selectedEmployee = null;
+                        });
+                        _updateFilters();
+                        // Close the autocomplete overlay
+                        FocusScope.of(context).unfocus();
+                      },
+                      selected: _selectedEmployee == null,
+                    );
+                  }
+
+                  final employee = options.elementAt(index - 1);
+                  return ListTile(
+                    leading: Icon(Icons.person, color: Colors.grey[600]),
+                    title: Text(employee.name),
+                    onTap: () {
+                      onSelected(employee);
+                    },
+                    selected: _selectedEmployee?.id == employee.id,
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchableCustomerDropdown(AppLocalizations l10n) {
+    return Autocomplete<Customer>(
+      displayStringForOption: (Customer customer) => customer.name,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return _customers;
+        }
+        return _customers.where((Customer customer) =>
+            customer.name
+                .toLowerCase()
+                .contains(textEditingValue.text.toLowerCase()) ||
+            customer.phone.contains(textEditingValue.text));
+      },
+      onSelected: (Customer selection) {
+        setState(() {
+          _selectedCustomer = selection;
+        });
+        _updateFilters();
+      },
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: AppTheme.inputDecoration(
+            label: l10n.selectCustomer,
+            prefixIcon: Icons.person_outline,
+          ).copyWith(
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            suffixIcon: _selectedCustomer != null
+                ? IconButton(
+                    icon: Icon(Icons.clear, color: Colors.grey[600]),
+                    onPressed: () {
+                      setState(() {
+                        _selectedCustomer = null;
+                        textEditingController.clear();
+                      });
+                      _updateFilters();
+                    },
+                  )
+                : null,
+          ),
+        );
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<Customer> onSelected,
+          Iterable<Customer> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length + 1, // +1 for "All" option
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      leading: Icon(Icons.people, color: Colors.grey[600]),
+                      title: Text(AppLocalizations.of(context)!.allCustomers),
+                      onTap: () {
+                        setState(() {
+                          _selectedCustomer = null;
+                        });
+                        _updateFilters();
+                        // Close the autocomplete overlay
+                        FocusScope.of(context).unfocus();
+                      },
+                      selected: _selectedCustomer == null,
+                    );
+                  }
+
+                  final customer = options.elementAt(index - 1);
+                  return ListTile(
+                    leading:
+                        Icon(Icons.person_outline, color: Colors.grey[600]),
+                    title: Text(customer.name),
+                    subtitle: Text(customer.phone),
+                    onTap: () {
+                      onSelected(customer);
+                    },
+                    selected: _selectedCustomer?.phone == customer.phone,
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchableGroupDropdown(AppLocalizations l10n) {
+    return Autocomplete<String>(
+      displayStringForOption: (String group) => group,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return _customerGroups;
+        }
+        return _customerGroups.where((String group) =>
+            group.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+      },
+      onSelected: (String selection) {
+        setState(() {
+          _selectedGroup = selection;
+        });
+        _updateFilters();
+      },
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: AppTheme.inputDecoration(
+            label: l10n.groupFilter,
+            prefixIcon: Icons.group,
+          ).copyWith(
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            suffixIcon: _selectedGroup != null
+                ? IconButton(
+                    icon: Icon(Icons.clear, color: Colors.grey[600]),
+                    onPressed: () {
+                      setState(() {
+                        _selectedGroup = null;
+                        textEditingController.clear();
+                      });
+                      _updateFilters();
+                    },
+                  )
+                : null,
+          ),
+        );
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length + 1, // +1 for "All" option
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      leading: Icon(Icons.group, color: Colors.grey[600]),
+                      title: Text(AppLocalizations.of(context)!.allGroups),
+                      onTap: () {
+                        setState(() {
+                          _selectedGroup = null;
+                        });
+                        _updateFilters();
+                        // Close the autocomplete overlay
+                        FocusScope.of(context).unfocus();
+                      },
+                      selected: _selectedGroup == null,
+                    );
+                  }
+
+                  final group = options.elementAt(index - 1);
+                  return ListTile(
+                    leading: Icon(Icons.group, color: Colors.grey[600]),
+                    title: Text(group),
+                    onTap: () {
+                      onSelected(group);
+                    },
+                    selected: _selectedGroup == group,
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -761,35 +1061,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   // Employee Filter
                   Container(
                     decoration: AppTheme.cardDecoration(),
-                    child: DropdownButtonFormField<Employee>(
-                      decoration: AppTheme.inputDecoration(
-                        label: l10n.selectEmployee,
-                        prefixIcon: Icons.person,
-                      ).copyWith(
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                      ),
-                      value: _selectedEmployee,
-                      items: [
-                        DropdownMenuItem<Employee>(
-                          value: null,
-                          child:
-                              Text(AppLocalizations.of(context)!.allEmployees),
-                        ),
-                        ..._employees
-                            .map((employee) => DropdownMenuItem<Employee>(
-                                  value: employee,
-                                  child: Text(employee.name),
-                                )),
-                      ],
-                      onChanged: (Employee? value) {
-                        setState(() {
-                          _selectedEmployee = value;
-                        });
-                        _updateFilters();
-                      },
-                    ),
+                    child: _buildSearchableEmployeeDropdown(l10n),
+                  ),
+
+                  const SizedBox(height: AppTheme.spacingL),
+
+                  // Group Filter
+                  Container(
+                    decoration: AppTheme.cardDecoration(),
+                    child: _buildSearchableGroupDropdown(l10n),
                   ),
 
                   const SizedBox(height: AppTheme.spacingL),
@@ -797,35 +1077,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   // Customer Filter
                   Container(
                     decoration: AppTheme.cardDecoration(),
-                    child: DropdownButtonFormField<Customer>(
-                      decoration: AppTheme.inputDecoration(
-                        label: l10n.selectCustomer,
-                        prefixIcon: Icons.person_outline,
-                      ).copyWith(
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                      ),
-                      value: _selectedCustomer,
-                      items: [
-                        DropdownMenuItem<Customer>(
-                          value: null,
-                          child:
-                              Text(AppLocalizations.of(context)!.allCustomers),
-                        ),
-                        ..._customers
-                            .map((customer) => DropdownMenuItem<Customer>(
-                                  value: customer,
-                                  child: Text(customer.name),
-                                )),
-                      ],
-                      onChanged: (Customer? value) {
-                        setState(() {
-                          _selectedCustomer = value;
-                        });
-                        _updateFilters();
-                      },
-                    ),
+                    child: _buildSearchableCustomerDropdown(l10n),
                   ),
 
                   const SizedBox(height: AppTheme.spacingL),

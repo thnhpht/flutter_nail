@@ -118,12 +118,14 @@ class Customer {
   final String name;
   final int? code; // Auto-increment code from backend
   final String? address; // Optional address
+  final String? group; // Optional group
 
   Customer({
     required this.phone,
     required this.name,
     this.code,
     this.address,
+    this.group,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
@@ -131,6 +133,7 @@ class Customer {
         name: json['name'] as String,
         code: json['code'] as int?,
         address: json['address'] as String?,
+        group: json['group'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -138,6 +141,7 @@ class Customer {
         'name': name,
         if (code != null) 'code': code,
         'address': address,
+        'group': group,
       };
 }
 

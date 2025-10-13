@@ -2547,7 +2547,7 @@ abstract class AppLocalizations {
   /// Bill footer message
   ///
   /// In vi, this message translates to:
-  /// **'Cảm ơn quý khách đã sử dụng chi tiết!'**
+  /// **'Cảm ơn quý khách!'**
   String get billFooter;
 
   /// Bill footer second message
@@ -2835,7 +2835,7 @@ abstract class AppLocalizations {
   /// Thank you message in PDF footer
   ///
   /// In vi, this message translates to:
-  /// **'Cảm ơn quý khách đã sử dụng chi tiết!'**
+  /// **'Cảm ơn quý khách!'**
   String get pdfThankYouMessage;
 
   /// See you again message in PDF footer
@@ -3881,6 +3881,72 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'{serviceName} chỉ còn {remainingQuantity} sản phẩm!'**
   String serviceOnlyRemaining(String serviceName, int remainingQuantity);
+
+  /// Group field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhóm'**
+  String get group;
+
+  /// Select group dropdown label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn nhóm'**
+  String get selectGroup;
+
+  /// All groups filter option
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả nhóm'**
+  String get allGroups;
+
+  /// No group option
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có nhóm'**
+  String get noGroup;
+
+  /// Please enter group validation message
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập nhóm'**
+  String get pleaseEnterGroup;
+
+  /// Group filter label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn nhóm'**
+  String get groupFilter;
+
+  /// Select group to filter customers description
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn nhóm để lọc khách hàng'**
+  String get selectGroupToFilter;
+
+  /// Number of groups selected
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} nhóm được chọn'**
+  String groupsSelected(int count);
+
+  /// Clear group filter button text
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa bộ lọc nhóm'**
+  String get clearGroupFilter;
+
+  /// Customer group label
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhóm khách hàng'**
+  String get customerGroup;
+
+  /// Group label with value
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhóm: {group}'**
+  String groupLabel(String group);
 }
 
 class _AppLocalizationsDelegate

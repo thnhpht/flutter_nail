@@ -1339,7 +1339,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemNotFoundError => 'Item not found error';
 
   @override
-  String get billFooter => 'Thank you for using our items!';
+  String get billFooter => 'Thank you!';
 
   @override
   String get billFooter2 => 'See you again!';
@@ -1510,7 +1510,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfTotalPayment => 'Total Payment';
 
   @override
-  String get pdfThankYouMessage => 'Thank you for using our service!';
+  String get pdfThankYouMessage => 'Thank you!';
 
   @override
   String get pdfSeeYouAgainMessage => 'See you again!';
@@ -2086,5 +2086,42 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String serviceOnlyRemaining(String serviceName, int remainingQuantity) {
     return '$serviceName only has $remainingQuantity items left!';
+  }
+
+  @override
+  String get group => 'Group';
+
+  @override
+  String get selectGroup => 'Select Group';
+
+  @override
+  String get allGroups => 'All Groups';
+
+  @override
+  String get noGroup => 'No Group';
+
+  @override
+  String get pleaseEnterGroup => 'Please enter group';
+
+  @override
+  String get groupFilter => 'Filter by Group';
+
+  @override
+  String get selectGroupToFilter => 'Select group to filter customers';
+
+  @override
+  String groupsSelected(int count) {
+    return '$count groups selected';
+  }
+
+  @override
+  String get clearGroupFilter => 'Clear Group Filter';
+
+  @override
+  String get customerGroup => 'Customer Group';
+
+  @override
+  String groupLabel(String group) {
+    return 'Group: $group';
   }
 }
