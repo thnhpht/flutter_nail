@@ -47,8 +47,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   double _taxPercent = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
-  bool _showCategoryDropdown = false;
-  bool _showServiceDropdown = false;
   bool _showEmployeeDropdown = false;
   bool _isPaid = false;
   String? _currentUserRole;
@@ -104,10 +102,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _tip = widget.order.tip;
     _taxPercent = widget.order.taxPercent;
 
-    // Initialize selected employees
-    if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
-      // Nếu là nhân viên đăng nhập, tự động chọn nhân viên đó
-      if (_employees.isNotEmpty) {
+    // Initialize selected employees (optional)
+    if (_employees.isNotEmpty) {
+      if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
+        // Nếu là nhân viên đăng nhập, tự động chọn nhân viên đó
         try {
           final currentEmployee = _employees.firstWhere(
             (employee) => employee.id == _currentEmployeeId,
@@ -118,14 +116,14 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
           _selectedEmployees = [];
         }
       } else {
-        // Danh sách nhân viên chưa được tải, để rỗng
-        _selectedEmployees = [];
+        // Nếu là chủ shop, giữ nguyên logic cũ
+        _selectedEmployees = _employees
+            .where((employee) => widget.order.employeeIds.contains(employee.id))
+            .toList();
       }
     } else {
-      // Nếu là chủ shop, giữ nguyên logic cũ
-      _selectedEmployees = _employees
-          .where((employee) => widget.order.employeeIds.contains(employee.id))
-          .toList();
+      // Không có nhân viên nào, để danh sách rỗng
+      _selectedEmployees = [];
     }
 
     // Initialize selected services and categories with quantities
@@ -178,8 +176,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final categories = await widget.api.getCategories();
       setState(() {
         _categories = categories;
-        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
-        if (_services.isNotEmpty && _employees.isNotEmpty) {
+        // Initialize form data if services are loaded (employees are optional)
+        if (_services.isNotEmpty) {
           _initializeFormData();
         }
       });
@@ -195,8 +193,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final services = await widget.api.getServices();
       setState(() {
         _services = services;
-        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
-        if (_categories.isNotEmpty && _employees.isNotEmpty) {
+        // Initialize form data if categories are loaded (employees are optional)
+        if (_categories.isNotEmpty) {
           _initializeFormData();
         }
       });
@@ -212,13 +210,20 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final employees = await widget.api.getEmployees();
       setState(() {
         _employees = employees;
-        // Chỉ initialize form data nếu tất cả dữ liệu đã được tải
+        // Initialize form data if categories and services are loaded
         if (_categories.isNotEmpty && _services.isNotEmpty) {
           _initializeFormData();
         }
         _ensureEmployeeSelected(); // Ensure current employee is selected
       });
     } catch (e) {
+      // If employees fail to load, still try to initialize form data
+      setState(() {
+        _employees = [];
+        if (_categories.isNotEmpty && _services.isNotEmpty) {
+          _initializeFormData();
+        }
+      });
       AppWidgets.showFlushbar(context,
           AppLocalizations.of(context)!.errorLoadingEmployees(e.toString()),
           type: MessageType.error);
@@ -227,6 +232,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
   void _ensureEmployeeSelected() {
     // Đảm bảo nhân viên hiện tại được chọn nếu đang đăng nhập bằng nhân viên
+    // Chỉ thực hiện nếu có nhân viên trong danh sách
     if (_currentUserRole == 'employee' &&
         _currentEmployeeId != null &&
         _employees.isNotEmpty &&
@@ -241,6 +247,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         _selectedEmployees = [];
       }
     }
+    // Nếu không có nhân viên nào, _selectedEmployees sẽ là danh sách rỗng (đã được xử lý trong _initializeFormData)
   }
 
   Future<void> _findCustomerByPhone() async {
@@ -307,32 +314,9 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     }
   }
 
-  void _toggleCategoryDropdown() {
-    setState(() {
-      _showCategoryDropdown = !_showCategoryDropdown;
-      if (_showCategoryDropdown) {
-        _showServiceDropdown = false;
-      }
-    });
-  }
-
-  void _toggleServiceDropdown() {
-    setState(() {
-      _showServiceDropdown = !_showServiceDropdown;
-      if (_showServiceDropdown) {
-        _showCategoryDropdown = false;
-        _showEmployeeDropdown = false;
-      }
-    });
-  }
-
   void _toggleEmployeeDropdown() {
     setState(() {
       _showEmployeeDropdown = !_showEmployeeDropdown;
-      if (_showEmployeeDropdown) {
-        _showCategoryDropdown = false;
-        _showServiceDropdown = false;
-      }
     });
   }
 
@@ -445,9 +429,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     setState(() {
       if (_selectedCategories.contains(category)) {
         _selectedCategories.remove(category);
-        // Remove all services from this category
-        _selectedServices.removeWhere((serviceWithQuantity) =>
-            serviceWithQuantity.service.categoryId == category.id);
+        // Không tự động xóa các dịch vụ đã chọn khi bỏ chọn danh mục
+        // Người dùng có thể tự xóa dịch vụ thông qua chip hoặc chọn lại danh mục
       } else {
         _selectedCategories.add(category);
       }
@@ -484,9 +467,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   void _removeSelectedCategory(Category category) {
     setState(() {
       _selectedCategories.remove(category);
-      // Remove all services from this category
-      _selectedServices.removeWhere((serviceWithQuantity) =>
-          serviceWithQuantity.service.categoryId == category.id);
+      // Không tự động xóa các dịch vụ đã chọn khi bỏ chọn danh mục
+      // Người dùng có thể tự xóa dịch vụ thông qua chip hoặc chọn lại danh mục
       _calculateTotal();
     });
   }
@@ -611,12 +593,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
           type: MessageType.warning);
       return;
     }
-    if (_selectedEmployees.isEmpty) {
-      AppWidgets.showFlushbar(
-          context, AppLocalizations.of(context)!.pleaseSelectAtLeastOneEmployee,
-          type: MessageType.warning);
-      return;
-    }
+    // Employee selection is now optional
 
     setState(() {
       _isLoading = true;
@@ -693,12 +670,8 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     return GestureDetector(
       onTap: () {
         // Close dropdowns when tapping outside
-        if (_showCategoryDropdown ||
-            _showServiceDropdown ||
-            _showEmployeeDropdown) {
+        if (_showEmployeeDropdown) {
           setState(() {
-            _showCategoryDropdown = false;
-            _showServiceDropdown = false;
             _showEmployeeDropdown = false;
           });
         }
@@ -832,121 +805,104 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Employee Information - chỉ hiển thị khi không phải nhân viên đăng nhập
-                    if (_currentUserRole != 'employee')
-                      _buildSectionCard(
-                        title: l10n.employeeInformation,
-                        icon: Icons.work,
-                        child: Column(
-                          children: [
-                            // Selected Employees Chips
-                            if (_selectedEmployees.isNotEmpty) ...[
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: _selectedEmployees
-                                    .map((employee) => _buildChip(
-                                          label: employee.name,
-                                          onDeleted: () =>
-                                              _toggleEmployee(employee),
-                                          color: const Color(0xFF667eea),
-                                        ))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-
-                            // Employee Dropdown
-                            _buildDropdownButton(
-                              onTap: _toggleEmployeeDropdown,
-                              label: _selectedEmployees.isEmpty
-                                  ? l10n.selectEmployee
-                                  : l10n.employeesSelected(
-                                      _selectedEmployees.length),
-                              isExpanded: _showEmployeeDropdown,
+                    // Employee Information - optional selection
+                    _buildSectionCard(
+                      title: l10n.employeeInformation,
+                      icon: Icons.work,
+                      child: Column(
+                        children: [
+                          // Selected Employees Chips
+                          if (_selectedEmployees.isNotEmpty) ...[
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _selectedEmployees
+                                  .map((employee) => _buildChip(
+                                        label: employee.name,
+                                        onDeleted: () =>
+                                            _toggleEmployee(employee),
+                                        color: const Color(0xFF667eea),
+                                      ))
+                                  .toList(),
                             ),
-                            if (_showEmployeeDropdown) ...[
-                              const SizedBox(height: 8),
-                              _buildDropdownMenu(
-                                maxHeight: 200,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: _employees.length,
-                                  itemBuilder: (context, index) {
-                                    final employee = _employees[index];
-                                    final isSelected =
-                                        _selectedEmployees.contains(employee);
-                                    return _buildDropdownItem(
-                                      title: employee.name,
-                                      subtitle: employee.phone != null
-                                          ? _formatPhoneNumber(employee.phone!)
-                                          : '',
-                                      isSelected: isSelected,
-                                      onTap: () => _toggleEmployee(employee),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
+                            const SizedBox(height: 16),
                           ],
-                        ),
-                      )
-                    else
-                      // Hiển thị thông tin nhân viên đăng nhập
-                      _buildSectionCard(
-                        title: l10n.performingEmployee,
-                        icon: Icons.person,
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color:
-                                const Color(0xFF667eea).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xFF667eea)
-                                  .withValues(alpha: 0.3),
-                              width: 1,
+
+                          // Employee Dropdown
+                          GestureDetector(
+                            onTap: _toggleEmployeeDropdown,
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey[300]!),
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.grey[50],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _selectedEmployees.isEmpty
+                                        ? l10n.selectEmployee
+                                        : l10n.employeesSelected(
+                                            _selectedEmployees.length),
+                                    style: TextStyle(
+                                      color: _selectedEmployees.isEmpty
+                                          ? Colors.grey[600]
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Icon(
+                                    _showEmployeeDropdown
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: Colors.grey[600],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                color: const Color(0xFF667eea),
-                                size: 24,
+                          if (_showEmployeeDropdown) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              constraints: const BoxConstraints(maxHeight: 200),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.grey[300]!),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _selectedEmployees.isNotEmpty
-                                          ? _selectedEmployees.first.name
-                                          : l10n.loggedInEmployee,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF667eea),
-                                      ),
-                                    ),
-                                    if (_selectedEmployees.isNotEmpty &&
-                                        _selectedEmployees.first.phone != null)
-                                      Text(
-                                        _formatPhoneNumber(
-                                            _selectedEmployees.first.phone!),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _employees.length,
+                                itemBuilder: (context, index) {
+                                  final employee = _employees[index];
+                                  final isSelected =
+                                      _selectedEmployees.contains(employee);
+                                  return _buildDropdownEmployeeItem(
+                                    title: employee.name,
+                                    subtitle: employee.phone != null
+                                        ? _formatPhoneNumber(employee.phone!)
+                                        : '',
+                                    isSelected: isSelected,
+                                    onTap: () => _toggleEmployee(employee),
+                                    image: employee.image,
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          ],
+                        ],
                       ),
+                    ),
 
                     const SizedBox(height: 16),
 
@@ -973,38 +929,24 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                             const SizedBox(height: 16),
                           ],
 
-                          // Category Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleCategoryDropdown,
-                            label: _selectedCategories.isEmpty
-                                ? l10n.selectCategory
-                                : l10n.categoriesSelected(
-                                    _selectedCategories.length),
-                            isExpanded: _showCategoryDropdown,
-                          ),
-
-                          // Category Dropdown Menu
-                          if (_showCategoryDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _categories.length,
-                                itemBuilder: (context, index) {
-                                  final category = _categories[index];
-                                  final isSelected =
-                                      _selectedCategories.contains(category);
-                                  return _buildDropdownItem(
-                                    title: category.name,
-                                    isSelected: isSelected,
-                                    onTap: () => _onCategoryToggled(category),
-                                    image: category.image,
-                                  );
-                                },
-                              ),
+                          // Categories Carousel
+                          SizedBox(
+                            height: 120,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _categories.length,
+                              itemBuilder: (context, index) {
+                                final category = _categories[index];
+                                final isSelected =
+                                    _selectedCategories.contains(category);
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: _buildCompactCategoryCard(
+                                      category, isSelected),
+                                );
+                              },
                             ),
-                          ],
+                          ),
                         ],
                       ),
                     ),
@@ -1025,89 +967,44 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                               children:
                                   _selectedServices.map((serviceWithQuantity) {
                                 return _buildServiceChipWithQuantity(
-                                    serviceWithQuantity);
+                                  serviceWithQuantity: serviceWithQuantity,
+                                  onDeleted: () => _removeSelectedService(
+                                      serviceWithQuantity),
+                                  onIncrease: () => _increaseServiceQuantity(
+                                      serviceWithQuantity),
+                                  onDecrease: () => _decreaseServiceQuantity(
+                                      serviceWithQuantity),
+                                );
                               }).toList(),
                             ),
                             const SizedBox(height: 16),
                           ],
 
-                          // Service Dropdown
-                          _buildDropdownButton(
-                            onTap: _toggleServiceDropdown,
-                            label: _selectedServices.isEmpty
-                                ? l10n.selectService
-                                : l10n.servicesSelectedCount(
-                                    _selectedServices.length),
-                            isExpanded: _showServiceDropdown,
-                          ),
-
-                          // Service Dropdown Menu
-                          if (_showServiceDropdown) ...[
-                            const SizedBox(height: 8),
-                            _buildDropdownMenu(
-                              maxHeight: 300,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: (_selectedCategories.isEmpty
-                                        ? _categories
-                                        : _selectedCategories)
-                                    .length,
-                                itemBuilder: (context, categoryIndex) {
-                                  final visibleCategories =
-                                      _selectedCategories.isEmpty
-                                          ? _categories
-                                          : _selectedCategories;
-                                  final category =
-                                      visibleCategories[categoryIndex];
-                                  final categoryServices = _services
-                                      .where((service) =>
-                                          service.categoryId == category.id)
-                                      .toList();
-
-                                  if (categoryServices.isEmpty)
-                                    return const SizedBox.shrink();
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Category Header
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          category.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      // Services in this category
-                                      ...categoryServices.map((service) {
-                                        final isSelected =
-                                            _selectedServices.any((swq) =>
-                                                swq.service.id == service.id);
-                                        return _buildDropdownItem(
-                                          title: service.name,
-                                          subtitle:
-                                              '${_formatPrice(service.price)} ${l10n.vnd}',
-                                          isSelected: isSelected,
-                                          onTap: () =>
-                                              _onServiceToggled(service),
-                                          image: service.image,
-                                        );
-                                      }).toList(),
-                                    ],
-                                  );
-                                },
+                          // Services Grid - chỉ hiển thị khi đã chọn category
+                          if (_selectedCategories.isNotEmpty) ...[
+                            _buildCompactServicesGrid(),
+                          ] else ...[
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey[200]!),
+                              ),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .pleaseSelectAtLeastOneCategory,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -1688,27 +1585,47 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     );
   }
 
-  Widget _buildServiceChipWithQuantity(
-      ServiceWithQuantity serviceWithQuantity) {
+  Widget _buildServiceChipWithQuantity({
+    required ServiceWithQuantity serviceWithQuantity,
+    required VoidCallback onDeleted,
+    required VoidCallback onIncrease,
+    required VoidCallback onDecrease,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF764ba2),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF764ba2), Color(0xFF667eea)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF764ba2).withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            serviceWithQuantity.service.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
+          // Service name
+          Flexible(
+            child: Text(
+              serviceWithQuantity.service.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 8),
+          // Quantity controls
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
@@ -1716,40 +1633,48 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Decrease button
                 GestureDetector(
-                  onTap: () => _decreaseServiceQuantity(serviceWithQuantity),
+                  onTap: onDecrease,
                   child: Container(
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      shape: BoxShape.circle,
+                      color: serviceWithQuantity.quantity > 1
+                          ? Colors.white.withValues(alpha: 0.3)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.remove,
-                      color: Colors.white,
+                      color: serviceWithQuantity.quantity > 1
+                          ? Colors.white
+                          : Colors.white.withValues(alpha: 0.5),
                       size: 16,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  '${serviceWithQuantity.quantity}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                // Quantity display
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    '${serviceWithQuantity.quantity}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                // Increase button
                 GestureDetector(
-                  onTap: () => _increaseServiceQuantity(serviceWithQuantity),
+                  onTap: onIncrease,
                   child: Container(
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.3),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.add,
@@ -1762,14 +1687,15 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
             ),
           ),
           const SizedBox(width: 8),
+          // Delete button
           GestureDetector(
-            onTap: () => _removeSelectedService(serviceWithQuantity),
+            onTap: onDeleted,
             child: Container(
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
+                color: Colors.red.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.close,
@@ -1779,118 +1705,6 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDropdownButton({
-    required VoidCallback onTap,
-    required String label,
-    required bool isExpanded,
-  }) {
-    final l10n = AppLocalizations.of(context)!;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.grey[50],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: label.contains(l10n.select)
-                    ? Colors.grey[600]
-                    : Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Icon(
-              isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: Colors.grey[600],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownMenu({
-    required double maxHeight,
-    required Widget child,
-  }) {
-    return Container(
-      constraints: BoxConstraints(maxHeight: maxHeight),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildDropdownItem({
-    required String title,
-    String? subtitle,
-    required bool isSelected,
-    required VoidCallback onTap,
-    String? image,
-  }) {
-    return ListTile(
-      leading: image != null && image.isNotEmpty
-          ? Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _buildImageWidget(image),
-              ),
-            )
-          : Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: Icon(
-                Icons.category,
-                color: Colors.grey[400],
-                size: 20,
-              ),
-            ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing:
-          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
-      tileColor:
-          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
-      onTap: onTap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
@@ -1990,6 +1804,380 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCompactCategoryCard(Category category, bool isSelected) {
+    return GestureDetector(
+      onTap: () => _onCategoryToggled(category),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 100,
+        height: 100,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              // Background
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isSelected
+                        ? [
+                            const Color(0xFF667eea),
+                            const Color(0xFF764ba2),
+                          ]
+                        : [
+                            Colors.grey[300]!,
+                            Colors.grey[400]!,
+                          ],
+                  ),
+                ),
+                child: category.image != null && category.image!.isNotEmpty
+                    ? _buildImageWidget(category.image!)
+                    : _buildCompactCategoryImagePlaceholder(),
+              ),
+
+              // Overlay for better text readability
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.3),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Category name
+              Positioned(
+                bottom: 8,
+                left: 8,
+                right: 8,
+                child: Text(
+                  category.name,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // Selection indicator
+              if (isSelected)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Color(0xFF667eea),
+                      size: 12,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactServicesGrid() {
+    // Filter services based on selected categories
+    List<Service> visibleServices = _services;
+    if (_selectedCategories.isNotEmpty) {
+      visibleServices = _services
+          .where((service) => _selectedCategories
+              .any((category) => category.id == service.categoryId))
+          .toList();
+    }
+
+    // Sort services by category name, then by price
+    visibleServices.sort((a, b) {
+      final categoryA = _categories.firstWhere(
+        (cat) => cat.id == a.categoryId,
+        orElse: () => Category(id: '', name: ''),
+      );
+      final categoryB = _categories.firstWhere(
+        (cat) => cat.id == b.categoryId,
+        orElse: () => Category(id: '', name: ''),
+      );
+
+      final categoryComparison = categoryA.name.compareTo(categoryB.name);
+      if (categoryComparison != 0) {
+        return categoryComparison;
+      }
+      return a.price.compareTo(b.price);
+    });
+
+    // Use maxCrossAxisExtent to maintain consistent item size across all devices
+    // This ensures service items maintain mobile-like size on tablet/desktop
+    const double maxItemWidth =
+        120.0; // Maximum width for each service item (mobile-like size)
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: maxItemWidth, // Maximum width for each item
+        childAspectRatio: 0.75, // Slightly taller to accommodate text
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: visibleServices.length,
+      itemBuilder: (context, index) {
+        final service = visibleServices[index];
+        final isSelected = _selectedServices.any((serviceWithQuantity) =>
+            serviceWithQuantity.service.id == service.id);
+        return _buildCompactServiceCard(service, isSelected);
+      },
+    );
+  }
+
+  Widget _buildCompactServiceCard(Service service, bool isSelected) {
+    final category = _categories.firstWhere(
+      (cat) => cat.id == service.categoryId,
+      orElse: () => Category(id: '', name: ''),
+    );
+
+    return GestureDetector(
+      onTap: () => _onServiceToggled(service),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF667eea) : Colors.grey[300]!,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? const Color(0xFF667eea).withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.05),
+              blurRadius: isSelected ? 8 : 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Service image
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: service.image != null && service.image!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                            ),
+                            child: _buildImageWidget(service.image!),
+                          )
+                        : _buildCompactServiceImagePlaceholder(),
+                  ),
+                ),
+
+                // Service info - Fixed height container to prevent overflow
+                Container(
+                  height: 65, // Fixed height to prevent overflow
+                  padding: const EdgeInsets.all(6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Service name - Limited space
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          service.name,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            height: 1.1,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      // Category name
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          category.name,
+                          style: TextStyle(
+                            fontSize: 8,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      // Price
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '${_formatPrice(service.price)}₫',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? const Color(0xFF667eea)
+                                : Colors.grey[800],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // Selection indicator
+            if (isSelected)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF667eea),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: 10,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactCategoryImagePlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF667eea).withValues(alpha: 0.3),
+            const Color(0xFF764ba2).withValues(alpha: 0.3),
+          ],
+        ),
+      ),
+      child: const Icon(
+        Icons.category,
+        size: 24,
+        color: Colors.white70,
+      ),
+    );
+  }
+
+  Widget _buildCompactServiceImagePlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+      ),
+      child: Icon(
+        Icons.shopping_cart,
+        size: 20,
+        color: Colors.grey[400],
+      ),
+    );
+  }
+
+  Widget _buildDropdownEmployeeItem({
+    required String title,
+    String? subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+    String? image,
+  }) {
+    return ListTile(
+      leading: image != null && image.isNotEmpty
+          ? Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: _buildImageWidget(image),
+              ),
+            )
+          : Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Icon(
+                Icons.person,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+            ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      subtitle: subtitle != null ? Text(subtitle) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Color(0xFF667eea)) : null,
+      tileColor:
+          isSelected ? const Color(0xFF667eea).withValues(alpha: 0.1) : null,
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }

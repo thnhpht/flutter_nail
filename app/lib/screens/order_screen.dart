@@ -619,12 +619,7 @@ class _OrderScreenState extends State<OrderScreen> {
           type: MessageType.warning);
       return;
     }
-    if (_selectedEmployees.isEmpty) {
-      AppWidgets.showFlushbar(
-          context, AppLocalizations.of(context)!.pleaseSelectAtLeastOneEmployee,
-          type: MessageType.warning);
-      return;
-    }
+    // Employee selection is now optional
 
     // Validate order ID if provided
     final orderId = _orderIdController.text.trim();
@@ -960,163 +955,104 @@ class _OrderScreenState extends State<OrderScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Employee Information - chỉ hiển thị khi không phải nhân viên đăng nhập
-                    if (_currentUserRole != 'employee')
-                      _buildSectionCard(
-                        title: l10n.employeeInformation,
-                        icon: Icons.work,
-                        child: Column(
-                          children: [
-                            // Selected Employees Chips
-                            if (_selectedEmployees.isNotEmpty) ...[
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: _selectedEmployees
-                                    .map((employee) => _buildChip(
-                                          label: employee.name,
-                                          onDeleted: () =>
-                                              _toggleEmployee(employee),
-                                          color: const Color(0xFF667eea),
-                                        ))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-
-                            // Employee Dropdown
-                            GestureDetector(
-                              onTap: _toggleEmployeeDropdown,
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[300]!),
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.grey[50],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      _selectedEmployees.isEmpty
-                                          ? l10n.selectEmployee
-                                          : l10n.employeesSelected(
-                                              _selectedEmployees.length),
-                                      style: TextStyle(
-                                        color: _selectedEmployees.isEmpty
-                                            ? Colors.grey[600]
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Icon(
-                                      _showEmployeeDropdown
-                                          ? Icons.keyboard_arrow_up
-                                          : Icons.keyboard_arrow_down,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                    // Employee Information - optional selection
+                    _buildSectionCard(
+                      title: l10n.employeeInformation,
+                      icon: Icons.work,
+                      child: Column(
+                        children: [
+                          // Selected Employees Chips
+                          if (_selectedEmployees.isNotEmpty) ...[
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: _selectedEmployees
+                                  .map((employee) => _buildChip(
+                                        label: employee.name,
+                                        onDeleted: () =>
+                                            _toggleEmployee(employee),
+                                        color: const Color(0xFF667eea),
+                                      ))
+                                  .toList(),
                             ),
-                            if (_showEmployeeDropdown) ...[
-                              const SizedBox(height: 8),
-                              Container(
-                                constraints:
-                                    const BoxConstraints(maxHeight: 200),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey[300]!),
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: _employees.length,
-                                  itemBuilder: (context, index) {
-                                    final employee = _employees[index];
-                                    final isSelected =
-                                        _selectedEmployees.contains(employee);
-                                    return _buildDropdownEmployeeItem(
-                                      title: employee.name,
-                                      subtitle: employee.phone != null
-                                          ? _formatPhoneNumber(employee.phone!)
-                                          : '',
-                                      isSelected: isSelected,
-                                      onTap: () => _toggleEmployee(employee),
-                                      image: employee.image,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
+                            const SizedBox(height: 16),
                           ],
-                        ),
-                      )
-                    else
-                      // Hiển thị thông tin nhân viên đăng nhập
-                      _buildSectionCard(
-                        title: l10n.performingEmployee,
-                        icon: Icons.person,
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color:
-                                const Color(0xFF667eea).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xFF667eea)
-                                  .withValues(alpha: 0.3),
-                              width: 1,
+
+                          // Employee Dropdown
+                          GestureDetector(
+                            onTap: _toggleEmployeeDropdown,
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey[300]!),
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.grey[50],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _selectedEmployees.isEmpty
+                                        ? l10n.selectEmployee
+                                        : l10n.employeesSelected(
+                                            _selectedEmployees.length),
+                                    style: TextStyle(
+                                      color: _selectedEmployees.isEmpty
+                                          ? Colors.grey[600]
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Icon(
+                                    _showEmployeeDropdown
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: Colors.grey[600],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                color: const Color(0xFF667eea),
-                                size: 24,
+                          if (_showEmployeeDropdown) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              constraints: const BoxConstraints(maxHeight: 200),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.grey[300]!),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _selectedEmployees.isNotEmpty
-                                          ? _selectedEmployees.first.name
-                                          : l10n.loggedInEmployee,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF667eea),
-                                      ),
-                                    ),
-                                    if (_selectedEmployees.isNotEmpty &&
-                                        _selectedEmployees.first.phone != null)
-                                      Text(
-                                        _formatPhoneNumber(
-                                            _selectedEmployees.first.phone!),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _employees.length,
+                                itemBuilder: (context, index) {
+                                  final employee = _employees[index];
+                                  final isSelected =
+                                      _selectedEmployees.contains(employee);
+                                  return _buildDropdownEmployeeItem(
+                                    title: employee.name,
+                                    subtitle: employee.phone != null
+                                        ? _formatPhoneNumber(employee.phone!)
+                                        : '',
+                                    isSelected: isSelected,
+                                    onTap: () => _toggleEmployee(employee),
+                                    image: employee.image,
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          ],
+                        ],
                       ),
+                    ),
 
                     const SizedBox(height: 16),
 

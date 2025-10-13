@@ -207,6 +207,18 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 7,
           isSelected: selectedIndex == 7,
         ),
+        _buildNavItem(
+          icon: Icons.inventory_2,
+          title: l10n.inventoryReports,
+          index: 10,
+          isSelected: selectedIndex == 10,
+        ),
+        _buildNavItem(
+          icon: Icons.trending_up,
+          title: l10n.profitReports,
+          index: 11,
+          isSelected: selectedIndex == 11,
+        ),
       ];
     }
   }

@@ -4,33 +4,33 @@ import 'package:intl/intl.dart';
 import '../api_client.dart';
 import '../models.dart';
 import '../ui/design_system.dart';
-import '../ui/reports_pdf_generator.dart';
+import '../ui/inventory_reports_pdf_generator.dart';
 
-class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({super.key, required this.api});
+class InventoryReportsScreen extends StatefulWidget {
+  const InventoryReportsScreen({super.key, required this.api});
 
   final ApiClient api;
 
   @override
-  State<ReportsScreen> createState() => _ReportsScreenState();
+  State<InventoryReportsScreen> createState() => _InventoryReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> {
-  List<Order> _orders = [];
-  List<Employee> _employees = [];
-  List<Customer> _customers = [];
-  List<String> _customerGroups = [];
+class _InventoryReportsScreenState extends State<InventoryReportsScreen> {
+  List<ServiceInventory> _inventoryData = [];
+  List<Service> _services = [];
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
-  Employee? _selectedEmployee;
-  Customer? _selectedCustomer;
-  String? _selectedPaymentStatus;
-  String? _selectedGroup;
   String _searchQuery = '';
+  String _sortBy =
+      'serviceName'; // 'serviceName', 'totalImported', 'totalOrdered', 'remainingQuantity'
+  bool _sortAscending = true;
+  String? _selectedStockStatus; // 'all', 'inStock', 'outOfStock'
 
-  // Thống kê
-  double _totalRevenue = 0.0;
-  int _totalOrders = 0;
+  // Thống kê tổng quan
+  int _totalImported = 0;
+  int _totalOrdered = 0;
+  int _totalRemaining = 0;
+  int _outOfStockCount = 0;
 
   @override
   void initState() {
@@ -53,20 +53,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
     });
 
     try {
-      final orders = await widget.api.getOrders();
-      final employees = await widget.api.getEmployees();
-      final customers = await widget.api.getCustomers();
-      final groups = await widget.api.getCustomerGroups();
+      final inventory = await widget.api.getServiceInventory();
+      final services = await widget.api.getServices();
 
       setState(() {
-        _orders = orders;
-        _employees = employees;
-        _customers = customers;
-        _customerGroups = groups;
+        _inventoryData = inventory;
+        _services = services;
         _isLoading = false;
       });
 
-      _updateFilters();
+      _calculateStatistics();
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -78,161 +74,74 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   void _calculateStatistics() {
-    final filteredOrders = _getFilteredOrders();
-
-    // Tính tổng doanh thu
-    _totalRevenue =
-        filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice);
-
-    // Tính số lượng hóa đơn
-    _totalOrders = filteredOrders.length;
+    final filteredInventory = _getFilteredInventory();
+    _totalImported =
+        filteredInventory.fold(0, (sum, item) => sum + item.totalImported);
+    _totalOrdered =
+        filteredInventory.fold(0, (sum, item) => sum + item.totalOrdered);
+    _totalRemaining =
+        filteredInventory.fold(0, (sum, item) => sum + item.remainingQuantity);
+    _outOfStockCount =
+        filteredInventory.where((item) => item.isOutOfStock).length;
   }
 
-  List<Order> _getFilteredOrders() {
-    List<Order> filtered = _orders;
+  List<ServiceInventory> _getFilteredInventory() {
+    List<ServiceInventory> filtered = _inventoryData;
 
     // Áp dụng tìm kiếm
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((order) {
-        return order.customerName
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
-            order.customerPhone.contains(_searchQuery) ||
-            order.id.contains(_searchQuery);
-      }).toList();
-    }
-
-    // Áp dụng lọc theo khoảng thời gian
-    if (_selectedDateRange != null) {
-      filtered = filtered.where((order) {
-        final orderDate = DateTime(
-            order.createdAt.year, order.createdAt.month, order.createdAt.day);
-        final startDate = DateTime(_selectedDateRange!.start.year,
-            _selectedDateRange!.start.month, _selectedDateRange!.start.day);
-        final endDate = DateTime(_selectedDateRange!.end.year,
-            _selectedDateRange!.end.month, _selectedDateRange!.end.day);
-
-        return orderDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
-            orderDate.isBefore(endDate.add(const Duration(days: 1)));
-      }).toList();
-    }
-
-    // Áp dụng lọc theo nhân viên
-    if (_selectedEmployee != null) {
-      filtered = filtered.where((order) {
-        return order.employeeIds.contains(_selectedEmployee!.id);
-      }).toList();
-    }
-
-    // Áp dụng lọc theo khách hàng
-    if (_selectedCustomer != null) {
-      filtered = filtered.where((order) {
-        return order.customerPhone == _selectedCustomer!.phone;
-      }).toList();
-    }
-
-    // Áp dụng lọc theo trạng thái thanh toán
-    if (_selectedPaymentStatus != null) {
-      filtered = filtered.where((order) {
-        if (_selectedPaymentStatus == 'paid') {
-          return order.isPaid;
-        } else if (_selectedPaymentStatus == 'unpaid') {
-          return !order.isPaid;
-        }
-        return true; // 'all' - hiển thị tất cả
-      }).toList();
-    }
-
-    // Áp dụng lọc theo nhóm khách hàng
-    if (_selectedGroup != null) {
-      filtered = filtered.where((order) {
-        // Tìm customer tương ứng với order
-        final customer = _customers.firstWhere(
-          (c) => c.phone == order.customerPhone,
-          orElse: () => Customer(phone: '', name: ''),
+      filtered = filtered.where((item) {
+        final service = _services.firstWhere(
+          (s) => s.id == item.serviceId,
+          orElse: () => Service(id: '', categoryId: '', name: '', price: 0),
         );
-        return customer.group == _selectedGroup;
+        return service.name.toLowerCase().contains(_searchQuery.toLowerCase());
       }).toList();
     }
 
-    // Sắp xếp theo thời gian mới nhất
-    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    // Áp dụng lọc theo trạng thái stock
+    if (_selectedStockStatus != null && _selectedStockStatus != 'all') {
+      filtered = filtered.where((item) {
+        if (_selectedStockStatus == 'inStock') {
+          return !item.isOutOfStock;
+        } else if (_selectedStockStatus == 'outOfStock') {
+          return item.isOutOfStock;
+        }
+        return true;
+      }).toList();
+    }
+
+    // Sắp xếp
+    filtered.sort((a, b) {
+      int comparison = 0;
+
+      switch (_sortBy) {
+        case 'serviceName':
+          final serviceA = _services.firstWhere(
+            (s) => s.id == a.serviceId,
+            orElse: () => Service(id: '', categoryId: '', name: '', price: 0),
+          );
+          final serviceB = _services.firstWhere(
+            (s) => s.id == b.serviceId,
+            orElse: () => Service(id: '', categoryId: '', name: '', price: 0),
+          );
+          comparison = serviceA.name.compareTo(serviceB.name);
+          break;
+        case 'totalImported':
+          comparison = a.totalImported.compareTo(b.totalImported);
+          break;
+        case 'totalOrdered':
+          comparison = a.totalOrdered.compareTo(b.totalOrdered);
+          break;
+        case 'remainingQuantity':
+          comparison = a.remainingQuantity.compareTo(b.remainingQuantity);
+          break;
+      }
+
+      return _sortAscending ? comparison : -comparison;
+    });
 
     return filtered;
-  }
-
-  Future<void> _selectDateRange() async {
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      initialDateRange: _selectedDateRange ??
-          DateTimeRange(
-            start: DateTime.now(),
-            end: DateTime.now(),
-          ),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppTheme.primaryStart,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: AppTheme.textPrimary,
-              secondary: AppTheme.primaryEnd,
-              onSecondary: Colors.white,
-            ),
-            dialogBackgroundColor: Colors.white,
-            datePickerTheme: DatePickerThemeData(
-              backgroundColor: Colors.white,
-              headerBackgroundColor: AppTheme.primaryStart,
-              headerForegroundColor: Colors.white,
-              rangeSelectionBackgroundColor:
-                  AppTheme.primaryStart.withValues(alpha: 0.2),
-              rangeSelectionOverlayColor: WidgetStateProperty.all(
-                  AppTheme.primaryEnd.withValues(alpha: 0.1)),
-              rangePickerBackgroundColor: Colors.white,
-              rangePickerSurfaceTintColor: AppTheme.primaryStart,
-              rangePickerHeaderBackgroundColor: AppTheme.primaryStart,
-              rangePickerHeaderForegroundColor: Colors.white,
-              rangePickerHeaderHelpStyle: TextStyle(color: Colors.white70),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedDateRange = picked;
-      });
-      _updateFilters();
-    }
-  }
-
-  void _updateFilters() {
-    if (mounted) {
-      _calculateStatistics();
-      setState(() {});
-    }
-  }
-
-  Future<void> _exportReports() async {
-    final filteredOrders = _getFilteredOrders();
-
-    if (filteredOrders.isEmpty) {
-      AppWidgets.showFlushbar(
-          context, AppLocalizations.of(context)!.noOrdersToExport,
-          type: MessageType.warning);
-      return;
-    }
-
-    await ReportsPdfGenerator.generateAndShareReports(
-      context: context,
-      orders: filteredOrders,
-      api: widget.api,
-    );
   }
 
   Future<void> _showDateFilterDialog() async {
@@ -453,11 +362,61 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
+  Future<void> _selectDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: _selectedDateRange ??
+          DateTimeRange(
+            start: DateTime.now(),
+            end: DateTime.now(),
+          ),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppTheme.primaryStart,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: AppTheme.textPrimary,
+              secondary: AppTheme.primaryEnd,
+              onSecondary: Colors.white,
+            ),
+            dialogBackgroundColor: Colors.white,
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: AppTheme.primaryStart,
+              headerForegroundColor: Colors.white,
+              rangeSelectionBackgroundColor:
+                  AppTheme.primaryStart.withValues(alpha: 0.2),
+              rangeSelectionOverlayColor: WidgetStateProperty.all(
+                  AppTheme.primaryEnd.withValues(alpha: 0.1)),
+              rangePickerBackgroundColor: Colors.white,
+              rangePickerSurfaceTintColor: AppTheme.primaryStart,
+              rangePickerHeaderBackgroundColor: AppTheme.primaryStart,
+              rangePickerHeaderForegroundColor: Colors.white,
+              rangePickerHeaderHelpStyle: TextStyle(color: Colors.white70),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _selectedDateRange = picked;
+        _calculateStatistics();
+      });
+    }
+  }
+
   void _clearDateRange() {
     setState(() {
       _selectedDateRange = null;
+      _calculateStatistics();
     });
-    _updateFilters();
   }
 
   void _setPresetDateRange(String preset) {
@@ -502,8 +461,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (newRange != null) {
       setState(() {
         _selectedDateRange = newRange;
+        _calculateStatistics();
       });
-      _updateFilters();
       // Close the dialog if it's open
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
@@ -629,294 +588,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildSearchableEmployeeDropdown(AppLocalizations l10n) {
-    return Autocomplete<Employee>(
-      displayStringForOption: (Employee employee) => employee.name,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text.isEmpty) {
-          return _employees;
-        }
-        return _employees.where((Employee employee) => employee.name
-            .toLowerCase()
-            .contains(textEditingValue.text.toLowerCase()));
-      },
-      onSelected: (Employee selection) {
-        setState(() {
-          _selectedEmployee = selection;
-        });
-        _updateFilters();
-      },
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
-        return TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          decoration: AppTheme.inputDecoration(
-            label: l10n.selectEmployee,
-            prefixIcon: Icons.person,
-          ).copyWith(
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            suffixIcon: _selectedEmployee != null
-                ? IconButton(
-                    icon: Icon(Icons.clear, color: Colors.grey[600]),
-                    onPressed: () {
-                      setState(() {
-                        _selectedEmployee = null;
-                        textEditingController.clear();
-                      });
-                      _updateFilters();
-                    },
-                  )
-                : null,
-          ),
-        );
-      },
-      optionsViewBuilder: (BuildContext context,
-          AutocompleteOnSelected<Employee> onSelected,
-          Iterable<Employee> options) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            elevation: 4.0,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: options.length + 1, // +1 for "All" option
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return ListTile(
-                      leading: Icon(Icons.people, color: Colors.grey[600]),
-                      title: Text(AppLocalizations.of(context)!.allEmployees),
-                      onTap: () {
-                        setState(() {
-                          _selectedEmployee = null;
-                        });
-                        _updateFilters();
-                        // Close the autocomplete overlay
-                        FocusScope.of(context).unfocus();
-                      },
-                      selected: _selectedEmployee == null,
-                    );
-                  }
+  Future<void> _exportInventoryReports() async {
+    final filteredInventory = _getFilteredInventory();
 
-                  final employee = options.elementAt(index - 1);
-                  return ListTile(
-                    leading: Icon(Icons.person, color: Colors.grey[600]),
-                    title: Text(employee.name),
-                    onTap: () {
-                      onSelected(employee);
-                    },
-                    selected: _selectedEmployee?.id == employee.id,
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+    if (filteredInventory.isEmpty) {
+      AppWidgets.showFlushbar(
+          context, AppLocalizations.of(context)!.noDataToExport,
+          type: MessageType.warning);
+      return;
+    }
 
-  Widget _buildSearchableCustomerDropdown(AppLocalizations l10n) {
-    return Autocomplete<Customer>(
-      displayStringForOption: (Customer customer) => customer.name,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text.isEmpty) {
-          return _customers;
-        }
-        return _customers.where((Customer customer) =>
-            customer.name
-                .toLowerCase()
-                .contains(textEditingValue.text.toLowerCase()) ||
-            customer.phone.contains(textEditingValue.text));
-      },
-      onSelected: (Customer selection) {
-        setState(() {
-          _selectedCustomer = selection;
-        });
-        _updateFilters();
-      },
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
-        return TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          decoration: AppTheme.inputDecoration(
-            label: l10n.selectCustomer,
-            prefixIcon: Icons.person_outline,
-          ).copyWith(
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            suffixIcon: _selectedCustomer != null
-                ? IconButton(
-                    icon: Icon(Icons.clear, color: Colors.grey[600]),
-                    onPressed: () {
-                      setState(() {
-                        _selectedCustomer = null;
-                        textEditingController.clear();
-                      });
-                      _updateFilters();
-                    },
-                  )
-                : null,
-          ),
-        );
-      },
-      optionsViewBuilder: (BuildContext context,
-          AutocompleteOnSelected<Customer> onSelected,
-          Iterable<Customer> options) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            elevation: 4.0,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: options.length + 1, // +1 for "All" option
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return ListTile(
-                      leading: Icon(Icons.people, color: Colors.grey[600]),
-                      title: Text(AppLocalizations.of(context)!.allCustomers),
-                      onTap: () {
-                        setState(() {
-                          _selectedCustomer = null;
-                        });
-                        _updateFilters();
-                        // Close the autocomplete overlay
-                        FocusScope.of(context).unfocus();
-                      },
-                      selected: _selectedCustomer == null,
-                    );
-                  }
-
-                  final customer = options.elementAt(index - 1);
-                  return ListTile(
-                    leading:
-                        Icon(Icons.person_outline, color: Colors.grey[600]),
-                    title: Text(customer.name),
-                    subtitle: Text(customer.phone),
-                    onTap: () {
-                      onSelected(customer);
-                    },
-                    selected: _selectedCustomer?.phone == customer.phone,
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSearchableGroupDropdown(AppLocalizations l10n) {
-    return Autocomplete<String>(
-      displayStringForOption: (String group) => group,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text.isEmpty) {
-          return _customerGroups;
-        }
-        return _customerGroups.where((String group) =>
-            group.toLowerCase().contains(textEditingValue.text.toLowerCase()));
-      },
-      onSelected: (String selection) {
-        setState(() {
-          _selectedGroup = selection;
-        });
-        _updateFilters();
-      },
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController textEditingController,
-          FocusNode focusNode,
-          VoidCallback onFieldSubmitted) {
-        return TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          decoration: AppTheme.inputDecoration(
-            label: l10n.groupFilter,
-            prefixIcon: Icons.group,
-          ).copyWith(
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            suffixIcon: _selectedGroup != null
-                ? IconButton(
-                    icon: Icon(Icons.clear, color: Colors.grey[600]),
-                    onPressed: () {
-                      setState(() {
-                        _selectedGroup = null;
-                        textEditingController.clear();
-                      });
-                      _updateFilters();
-                    },
-                  )
-                : null,
-          ),
-        );
-      },
-      optionsViewBuilder: (BuildContext context,
-          AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            elevation: 4.0,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: options.length + 1, // +1 for "All" option
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return ListTile(
-                      leading: Icon(Icons.group, color: Colors.grey[600]),
-                      title: Text(AppLocalizations.of(context)!.allGroups),
-                      onTap: () {
-                        setState(() {
-                          _selectedGroup = null;
-                        });
-                        _updateFilters();
-                        // Close the autocomplete overlay
-                        FocusScope.of(context).unfocus();
-                      },
-                      selected: _selectedGroup == null,
-                    );
-                  }
-
-                  final group = options.elementAt(index - 1);
-                  return ListTile(
-                    leading: Icon(Icons.group, color: Colors.grey[600]),
-                    title: Text(group),
-                    onTap: () {
-                      onSelected(group);
-                    },
-                    selected: _selectedGroup == group,
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
+    await InventoryReportsPdfGenerator.generateAndShareInventoryReports(
+      context: context,
+      inventoryData: filteredInventory,
+      services: _services,
+      api: widget.api,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final filteredOrders = _getFilteredOrders();
+    final filteredInventory = _getFilteredInventory();
 
     return Container(
       decoration: BoxDecoration(
@@ -963,7 +656,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   ],
                 ),
                 child: FloatingActionButton(
-                  onPressed: _exportReports,
+                  onPressed: _exportInventoryReports,
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   child: const Icon(
@@ -1009,9 +702,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppWidgets.gradientHeader(
-                    icon: Icons.receipt,
-                    title: l10n.revenueReports,
-                    subtitle: l10n.statisticsAndRevenueReports,
+                    icon: Icons.inventory_2,
+                    title: l10n.inventoryReports,
+                    subtitle: l10n.inventoryStatisticsAndReports,
                     fullWidth: true,
                   ),
 
@@ -1024,11 +717,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       onChanged: (value) {
                         setState(() {
                           _searchQuery = value;
+                          _calculateStatistics();
                         });
-                        _updateFilters();
                       },
                       decoration: InputDecoration(
-                        hintText: l10n.searchHint,
+                        hintText: l10n.searchServices,
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -1038,8 +731,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 onPressed: () {
                                   setState(() {
                                     _searchQuery = '';
+                                    _calculateStatistics();
                                   });
-                                  _updateFilters();
                                 },
                               )
                             : null,
@@ -1058,43 +751,82 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                   const SizedBox(height: AppTheme.spacingL),
 
-                  // Employee Filter
+                  // Sort Options
                   Container(
                     decoration: AppTheme.cardDecoration(),
-                    child: _buildSearchableEmployeeDropdown(l10n),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            decoration: AppTheme.inputDecoration(
+                              label: l10n.sortBy,
+                              prefixIcon: Icons.sort,
+                            ).copyWith(
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                            ),
+                            value: _sortBy,
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'serviceName',
+                                child: Text(l10n.serviceName),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'totalImported',
+                                child: Text(l10n.totalImported),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'totalOrdered',
+                                child: Text(l10n.totalOrdered),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'remainingQuantity',
+                                child: Text(l10n.remainingQuantity),
+                              ),
+                            ],
+                            onChanged: (String? value) {
+                              setState(() {
+                                _sortBy = value!;
+                                _calculateStatistics();
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: AppTheme.spacingM),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _sortAscending = !_sortAscending;
+                              _calculateStatistics();
+                            });
+                          },
+                          icon: Icon(
+                            _sortAscending
+                                ? Icons.arrow_upward
+                                : Icons.arrow_downward,
+                            color: AppTheme.primaryStart,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: AppTheme.spacingL),
 
-                  // Group Filter
-                  Container(
-                    decoration: AppTheme.cardDecoration(),
-                    child: _buildSearchableGroupDropdown(l10n),
-                  ),
-
-                  const SizedBox(height: AppTheme.spacingL),
-
-                  // Customer Filter
-                  Container(
-                    decoration: AppTheme.cardDecoration(),
-                    child: _buildSearchableCustomerDropdown(l10n),
-                  ),
-
-                  const SizedBox(height: AppTheme.spacingL),
-
-                  // Payment Status Filter
+                  // Stock Status Filter
                   Container(
                     decoration: AppTheme.cardDecoration(),
                     child: DropdownButtonFormField<String>(
                       decoration: AppTheme.inputDecoration(
-                        label: l10n.paymentStatus,
-                        prefixIcon: Icons.payment,
+                        label: l10n.stockStatus,
+                        prefixIcon: Icons.inventory_2,
                       ).copyWith(
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                       ),
-                      initialValue: _selectedPaymentStatus,
+                      value: _selectedStockStatus,
                       items: [
                         DropdownMenuItem<String>(
                           value: null,
@@ -1102,33 +834,33 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               Text(AppLocalizations.of(context)!.allStatuses),
                         ),
                         DropdownMenuItem<String>(
-                          value: 'paid',
+                          value: 'inStock',
                           child: Row(
                             children: [
                               const Icon(Icons.check_circle,
                                   size: 16, color: Colors.green),
                               const SizedBox(width: 8),
-                              Text(AppLocalizations.of(context)!.paid),
+                              Text(l10n.inStock),
                             ],
                           ),
                         ),
                         DropdownMenuItem<String>(
-                          value: 'unpaid',
+                          value: 'outOfStock',
                           child: Row(
                             children: [
                               const Icon(Icons.cancel,
                                   size: 16, color: Colors.red),
                               const SizedBox(width: 8),
-                              Text(AppLocalizations.of(context)!.unpaid),
+                              Text(l10n.outOfStock),
                             ],
                           ),
                         ),
                       ],
                       onChanged: (String? value) {
                         setState(() {
-                          _selectedPaymentStatus = value;
+                          _selectedStockStatus = value;
+                          _calculateStatistics();
                         });
-                        _updateFilters();
                       },
                     ),
                   ),
@@ -1202,7 +934,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                   const SizedBox(height: AppTheme.spacingL),
 
-                  // Danh sách hóa đơn
+                  // Danh sách sản lượng
                   if (_isLoading)
                     const Center(
                       child: CircularProgressIndicator(
@@ -1210,15 +942,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             AppTheme.primaryStart),
                       ),
                     )
-                  else if (filteredOrders.isEmpty)
+                  else if (filteredInventory.isEmpty)
                     _buildEmptyState(l10n)
                   else
-                    ...filteredOrders.asMap().entries.map((entry) {
+                    ...filteredInventory.asMap().entries.map((entry) {
                       final index = entry.key;
-                      final order = entry.value;
+                      final inventory = entry.value;
                       return AppWidgets.animatedItem(
                         index: index,
-                        child: _buildOrderCard(order, l10n),
+                        child: _buildInventoryCard(inventory, l10n),
                       );
                     }).toList(),
 
@@ -1234,25 +966,50 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   Widget _buildSummaryCards(AppLocalizations l10n) {
     return Container(
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: _buildSummaryCard(
-              title: l10n.bills,
-              value: _totalOrders.toString(),
-              icon: Icons.receipt,
-              color: Colors.blue,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSummaryCard(
+                  title: l10n.totalImported,
+                  value: _totalImported.toString(),
+                  icon: Icons.add_box,
+                  color: Colors.green,
+                ),
+              ),
+              const SizedBox(width: AppTheme.spacingM),
+              Expanded(
+                child: _buildSummaryCard(
+                  title: l10n.totalOrdered,
+                  value: _totalOrdered.toString(),
+                  icon: Icons.shopping_cart,
+                  color: Colors.blue,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: AppTheme.spacingM),
-          Expanded(
-            child: _buildSummaryCard(
-              title: l10n.revenue,
-              value: NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ')
-                  .format(_totalRevenue),
-              icon: Icons.attach_money,
-              color: Colors.green,
-            ),
+          const SizedBox(height: AppTheme.spacingM),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSummaryCard(
+                  title: l10n.remainingQuantity,
+                  value: _totalRemaining.toString(),
+                  icon: Icons.inventory,
+                  color: Colors.orange,
+                ),
+              ),
+              const SizedBox(width: AppTheme.spacingM),
+              Expanded(
+                child: _buildSummaryCard(
+                  title: l10n.outOfStock,
+                  value: _outOfStockCount.toString(),
+                  icon: Icons.warning,
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -1307,7 +1064,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildOrderCard(Order order, AppLocalizations l10n) {
+  Widget _buildInventoryCard(
+      ServiceInventory inventory, AppLocalizations l10n) {
+    final service = _services.firstWhere(
+      (s) => s.id == inventory.serviceId,
+      orElse: () =>
+          Service(id: '', categoryId: '', name: 'Unknown Service', price: 0),
+    );
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppTheme.spacingS),
       decoration: AppTheme.cardDecoration(),
@@ -1316,7 +1080,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
           onTap: () {
-            // Có thể thêm action khi tap vào order card
+            // Có thể thêm action khi tap vào inventory card
           },
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.spacingM),
@@ -1331,76 +1095,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                order.customerName,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.textPrimary,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            service.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                            ),
                           ),
                           const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                _formatPhoneNumber(order.customerPhone),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                ),
+                          if (service.unit != null && service.unit!.isNotEmpty)
+                            Text(
+                              '${l10n.unit}: ${service.unit}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
                               ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: order.isPaid
-                                      ? Colors.green.withValues(alpha: 0.1)
-                                      : Colors.red.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  order.isPaid ? l10n.paid : l10n.unpaid,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: order.isPaid
-                                        ? Colors.green[700]
-                                        : Colors.red[700],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (order.customerAddress != null &&
-                              order.customerAddress!.isNotEmpty) ...[
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  size: 14,
-                                  color: Colors.grey[500],
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    order.customerAddress!,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[500],
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
                             ),
-                          ],
                         ],
                       ),
                     ),
@@ -1408,138 +1119,108 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppTheme.primaryStart.withValues(alpha: 0.1),
+                        color: inventory.isOutOfStock
+                            ? Colors.red.withValues(alpha: 0.1)
+                            : Colors.green.withValues(alpha: 0.1),
                         borderRadius:
                             BorderRadius.circular(AppTheme.radiusSmall),
                         border: Border.all(
-                          color: AppTheme.primaryStart.withValues(alpha: 0.3),
+                          color: inventory.isOutOfStock
+                              ? Colors.red.withValues(alpha: 0.3)
+                              : Colors.green.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
                       child: Text(
-                        '#${_formatOrderId(order.id)}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryStart,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: AppTheme.spacingS),
-
-                // Services
-                Container(
-                  padding: const EdgeInsets.all(AppTheme.spacingS),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.shopping_cart,
-                        size: 16,
-                        color: Colors.grey[600],
-                      ),
-                      const SizedBox(width: AppTheme.spacingS),
-                      Expanded(
-                        child: _buildServicesDisplay(order, l10n),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: AppTheme.spacingS),
-
-                // Employee/Booking and Date
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      order.isBooking
-                          ? Icons.shopping_bag_outlined
-                          : Icons.person_outline,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        order.isBooking
-                            ? (order.deliveryMethod == 'pickup'
-                                ? AppLocalizations.of(context)!.pickupAtStore
-                                : AppLocalizations.of(context)!.homeDelivery)
-                            : order.employeeNames.join(', '),
+                        inventory.isOutOfStock ? l10n.outOfStock : l10n.inStock,
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          _formatDate(order.createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          _formatTime(order.createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: AppTheme.spacingS),
-
-                // Total Price
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.primaryGradient,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l10n.totalAmount,
-                        style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: inventory.isOutOfStock
+                              ? Colors.red[700]
+                              : Colors.green[700],
                         ),
                       ),
-                      Text(
-                        '${_formatPrice(order.totalPrice)} VNĐ',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: AppTheme.spacingM),
+
+                // Statistics
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatItem(
+                        icon: Icons.add_box,
+                        label: l10n.imported,
+                        value: inventory.totalImported.toString(),
+                        color: Colors.green,
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: _buildStatItem(
+                        icon: Icons.shopping_cart,
+                        label: l10n.ordered,
+                        value: inventory.totalOrdered.toString(),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildStatItem(
+                        icon: Icons.inventory,
+                        label: l10n.remaining,
+                        value: inventory.remainingQuantity.toString(),
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingS),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -1556,14 +1237,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.receipt_outlined,
+              Icons.inventory_2_outlined,
               size: 64,
               color: Colors.grey[400],
             ),
           ),
           const SizedBox(height: AppTheme.spacingXL),
           Text(
-            _getEmptyStateTitle(l10n),
+            l10n.noInventoryData,
             style: TextStyle(
               fontSize: 20,
               color: Colors.grey[700],
@@ -1572,7 +1253,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           ),
           const SizedBox(height: AppTheme.spacingS),
           Text(
-            _getEmptyStateMessage(l10n),
+            l10n.addServiceDetailsToViewInventory,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[500],
@@ -1580,113 +1261,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
             textAlign: TextAlign.center,
           ),
         ],
-      ),
-    );
-  }
-
-  String _getEmptyStateTitle(AppLocalizations l10n) {
-    if (_selectedDateRange != null) {
-      return l10n.noOrdersInTimeRange;
-    }
-    if (_searchQuery.isNotEmpty) {
-      return l10n.noOrdersFound;
-    }
-    return l10n.noOrdersYet;
-  }
-
-  String _getEmptyStateMessage(AppLocalizations l10n) {
-    if (_selectedDateRange != null) {
-      return l10n.tryDifferentTimeRange;
-    }
-    if (_searchQuery.isNotEmpty) {
-      return l10n.tryDifferentSearch;
-    }
-    return l10n.createFirstOrderToViewReports;
-  }
-
-  String _formatPrice(double price) {
-    return price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match match) => '${match[1]}.',
-        );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-  }
-
-  String _formatTime(DateTime date) {
-    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _formatOrderId(String orderId) {
-    // Kiểm tra nếu ID rỗng
-    if (orderId.isEmpty) {
-      return "TẠM THỜI";
-    }
-
-    // Nếu ID có format GUID, lấy 8 ký tự đầu
-    if (orderId.contains('-') && orderId.length >= 8) {
-      return orderId.substring(0, 8).toUpperCase();
-    }
-
-    // Nếu ID có độ dài hợp lệ khác, lấy 8 ký tự đầu
-    if (orderId.length >= 8) {
-      return orderId.substring(0, 8).toUpperCase();
-    }
-
-    // Trường hợp khác, trả về ID gốc
-    return orderId.toUpperCase();
-  }
-
-  String _formatPhoneNumber(String phoneNumber) {
-    // Loại bỏ tất cả ký tự không phải số
-    String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
-
-    // Kiểm tra nếu số điện thoại có 10 số
-    if (cleanPhone.length == 10) {
-      // Format: 0xxx xxx xxx
-      return '${cleanPhone.substring(0, 4)} ${cleanPhone.substring(4, 7)} ${cleanPhone.substring(7)}';
-    } else if (cleanPhone.length == 11 && cleanPhone.startsWith('84')) {
-      // Format cho số có mã quốc gia 84: +84 xxx xxx xxx
-      return '+${cleanPhone.substring(0, 2)} ${cleanPhone.substring(2, 5)} ${cleanPhone.substring(5, 8)} ${cleanPhone.substring(8)}';
-    } else if (cleanPhone.length == 9 && !cleanPhone.startsWith('0')) {
-      // Format cho số không có số 0 đầu: 0xxx xxx xxx
-      return '0${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}';
-    }
-
-    // Nếu không phù hợp với format Việt Nam, trả về số gốc
-    return phoneNumber;
-  }
-
-  Widget _buildServicesDisplay(Order order, AppLocalizations l10n) {
-    if (order.serviceNames.isNotEmpty) {
-      final displayServices = order.serviceNames.take(2).join(', ');
-      if (order.serviceNames.length > 2) {
-        return Text(
-          '${displayServices}...',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[700],
-          ),
-        );
-      }
-      return Text(
-        displayServices,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.grey[700],
-        ),
-      );
-    }
-
-    // If no service names available, show a placeholder
-    return Text(
-      l10n.noServices,
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.grey[600],
-        fontStyle: FontStyle.italic,
       ),
     );
   }

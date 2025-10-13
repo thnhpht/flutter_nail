@@ -2765,5 +2765,141 @@
         "type": "String"
       }
     }
+  },
+  "inventoryReports": "Inventory Reports",
+  "@inventoryReports": {
+    "description": "Inventory reports title"
+  },
+  "profitReports": "Profit Reports",
+  "@profitReports": {
+    "description": "Profit reports"
+  },
+  "profitReport": "Profit Report",
+  "@profitReport": {
+    "description": "Profit report"
+  },
+  "totalImportedAmount": "Total Imported Amount",
+  "@totalImportedAmount": {
+    "description": "Total imported amount"
+  },
+  "totalSoldAmount": "Total Sold Amount",
+  "@totalSoldAmount": {
+    "description": "Total sold amount"
+  },
+  "profit": "Profit",
+  "@profit": {
+    "description": "Profit"
+  },
+  "profitMargin": "Profit Margin",
+  "@profitMargin": {
+    "description": "Profit margin"
+  },
+  "printReport": "Print Report",
+  "@printReport": {
+    "description": "Print report"
+  },
+  "profitAnalysis": "Profit Analysis",
+  "@profitAnalysis": {
+    "description": "Profit analysis"
+  },
+  "revenueVsCost": "Revenue vs Cost",
+  "@revenueVsCost": {
+    "description": "Revenue vs Cost"
+  },
+  "exportProfitReportsSuccess": "Profit reports exported successfully",
+  "@exportProfitReportsSuccess": {
+    "description": "Success message for profit reports export"
+  },
+  "exportProfitReportsError": "Error exporting profit reports",
+  "@exportProfitReportsError": {
+    "description": "Error message for profit reports export"
+  },
+  "inventoryStatisticsAndReports": "Inventory Statistics and Reports",
+  "@inventoryStatisticsAndReports": {
+    "description": "Inventory statistics and reports subtitle"
+  },
+  "searchServices": "Search services...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "sortBy": "Sort by",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "serviceName": "Service Name",
+  "@serviceName": {
+    "description": "Service name"
+  },
+  "totalImported": "Total Imported",
+  "@totalImported": {
+    "description": "Total imported quantity"
+  },
+  "totalOrdered": "Total Ordered",
+  "@totalOrdered": {
+    "description": "Total ordered quantity"
+  },
+  "remainingQuantity": "Remaining Quantity",
+  "@remainingQuantity": {
+    "description": "Remaining quantity"
+  },
+  "imported": "Imported",
+  "@imported": {
+    "description": "Imported"
+  },
+  "ordered": "Ordered",
+  "@ordered": {
+    "description": "Ordered"
+  },
+  "remaining": "Remaining",
+  "@remaining": {
+    "description": "Remaining"
+  },
+  "outOfStock": "Out of Stock",
+  "@outOfStock": {
+    "description": "Out of stock"
+  },
+  "inStock": "In Stock",
+  "@inStock": {
+    "description": "In stock"
+  },
+  "unit": "Unit",
+  "@unit": {
+    "description": "Unit of measurement"
+  },
+  "noInventoryData": "No inventory data available",
+  "@noInventoryData": {
+    "description": "No inventory data message"
+  },
+  "addServiceDetailsToViewInventory": "Add service details to view inventory reports",
+  "@addServiceDetailsToViewInventory": {
+    "description": "Add service details to view inventory message"
+  },
+  "noDataToExport": "No data to export",
+  "@noDataToExport": {
+    "description": "No data to export message"
+  },
+  "exportInventoryReportsSuccess": "Inventory reports exported successfully",
+  "@exportInventoryReportsSuccess": {
+    "description": "Export inventory reports success message"
+  },
+  "exportInventoryReportsError": "Error exporting inventory reports",
+  "@exportInventoryReportsError": {
+    "description": "Export inventory reports error message"
+  },
+  "summary": "Summary",
+  "@summary": {
+    "description": "Summary"
+  },
+  "generatedOn": "Generated on",
+  "@generatedOn": {
+    "description": "Generated on"
+  },
+  "page": "Page",
+  "@page": {
+    "description": "Page"
+  },
+  "stockStatus": "Stock Status",
+  "@stockStatus": {
+    "description": "Stock status filter label"
   }
 }

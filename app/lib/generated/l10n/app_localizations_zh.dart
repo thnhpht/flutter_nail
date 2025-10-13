@@ -897,7 +897,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get itemsSubtitle => '按分类管理商品';
 
   @override
-  String get searchServices => '搜索商品...';
+  String get searchServices => '搜索服务...';
 
   @override
   String showingAllServices(int total) {
@@ -1726,7 +1726,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get serviceName => '商品名称';
+  String get serviceName => '服务名称';
 
   @override
   String get serviceAddedSuccessfully => '商品添加成功';
@@ -2010,7 +2010,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get errorImportingItem => '商品入库错误';
 
   @override
-  String get totalImported => '总入库量';
+  String get totalImported => '总入库';
 
   @override
   String get remainingQuantity => '剩余数量';
@@ -2072,4 +2072,79 @@ class AppLocalizationsZh extends AppLocalizations {
   String groupLabel(String group) {
     return '组别: $group';
   }
+
+  @override
+  String get inventoryReports => '库存报告';
+
+  @override
+  String get profitReports => '利润报告';
+
+  @override
+  String get profitReport => '利润报告';
+
+  @override
+  String get totalImportedAmount => '总进货金额';
+
+  @override
+  String get totalSoldAmount => '总销售金额';
+
+  @override
+  String get profit => '利润';
+
+  @override
+  String get profitMargin => '利润率';
+
+  @override
+  String get printReport => '打印报告';
+
+  @override
+  String get profitAnalysis => '利润分析';
+
+  @override
+  String get revenueVsCost => '收入 vs 成本';
+
+  @override
+  String get exportProfitReportsSuccess => '利润报告导出成功';
+
+  @override
+  String get exportProfitReportsError => '利润报告导出错误';
+
+  @override
+  String get inventoryStatisticsAndReports => '库存统计和报告';
+
+  @override
+  String get totalOrdered => '总订单';
+
+  @override
+  String get imported => '入库';
+
+  @override
+  String get ordered => '订单';
+
+  @override
+  String get remaining => '剩余';
+
+  @override
+  String get noInventoryData => '没有库存数据';
+
+  @override
+  String get addServiceDetailsToViewInventory => '添加服务详情以查看库存报告';
+
+  @override
+  String get noDataToExport => '没有数据可导出';
+
+  @override
+  String get exportInventoryReportsSuccess => '库存报告导出成功';
+
+  @override
+  String get exportInventoryReportsError => '导出库存报告时出错';
+
+  @override
+  String get generatedOn => '生成时间';
+
+  @override
+  String get page => '页面';
+
+  @override
+  String get stockStatus => '库存状态';
 }

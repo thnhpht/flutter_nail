@@ -17,6 +17,8 @@ import 'screens/menu_screen.dart';
 import 'screens/menu_booking_screen.dart' as booking;
 import 'screens/bills_screen.dart';
 import 'screens/reports_screen.dart';
+import 'screens/inventory_reports_screen.dart';
+import 'screens/profit_reports_screen.dart';
 import 'screens/salon_info_screen.dart';
 import 'screens/update_order_screen.dart';
 import 'ui/navigation_drawer.dart';
@@ -37,6 +39,8 @@ enum _HomeView {
   orders,
   bills,
   reports,
+  inventoryReports,
+  profitReports,
   salonInfo,
   updateOrder
 }
@@ -717,6 +721,10 @@ class _NailAppState extends State<NailApp> {
           return 6; // Seventh item in shop owner nav drawer
         case _HomeView.reports:
           return 7; // Eighth item in shop owner nav drawer
+        case _HomeView.inventoryReports:
+          return 10; // Eleventh item in shop owner nav drawer
+        case _HomeView.profitReports:
+          return 11; // Twelfth item in shop owner nav drawer
         case _HomeView.salonInfo:
           return 8; // Ninth item in shop owner nav drawer
         case _HomeView.updateOrder:
@@ -778,6 +786,12 @@ class _NailAppState extends State<NailApp> {
             break;
           case 9:
             _view = _HomeView.menu;
+            break;
+          case 10:
+            _view = _HomeView.inventoryReports;
+            break;
+          case 11:
+            _view = _HomeView.profitReports;
             break;
           default:
             _view = _HomeView.welcome;
@@ -916,6 +930,10 @@ class _NailAppState extends State<NailApp> {
               api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
         case _HomeView.reports:
           return ReportsScreen(api: api);
+        case _HomeView.inventoryReports:
+          return InventoryReportsScreen(api: api);
+        case _HomeView.profitReports:
+          return ProfitReportsScreen(api: api);
         case _HomeView.salonInfo:
           return SalonInfoScreen(
               api: api, onSalonInfoUpdated: _refreshSalonInfo);

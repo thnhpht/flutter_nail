@@ -3548,5 +3548,141 @@
         "type": "String"
       }
     }
+  },
+  "inventoryReports": "Báo cáo sản lượng",
+  "@inventoryReports": {
+    "description": "Inventory reports title"
+  },
+  "profitReports": "Báo cáo lợi nhuận",
+  "@profitReports": {
+    "description": "Profit reports"
+  },
+  "profitReport": "Báo cáo lợi nhuận",
+  "@profitReport": {
+    "description": "Profit report"
+  },
+  "totalImportedAmount": "Tổng tiền nhập",
+  "@totalImportedAmount": {
+    "description": "Total imported amount"
+  },
+  "totalSoldAmount": "Tổng tiền bán",
+  "@totalSoldAmount": {
+    "description": "Total sold amount"
+  },
+  "profit": "Lợi nhuận",
+  "@profit": {
+    "description": "Profit"
+  },
+  "profitMargin": "Tỷ lệ lợi nhuận",
+  "@profitMargin": {
+    "description": "Profit margin"
+  },
+  "printReport": "In báo cáo",
+  "@printReport": {
+    "description": "Print report"
+  },
+  "profitAnalysis": "Phân tích lợi nhuận",
+  "@profitAnalysis": {
+    "description": "Profit analysis"
+  },
+  "revenueVsCost": "Doanh thu vs Chi phí",
+  "@revenueVsCost": {
+    "description": "Revenue vs Cost"
+  },
+  "exportProfitReportsSuccess": "Xuất báo cáo lợi nhuận thành công",
+  "@exportProfitReportsSuccess": {
+    "description": "Success message for profit reports export"
+  },
+  "exportProfitReportsError": "Lỗi xuất báo cáo lợi nhuận",
+  "@exportProfitReportsError": {
+    "description": "Error message for profit reports export"
+  },
+  "inventoryStatisticsAndReports": "Thống kê và báo cáo sản lượng",
+  "@inventoryStatisticsAndReports": {
+    "description": "Inventory statistics and reports subtitle"
+  },
+  "searchServices": "Tìm kiếm dịch vụ...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "sortBy": "Sắp xếp theo",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "serviceName": "Tên dịch vụ",
+  "@serviceName": {
+    "description": "Service name"
+  },
+  "totalImported": "Tổng nhập",
+  "@totalImported": {
+    "description": "Total imported quantity"
+  },
+  "totalOrdered": "Tổng đã bán",
+  "@totalOrdered": {
+    "description": "Total ordered quantity"
+  },
+  "remainingQuantity": "Số lượng còn lại",
+  "@remainingQuantity": {
+    "description": "Remaining quantity"
+  },
+  "imported": "Đã nhập",
+  "@imported": {
+    "description": "Imported"
+  },
+  "ordered": "Đã bán",
+  "@ordered": {
+    "description": "Ordered"
+  },
+  "remaining": "Còn lại",
+  "@remaining": {
+    "description": "Remaining"
+  },
+  "outOfStock": "Hết hàng",
+  "@outOfStock": {
+    "description": "Out of stock"
+  },
+  "inStock": "Còn hàng",
+  "@inStock": {
+    "description": "In stock"
+  },
+  "unit": "Đơn vị",
+  "@unit": {
+    "description": "Unit of measurement"
+  },
+  "noInventoryData": "Chưa có dữ liệu sản lượng",
+  "@noInventoryData": {
+    "description": "No inventory data message"
+  },
+  "addServiceDetailsToViewInventory": "Thêm chi tiết dịch vụ để xem báo cáo sản lượng",
+  "@addServiceDetailsToViewInventory": {
+    "description": "Add service details to view inventory message"
+  },
+  "noDataToExport": "Không có dữ liệu để xuất",
+  "@noDataToExport": {
+    "description": "No data to export message"
+  },
+  "exportInventoryReportsSuccess": "Xuất báo cáo sản lượng thành công",
+  "@exportInventoryReportsSuccess": {
+    "description": "Export inventory reports success message"
+  },
+  "exportInventoryReportsError": "Lỗi khi xuất báo cáo sản lượng",
+  "@exportInventoryReportsError": {
+    "description": "Export inventory reports error message"
+  },
+  "summary": "Tổng quan",
+  "@summary": {
+    "description": "Summary"
+  },
+  "generatedOn": "Tạo lúc",
+  "@generatedOn": {
+    "description": "Generated on"
+  },
+  "page": "Trang",
+  "@page": {
+    "description": "Page"
+  },
+  "stockStatus": "Trạng thái kho",
+  "@stockStatus": {
+    "description": "Stock status filter label"
   }
 }

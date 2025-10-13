@@ -914,7 +914,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemsSubtitle => 'Manage items by category';
 
   @override
-  String get searchServices => 'Search items';
+  String get searchServices => 'Search services...';
 
   @override
   String showingAllServices(int total) {
@@ -1733,7 +1733,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitOfMeasurement => 'Unit of Measurement';
 
   @override
-  String get sortBy => 'Sort By';
+  String get sortBy => 'Sort by';
 
   @override
   String get sortAlphabeticalAZ => 'A-Z';
@@ -1776,7 +1776,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get serviceName => 'Item Name';
+  String get serviceName => 'Service Name';
 
   @override
   String get serviceAddedSuccessfully => 'Item added successfully';
@@ -2065,7 +2065,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalImported => 'Total Imported';
 
   @override
-  String get remainingQuantity => 'Remaining';
+  String get remainingQuantity => 'Remaining Quantity';
 
   @override
   String get outOfStock => 'Out of Stock';
@@ -2124,4 +2124,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String groupLabel(String group) {
     return 'Group: $group';
   }
+
+  @override
+  String get inventoryReports => 'Inventory Reports';
+
+  @override
+  String get profitReports => 'Profit Reports';
+
+  @override
+  String get profitReport => 'Profit Report';
+
+  @override
+  String get totalImportedAmount => 'Total Imported Amount';
+
+  @override
+  String get totalSoldAmount => 'Total Sold Amount';
+
+  @override
+  String get profit => 'Profit';
+
+  @override
+  String get profitMargin => 'Profit Margin';
+
+  @override
+  String get printReport => 'Print Report';
+
+  @override
+  String get profitAnalysis => 'Profit Analysis';
+
+  @override
+  String get revenueVsCost => 'Revenue vs Cost';
+
+  @override
+  String get exportProfitReportsSuccess =>
+      'Profit reports exported successfully';
+
+  @override
+  String get exportProfitReportsError => 'Error exporting profit reports';
+
+  @override
+  String get inventoryStatisticsAndReports =>
+      'Inventory Statistics and Reports';
+
+  @override
+  String get totalOrdered => 'Total Ordered';
+
+  @override
+  String get imported => 'Imported';
+
+  @override
+  String get ordered => 'Ordered';
+
+  @override
+  String get remaining => 'Remaining';
+
+  @override
+  String get noInventoryData => 'No inventory data available';
+
+  @override
+  String get addServiceDetailsToViewInventory =>
+      'Add service details to view inventory reports';
+
+  @override
+  String get noDataToExport => 'No data to export';
+
+  @override
+  String get exportInventoryReportsSuccess =>
+      'Inventory reports exported successfully';
+
+  @override
+  String get exportInventoryReportsError => 'Error exporting inventory reports';
+
+  @override
+  String get generatedOn => 'Generated on';
+
+  @override
+  String get page => 'Page';
+
+  @override
+  String get stockStatus => 'Stock Status';
 }

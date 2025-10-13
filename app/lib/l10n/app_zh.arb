@@ -2708,5 +2708,141 @@
         "type": "String"
       }
     }
+  },
+  "inventoryReports": "库存报告",
+  "@inventoryReports": {
+    "description": "Inventory reports title"
+  },
+  "profitReports": "利润报告",
+  "@profitReports": {
+    "description": "Profit reports"
+  },
+  "profitReport": "利润报告",
+  "@profitReport": {
+    "description": "Profit report"
+  },
+  "totalImportedAmount": "总进货金额",
+  "@totalImportedAmount": {
+    "description": "Total imported amount"
+  },
+  "totalSoldAmount": "总销售金额",
+  "@totalSoldAmount": {
+    "description": "Total sold amount"
+  },
+  "profit": "利润",
+  "@profit": {
+    "description": "Profit"
+  },
+  "profitMargin": "利润率",
+  "@profitMargin": {
+    "description": "Profit margin"
+  },
+  "printReport": "打印报告",
+  "@printReport": {
+    "description": "Print report"
+  },
+  "profitAnalysis": "利润分析",
+  "@profitAnalysis": {
+    "description": "Profit analysis"
+  },
+  "revenueVsCost": "收入 vs 成本",
+  "@revenueVsCost": {
+    "description": "Revenue vs Cost"
+  },
+  "exportProfitReportsSuccess": "利润报告导出成功",
+  "@exportProfitReportsSuccess": {
+    "description": "Success message for profit reports export"
+  },
+  "exportProfitReportsError": "利润报告导出错误",
+  "@exportProfitReportsError": {
+    "description": "Error message for profit reports export"
+  },
+  "inventoryStatisticsAndReports": "库存统计和报告",
+  "@inventoryStatisticsAndReports": {
+    "description": "Inventory statistics and reports subtitle"
+  },
+  "searchServices": "搜索服务...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "sortBy": "排序方式",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "serviceName": "服务名称",
+  "@serviceName": {
+    "description": "Service name"
+  },
+  "totalImported": "总入库",
+  "@totalImported": {
+    "description": "Total imported quantity"
+  },
+  "totalOrdered": "总订单",
+  "@totalOrdered": {
+    "description": "Total ordered quantity"
+  },
+  "remainingQuantity": "剩余数量",
+  "@remainingQuantity": {
+    "description": "Remaining quantity"
+  },
+  "imported": "入库",
+  "@imported": {
+    "description": "Imported"
+  },
+  "ordered": "订单",
+  "@ordered": {
+    "description": "Ordered"
+  },
+  "remaining": "剩余",
+  "@remaining": {
+    "description": "Remaining"
+  },
+  "outOfStock": "缺货",
+  "@outOfStock": {
+    "description": "Out of stock"
+  },
+  "inStock": "有库存",
+  "@inStock": {
+    "description": "In stock"
+  },
+  "unit": "单位",
+  "@unit": {
+    "description": "Unit of measurement"
+  },
+  "noInventoryData": "没有库存数据",
+  "@noInventoryData": {
+    "description": "No inventory data message"
+  },
+  "addServiceDetailsToViewInventory": "添加服务详情以查看库存报告",
+  "@addServiceDetailsToViewInventory": {
+    "description": "Add service details to view inventory message"
+  },
+  "noDataToExport": "没有数据可导出",
+  "@noDataToExport": {
+    "description": "No data to export message"
+  },
+  "exportInventoryReportsSuccess": "库存报告导出成功",
+  "@exportInventoryReportsSuccess": {
+    "description": "Export inventory reports success message"
+  },
+  "exportInventoryReportsError": "导出库存报告时出错",
+  "@exportInventoryReportsError": {
+    "description": "Export inventory reports error message"
+  },
+  "summary": "摘要",
+  "@summary": {
+    "description": "Summary"
+  },
+  "generatedOn": "生成时间",
+  "@generatedOn": {
+    "description": "Generated on"
+  },
+  "page": "页面",
+  "@page": {
+    "description": "Page"
+  },
+  "stockStatus": "库存状态",
+  "@stockStatus": {
+    "description": "Stock status filter label"
   }
 }

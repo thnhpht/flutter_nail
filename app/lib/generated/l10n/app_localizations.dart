@@ -1806,10 +1806,10 @@ abstract class AppLocalizations {
   /// **'Quản lý chi tiết theo danh mục'**
   String get itemsSubtitle;
 
-  /// Search items placeholder
+  /// Search services placeholder
   ///
   /// In vi, this message translates to:
-  /// **'Tìm kiếm chi tiết...'**
+  /// **'Tìm kiếm dịch vụ...'**
   String get searchServices;
 
   /// Showing all items message
@@ -3210,7 +3210,7 @@ abstract class AppLocalizations {
   /// **'Mã số'**
   String get code;
 
-  /// Trường đơn vị tính
+  /// Unit of measurement
   ///
   /// In vi, this message translates to:
   /// **'Đơn vị'**
@@ -3228,7 +3228,7 @@ abstract class AppLocalizations {
   /// **'Đơn vị tính'**
   String get unitOfMeasurement;
 
-  /// No description provided for @sortBy.
+  /// Sort by label
   ///
   /// In vi, this message translates to:
   /// **'Sắp xếp theo'**
@@ -3306,10 +3306,10 @@ abstract class AppLocalizations {
   /// **'{count} chi tiết đã chọn'**
   String servicesSelectedCount(int count);
 
-  /// Service name field label
+  /// Service name
   ///
   /// In vi, this message translates to:
-  /// **'Tên chi tiết'**
+  /// **'Tên dịch vụ'**
   String get serviceName;
 
   /// Service added successfully message
@@ -3462,10 +3462,10 @@ abstract class AppLocalizations {
   /// **'Không có hóa đơn để xuất'**
   String get noOrdersToExport;
 
-  /// Summary section title
+  /// Summary
   ///
   /// In vi, this message translates to:
-  /// **'Tóm tắt'**
+  /// **'Tổng quan'**
   String get summary;
 
   /// Export date column header
@@ -3840,25 +3840,25 @@ abstract class AppLocalizations {
   /// **'Lỗi khi nhập hàng'**
   String get errorImportingItem;
 
-  /// Total imported quantity label
+  /// Total imported quantity
   ///
   /// In vi, this message translates to:
   /// **'Tổng nhập'**
   String get totalImported;
 
-  /// Remaining quantity label
+  /// Remaining quantity
   ///
   /// In vi, this message translates to:
-  /// **'Còn lại'**
+  /// **'Số lượng còn lại'**
   String get remainingQuantity;
 
-  /// Out of stock status
+  /// Out of stock
   ///
   /// In vi, this message translates to:
   /// **'Hết hàng'**
   String get outOfStock;
 
-  /// In stock status
+  /// In stock
   ///
   /// In vi, this message translates to:
   /// **'Còn hàng'**
@@ -3947,6 +3947,156 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Nhóm: {group}'**
   String groupLabel(String group);
+
+  /// Inventory reports title
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo sản lượng'**
+  String get inventoryReports;
+
+  /// Profit reports
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo lợi nhuận'**
+  String get profitReports;
+
+  /// Profit report
+  ///
+  /// In vi, this message translates to:
+  /// **'Báo cáo lợi nhuận'**
+  String get profitReport;
+
+  /// Total imported amount
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng tiền nhập'**
+  String get totalImportedAmount;
+
+  /// Total sold amount
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng tiền bán'**
+  String get totalSoldAmount;
+
+  /// Profit
+  ///
+  /// In vi, this message translates to:
+  /// **'Lợi nhuận'**
+  String get profit;
+
+  /// Profit margin
+  ///
+  /// In vi, this message translates to:
+  /// **'Tỷ lệ lợi nhuận'**
+  String get profitMargin;
+
+  /// Print report
+  ///
+  /// In vi, this message translates to:
+  /// **'In báo cáo'**
+  String get printReport;
+
+  /// Profit analysis
+  ///
+  /// In vi, this message translates to:
+  /// **'Phân tích lợi nhuận'**
+  String get profitAnalysis;
+
+  /// Revenue vs Cost
+  ///
+  /// In vi, this message translates to:
+  /// **'Doanh thu vs Chi phí'**
+  String get revenueVsCost;
+
+  /// Success message for profit reports export
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất báo cáo lợi nhuận thành công'**
+  String get exportProfitReportsSuccess;
+
+  /// Error message for profit reports export
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi xuất báo cáo lợi nhuận'**
+  String get exportProfitReportsError;
+
+  /// Inventory statistics and reports subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Thống kê và báo cáo sản lượng'**
+  String get inventoryStatisticsAndReports;
+
+  /// Total ordered quantity
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng đã bán'**
+  String get totalOrdered;
+
+  /// Imported
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã nhập'**
+  String get imported;
+
+  /// Ordered
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã bán'**
+  String get ordered;
+
+  /// Remaining
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn lại'**
+  String get remaining;
+
+  /// No inventory data message
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có dữ liệu sản lượng'**
+  String get noInventoryData;
+
+  /// Add service details to view inventory message
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm chi tiết dịch vụ để xem báo cáo sản lượng'**
+  String get addServiceDetailsToViewInventory;
+
+  /// No data to export message
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có dữ liệu để xuất'**
+  String get noDataToExport;
+
+  /// Export inventory reports success message
+  ///
+  /// In vi, this message translates to:
+  /// **'Xuất báo cáo sản lượng thành công'**
+  String get exportInventoryReportsSuccess;
+
+  /// Export inventory reports error message
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi khi xuất báo cáo sản lượng'**
+  String get exportInventoryReportsError;
+
+  /// Generated on
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạo lúc'**
+  String get generatedOn;
+
+  /// Page
+  ///
+  /// In vi, this message translates to:
+  /// **'Trang'**
+  String get page;
+
+  /// Stock status filter label
+  ///
+  /// In vi, this message translates to:
+  /// **'Trạng thái kho'**
+  String get stockStatus;
 }
 
 class _AppLocalizationsDelegate

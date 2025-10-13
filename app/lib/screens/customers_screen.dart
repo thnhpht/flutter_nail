@@ -16,6 +16,8 @@ class CustomersScreen extends StatefulWidget {
 class _CustomersScreenState extends State<CustomersScreen> {
   late Future<List<Customer>> _future;
   String _search = '';
+  String? _selectedGroup;
+  List<String> _customerGroups = [];
   final _formKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
 
@@ -23,12 +25,25 @@ class _CustomersScreenState extends State<CustomersScreen> {
   void initState() {
     super.initState();
     _future = widget.api.getCustomers();
+    _loadCustomerGroups();
+  }
+
+  Future<void> _loadCustomerGroups() async {
+    try {
+      final groups = await widget.api.getCustomerGroups();
+      setState(() {
+        _customerGroups = groups;
+      });
+    } catch (e) {
+      // Handle error silently or show a message
+    }
   }
 
   Future<void> _reload() async {
     setState(() {
       _future = widget.api.getCustomers();
     });
+    await _loadCustomerGroups();
   }
 
   Future<void> _showAddDialog() async {
@@ -674,6 +689,95 @@ class _CustomersScreenState extends State<CustomersScreen> {
     }
   }
 
+  Widget _buildSearchableGroupDropdown(AppLocalizations l10n) {
+    return Autocomplete<String>(
+      displayStringForOption: (String group) => group,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return _customerGroups;
+        }
+        return _customerGroups.where((String group) =>
+            group.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+      },
+      onSelected: (String selection) {
+        setState(() {
+          _selectedGroup = selection;
+        });
+      },
+      fieldViewBuilder: (BuildContext context,
+          TextEditingController textEditingController,
+          FocusNode focusNode,
+          VoidCallback onFieldSubmitted) {
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: AppTheme.inputDecoration(
+            label: l10n.groupFilter,
+            prefixIcon: Icons.group,
+          ).copyWith(
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            suffixIcon: _selectedGroup != null
+                ? IconButton(
+                    icon: Icon(Icons.clear, color: Colors.grey[600]),
+                    onPressed: () {
+                      setState(() {
+                        _selectedGroup = null;
+                        textEditingController.clear();
+                      });
+                    },
+                  )
+                : null,
+          ),
+        );
+      },
+      optionsViewBuilder: (BuildContext context,
+          AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length + 1, // +1 for "All" option
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      leading: Icon(Icons.group, color: Colors.grey[600]),
+                      title: Text(AppLocalizations.of(context)!.allGroups),
+                      onTap: () {
+                        setState(() {
+                          _selectedGroup = null;
+                        });
+                        // Close the autocomplete overlay
+                        FocusScope.of(context).unfocus();
+                      },
+                      selected: _selectedGroup == null,
+                    );
+                  }
+
+                  final group = options.elementAt(index - 1);
+                  return ListTile(
+                    leading: Icon(Icons.group, color: Colors.grey[600]),
+                    title: Text(group),
+                    onTap: () {
+                      onSelected(group);
+                    },
+                    selected: _selectedGroup == group,
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _showActionDialog(Customer c) async {
     await showDialog(
       context: context,
@@ -779,6 +883,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+
+                // Group Filter
+                Container(
+                  decoration: AppTheme.cardDecoration(),
+                  child: _buildSearchableGroupDropdown(l10n),
+                ),
+                const SizedBox(height: 12),
                 SizedBox(
                   height: MediaQuery.of(context).size.height -
                       300, // Đảm bảo có chiều cao cố định
@@ -843,7 +954,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
                                     .toLowerCase()
                                     .contains(_search.toLowerCase()));
 
-                        return matchesSearch;
+                        // Group filter
+                        final matchesGroup = _selectedGroup == null ||
+                            (c.group != null && c.group == _selectedGroup);
+
+                        return matchesSearch && matchesGroup;
                       }).toList()
                         ..sort((a, b) => a.name
                             .toLowerCase()

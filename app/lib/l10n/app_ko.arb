@@ -2708,5 +2708,141 @@
         "type": "String"
       }
     }
+  },
+  "inventoryReports": "재고 보고서",
+  "@inventoryReports": {
+    "description": "Inventory reports title"
+  },
+  "profitReports": "수익 보고서",
+  "@profitReports": {
+    "description": "Profit reports"
+  },
+  "profitReport": "수익 보고서",
+  "@profitReport": {
+    "description": "Profit report"
+  },
+  "totalImportedAmount": "총 수입 금액",
+  "@totalImportedAmount": {
+    "description": "Total imported amount"
+  },
+  "totalSoldAmount": "총 판매 금액",
+  "@totalSoldAmount": {
+    "description": "Total sold amount"
+  },
+  "profit": "수익",
+  "@profit": {
+    "description": "Profit"
+  },
+  "profitMargin": "수익률",
+  "@profitMargin": {
+    "description": "Profit margin"
+  },
+  "printReport": "보고서 인쇄",
+  "@printReport": {
+    "description": "Print report"
+  },
+  "profitAnalysis": "수익 분석",
+  "@profitAnalysis": {
+    "description": "Profit analysis"
+  },
+  "revenueVsCost": "수익 vs 비용",
+  "@revenueVsCost": {
+    "description": "Revenue vs Cost"
+  },
+  "exportProfitReportsSuccess": "수익 보고서 내보내기 성공",
+  "@exportProfitReportsSuccess": {
+    "description": "Success message for profit reports export"
+  },
+  "exportProfitReportsError": "수익 보고서 내보내기 오류",
+  "@exportProfitReportsError": {
+    "description": "Error message for profit reports export"
+  },
+  "inventoryStatisticsAndReports": "재고 통계 및 보고서",
+  "@inventoryStatisticsAndReports": {
+    "description": "Inventory statistics and reports subtitle"
+  },
+  "searchServices": "서비스 검색...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  "sortBy": "정렬 기준",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "serviceName": "서비스명",
+  "@serviceName": {
+    "description": "Service name"
+  },
+  "totalImported": "총 입고",
+  "@totalImported": {
+    "description": "Total imported quantity"
+  },
+  "totalOrdered": "총 주문",
+  "@totalOrdered": {
+    "description": "Total ordered quantity"
+  },
+  "remainingQuantity": "남은 수량",
+  "@remainingQuantity": {
+    "description": "Remaining quantity"
+  },
+  "imported": "입고",
+  "@imported": {
+    "description": "Imported"
+  },
+  "ordered": "주문",
+  "@ordered": {
+    "description": "Ordered"
+  },
+  "remaining": "남은",
+  "@remaining": {
+    "description": "Remaining"
+  },
+  "outOfStock": "품절",
+  "@outOfStock": {
+    "description": "Out of stock"
+  },
+  "inStock": "재고 있음",
+  "@inStock": {
+    "description": "In stock"
+  },
+  "unit": "단위",
+  "@unit": {
+    "description": "Unit of measurement"
+  },
+  "noInventoryData": "재고 데이터가 없습니다",
+  "@noInventoryData": {
+    "description": "No inventory data message"
+  },
+  "addServiceDetailsToViewInventory": "재고 보고서를 보려면 서비스 세부사항을 추가하세요",
+  "@addServiceDetailsToViewInventory": {
+    "description": "Add service details to view inventory message"
+  },
+  "noDataToExport": "내보낼 데이터가 없습니다",
+  "@noDataToExport": {
+    "description": "No data to export message"
+  },
+  "exportInventoryReportsSuccess": "재고 보고서 내보내기 성공",
+  "@exportInventoryReportsSuccess": {
+    "description": "Export inventory reports success message"
+  },
+  "exportInventoryReportsError": "재고 보고서 내보내기 오류",
+  "@exportInventoryReportsError": {
+    "description": "Export inventory reports error message"
+  },
+  "summary": "요약",
+  "@summary": {
+    "description": "Summary"
+  },
+  "generatedOn": "생성일",
+  "@generatedOn": {
+    "description": "Generated on"
+  },
+  "page": "페이지",
+  "@page": {
+    "description": "Page"
+  },
+  "stockStatus": "재고 상태",
+  "@stockStatus": {
+    "description": "Stock status filter label"
   }
 }

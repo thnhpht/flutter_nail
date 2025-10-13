@@ -915,7 +915,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get itemsSubtitle => 'Quản lý chi tiết theo danh mục';
 
   @override
-  String get searchServices => 'Tìm kiếm chi tiết...';
+  String get searchServices => 'Tìm kiếm dịch vụ...';
 
   @override
   String showingAllServices(int total) {
@@ -1787,7 +1787,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get serviceName => 'Tên chi tiết';
+  String get serviceName => 'Tên dịch vụ';
 
   @override
   String get serviceAddedSuccessfully => 'Thêm chi tiết thành công';
@@ -1881,7 +1881,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noOrdersToExport => 'Không có hóa đơn để xuất';
 
   @override
-  String get summary => 'Tóm tắt';
+  String get summary => 'Tổng quan';
 
   @override
   String get exportDate => 'Ngày xuất';
@@ -2077,7 +2077,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get totalImported => 'Tổng nhập';
 
   @override
-  String get remainingQuantity => 'Còn lại';
+  String get remainingQuantity => 'Số lượng còn lại';
 
   @override
   String get outOfStock => 'Hết hàng';
@@ -2136,4 +2136,81 @@ class AppLocalizationsVi extends AppLocalizations {
   String groupLabel(String group) {
     return 'Nhóm: $group';
   }
+
+  @override
+  String get inventoryReports => 'Báo cáo sản lượng';
+
+  @override
+  String get profitReports => 'Báo cáo lợi nhuận';
+
+  @override
+  String get profitReport => 'Báo cáo lợi nhuận';
+
+  @override
+  String get totalImportedAmount => 'Tổng tiền nhập';
+
+  @override
+  String get totalSoldAmount => 'Tổng tiền bán';
+
+  @override
+  String get profit => 'Lợi nhuận';
+
+  @override
+  String get profitMargin => 'Tỷ lệ lợi nhuận';
+
+  @override
+  String get printReport => 'In báo cáo';
+
+  @override
+  String get profitAnalysis => 'Phân tích lợi nhuận';
+
+  @override
+  String get revenueVsCost => 'Doanh thu vs Chi phí';
+
+  @override
+  String get exportProfitReportsSuccess => 'Xuất báo cáo lợi nhuận thành công';
+
+  @override
+  String get exportProfitReportsError => 'Lỗi xuất báo cáo lợi nhuận';
+
+  @override
+  String get inventoryStatisticsAndReports => 'Thống kê và báo cáo sản lượng';
+
+  @override
+  String get totalOrdered => 'Tổng đã bán';
+
+  @override
+  String get imported => 'Đã nhập';
+
+  @override
+  String get ordered => 'Đã bán';
+
+  @override
+  String get remaining => 'Còn lại';
+
+  @override
+  String get noInventoryData => 'Chưa có dữ liệu sản lượng';
+
+  @override
+  String get addServiceDetailsToViewInventory =>
+      'Thêm chi tiết dịch vụ để xem báo cáo sản lượng';
+
+  @override
+  String get noDataToExport => 'Không có dữ liệu để xuất';
+
+  @override
+  String get exportInventoryReportsSuccess =>
+      'Xuất báo cáo sản lượng thành công';
+
+  @override
+  String get exportInventoryReportsError => 'Lỗi khi xuất báo cáo sản lượng';
+
+  @override
+  String get generatedOn => 'Tạo lúc';
+
+  @override
+  String get page => 'Trang';
+
+  @override
+  String get stockStatus => 'Trạng thái kho';
 }

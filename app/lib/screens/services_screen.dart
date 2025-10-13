@@ -2506,7 +2506,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            '${AppLocalizations.of(context)!.remainingQuantity}: ${inventory.remainingQuantity}',
+            '${AppLocalizations.of(context)!.remaining}: ${inventory.remainingQuantity}',
             style: const TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.bold,

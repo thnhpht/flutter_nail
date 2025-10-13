@@ -898,7 +898,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get itemsSubtitle => '카테고리별 상품 관리';
 
   @override
-  String get searchServices => '상품 검색...';
+  String get searchServices => '서비스 검색...';
 
   @override
   String showingAllServices(int total) {
@@ -1737,7 +1737,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get serviceName => '상품 이름';
+  String get serviceName => '서비스명';
 
   @override
   String get serviceAddedSuccessfully => '상품이 성공적으로 추가되었습니다';
@@ -2021,7 +2021,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get errorImportingItem => '상품 수입 오류';
 
   @override
-  String get totalImported => '총 수입량';
+  String get totalImported => '총 입고';
 
   @override
   String get remainingQuantity => '남은 수량';
@@ -2083,4 +2083,79 @@ class AppLocalizationsKo extends AppLocalizations {
   String groupLabel(String group) {
     return '그룹: $group';
   }
+
+  @override
+  String get inventoryReports => '재고 보고서';
+
+  @override
+  String get profitReports => '수익 보고서';
+
+  @override
+  String get profitReport => '수익 보고서';
+
+  @override
+  String get totalImportedAmount => '총 수입 금액';
+
+  @override
+  String get totalSoldAmount => '총 판매 금액';
+
+  @override
+  String get profit => '수익';
+
+  @override
+  String get profitMargin => '수익률';
+
+  @override
+  String get printReport => '보고서 인쇄';
+
+  @override
+  String get profitAnalysis => '수익 분석';
+
+  @override
+  String get revenueVsCost => '수익 vs 비용';
+
+  @override
+  String get exportProfitReportsSuccess => '수익 보고서 내보내기 성공';
+
+  @override
+  String get exportProfitReportsError => '수익 보고서 내보내기 오류';
+
+  @override
+  String get inventoryStatisticsAndReports => '재고 통계 및 보고서';
+
+  @override
+  String get totalOrdered => '총 주문';
+
+  @override
+  String get imported => '입고';
+
+  @override
+  String get ordered => '주문';
+
+  @override
+  String get remaining => '남은';
+
+  @override
+  String get noInventoryData => '재고 데이터가 없습니다';
+
+  @override
+  String get addServiceDetailsToViewInventory => '재고 보고서를 보려면 서비스 세부사항을 추가하세요';
+
+  @override
+  String get noDataToExport => '내보낼 데이터가 없습니다';
+
+  @override
+  String get exportInventoryReportsSuccess => '재고 보고서 내보내기 성공';
+
+  @override
+  String get exportInventoryReportsError => '재고 보고서 내보내기 오류';
+
+  @override
+  String get generatedOn => '생성일';
+
+  @override
+  String get page => '페이지';
+
+  @override
+  String get stockStatus => '재고 상태';
 }
