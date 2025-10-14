@@ -2826,7 +2826,7 @@
   "@sortBy": {
     "description": "Sort by label"
   },
-  "serviceName": "Service Name",
+  "serviceName": "Name",
   "@serviceName": {
     "description": "Service name"
   },
@@ -2901,5 +2901,121 @@
   "stockStatus": "Stock Status",
   "@stockStatus": {
     "description": "Stock status filter label"
+  },
+  "deliveryStatus": "Delivery Status",
+  "@deliveryStatus": {
+    "description": "Delivery status label"
+  },
+  "pendingDelivery": "Pending Delivery",
+  "@pendingDelivery": {
+    "description": "Pending delivery status"
+  },
+  "delivered": "Delivered",
+  "@delivered": {
+    "description": "Delivered status"
+  },
+  "deliveryCancelled": "Delivery Cancelled",
+  "@deliveryCancelled": {
+    "description": "Delivery cancelled status"
+  },
+  "employeeType": "Employee Type",
+  "@employeeType": {
+    "description": "Employee type field label"
+  },
+  "serviceEmployee": "Service Employee",
+  "@serviceEmployee": {
+    "description": "Service employee type"
+  },
+  "deliveryEmployee": "Delivery Employee",
+  "@deliveryEmployee": {
+    "description": "Delivery employee type"
+  },
+  "deliveryStaff": "Delivery Staff",
+  "@deliveryStaff": {
+    "description": "Delivery staff"
+  },
+  "selectEmployeeType": "Select Employee Type",
+  "@selectEmployeeType": {
+    "description": "Select employee type label"
+  },
+  "deliveryManagement": "Delivery Management",
+  "@deliveryManagement": {
+    "description": "Delivery management screen title"
+  },
+  "deliveryOrders": "Delivery Orders",
+  "@deliveryOrders": {
+    "description": "Delivery orders list title"
+  },
+  "markAsDelivered": "Mark as Delivered",
+  "@markAsDelivered": {
+    "description": "Mark order as delivered button"
+  },
+  "markAsPending": "Mark as Pending",
+  "@markAsPending": {
+    "description": "Mark order as pending button"
+  },
+  "deliveryLogin": "Delivery Login",
+  "@deliveryLogin": {
+    "description": "Delivery employee login title"
+  },
+  "deliveryEmployeeLogin": "Delivery Employee Login",
+  "@deliveryEmployeeLogin": {
+    "description": "Delivery employee login description"
+  },
+  "onlyServiceEmployeesAllowed": "Only service employees are allowed to login",
+  "@onlyServiceEmployeesAllowed": {
+    "description": "Error message for non-service employees"
+  },
+  "onlyDeliveryEmployeesAllowed": "Only delivery employees are allowed to login",
+  "@onlyDeliveryEmployeesAllowed": {
+    "description": "Error message for non-delivery employees"
+  },
+  "updateDeliveryStatus": "Update Delivery Status",
+  "@updateDeliveryStatus": {
+    "description": "Update delivery status dialog title"
+  },
+  "deliveryStatusUpdated": "Delivery status updated successfully",
+  "@deliveryStatusUpdated": {
+    "description": "Success message when delivery status is updated"
+  },
+  "errorUpdatingDeliveryStatus": "Error updating delivery status",
+  "@errorUpdatingDeliveryStatus": {
+    "description": "Error message when updating delivery status fails"
+  },
+  "noDeliveryOrdersInTimeRange": "No delivery orders in this time range",
+  "@noDeliveryOrdersInTimeRange": {
+    "description": "No delivery orders in selected time range"
+  },
+  "noDeliveryOrdersFound": "No delivery orders found",
+  "@noDeliveryOrdersFound": {
+    "description": "No delivery orders found in search"
+  },
+  "noDeliveryOrdersYet": "No delivery orders yet",
+  "@noDeliveryOrdersYet": {
+    "description": "No delivery orders yet"
+  },
+  "waitingForDeliveryOrders": "Waiting for delivery orders",
+  "@waitingForDeliveryOrders": {
+    "description": "Waiting for delivery orders message"
+  },
+  "selectDeliveryStatus": "Select delivery status",
+  "@selectDeliveryStatus": {
+    "description": "Select delivery status label"
+  },
+  "currentStatus": "Current Status",
+  "@currentStatus": {
+    "description": "Current status label"
+  },
+  "selectNewStatus": "Select New Status",
+  "@selectNewStatus": {
+    "description": "Select new status label"
+  },
+  "pendingDeliveryDescription": "Order is waiting to be delivered",
+  "@pendingDeliveryDescription": {
+    "description": "Pending delivery description"
+  },
+  "deliveredDescription": "Order has been delivered successfully",
+  "@deliveredDescription": {
+    "description": "Delivered description"
   }
 }

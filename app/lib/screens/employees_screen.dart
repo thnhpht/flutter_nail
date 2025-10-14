@@ -155,6 +155,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     String? imageUrl;
     XFile? pickedImage;
     Uint8List? selectedImageBytes;
+    String selectedEmployeeType = 'service';
 
     final ok = await showDialog<bool>(
       context: context,
@@ -362,6 +363,55 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                    labelText: l10n.employeeType,
+                                    prefixIcon: Icon(Icons.work,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  value: selectedEmployeeType,
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: 'service',
+                                      child: Text(l10n.serviceEmployee),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 'delivery',
+                                      child: Text(l10n.deliveryEmployee),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedEmployeeType = value!;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.selectEmployeeType;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -482,7 +532,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         await widget.api.createEmployee(name,
             phone: phone,
             password: passwordCtrl.text.trim(),
-            image: imageUrlToSave);
+            image: imageUrlToSave,
+            employeeType: selectedEmployeeType);
         await _reload();
         AppWidgets.showFlushbar(context, l10n.employeeAddedSuccessfully,
             type: MessageType.success);
@@ -501,6 +552,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     String? imageUrl = e.image;
     XFile? pickedImage;
     Uint8List? selectedImageBytes;
+    String selectedEmployeeType = e.employeeType;
 
     final ok = await showDialog<bool>(
       context: context,
@@ -706,6 +758,55 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                   },
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                    labelText: l10n.employeeType,
+                                    prefixIcon: Icon(Icons.work,
+                                        color: AppTheme.primaryStart),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.red, width: 2),
+                                    ),
+                                  ),
+                                  value: selectedEmployeeType,
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: 'service',
+                                      child: Text(l10n.serviceEmployee),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 'delivery',
+                                      child: Text(l10n.deliveryEmployee),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedEmployeeType = value!;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return l10n.selectEmployeeType;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -831,6 +932,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           phone: phone.isEmpty ? null : phone,
           password: password.isEmpty ? null : password,
           image: imageUrlToSave,
+          employeeType: selectedEmployeeType,
         ));
         await _reload();
         AppWidgets.showFlushbar(context, l10n.employeeInfoUpdatedSuccessfully,
@@ -1215,6 +1317,89 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                                           fontSize: 12,
                                                           color: AppTheme
                                                               .primaryEnd,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        e.employeeType ==
+                                                                'service'
+                                                            ? Colors.blue
+                                                                .withValues(
+                                                                    alpha: 0.1)
+                                                            : Colors.orange
+                                                                .withValues(
+                                                                    alpha: 0.1),
+                                                        e.employeeType ==
+                                                                'service'
+                                                            ? Colors.blue
+                                                                .withValues(
+                                                                    alpha: 0.1)
+                                                            : Colors.orange
+                                                                .withValues(
+                                                                    alpha: 0.1),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                    border: Border.all(
+                                                        color: e.employeeType ==
+                                                                'service'
+                                                            ? Colors.blue
+                                                                .withValues(
+                                                                    alpha: 0.3)
+                                                            : Colors.orange
+                                                                .withValues(
+                                                                    alpha:
+                                                                        0.3)),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        e.employeeType ==
+                                                                'service'
+                                                            ? Icons.work
+                                                            : Icons
+                                                                .local_shipping,
+                                                        size: 12,
+                                                        color: e.employeeType ==
+                                                                'service'
+                                                            ? Colors.blue
+                                                            : Colors.orange,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        e.employeeType ==
+                                                                'service'
+                                                            ? l10n
+                                                                .serviceEmployee
+                                                            : l10n
+                                                                .deliveryEmployee,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              e.employeeType ==
+                                                                      'service'
+                                                                  ? Colors.blue
+                                                                  : Colors
+                                                                      .orange,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),

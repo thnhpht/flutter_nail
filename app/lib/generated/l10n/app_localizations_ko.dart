@@ -2158,4 +2158,92 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get stockStatus => '재고 상태';
+
+  @override
+  String get deliveryStatus => 'Trạng thái giao hàng';
+
+  @override
+  String get pendingDelivery => 'Chưa giao hàng';
+
+  @override
+  String get delivered => 'Đã giao hàng';
+
+  @override
+  String get deliveryCancelled => 'Hủy giao hàng';
+
+  @override
+  String get employeeType => '직원 유형';
+
+  @override
+  String get serviceEmployee => '서비스 직원';
+
+  @override
+  String get deliveryEmployee => '배송 직원';
+
+  @override
+  String get deliveryStaff => '배송 직원';
+
+  @override
+  String get selectEmployeeType => '직원 유형 선택';
+
+  @override
+  String get deliveryManagement => '배송 관리';
+
+  @override
+  String get deliveryOrders => '배송 주문';
+
+  @override
+  String get markAsDelivered => '배송 완료로 표시';
+
+  @override
+  String get markAsPending => '대기 중으로 표시';
+
+  @override
+  String get deliveryLogin => '배송 로그인';
+
+  @override
+  String get deliveryEmployeeLogin => '배송 직원 로그인';
+
+  @override
+  String get onlyServiceEmployeesAllowed => '서비스 직원만 로그인이 허용됩니다';
+
+  @override
+  String get onlyDeliveryEmployeesAllowed => '배송 직원만 로그인이 허용됩니다';
+
+  @override
+  String get updateDeliveryStatus => '배송 상태 업데이트';
+
+  @override
+  String get deliveryStatusUpdated => '배송 상태가 성공적으로 업데이트되었습니다';
+
+  @override
+  String get errorUpdatingDeliveryStatus => '배송 상태 업데이트 중 오류가 발생했습니다';
+
+  @override
+  String get noDeliveryOrdersInTimeRange =>
+      'Không có đơn giao hàng trong khoảng thời gian này';
+
+  @override
+  String get noDeliveryOrdersFound => 'Không tìm thấy đơn giao hàng';
+
+  @override
+  String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
+
+  @override
+  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+
+  @override
+  String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
+
+  @override
+  String get currentStatus => 'Trạng thái hiện tại';
+
+  @override
+  String get selectNewStatus => 'Chọn trạng thái mới';
+
+  @override
+  String get pendingDeliveryDescription => 'Đơn hàng đang chờ giao';
+
+  @override
+  String get deliveredDescription => 'Đơn hàng đã giao thành công';
 }

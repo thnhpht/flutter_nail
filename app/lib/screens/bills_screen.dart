@@ -104,6 +104,15 @@ class _BillsScreenState extends State<BillsScreen> {
       }).toList();
     }
 
+    // Lọc theo delivery orders nếu là delivery employee
+    if (_currentUserRole == 'delivery') {
+      filtered = filtered.where((order) {
+        return order.isBooking == true &&
+            order.deliveryMethod == 'delivery' &&
+            order.employeeIds.contains(_currentEmployeeId!);
+      }).toList();
+    }
+
     // Áp dụng tìm kiếm
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((order) {
@@ -223,6 +232,13 @@ class _BillsScreenState extends State<BillsScreen> {
 
   void _showUpdateOrderDialog(Order order) {
     final l10n = AppLocalizations.of(context)!;
+
+    // For delivery employees, show delivery status update dialog
+    if (_currentUserRole == 'delivery') {
+      _showDeliveryStatusDialog(order);
+      return;
+    }
+
     if (!_canUpdateOrder(order)) {
       AppWidgets.showFlushbar(
         context,
@@ -234,6 +250,445 @@ class _BillsScreenState extends State<BillsScreen> {
 
     if (widget.onNavigateToUpdateOrder != null) {
       widget.onNavigateToUpdateOrder!(order);
+    }
+  }
+
+  Future<void> _showDeliveryStatusDialog(Order order) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    await showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header với gradient
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(
+                        Icons.local_shipping,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.updateDeliveryStatus,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.selectDeliveryStatus,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Customer Info Card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.grey[200]!,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                size: 20,
+                                color: Colors.grey[600],
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.customerName,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            order.customerName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                size: 20,
+                                color: Colors.grey[600],
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.phone,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _formatPhoneNumber(order.customerPhone),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          if (order.customerAddress != null &&
+                              order.customerAddress!.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 20,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  l10n.address,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              order.customerAddress!,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Current Status
+                    Text(
+                      l10n.currentStatus,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: _getDeliveryStatusColor(order.deliveryStatus)
+                            .withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _getDeliveryStatusColor(order.deliveryStatus)
+                              .withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 8,
+                            color:
+                                _getDeliveryStatusColor(order.deliveryStatus),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _getDeliveryStatusText(
+                                context, order.deliveryStatus),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  _getDeliveryStatusColor(order.deliveryStatus),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Status Options
+                    Text(
+                      l10n.selectNewStatus,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Pending Option
+                    _buildStatusOption(
+                      context: context,
+                      title: l10n.pendingDelivery,
+                      subtitle: l10n.pendingDeliveryDescription,
+                      value: 'pending',
+                      groupValue: order.deliveryStatus,
+                      icon: Icons.schedule,
+                      color: Colors.orange,
+                      onChanged: (value) {
+                        Navigator.pop(context);
+                        _updateDeliveryStatus(order, value);
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Delivered Option
+                    _buildStatusOption(
+                      context: context,
+                      title: l10n.delivered,
+                      subtitle: l10n.deliveredDescription,
+                      value: 'delivered',
+                      groupValue: order.deliveryStatus,
+                      icon: Icons.check_circle,
+                      color: Colors.green,
+                      onChanged: (value) {
+                        Navigator.pop(context);
+                        _updateDeliveryStatus(order, value);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              // Actions
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          side: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        child: Text(
+                          l10n.cancel,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusOption({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required String value,
+    required String groupValue,
+    required IconData icon,
+    required Color color,
+    required Function(String) onChanged,
+  }) {
+    final isSelected = value == groupValue;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onChanged(value),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isSelected ? color.withValues(alpha: 0.1) : Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color:
+                  isSelected ? color.withValues(alpha: 0.3) : Colors.grey[200]!,
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? color.withValues(alpha: 0.2)
+                      : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ? color : Colors.grey[600],
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected ? color : AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isSelected
+                            ? color.withValues(alpha: 0.8)
+                            : Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (isSelected)
+                Icon(
+                  Icons.check_circle,
+                  color: color,
+                  size: 20,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _updateDeliveryStatus(Order order, String newStatus) async {
+    try {
+      // Create updated order with new delivery status
+      final updatedOrder = Order(
+        id: order.id,
+        customerPhone: order.customerPhone,
+        customerName: order.customerName,
+        customerAddress: order.customerAddress,
+        employeeIds: order.employeeIds,
+        employeeNames: order.employeeNames,
+        serviceIds: order.serviceIds,
+        serviceNames: order.serviceNames,
+        serviceQuantities: order.serviceQuantities,
+        totalPrice: order.totalPrice,
+        discountPercent: order.discountPercent,
+        tip: order.tip,
+        taxPercent: order.taxPercent,
+        shippingFee: order.shippingFee,
+        createdAt: order.createdAt,
+        isPaid: order.isPaid,
+        isBooking: order.isBooking,
+        deliveryMethod: order.deliveryMethod,
+        deliveryStatus: newStatus,
+      );
+
+      // Update the order via API
+      await widget.api.updateOrder(updatedOrder);
+
+      // Refresh the data
+      await _loadData();
+
+      final l10n = AppLocalizations.of(context)!;
+      AppWidgets.showFlushbar(context, l10n.deliveryStatusUpdated,
+          type: MessageType.success);
+    } catch (e) {
+      final l10n = AppLocalizations.of(context)!;
+      AppWidgets.showFlushbar(context, l10n.errorUpdatingDeliveryStatus,
+          type: MessageType.error);
     }
   }
 
@@ -291,6 +746,33 @@ class _BillsScreenState extends State<BillsScreen> {
 
     // Nếu không phù hợp với format Việt Nam, trả về số gốc
     return phoneNumber;
+  }
+
+  String _getDeliveryStatusText(BuildContext context, String deliveryStatus) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (deliveryStatus) {
+      case 'pending':
+        return l10n.pendingDelivery;
+      case 'delivered':
+        return l10n.delivered;
+      case 'cancelled':
+        return l10n.deliveryCancelled;
+      default:
+        return l10n.pendingDelivery;
+    }
+  }
+
+  Color _getDeliveryStatusColor(String deliveryStatus) {
+    switch (deliveryStatus) {
+      case 'pending':
+        return Colors.orange;
+      case 'delivered':
+        return Colors.green;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
   }
 
   Future<void> _selectDateRange() async {
@@ -642,6 +1124,16 @@ class _BillsScreenState extends State<BillsScreen> {
       return l10n.noYourBillsYet;
     }
 
+    if (_currentUserRole == 'delivery') {
+      if (_selectedDateRange != null) {
+        return l10n.noDeliveryOrdersInTimeRange;
+      }
+      if (_searchQuery.isNotEmpty) {
+        return l10n.noDeliveryOrdersFound;
+      }
+      return l10n.noDeliveryOrdersYet;
+    }
+
     if (_selectedDateRange != null) {
       return l10n.noBillsInTimeRange;
     }
@@ -661,6 +1153,16 @@ class _BillsScreenState extends State<BillsScreen> {
         return l10n.tryDifferentSearch;
       }
       return l10n.createFirstOrderToViewYourBills;
+    }
+
+    if (_currentUserRole == 'delivery') {
+      if (_selectedDateRange != null) {
+        return l10n.tryDifferentTimeRange;
+      }
+      if (_searchQuery.isNotEmpty) {
+        return l10n.tryDifferentSearch;
+      }
+      return l10n.waitingForDeliveryOrders;
     }
 
     if (_selectedDateRange != null) {
@@ -842,9 +1344,15 @@ class _BillsScreenState extends State<BillsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppWidgets.gradientHeader(
-                    icon: Icons.receipt,
-                    title: l10n.bills,
-                    subtitle: l10n.billsManagement,
+                    icon: _currentUserRole == 'delivery'
+                        ? Icons.local_shipping
+                        : Icons.receipt,
+                    title: _currentUserRole == 'delivery'
+                        ? l10n.deliveryManagement
+                        : l10n.bills,
+                    subtitle: _currentUserRole == 'delivery'
+                        ? l10n.deliveryOrders
+                        : l10n.billsManagement,
                     fullWidth: true,
                   ),
 
@@ -860,7 +1368,9 @@ class _BillsScreenState extends State<BillsScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: l10n.searchBills,
+                        hintText: _currentUserRole == 'delivery'
+                            ? l10n.search
+                            : l10n.searchBills,
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -952,28 +1462,38 @@ class _BillsScreenState extends State<BillsScreen> {
                   const SizedBox(height: AppTheme.spacingL),
 
                   // Stats
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatCard(
-                          title: _getStatsTitle(l10n.bills),
-                          value: _filteredOrders.length.toString(),
-                          icon: Icons.receipt,
-                          color: Colors.blue,
+                  if (_currentUserRole == 'delivery')
+                    // Delivery employee - only show delivery orders count
+                    _buildStatCard(
+                      title: _getStatsTitle(l10n.deliveryOrders),
+                      value: _filteredOrders.length.toString(),
+                      icon: Icons.local_shipping,
+                      color: Colors.orange,
+                    )
+                  else
+                    // Other roles - show both bills and revenue
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            title: _getStatsTitle(l10n.bills),
+                            value: _filteredOrders.length.toString(),
+                            icon: Icons.receipt,
+                            color: Colors.blue,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: AppTheme.spacingS),
-                      Expanded(
-                        child: _buildStatCard(
-                          title: _getStatsTitle(l10n.revenue),
-                          value:
-                              '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
-                          icon: Icons.attach_money,
-                          color: Colors.green,
+                        const SizedBox(width: AppTheme.spacingS),
+                        Expanded(
+                          child: _buildStatCard(
+                            title: _getStatsTitle(l10n.revenue),
+                            value:
+                                '${_formatPrice(_filteredOrders.fold(0.0, (sum, order) => sum + order.totalPrice))} ${SalonConfig.currency}',
+                            icon: Icons.attach_money,
+                            color: Colors.green,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
 
                   const SizedBox(height: AppTheme.spacingM),
 
@@ -1233,16 +1753,73 @@ class _BillsScreenState extends State<BillsScreen> {
                     ),
                     const SizedBox(width: 4),
                     Expanded(
-                      child: Text(
-                        order.isBooking
-                            ? (order.deliveryMethod == 'pickup'
-                                ? AppLocalizations.of(context)!.pickupAtStore
-                                : AppLocalizations.of(context)!.homeDelivery)
-                            : order.employeeNames.join(', '),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.isBooking
+                                ? (order.deliveryMethod == 'pickup'
+                                    ? AppLocalizations.of(context)!
+                                        .pickupAtStore
+                                    : AppLocalizations.of(context)!
+                                        .homeDelivery)
+                                : order.employeeNames.join(', '),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          // Show delivery staff for booking orders with delivery method
+                          if (order.isBooking &&
+                              order.deliveryMethod == 'delivery' &&
+                              order.employeeNames.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 12,
+                                  color: Colors.grey[500],
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${AppLocalizations.of(context)!.deliveryStaff}: ${order.employeeNames.join(', ')}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[500],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          // Show delivery status for booking orders with delivery method
+                          if (order.isBooking &&
+                              order.deliveryMethod == 'delivery') ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.local_shipping,
+                                  size: 12,
+                                  color: _getDeliveryStatusColor(
+                                      order.deliveryStatus),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _getDeliveryStatusText(
+                                      context, order.deliveryStatus),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: _getDeliveryStatusColor(
+                                        order.deliveryStatus),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),

@@ -136,6 +136,17 @@ class AppNavigationDrawer extends StatelessWidget {
           isSelected: selectedIndex == 3,
         ),
       ];
+    } else if (userRole == 'delivery') {
+      // Delivery employee navigation - only delivery management
+      return [
+        _buildSectionHeader(l10n.deliveryManagement),
+        _buildNavItem(
+          icon: Icons.local_shipping,
+          title: l10n.deliveryManagement,
+          index: 0,
+          isSelected: selectedIndex == 0,
+        ),
+      ];
     } else {
       // Shop owner navigation - full features
       return [
@@ -759,6 +770,11 @@ class AppNavigationRail extends StatelessWidget {
         _buildRailDestination(Icons.shopping_cart, l10n.services),
         _buildRailDestination(Icons.add_shopping_cart, l10n.createOrder),
         _buildRailDestination(Icons.receipt, l10n.bills),
+      ];
+    } else if (userRole == 'delivery') {
+      // Delivery employee navigation - only delivery management
+      return [
+        _buildRailDestination(Icons.local_shipping, l10n.deliveryManagement),
       ];
     } else {
       // Shop owner navigation - full features

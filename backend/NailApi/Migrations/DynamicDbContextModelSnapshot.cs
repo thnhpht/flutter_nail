@@ -71,6 +71,10 @@ namespace NailApi.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("NEWID()");
 
+                    b.Property<string>("EmployeeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -207,6 +211,11 @@ namespace NailApi.Migrations
 
                     b.Property<decimal>("ShippingFee")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeliveryStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
 
                     b.Property<decimal>("TaxPercent")
                         .HasColumnType("decimal(18,2)");

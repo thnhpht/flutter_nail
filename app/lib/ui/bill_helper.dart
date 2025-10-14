@@ -329,18 +329,32 @@ class BillHelper {
                     AppLocalizations.of(context)!.customerAddress,
                     order.customerAddress!),
               // Show booking info for booking orders, employee info for regular orders
-              if (order.isBooking)
+              if (order.isBooking) ...[
                 _buildInfoRowWithWrap(
                     context,
                     AppLocalizations.of(context)!.booking,
                     order.deliveryMethod == 'pickup'
                         ? AppLocalizations.of(context)!.pickupAtStore
-                        : AppLocalizations.of(context)!.homeDelivery)
-              else
+                        : AppLocalizations.of(context)!.homeDelivery),
+                // Show delivery staff for booking orders with delivery method
+                if (order.deliveryMethod == 'delivery' &&
+                    order.employeeNames.isNotEmpty)
+                  _buildInfoRowWithWrap(
+                      context,
+                      AppLocalizations.of(context)!.deliveryStaff,
+                      order.employeeNames.join(', ')),
+              ] else
                 _buildInfoRowWithWrap(
                     context,
                     AppLocalizations.of(context)!.servingStaff,
                     order.employeeNames.join(', ')),
+
+              // Show delivery status for booking orders with delivery method
+              if (order.isBooking && order.deliveryMethod == 'delivery')
+                _buildInfoRowWithWrap(
+                    context,
+                    AppLocalizations.of(context)!.deliveryStatus,
+                    _getDeliveryStatusText(context, order.deliveryStatus)),
             ],
           ),
         ),
@@ -1108,6 +1122,21 @@ class BillHelper {
 
     // Nếu không phù hợp với format Việt Nam, trả về số gốc
     return phoneNumber;
+  }
+
+  static String _getDeliveryStatusText(
+      BuildContext context, String deliveryStatus) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (deliveryStatus) {
+      case 'pending':
+        return l10n.pendingDelivery;
+      case 'delivered':
+        return l10n.delivered;
+      case 'cancelled':
+        return l10n.deliveryCancelled;
+      default:
+        return l10n.pendingDelivery;
+    }
   }
 
   static Future<void> _printBill(BuildContext context, Order order) async {

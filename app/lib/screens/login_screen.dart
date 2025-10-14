@@ -181,6 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _currentStep = 'email';
       } else if (role == 'employee') {
         _currentStep = 'employee_login';
+      } else if (role == 'delivery') {
+        _currentStep = 'delivery_login';
       } else if (role == 'booking') {
         _currentStep = 'booking_connection';
       }
@@ -194,6 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
           _currentStep == 'create_account') {
         _currentStep = 'role_selection';
       } else if (_currentStep == 'employee_login') {
+        _currentStep = 'role_selection';
+      } else if (_currentStep == 'delivery_login') {
         _currentStep = 'role_selection';
       } else if (_currentStep == 'booking_connection') {
         _currentStep = 'role_selection';
@@ -234,6 +238,59 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('jwt_token', response.token);
         await prefs.setString('database_name', response.databaseName);
         await prefs.setString('user_role', response.userRole ?? 'employee');
+        await prefs.setString('employee_id', response.employeeId ?? '');
+        await prefs.setString('shop_name', _shopNameController.text.trim());
+
+        // Hiển thị thông báo thành công
+        if (mounted) {
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.success);
+        }
+
+        // Chuyển đến màn hình chính
+        widget.onLoginSuccess();
+      } else {
+        if (mounted) {
+          AppWidgets.showFlushbar(context, response.message,
+              type: MessageType.error);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        String errorMessage = _getUserFriendlyErrorMessage(e.toString());
+        AppWidgets.showFlushbar(context, errorMessage, type: MessageType.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleDeliveryLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final request = EmployeeLoginRequest(
+        shopName: _shopNameController.text.trim(),
+        employeePhone: _employeePhoneController.text.trim(),
+        employeePassword: _employeePasswordController.text,
+      );
+
+      final response = await widget.api.deliveryLogin(request);
+
+      if (response.success) {
+        // Lưu thông tin đăng nhập
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', response.token);
+        await prefs.setString('database_name', response.databaseName);
+        await prefs.setString('user_role', response.userRole ?? 'delivery');
         await prefs.setString('employee_id', response.employeeId ?? '');
         await prefs.setString('shop_name', _shopNameController.text.trim());
 
@@ -362,6 +419,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return _handleLogin;
       case 'employee_login':
         return _handleEmployeeLogin;
+      case 'delivery_login':
+        return _handleDeliveryLogin;
       case 'booking_connection':
         return _handleBookingConnection;
       default:
@@ -382,6 +441,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return l10n.createAccount;
       case 'employee_login':
         return l10n.loginButton;
+      case 'delivery_login':
+        return l10n.deliveryLogin;
       case 'booking_connection':
         return l10n.connectToSalon;
       default:
@@ -513,6 +574,66 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
 
+        // Delivery Option
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _selectRole('delivery'),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'delivery'
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _selectedRole == 'delivery'
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.local_shipping,
+                      color: _selectedRole == 'delivery'
+                          ? Colors.white
+                          : Colors.white70,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.deliveryEmployee,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedRole == 'delivery'
+                                  ? Colors.white
+                                  : Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_selectedRole == 'delivery')
+                      const Icon(Icons.check_circle,
+                          color: Colors.white, size: 24),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
         // Booking Option
         Container(
           width: double.infinity,
@@ -615,7 +736,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? l10n.createAccount
                                     : _currentStep == 'employee_login'
                                         ? l10n.employeeLogin
-                                        : l10n.connectToSalon,
+                                        : _currentStep == 'delivery_login'
+                                            ? l10n.deliveryLogin
+                                            : l10n.connectToSalon,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -637,7 +760,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         : l10n.createNewAccount
                                     : _currentStep == 'employee_login'
                                         ? l10n.enterEmployeeLoginInfo
-                                        : l10n.enterSalonName,
+                                        : _currentStep == 'delivery_login'
+                                            ? l10n.deliveryEmployeeLogin
+                                            : l10n.enterSalonName,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -681,6 +806,111 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           // Employee login form
                           if (_currentStep == 'employee_login') ...[
+                            TextFormField(
+                              controller: _shopNameController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: l10n.shopName,
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.business,
+                                    color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.pleaseEnterShopName;
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _employeePhoneController,
+                              keyboardType: TextInputType.phone,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: l10n.employeePhone,
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.phone,
+                                    color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.pleaseEnterPhone;
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _employeePasswordController,
+                              obscureText: true,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: l10n.employeePassword,
+                                labelStyle:
+                                    const TextStyle(color: Colors.white70),
+                                prefixIcon: const Icon(Icons.lock,
+                                    color: Colors.white70),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.pleaseEnterPassword;
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+
+                          // Delivery login form
+                          if (_currentStep == 'delivery_login') ...[
                             TextFormField(
                               controller: _shopNameController,
                               keyboardType: TextInputType.text,

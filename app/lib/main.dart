@@ -700,6 +700,9 @@ class _NailAppState extends State<NailApp> {
         default:
           return -1; // No selection for restricted screens
       }
+    } else if (_userRole == 'delivery') {
+      // Delivery employee navigation mapping - only delivery management
+      return 0; // Always select the first (and only) item in delivery nav
     } else {
       // Shop owner navigation mapping
       switch (_view) {
@@ -754,6 +757,10 @@ class _NailAppState extends State<NailApp> {
             _view = _HomeView.welcome;
             break;
         }
+      } else if (_userRole == 'delivery') {
+        // Delivery employee navigation mapping - only delivery management
+        // Always stay on delivery screen regardless of navigation
+        _view = _HomeView.welcome; // This will show DeliveryScreen
       } else {
         // Shop owner navigation mapping
         switch (index) {
@@ -910,6 +917,10 @@ class _NailAppState extends State<NailApp> {
         default:
           return _buildWelcomeScreen();
       }
+    } else if (_userRole == 'delivery') {
+      // Delivery employee has access to bills screen with delivery orders
+      return BillsScreen(
+          api: api, onNavigateToUpdateOrder: _navigateToUpdateOrder);
     } else {
       // Shop owner has access to all screens
       switch (_view) {

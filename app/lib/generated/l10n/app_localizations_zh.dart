@@ -2147,4 +2147,92 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get stockStatus => '库存状态';
+
+  @override
+  String get deliveryStatus => 'Trạng thái giao hàng';
+
+  @override
+  String get pendingDelivery => 'Chưa giao hàng';
+
+  @override
+  String get delivered => 'Đã giao hàng';
+
+  @override
+  String get deliveryCancelled => 'Hủy giao hàng';
+
+  @override
+  String get employeeType => '员工类型';
+
+  @override
+  String get serviceEmployee => '服务员工';
+
+  @override
+  String get deliveryEmployee => '配送员工';
+
+  @override
+  String get deliveryStaff => '配送员工';
+
+  @override
+  String get selectEmployeeType => '选择员工类型';
+
+  @override
+  String get deliveryManagement => '配送管理';
+
+  @override
+  String get deliveryOrders => '配送订单';
+
+  @override
+  String get markAsDelivered => '标记为已配送';
+
+  @override
+  String get markAsPending => '标记为待配送';
+
+  @override
+  String get deliveryLogin => '配送登录';
+
+  @override
+  String get deliveryEmployeeLogin => '配送员工登录';
+
+  @override
+  String get onlyServiceEmployeesAllowed => '仅允许服务员工登录';
+
+  @override
+  String get onlyDeliveryEmployeesAllowed => '仅允许配送员工登录';
+
+  @override
+  String get updateDeliveryStatus => '更新配送状态';
+
+  @override
+  String get deliveryStatusUpdated => '配送状态更新成功';
+
+  @override
+  String get errorUpdatingDeliveryStatus => '更新配送状态时出错';
+
+  @override
+  String get noDeliveryOrdersInTimeRange =>
+      'Không có đơn giao hàng trong khoảng thời gian này';
+
+  @override
+  String get noDeliveryOrdersFound => 'Không tìm thấy đơn giao hàng';
+
+  @override
+  String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
+
+  @override
+  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+
+  @override
+  String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
+
+  @override
+  String get currentStatus => 'Trạng thái hiện tại';
+
+  @override
+  String get selectNewStatus => 'Chọn trạng thái mới';
+
+  @override
+  String get pendingDeliveryDescription => 'Đơn hàng đang chờ giao';
+
+  @override
+  String get deliveredDescription => 'Đơn hàng đã giao thành công';
 }

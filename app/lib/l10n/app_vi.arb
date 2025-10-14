@@ -3609,7 +3609,7 @@
   "@sortBy": {
     "description": "Sort by label"
   },
-  "serviceName": "Tên dịch vụ",
+  "serviceName": "Tên",
   "@serviceName": {
     "description": "Service name"
   },
@@ -3684,5 +3684,121 @@
   "stockStatus": "Trạng thái kho",
   "@stockStatus": {
     "description": "Stock status filter label"
+  },
+  "deliveryStatus": "Trạng thái giao hàng",
+  "@deliveryStatus": {
+    "description": "Delivery status label"
+  },
+  "pendingDelivery": "Chưa giao hàng",
+  "@pendingDelivery": {
+    "description": "Pending delivery status"
+  },
+  "delivered": "Đã giao hàng",
+  "@delivered": {
+    "description": "Delivered status"
+  },
+  "deliveryCancelled": "Hủy giao hàng",
+  "@deliveryCancelled": {
+    "description": "Delivery cancelled status"
+  },
+  "employeeType": "Loại nhân viên",
+  "@employeeType": {
+    "description": "Employee type field label"
+  },
+  "serviceEmployee": "Nhân viên phục vụ",
+  "@serviceEmployee": {
+    "description": "Service employee type"
+  },
+  "deliveryEmployee": "Nhân viên giao hàng",
+  "@deliveryEmployee": {
+    "description": "Delivery employee type"
+  },
+  "deliveryStaff": "Nhân viên giao hàng",
+  "@deliveryStaff": {
+    "description": "Delivery staff"
+  },
+  "selectEmployeeType": "Chọn loại nhân viên",
+  "@selectEmployeeType": {
+    "description": "Select employee type label"
+  },
+  "deliveryManagement": "Quản lý giao hàng",
+  "@deliveryManagement": {
+    "description": "Delivery management screen title"
+  },
+  "deliveryOrders": "Đơn hàng giao hàng",
+  "@deliveryOrders": {
+    "description": "Delivery orders list title"
+  },
+  "markAsDelivered": "Đánh dấu đã giao",
+  "@markAsDelivered": {
+    "description": "Mark order as delivered button"
+  },
+  "markAsPending": "Đánh dấu chưa giao",
+  "@markAsPending": {
+    "description": "Mark order as pending button"
+  },
+  "deliveryLogin": "Đăng nhập giao hàng",
+  "@deliveryLogin": {
+    "description": "Delivery employee login title"
+  },
+  "deliveryEmployeeLogin": "Đăng nhập nhân viên giao hàng",
+  "@deliveryEmployeeLogin": {
+    "description": "Delivery employee login description"
+  },
+  "onlyServiceEmployeesAllowed": "Chỉ nhân viên phục vụ mới được phép đăng nhập",
+  "@onlyServiceEmployeesAllowed": {
+    "description": "Error message for non-service employees"
+  },
+  "onlyDeliveryEmployeesAllowed": "Chỉ nhân viên giao hàng mới được phép đăng nhập",
+  "@onlyDeliveryEmployeesAllowed": {
+    "description": "Error message for non-delivery employees"
+  },
+  "updateDeliveryStatus": "Cập nhật trạng thái giao hàng",
+  "@updateDeliveryStatus": {
+    "description": "Update delivery status dialog title"
+  },
+  "deliveryStatusUpdated": "Cập nhật trạng thái giao hàng thành công",
+  "@deliveryStatusUpdated": {
+    "description": "Success message when delivery status is updated"
+  },
+  "errorUpdatingDeliveryStatus": "Lỗi khi cập nhật trạng thái giao hàng",
+  "@errorUpdatingDeliveryStatus": {
+    "description": "Error message when updating delivery status fails"
+  },
+  "noDeliveryOrdersInTimeRange": "Không có đơn giao hàng trong khoảng thời gian này",
+  "@noDeliveryOrdersInTimeRange": {
+    "description": "No delivery orders in selected time range"
+  },
+  "noDeliveryOrdersFound": "Không tìm thấy đơn giao hàng",
+  "@noDeliveryOrdersFound": {
+    "description": "No delivery orders found in search"
+  },
+  "noDeliveryOrdersYet": "Chưa có đơn giao hàng nào",
+  "@noDeliveryOrdersYet": {
+    "description": "No delivery orders yet"
+  },
+  "waitingForDeliveryOrders": "Đang chờ đơn hàng giao hàng",
+  "@waitingForDeliveryOrders": {
+    "description": "Waiting for delivery orders message"
+  },
+  "selectDeliveryStatus": "Chọn trạng thái giao hàng",
+  "@selectDeliveryStatus": {
+    "description": "Select delivery status label"
+  },
+  "currentStatus": "Trạng thái hiện tại",
+  "@currentStatus": {
+    "description": "Current status label"
+  },
+  "selectNewStatus": "Chọn trạng thái mới",
+  "@selectNewStatus": {
+    "description": "Select new status label"
+  },
+  "pendingDeliveryDescription": "Đơn hàng đang chờ giao",
+  "@pendingDeliveryDescription": {
+    "description": "Pending delivery description"
+  },
+  "deliveredDescription": "Đơn hàng đã giao thành công",
+  "@deliveredDescription": {
+    "description": "Delivered description"
   }
 }

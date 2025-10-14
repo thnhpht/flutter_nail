@@ -1787,7 +1787,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get serviceName => 'Tên dịch vụ';
+  String get serviceName => 'Tên';
 
   @override
   String get serviceAddedSuccessfully => 'Thêm chi tiết thành công';
@@ -2213,4 +2213,96 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get stockStatus => 'Trạng thái kho';
+
+  @override
+  String get deliveryStatus => 'Trạng thái giao hàng';
+
+  @override
+  String get pendingDelivery => 'Chưa giao hàng';
+
+  @override
+  String get delivered => 'Đã giao hàng';
+
+  @override
+  String get deliveryCancelled => 'Hủy giao hàng';
+
+  @override
+  String get employeeType => 'Loại nhân viên';
+
+  @override
+  String get serviceEmployee => 'Nhân viên phục vụ';
+
+  @override
+  String get deliveryEmployee => 'Nhân viên giao hàng';
+
+  @override
+  String get deliveryStaff => 'Nhân viên giao hàng';
+
+  @override
+  String get selectEmployeeType => 'Chọn loại nhân viên';
+
+  @override
+  String get deliveryManagement => 'Quản lý giao hàng';
+
+  @override
+  String get deliveryOrders => 'Đơn hàng giao hàng';
+
+  @override
+  String get markAsDelivered => 'Đánh dấu đã giao';
+
+  @override
+  String get markAsPending => 'Đánh dấu chưa giao';
+
+  @override
+  String get deliveryLogin => 'Đăng nhập giao hàng';
+
+  @override
+  String get deliveryEmployeeLogin => 'Đăng nhập nhân viên giao hàng';
+
+  @override
+  String get onlyServiceEmployeesAllowed =>
+      'Chỉ nhân viên phục vụ mới được phép đăng nhập';
+
+  @override
+  String get onlyDeliveryEmployeesAllowed =>
+      'Chỉ nhân viên giao hàng mới được phép đăng nhập';
+
+  @override
+  String get updateDeliveryStatus => 'Cập nhật trạng thái giao hàng';
+
+  @override
+  String get deliveryStatusUpdated =>
+      'Cập nhật trạng thái giao hàng thành công';
+
+  @override
+  String get errorUpdatingDeliveryStatus =>
+      'Lỗi khi cập nhật trạng thái giao hàng';
+
+  @override
+  String get noDeliveryOrdersInTimeRange =>
+      'Không có đơn giao hàng trong khoảng thời gian này';
+
+  @override
+  String get noDeliveryOrdersFound => 'Không tìm thấy đơn giao hàng';
+
+  @override
+  String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
+
+  @override
+  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+
+  @override
+  String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
+
+  @override
+  String get currentStatus => 'Trạng thái hiện tại';
+
+  @override
+  String get selectNewStatus => 'Chọn trạng thái mới';
+
+  @override
+  String get pendingDeliveryDescription => 'Đơn hàng đang chờ giao';
+
+  @override
+  String get deliveredDescription => 'Đơn hàng đã giao thành công';
 }

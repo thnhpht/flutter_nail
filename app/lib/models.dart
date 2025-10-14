@@ -151,13 +151,15 @@ class Employee {
   final String? phone;
   final String? password;
   final String? image;
+  final String employeeType; // "service" or "delivery"
 
   Employee(
       {required this.id,
       required this.name,
       this.phone,
       this.password,
-      this.image});
+      this.image,
+      this.employeeType = 'service'});
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
         id: json['id'] as String,
@@ -165,6 +167,7 @@ class Employee {
         phone: json['phone'] as String?,
         password: json['password'] as String?,
         image: json['image'] as String?,
+        employeeType: json['employeeType'] as String? ?? 'service',
       );
 
   Map<String, dynamic> toJson() => {
@@ -173,6 +176,7 @@ class Employee {
         'phone': phone,
         'password': password,
         'image': image,
+        'employeeType': employeeType,
       };
 }
 
@@ -285,6 +289,7 @@ class Order {
   final bool isPaid;
   final bool isBooking; // true if created from booking, false if from order
   final String deliveryMethod; // "pickup" or "delivery"
+  final String deliveryStatus; // "pending", "delivered", "cancelled"
 
   Order({
     required this.id,
@@ -305,6 +310,7 @@ class Order {
     this.isPaid = false,
     this.isBooking = false, // Mặc định là order (false)
     this.deliveryMethod = 'pickup', // Mặc định là lấy tại chỗ
+    this.deliveryStatus = '', // Mặc định là rỗng, chỉ set khi cần
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -394,6 +400,7 @@ class Order {
       isPaid: json['isPaid'] as bool? ?? false,
       isBooking: json['isBooking'] as bool? ?? false,
       deliveryMethod: json['deliveryMethod'] as String? ?? 'pickup',
+      deliveryStatus: json['deliveryStatus'] as String? ?? '',
     );
   }
 
@@ -417,6 +424,7 @@ class Order {
         'isPaid': isPaid,
         'isBooking': isBooking,
         'deliveryMethod': deliveryMethod,
+        'deliveryStatus': deliveryStatus,
       };
 }
 

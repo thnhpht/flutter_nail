@@ -207,7 +207,7 @@ namespace NailApi.Controllers
                     Console.WriteLine("Connected to shop database successfully");
 
                     // Tìm nhân viên theo số điện thoại
-                    var findEmployeeCommand = new SqlCommand("SELECT Id, Name, Phone, Password FROM Employees WHERE Phone = @phone", connection);
+                    var findEmployeeCommand = new SqlCommand("SELECT Id, Name, Phone, Password, EmployeeType FROM Employees WHERE Phone = @phone", connection);
                     findEmployeeCommand.Parameters.AddWithValue("@phone", request.EmployeePhone);
 
                     using (var reader = await findEmployeeCommand.ExecuteReaderAsync())
@@ -218,8 +218,20 @@ namespace NailApi.Controllers
                             var employeeName = reader["Name"].ToString();
                             var employeePhone = reader["Phone"].ToString();
                             var employeePassword = reader["Password"].ToString();
+                            var employeeType = reader["EmployeeType"].ToString();
 
-                            Console.WriteLine($"Employee found: {employeeName} ({employeePhone})");
+                            Console.WriteLine($"Employee found: {employeeName} ({employeePhone}) - Type: {employeeType}");
+
+                            // Kiểm tra loại nhân viên - chỉ cho phép nhân viên phục vụ
+                            if (employeeType != "service")
+                            {
+                                Console.WriteLine("Employee type is not service, login denied");
+                                return BadRequest(new LoginResponse
+                                {
+                                    Success = false,
+                                    Message = "Chỉ nhân viên phục vụ mới được phép đăng nhập vào hệ thống này."
+                                });
+                            }
 
                             // Kiểm tra mật khẩu nhân viên
                             if (!string.IsNullOrEmpty(employeePassword) && _passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
@@ -432,6 +444,7 @@ namespace NailApi.Controllers
                             [Phone] nvarchar(max) NULL,
                             [Password] nvarchar(max) NULL,
                             [Image] nvarchar(max) NULL,
+                            [EmployeeType] nvarchar(max) NOT NULL DEFAULT 'service',
                             CONSTRAINT [PK_Employees] PRIMARY KEY ([Id])
                         );",
 
@@ -473,6 +486,7 @@ namespace NailApi.Controllers
                             [IsPaid] bit NOT NULL DEFAULT 0,
                             [IsBooking] bit NOT NULL DEFAULT 0,
                             [DeliveryMethod] nvarchar(max) NOT NULL DEFAULT 'pickup',
+                            [DeliveryStatus] nvarchar(max) NOT NULL DEFAULT '',
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
                         );",
 
@@ -972,6 +986,113 @@ namespace NailApi.Controllers
             {
                 Console.WriteLine($"Check salon error: {ex.Message}");
                 return StatusCode(500, new { exists = false, message = "Không thể kiểm tra salon. Vui lòng thử lại sau." });
+            }
+        }
+
+        [HttpPost("delivery-login")]
+        public async Task<ActionResult<LoginResponse>> DeliveryLogin([FromBody] EmployeeLoginRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Delivery login attempt for shop name: {request.ShopName}");
+
+                // Kiểm tra tên shop có tồn tại không
+                var shopOwner = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.ShopName.ToLower());
+
+                if (shopOwner == null)
+                {
+                    Console.WriteLine("Shop owner not found");
+                    return BadRequest(new LoginResponse
+                    {
+                        Success = false,
+                        Message = "Tên shop không tồn tại trong hệ thống."
+                    });
+                }
+
+                // Tạo database name từ tên shop
+                var databaseName = request.ShopName.ToLower();
+                Console.WriteLine($"Connecting to shop database: {databaseName}");
+
+                // Kết nối đến database của chủ shop để tìm nhân viên
+                var shopConnectionString = $"Server=115.78.95.245;Database={databaseName};User Id={shopOwner.UserLogin};Password={_passwordService.DecryptPasswordLogin(shopOwner.PasswordLogin)};TrustServerCertificate=True;";
+
+                using (var connection = new SqlConnection(shopConnectionString))
+                {
+                    await connection.OpenAsync();
+                    Console.WriteLine("Connected to shop database successfully");
+
+                    // Tìm nhân viên theo số điện thoại
+                    var findEmployeeCommand = new SqlCommand("SELECT Id, Name, Phone, Password, EmployeeType FROM Employees WHERE Phone = @phone", connection);
+                    findEmployeeCommand.Parameters.AddWithValue("@phone", request.EmployeePhone);
+
+                    using (var reader = await findEmployeeCommand.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            var employeeId = reader["Id"].ToString();
+                            var employeeName = reader["Name"].ToString();
+                            var employeePhone = reader["Phone"].ToString();
+                            var employeePassword = reader["Password"].ToString();
+                            var employeeType = reader["EmployeeType"].ToString();
+
+                            Console.WriteLine($"Employee found: {employeeName} ({employeePhone}) - Type: {employeeType}");
+
+                            // Kiểm tra loại nhân viên - chỉ cho phép nhân viên giao hàng
+                            if (employeeType != "delivery")
+                            {
+                                Console.WriteLine("Employee type is not delivery, login denied");
+                                return BadRequest(new LoginResponse
+                                {
+                                    Success = false,
+                                    Message = "Chỉ nhân viên giao hàng mới được phép đăng nhập vào hệ thống giao hàng."
+                                });
+                            }
+
+                            // Kiểm tra mật khẩu nhân viên
+                            if (!string.IsNullOrEmpty(employeePassword) && _passwordService.VerifyPassword(request.EmployeePassword, employeePassword))
+                            {
+                                Console.WriteLine("Employee password verified successfully");
+
+                                return Ok(new LoginResponse
+                                {
+                                    Success = true,
+                                    Message = $"Đăng nhập thành công! Chào mừng {employeeName}",
+                                    DatabaseName = databaseName,
+                                    Token = _jwtService.GenerateToken(request.ShopName, shopOwner.UserLogin, "delivery", employeeId, employeeName),
+                                    UserRole = "delivery",
+                                    EmployeeId = employeeId
+                                });
+                            }
+                            else
+                            {
+                                Console.WriteLine("Employee password verification failed");
+                                return BadRequest(new LoginResponse
+                                {
+                                    Success = false,
+                                    Message = "Mật khẩu nhân viên không chính xác."
+                                });
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Employee not found in shop database");
+                            return BadRequest(new LoginResponse
+                            {
+                                Success = false,
+                                Message = "Không tìm thấy nhân viên với số điện thoại này trong hệ thống của chủ shop."
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in delivery login: {ex.Message}");
+                return BadRequest(new LoginResponse
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau hoặc liên hệ admin."
+                });
             }
         }
     }

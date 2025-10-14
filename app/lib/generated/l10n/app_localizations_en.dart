@@ -1776,7 +1776,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get serviceName => 'Service Name';
+  String get serviceName => 'Name';
 
   @override
   String get serviceAddedSuccessfully => 'Item added successfully';
@@ -2203,4 +2203,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stockStatus => 'Stock Status';
+
+  @override
+  String get deliveryStatus => 'Delivery Status';
+
+  @override
+  String get pendingDelivery => 'Pending Delivery';
+
+  @override
+  String get delivered => 'Delivered';
+
+  @override
+  String get deliveryCancelled => 'Delivery Cancelled';
+
+  @override
+  String get employeeType => 'Employee Type';
+
+  @override
+  String get serviceEmployee => 'Service Employee';
+
+  @override
+  String get deliveryEmployee => 'Delivery Employee';
+
+  @override
+  String get deliveryStaff => 'Delivery Staff';
+
+  @override
+  String get selectEmployeeType => 'Select Employee Type';
+
+  @override
+  String get deliveryManagement => 'Delivery Management';
+
+  @override
+  String get deliveryOrders => 'Delivery Orders';
+
+  @override
+  String get markAsDelivered => 'Mark as Delivered';
+
+  @override
+  String get markAsPending => 'Mark as Pending';
+
+  @override
+  String get deliveryLogin => 'Delivery Login';
+
+  @override
+  String get deliveryEmployeeLogin => 'Delivery Employee Login';
+
+  @override
+  String get onlyServiceEmployeesAllowed =>
+      'Only service employees are allowed to login';
+
+  @override
+  String get onlyDeliveryEmployeesAllowed =>
+      'Only delivery employees are allowed to login';
+
+  @override
+  String get updateDeliveryStatus => 'Update Delivery Status';
+
+  @override
+  String get deliveryStatusUpdated => 'Delivery status updated successfully';
+
+  @override
+  String get errorUpdatingDeliveryStatus => 'Error updating delivery status';
+
+  @override
+  String get noDeliveryOrdersInTimeRange =>
+      'No delivery orders in this time range';
+
+  @override
+  String get noDeliveryOrdersFound => 'No delivery orders found';
+
+  @override
+  String get noDeliveryOrdersYet => 'No delivery orders yet';
+
+  @override
+  String get waitingForDeliveryOrders => 'Waiting for delivery orders';
+
+  @override
+  String get selectDeliveryStatus => 'Select delivery status';
+
+  @override
+  String get currentStatus => 'Current Status';
+
+  @override
+  String get selectNewStatus => 'Select New Status';
+
+  @override
+  String get pendingDeliveryDescription => 'Order is waiting to be delivered';
+
+  @override
+  String get deliveredDescription => 'Order has been delivered successfully';
 }

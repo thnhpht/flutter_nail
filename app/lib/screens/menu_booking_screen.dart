@@ -634,6 +634,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         isPaid: false,
         isBooking: true, // This is a booking order
         deliveryMethod: _deliveryOption, // Use the selected delivery option
+        deliveryStatus: _deliveryOption == 'delivery'
+            ? 'pending'
+            : '', // Set delivery status based on delivery method
       );
 
       // Create the booking order using booking-specific API

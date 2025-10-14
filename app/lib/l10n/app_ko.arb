@@ -2844,5 +2844,69 @@
   "stockStatus": "재고 상태",
   "@stockStatus": {
     "description": "Stock status filter label"
+  },
+  "employeeType": "직원 유형",
+  "@employeeType": {
+    "description": "Employee type field label"
+  },
+  "serviceEmployee": "서비스 직원",
+  "@serviceEmployee": {
+    "description": "Service employee type"
+  },
+  "deliveryEmployee": "배송 직원",
+  "@deliveryEmployee": {
+    "description": "Delivery employee type"
+  },
+  "deliveryStaff": "배송 직원",
+  "@deliveryStaff": {
+    "description": "Delivery staff"
+  },
+  "selectEmployeeType": "직원 유형 선택",
+  "@selectEmployeeType": {
+    "description": "Select employee type label"
+  },
+  "deliveryManagement": "배송 관리",
+  "@deliveryManagement": {
+    "description": "Delivery management screen title"
+  },
+  "deliveryOrders": "배송 주문",
+  "@deliveryOrders": {
+    "description": "Delivery orders list title"
+  },
+  "markAsDelivered": "배송 완료로 표시",
+  "@markAsDelivered": {
+    "description": "Mark order as delivered button"
+  },
+  "markAsPending": "대기 중으로 표시",
+  "@markAsPending": {
+    "description": "Mark order as pending button"
+  },
+  "deliveryLogin": "배송 로그인",
+  "@deliveryLogin": {
+    "description": "Delivery employee login title"
+  },
+  "deliveryEmployeeLogin": "배송 직원 로그인",
+  "@deliveryEmployeeLogin": {
+    "description": "Delivery employee login description"
+  },
+  "onlyServiceEmployeesAllowed": "서비스 직원만 로그인이 허용됩니다",
+  "@onlyServiceEmployeesAllowed": {
+    "description": "Error message for non-service employees"
+  },
+  "onlyDeliveryEmployeesAllowed": "배송 직원만 로그인이 허용됩니다",
+  "@onlyDeliveryEmployeesAllowed": {
+    "description": "Error message for non-delivery employees"
+  },
+  "updateDeliveryStatus": "배송 상태 업데이트",
+  "@updateDeliveryStatus": {
+    "description": "Update delivery status dialog title"
+  },
+  "deliveryStatusUpdated": "배송 상태가 성공적으로 업데이트되었습니다",
+  "@deliveryStatusUpdated": {
+    "description": "Success message when delivery status is updated"
+  },
+  "errorUpdatingDeliveryStatus": "배송 상태 업데이트 중 오류가 발생했습니다",
+  "@errorUpdatingDeliveryStatus": {
+    "description": "Error message when updating delivery status fails"
   }
 }

@@ -3309,7 +3309,7 @@ abstract class AppLocalizations {
   /// Service name
   ///
   /// In vi, this message translates to:
-  /// **'Tên dịch vụ'**
+  /// **'Tên'**
   String get serviceName;
 
   /// Service added successfully message
@@ -4097,6 +4097,180 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Trạng thái kho'**
   String get stockStatus;
+
+  /// Delivery status label
+  ///
+  /// In vi, this message translates to:
+  /// **'Trạng thái giao hàng'**
+  String get deliveryStatus;
+
+  /// Pending delivery status
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa giao hàng'**
+  String get pendingDelivery;
+
+  /// Delivered status
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã giao hàng'**
+  String get delivered;
+
+  /// Delivery cancelled status
+  ///
+  /// In vi, this message translates to:
+  /// **'Hủy giao hàng'**
+  String get deliveryCancelled;
+
+  /// Employee type field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Loại nhân viên'**
+  String get employeeType;
+
+  /// Service employee type
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên phục vụ'**
+  String get serviceEmployee;
+
+  /// Delivery employee type
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên giao hàng'**
+  String get deliveryEmployee;
+
+  /// Delivery staff
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên giao hàng'**
+  String get deliveryStaff;
+
+  /// Select employee type label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn loại nhân viên'**
+  String get selectEmployeeType;
+
+  /// Delivery management screen title
+  ///
+  /// In vi, this message translates to:
+  /// **'Quản lý giao hàng'**
+  String get deliveryManagement;
+
+  /// Delivery orders list title
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng giao hàng'**
+  String get deliveryOrders;
+
+  /// Mark order as delivered button
+  ///
+  /// In vi, this message translates to:
+  /// **'Đánh dấu đã giao'**
+  String get markAsDelivered;
+
+  /// Mark order as pending button
+  ///
+  /// In vi, this message translates to:
+  /// **'Đánh dấu chưa giao'**
+  String get markAsPending;
+
+  /// Delivery employee login title
+  ///
+  /// In vi, this message translates to:
+  /// **'Đăng nhập giao hàng'**
+  String get deliveryLogin;
+
+  /// Delivery employee login description
+  ///
+  /// In vi, this message translates to:
+  /// **'Đăng nhập nhân viên giao hàng'**
+  String get deliveryEmployeeLogin;
+
+  /// Error message for non-service employees
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉ nhân viên phục vụ mới được phép đăng nhập'**
+  String get onlyServiceEmployeesAllowed;
+
+  /// Error message for non-delivery employees
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉ nhân viên giao hàng mới được phép đăng nhập'**
+  String get onlyDeliveryEmployeesAllowed;
+
+  /// Update delivery status dialog title
+  ///
+  /// In vi, this message translates to:
+  /// **'Cập nhật trạng thái giao hàng'**
+  String get updateDeliveryStatus;
+
+  /// Success message when delivery status is updated
+  ///
+  /// In vi, this message translates to:
+  /// **'Cập nhật trạng thái giao hàng thành công'**
+  String get deliveryStatusUpdated;
+
+  /// Error message when updating delivery status fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi khi cập nhật trạng thái giao hàng'**
+  String get errorUpdatingDeliveryStatus;
+
+  /// No delivery orders in selected time range
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có đơn giao hàng trong khoảng thời gian này'**
+  String get noDeliveryOrdersInTimeRange;
+
+  /// No delivery orders found in search
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy đơn giao hàng'**
+  String get noDeliveryOrdersFound;
+
+  /// No delivery orders yet
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có đơn giao hàng nào'**
+  String get noDeliveryOrdersYet;
+
+  /// Waiting for delivery orders message
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ đơn hàng giao hàng'**
+  String get waitingForDeliveryOrders;
+
+  /// Select delivery status label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn trạng thái giao hàng'**
+  String get selectDeliveryStatus;
+
+  /// Current status label
+  ///
+  /// In vi, this message translates to:
+  /// **'Trạng thái hiện tại'**
+  String get currentStatus;
+
+  /// Select new status label
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn trạng thái mới'**
+  String get selectNewStatus;
+
+  /// Pending delivery description
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng đang chờ giao'**
+  String get pendingDeliveryDescription;
+
+  /// Delivered description
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng đã giao thành công'**
+  String get deliveredDescription;
 }
 
 class _AppLocalizationsDelegate

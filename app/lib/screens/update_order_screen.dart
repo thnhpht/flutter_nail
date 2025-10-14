@@ -207,7 +207,21 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
   Future<void> _loadEmployees() async {
     try {
-      final employees = await widget.api.getEmployees();
+      final allEmployees = await widget.api.getEmployees();
+      List<Employee> employees;
+
+      // Nếu đang chỉnh sửa đơn booking, chỉ hiển thị nhân viên giao hàng
+      if (widget.order.isBooking) {
+        employees = allEmployees
+            .where((employee) => employee.employeeType == 'delivery')
+            .toList();
+      } else {
+        // Đối với đơn thường, chỉ hiển thị nhân viên phục vụ
+        employees = allEmployees
+            .where((employee) => employee.employeeType == 'service')
+            .toList();
+      }
+
       setState(() {
         _employees = employees;
         // Initialize form data if categories and services are loaded
@@ -617,6 +631,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         id: widget.order.id, // Keep the same ID
         customerPhone: customerPhone,
         customerName: customerName,
+        customerAddress: widget.order.customerAddress, // Keep original address
         employeeIds: _selectedEmployees.map((e) => e.id).toList(),
         employeeNames: _selectedEmployees.map((e) => e.name).toList(),
         serviceIds: _selectedServices.map((swq) => swq.service.id).toList(),
@@ -627,8 +642,14 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         discountPercent: _discountPercent,
         tip: _tip,
         taxPercent: _taxPercent,
+        shippingFee: widget.order.shippingFee, // Keep original shipping fee
         createdAt: widget.order.createdAt, // Keep original creation date
         isPaid: _isPaid,
+        isBooking: widget.order.isBooking, // Keep original booking status
+        deliveryMethod:
+            widget.order.deliveryMethod, // Keep original delivery method
+        deliveryStatus:
+            widget.order.deliveryStatus, // Keep original delivery status
       );
 
       // Validate order data

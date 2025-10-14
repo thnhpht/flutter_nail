@@ -1467,16 +1467,73 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ),
                     const SizedBox(width: 4),
                     Expanded(
-                      child: Text(
-                        order.isBooking
-                            ? (order.deliveryMethod == 'pickup'
-                                ? AppLocalizations.of(context)!.pickupAtStore
-                                : AppLocalizations.of(context)!.homeDelivery)
-                            : order.employeeNames.join(', '),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.isBooking
+                                ? (order.deliveryMethod == 'pickup'
+                                    ? AppLocalizations.of(context)!
+                                        .pickupAtStore
+                                    : AppLocalizations.of(context)!
+                                        .homeDelivery)
+                                : order.employeeNames.join(', '),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          // Show delivery staff for booking orders with delivery method
+                          if (order.isBooking &&
+                              order.deliveryMethod == 'delivery' &&
+                              order.employeeNames.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 12,
+                                  color: Colors.grey[500],
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${AppLocalizations.of(context)!.deliveryStaff}: ${order.employeeNames.join(', ')}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[500],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          // Show delivery status for booking orders with delivery method
+                          if (order.isBooking &&
+                              order.deliveryMethod == 'delivery') ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.local_shipping,
+                                  size: 12,
+                                  color: _getDeliveryStatusColor(
+                                      order.deliveryStatus),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _getDeliveryStatusText(
+                                      context, order.deliveryStatus),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: _getDeliveryStatusColor(
+                                        order.deliveryStatus),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -1657,6 +1714,33 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     // Nếu không phù hợp với format Việt Nam, trả về số gốc
     return phoneNumber;
+  }
+
+  String _getDeliveryStatusText(BuildContext context, String deliveryStatus) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (deliveryStatus) {
+      case 'pending':
+        return l10n.pendingDelivery;
+      case 'delivered':
+        return l10n.delivered;
+      case 'cancelled':
+        return l10n.deliveryCancelled;
+      default:
+        return l10n.pendingDelivery;
+    }
+  }
+
+  Color _getDeliveryStatusColor(String deliveryStatus) {
+    switch (deliveryStatus) {
+      case 'pending':
+        return Colors.orange;
+      case 'delivered':
+        return Colors.green;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
   }
 
   Widget _buildServicesDisplay(Order order, AppLocalizations l10n) {

@@ -61,6 +61,25 @@ class ApiClient {
     return response;
   }
 
+  Future<LoginResponse> deliveryLogin(EmployeeLoginRequest request) async {
+    final r = await _client
+        .post(_u('/auth/delivery-login'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(request.toJson()))
+        .timeout(_timeout);
+    _check(r);
+
+    final response = LoginResponse.fromJson(jsonDecode(r.body));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_token', response.token);
+    await prefs.setString('user_role', response.userRole ?? 'delivery');
+    await prefs.setString('employee_id', response.employeeId ?? '');
+    await prefs.setString(
+        'shop_name', request.shopName); // Lưu tên shop để gửi thông báo
+
+    return response;
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user_token');
@@ -411,7 +430,10 @@ class ApiClient {
   }
 
   Future<void> createEmployee(String name,
-      {String? phone, String? password, String? image}) async {
+      {String? phone,
+      String? password,
+      String? image,
+      String? employeeType}) async {
     final prefs = await SharedPreferences.getInstance();
     final jwtToken = prefs.getString('jwt_token') ?? '';
 
@@ -424,7 +446,8 @@ class ApiClient {
           'name': name,
           'phone': phone,
           'password': password ?? '',
-          'image': image
+          'image': image,
+          'employeeType': employeeType ?? 'service'
         }));
     _check(r, expect201: true);
   }

@@ -17,5 +17,7 @@ namespace NailApi.Models
         public string? Password { get; set; }
         
         public string? Image { get; set; }
+        
+        public string EmployeeType { get; set; } = "service"; // "service" or "delivery"
     }
 }

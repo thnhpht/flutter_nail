@@ -416,10 +416,10 @@ namespace NailApi.Controllers
                     var insertCommand = new SqlCommand(@"
                         INSERT INTO Orders (Id, CustomerPhone, CustomerName, CustomerAddress, EmployeeIds, EmployeeNames, 
                                           ServiceIds, ServiceNames, ServiceQuantities, TotalPrice, DiscountPercent, Tip, 
-                                          TaxPercent, ShippingFee, CreatedAt, IsPaid, IsBooking, DeliveryMethod)
+                                          TaxPercent, ShippingFee, CreatedAt, IsPaid, IsBooking, DeliveryMethod, DeliveryStatus)
                         VALUES (@Id, @CustomerPhone, @CustomerName, @CustomerAddress, @EmployeeIds, @EmployeeNames,
                                 @ServiceIds, @ServiceNames, @ServiceQuantities, @TotalPrice, @DiscountPercent, @Tip,
-                                @TaxPercent, @ShippingFee, @CreatedAt, @IsPaid, @IsBooking, @DeliveryMethod)", connection);
+                                @TaxPercent, @ShippingFee, @CreatedAt, @IsPaid, @IsBooking, @DeliveryMethod, @DeliveryStatus)", connection);
 
                     insertCommand.Parameters.AddWithValue("@Id", orderId);
                     insertCommand.Parameters.AddWithValue("@CustomerPhone", request.CustomerPhone);
@@ -439,6 +439,8 @@ namespace NailApi.Controllers
                     insertCommand.Parameters.AddWithValue("@IsPaid", false);
                     insertCommand.Parameters.AddWithValue("@IsBooking", true); // This is a booking order
                     insertCommand.Parameters.AddWithValue("@DeliveryMethod", request.DeliveryMethod);
+                    // Set DeliveryStatus to 'pending' only if DeliveryMethod is 'delivery', otherwise empty string
+                    insertCommand.Parameters.AddWithValue("@DeliveryStatus", request.DeliveryMethod == "delivery" ? "pending" : "");
 
                     await insertCommand.ExecuteNonQueryAsync();
 
@@ -488,7 +490,8 @@ namespace NailApi.Controllers
                         CreatedAt = createdAt,
                         IsPaid = false,
                         IsBooking = true, // This is a booking order
-                        DeliveryMethod = request.DeliveryMethod
+                        DeliveryMethod = request.DeliveryMethod,
+                        DeliveryStatus = request.DeliveryMethod == "delivery" ? "pending" : ""
                     };
 
                     return CreatedAtAction(nameof(CreateOrder), new { id = orderId }, order);

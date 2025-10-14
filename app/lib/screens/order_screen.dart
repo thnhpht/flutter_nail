@@ -170,21 +170,34 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _loadEmployees() async {
     try {
-      final employees = await widget.api.getEmployees();
+      final allEmployees = await widget.api.getEmployees();
       setState(() {
+        // Chỉ hiển thị nhân viên phục vụ khi tạo đơn mới
+        final serviceEmployees = allEmployees
+            .where((employee) => employee.employeeType == 'service')
+            .toList();
+
         // Sort employees alphabetically by name
-        employees.sort(
+        serviceEmployees.sort(
             (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-        _employees = employees;
+        _employees = serviceEmployees;
 
         // Tự động chọn nhân viên đăng nhập nếu là employee
-        if (_currentUserRole == 'employee' && _currentEmployeeId != null) {
-          final currentEmployee = employees.firstWhere(
-            (employee) => employee.id == _currentEmployeeId,
-            orElse: () =>
-                employees.first, // Fallback to first employee if not found
-          );
-          _selectedEmployees = [currentEmployee];
+        if (_currentUserRole == 'employee' &&
+            _currentEmployeeId != null &&
+            serviceEmployees.isNotEmpty) {
+          try {
+            final currentEmployee = serviceEmployees.firstWhere(
+              (employee) => employee.id == _currentEmployeeId,
+            );
+            _selectedEmployees = [currentEmployee];
+          } catch (e) {
+            // Nếu không tìm thấy nhân viên hiện tại trong danh sách service employees,
+            // chọn nhân viên đầu tiên nếu có
+            if (serviceEmployees.isNotEmpty) {
+              _selectedEmployees = [serviceEmployees.first];
+            }
+          }
         }
       });
     } catch (e) {

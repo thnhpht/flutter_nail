@@ -144,6 +144,7 @@ namespace NailApi.Controllers
                 exists.Name = input.Name.Trim();
                 exists.Phone = string.IsNullOrWhiteSpace(input.Phone) ? null : input.Phone.Trim();
                 exists.Image = input.Image;
+                exists.EmployeeType = string.IsNullOrWhiteSpace(input.EmployeeType) ? "service" : input.EmployeeType;
 
                 // Chỉ cập nhật mật khẩu nếu được cung cấp
                 if (!string.IsNullOrWhiteSpace(input.Password))

@@ -2844,5 +2844,69 @@
   "stockStatus": "库存状态",
   "@stockStatus": {
     "description": "Stock status filter label"
+  },
+  "employeeType": "员工类型",
+  "@employeeType": {
+    "description": "Employee type field label"
+  },
+  "serviceEmployee": "服务员工",
+  "@serviceEmployee": {
+    "description": "Service employee type"
+  },
+  "deliveryEmployee": "配送员工",
+  "@deliveryEmployee": {
+    "description": "Delivery employee type"
+  },
+  "deliveryStaff": "配送员工",
+  "@deliveryStaff": {
+    "description": "Delivery staff"
+  },
+  "selectEmployeeType": "选择员工类型",
+  "@selectEmployeeType": {
+    "description": "Select employee type label"
+  },
+  "deliveryManagement": "配送管理",
+  "@deliveryManagement": {
+    "description": "Delivery management screen title"
+  },
+  "deliveryOrders": "配送订单",
+  "@deliveryOrders": {
+    "description": "Delivery orders list title"
+  },
+  "markAsDelivered": "标记为已配送",
+  "@markAsDelivered": {
+    "description": "Mark order as delivered button"
+  },
+  "markAsPending": "标记为待配送",
+  "@markAsPending": {
+    "description": "Mark order as pending button"
+  },
+  "deliveryLogin": "配送登录",
+  "@deliveryLogin": {
+    "description": "Delivery employee login title"
+  },
+  "deliveryEmployeeLogin": "配送员工登录",
+  "@deliveryEmployeeLogin": {
+    "description": "Delivery employee login description"
+  },
+  "onlyServiceEmployeesAllowed": "仅允许服务员工登录",
+  "@onlyServiceEmployeesAllowed": {
+    "description": "Error message for non-service employees"
+  },
+  "onlyDeliveryEmployeesAllowed": "仅允许配送员工登录",
+  "@onlyDeliveryEmployeesAllowed": {
+    "description": "Error message for non-delivery employees"
+  },
+  "updateDeliveryStatus": "更新配送状态",
+  "@updateDeliveryStatus": {
+    "description": "Update delivery status dialog title"
+  },
+  "deliveryStatusUpdated": "配送状态更新成功",
+  "@deliveryStatusUpdated": {
+    "description": "Success message when delivery status is updated"
+  },
+  "errorUpdatingDeliveryStatus": "更新配送状态时出错",
+  "@errorUpdatingDeliveryStatus": {
+    "description": "Error message when updating delivery status fails"
   }
 }
