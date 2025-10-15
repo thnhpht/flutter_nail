@@ -141,7 +141,7 @@ class _NailAppState extends State<NailApp> {
         _loadTodayStats();
         _loadSalonInfo(); // Load salon info when checking login status
         // Load employee name with the correct userRole
-        if (userRole == 'employee') {
+        if (userRole == 'employee' || userRole == 'delivery') {
           _loadEmployeeName();
         } else {
           setState(() {
@@ -314,8 +314,8 @@ class _NailAppState extends State<NailApp> {
             orderDate.day == today.day;
       }).toList();
 
-      // Nếu là nhân viên, lọc theo nhân viên đó
-      if (_userRole == 'employee') {
+      // Nếu là nhân viên hoặc nhân viên giao hàng, lọc theo nhân viên đó
+      if (_userRole == 'employee' || _userRole == 'delivery') {
         final prefs = await SharedPreferences.getInstance();
         final employeeId = prefs.getString('employee_id');
         if (employeeId != null && employeeId.isNotEmpty) {
@@ -371,7 +371,7 @@ class _NailAppState extends State<NailApp> {
       _loadTodayStats();
       _loadSalonInfo();
       // Load employee name with the correct userRole
-      if (userRole == 'employee') {
+      if (userRole == 'employee' || userRole == 'delivery') {
         _loadEmployeeName();
       } else {
         setState(() {
@@ -831,10 +831,11 @@ class _NailAppState extends State<NailApp> {
 
       // Auto refresh today's stats when new notification arrives
       // This ensures dashboard updates when new orders are created
-      // Only refresh if notification is about orders (order_created, booking_created, order_paid)
+      // Only refresh if notification is about orders (order_created, booking_created, order_paid, order_delivered)
       if (newNotification.type == 'order_created' ||
           newNotification.type == 'booking_created' ||
-          newNotification.type == 'order_paid') {
+          newNotification.type == 'order_paid' ||
+          newNotification.type == 'order_delivered') {
         _debouncedRefreshStats();
       }
     }
@@ -857,7 +858,7 @@ class _NailAppState extends State<NailApp> {
   }
 
   String _getWelcomeText(BuildContext context) {
-    if (_userRole == 'employee') {
+    if (_userRole == 'employee' || _userRole == 'delivery') {
       if (_isLoadingEmployeeName) {
         return '...';
       } else if (_employeeName != null && _employeeName!.isNotEmpty) {
@@ -865,7 +866,11 @@ class _NailAppState extends State<NailApp> {
       } else {
         // Fallback to localized text or default
         final l10n = AppLocalizations.of(context);
-        return l10n?.employee ?? 'Nhân viên';
+        if (_userRole == 'delivery') {
+          return l10n?.deliveryStaff ?? 'Nhân viên giao hàng';
+        } else {
+          return l10n?.employee ?? 'Nhân viên';
+        }
       }
     } else {
       final l10n = AppLocalizations.of(context);

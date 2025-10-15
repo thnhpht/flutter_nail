@@ -487,6 +487,7 @@ namespace NailApi.Controllers
                             [IsBooking] bit NOT NULL DEFAULT 0,
                             [DeliveryMethod] nvarchar(max) NOT NULL DEFAULT 'pickup',
                             [DeliveryStatus] nvarchar(max) NOT NULL DEFAULT '',
+                            [ImageDelivered] nvarchar(max) NULL,
                             CONSTRAINT [PK_Orders] PRIMARY KEY ([Id])
                         );",
 

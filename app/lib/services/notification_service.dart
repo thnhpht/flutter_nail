@@ -8,6 +8,7 @@ import '../api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'audio_service.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class NotificationService {
   static const String _notificationsKey = 'notifications';
@@ -373,9 +374,13 @@ class NotificationService {
       const uuid = Uuid();
       final notification = models.Notification(
         id: uuid.v4(),
-        title: 'Đơn hàng mới',
-        message:
-            'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
+        title: _getLocalizedText(
+            context, (l) => l.orderCreatedTitle, 'Đơn hàng mới'),
+        message: _getLocalizedText(
+            context,
+            (l) => l.orderCreatedMessage(employeeName, customerName,
+                customerPhone, _formatCurrency(totalPrice)),
+            'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}'),
         type: 'order_created',
         createdAt: DateTime.now(),
         data: {
@@ -398,8 +403,9 @@ class NotificationService {
     }
 
     // Real mode: send via API first, then create local notification
-    // Only send notification to shop owner if employee created the order
-    if (_apiClient != null && currentUserRole == 'employee') {
+    // Only send notification to shop owner if employee or delivery person created the order
+    if (_apiClient != null &&
+        (currentUserRole == 'employee' || currentUserRole == 'delivery')) {
       try {
         final prefs = await SharedPreferences.getInstance();
         final shopName = prefs.getString('shop_email') ??
@@ -409,9 +415,13 @@ class NotificationService {
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
             shopName: shopName,
-            title: 'Đơn hàng mới',
-            message:
-                'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
+            title: _getLocalizedText(
+                context, (l) => l.orderCreatedTitle, 'Đơn hàng mới'),
+            message: _getLocalizedText(
+                context,
+                (l) => l.orderCreatedMessage(employeeName, customerName,
+                    customerPhone, _formatCurrency(totalPrice)),
+                'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}'),
             type: 'order_created',
             orderId: orderId,
             customerName: customerName,
@@ -430,9 +440,13 @@ class NotificationService {
               (n) => n.type == 'order_created' && n.data?['orderId'] == orderId,
               orElse: () => models.Notification(
                 id: '',
-                title: 'Đơn hàng mới',
-                message:
-                    'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
+                title: _getLocalizedText(
+                    context, (l) => l.orderCreatedTitle, 'Đơn hàng mới'),
+                message: _getLocalizedText(
+                    context,
+                    (l) => l.orderCreatedMessage(employeeName, customerName,
+                        customerPhone, _formatCurrency(totalPrice)),
+                    'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}'),
                 type: 'order_created',
                 createdAt: DateTime.now(),
                 data: {
@@ -461,9 +475,13 @@ class NotificationService {
     const uuid = Uuid();
     final notification = models.Notification(
       id: uuid.v4(),
-      title: 'Đơn hàng mới',
-      message:
-          'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}',
+      title: _getLocalizedText(
+          context, (l) => l.orderCreatedTitle, 'Đơn hàng mới'),
+      message: _getLocalizedText(
+          context,
+          (l) => l.orderCreatedMessage(employeeName, customerName,
+              customerPhone, _formatCurrency(totalPrice)),
+          'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName (${customerPhone}) với tổng tiền ${_formatCurrency(totalPrice)}'),
       type: 'order_created',
       createdAt: DateTime.now(),
       data: {
@@ -484,6 +502,7 @@ class NotificationService {
     required String customerName,
     required String employeeName,
     bool isDemo = false,
+    BuildContext? context,
     String? currentUserRole, // Add user role parameter
   }) async {
     if (isDemo) {
@@ -491,9 +510,12 @@ class NotificationService {
       const uuid = Uuid();
       final notification = models.Notification(
         id: uuid.v4(),
-        title: 'Đơn hàng được cập nhật',
-        message:
-            'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName',
+        title: _getLocalizedText(
+            context, (l) => l.orderUpdatedTitle, 'Đơn hàng được cập nhật'),
+        message: _getLocalizedText(
+            context,
+            (l) => l.orderUpdatedMessage(employeeName, customerName),
+            'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName'),
         type: 'order_updated',
         createdAt: DateTime.now(),
         data: {
@@ -507,8 +529,9 @@ class NotificationService {
     }
 
     // Real mode: send via API first, then create local notification
-    // Only send notification to shop owner if employee updated the order
-    if (_apiClient != null && currentUserRole == 'employee') {
+    // Only send notification to shop owner if employee or delivery person updated the order
+    if (_apiClient != null &&
+        (currentUserRole == 'employee' || currentUserRole == 'delivery')) {
       try {
         final prefs = await SharedPreferences.getInstance();
         final shopName = prefs.getString('shop_email') ??
@@ -518,9 +541,12 @@ class NotificationService {
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
             shopName: shopName,
-            title: 'Đơn hàng được cập nhật',
-            message:
-                'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName',
+            title: _getLocalizedText(
+                context, (l) => l.orderUpdatedTitle, 'Đơn hàng được cập nhật'),
+            message: _getLocalizedText(
+                context,
+                (l) => l.orderUpdatedMessage(employeeName, customerName),
+                'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName'),
             type: 'order_updated',
             orderId: orderId,
             customerName: customerName,
@@ -541,9 +567,12 @@ class NotificationService {
     const uuid = Uuid();
     final notification = models.Notification(
       id: uuid.v4(),
-      title: 'Đơn hàng được cập nhật',
-      message:
-          'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName',
+      title: _getLocalizedText(
+          context, (l) => l.orderUpdatedTitle, 'Đơn hàng được cập nhật'),
+      message: _getLocalizedText(
+          context,
+          (l) => l.orderUpdatedMessage(employeeName, customerName),
+          'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName'),
       type: 'order_updated',
       createdAt: DateTime.now(),
       data: {
@@ -571,9 +600,13 @@ class NotificationService {
       const uuid = Uuid();
       final notification = models.Notification(
         id: uuid.v4(),
-        title: 'Đơn đặt hàng mới',
-        message:
-            'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+        title: _getLocalizedText(
+            context, (l) => l.bookingCreatedTitle, 'Đơn đặt hàng mới'),
+        message: _getLocalizedText(
+            context,
+            (l) => l.bookingCreatedMessage(
+                customerName, customerPhone, _formatCurrency(totalPrice)),
+            'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}'),
         type: 'booking_created',
         createdAt: DateTime.now(),
         data: {
@@ -606,9 +639,13 @@ class NotificationService {
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
             shopName: shopName,
-            title: 'Đơn đặt hàng mới',
-            message:
-                'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+            title: _getLocalizedText(
+                context, (l) => l.bookingCreatedTitle, 'Đơn đặt hàng mới'),
+            message: _getLocalizedText(
+                context,
+                (l) => l.bookingCreatedMessage(
+                    customerName, customerPhone, _formatCurrency(totalPrice)),
+                'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}'),
             type: 'booking_created',
             orderId: orderId,
             customerName: customerName,
@@ -628,9 +665,13 @@ class NotificationService {
                   n.type == 'booking_created' && n.data?['orderId'] == orderId,
               orElse: () => models.Notification(
                 id: '',
-                title: 'Đơn đặt hàng mới',
-                message:
-                    'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+                title: _getLocalizedText(
+                    context, (l) => l.bookingCreatedTitle, 'Đơn đặt hàng mới'),
+                message: _getLocalizedText(
+                    context,
+                    (l) => l.bookingCreatedMessage(customerName, customerPhone,
+                        _formatCurrency(totalPrice)),
+                    'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}'),
                 type: 'booking_created',
                 createdAt: DateTime.now(),
                 data: {
@@ -658,9 +699,13 @@ class NotificationService {
     const uuid = Uuid();
     final notification = models.Notification(
       id: uuid.v4(),
-      title: 'Đơn đặt hàng mới',
-      message:
-          'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}',
+      title: _getLocalizedText(
+          context, (l) => l.bookingCreatedTitle, 'Đơn đặt hàng mới'),
+      message: _getLocalizedText(
+          context,
+          (l) => l.bookingCreatedMessage(
+              customerName, customerPhone, _formatCurrency(totalPrice)),
+          'Khách hàng $customerName (${customerPhone}) đã tạo đơn đặt hàng với tổng tiền ${_formatCurrency(totalPrice)}'),
       type: 'booking_created',
       createdAt: DateTime.now(),
       data: {
@@ -674,12 +719,15 @@ class NotificationService {
     await addNotification(notification);
   }
 
-  /// Create a notification for order paid
-  Future<void> createOrderPaidNotification({
+  /// Create a notification for order delivered
+  Future<void> createOrderDeliveredNotification({
     required String orderId,
     required String customerName,
-    required double totalPrice,
+    required String customerAddress,
+    required String employeeName,
+    required DateTime deliveredAt,
     bool isDemo = false,
+    BuildContext? context,
     String? currentUserRole, // Add user role parameter
   }) async {
     if (isDemo) {
@@ -687,9 +735,150 @@ class NotificationService {
       const uuid = Uuid();
       final notification = models.Notification(
         id: uuid.v4(),
-        title: 'Đơn hàng đã thanh toán',
+        title: 'Đơn hàng đã được giao',
         message:
-            'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}',
+            'Nhân viên $employeeName đã giao đơn hàng ${_formatOrderId(orderId)} cho khách hàng $customerName tại $customerAddress lúc ${_formatDateTime(deliveredAt)}',
+        type: 'order_delivered',
+        createdAt: DateTime.now(),
+        data: {
+          'orderId': orderId,
+          'customerName': customerName,
+          'customerAddress': customerAddress,
+          'employeeName': employeeName,
+          'deliveredAt': deliveredAt.toIso8601String(),
+        },
+      );
+      await addNotification(notification);
+
+      // Show Flushbar only for shop owners if context is available
+      if (context != null && currentUserRole == 'shop_owner') {
+        showNotification(context, notification);
+        // Play notification sound for shop owner
+        _audioService.playNotificationSound();
+      }
+      return;
+    }
+
+    // Real mode: send via API first, then create local notification
+    // Only send notification to shop owner if employee or delivery person delivered the order
+    if (_apiClient != null &&
+        (currentUserRole == 'employee' || currentUserRole == 'delivery')) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final shopName = prefs.getString('shop_email') ??
+            prefs.getString('user_email') ??
+            prefs.getString('salon_name');
+
+        if (shopName != null && shopName.isNotEmpty) {
+          await _apiClient!.sendNotification(
+            shopName: shopName,
+            title: _getLocalizedText(
+                context, (l) => l.orderDeliveredTitle, 'Đơn hàng đã được giao'),
+            message: _getLocalizedText(
+                context,
+                (l) => l.orderDeliveredMessage(
+                    employeeName,
+                    _formatOrderId(orderId),
+                    customerName,
+                    customerAddress,
+                    _formatDateTime(deliveredAt)),
+                'Nhân viên $employeeName đã giao đơn hàng ${_formatOrderId(orderId)} cho khách hàng $customerName tại $customerAddress lúc ${_formatDateTime(deliveredAt)}'),
+            type: 'order_delivered',
+            orderId: orderId,
+            customerName: customerName,
+            customerPhone: '',
+            employeeName: employeeName,
+            totalPrice: 0,
+          );
+
+          // Refresh notifications from API
+          await _loadNotifications();
+
+          // Show Flushbar for delivery employee to confirm action
+          if (context != null) {
+            // Find the notification that was just created from API
+            final newNotification = _notificationsNotifier.value.firstWhere(
+              (n) =>
+                  n.type == 'order_delivered' && n.data?['orderId'] == orderId,
+              orElse: () => models.Notification(
+                id: '',
+                title: _getLocalizedText(context, (l) => l.orderDeliveredTitle,
+                    'Đơn hàng đã được giao'),
+                message: _getLocalizedText(
+                    context,
+                    (l) => l.orderDeliveredMessage(
+                        employeeName,
+                        _formatOrderId(orderId),
+                        customerName,
+                        customerAddress,
+                        _formatDateTime(deliveredAt)),
+                    'Nhân viên $employeeName đã giao đơn hàng ${_formatOrderId(orderId)} cho khách hàng $customerName tại $customerAddress lúc ${_formatDateTime(deliveredAt)}'),
+                type: 'order_delivered',
+                createdAt: DateTime.now(),
+                data: {
+                  'orderId': orderId,
+                  'customerName': customerName,
+                  'customerAddress': customerAddress,
+                  'employeeName': employeeName,
+                  'deliveredAt': deliveredAt.toIso8601String(),
+                },
+              ),
+            );
+            showNotification(context, newNotification);
+            // Play notification sound for delivery employee
+            _audioService.playNotificationSound();
+          }
+          return;
+        } else {
+          // Fall back to local notification if API fails
+        }
+      } catch (e) {
+        // Fall back to local notification if API fails
+      }
+    }
+
+    // Fall back to local notification
+    const uuid = Uuid();
+    final notification = models.Notification(
+      id: uuid.v4(),
+      title: 'Đơn hàng đã được giao',
+      message:
+          'Nhân viên $employeeName đã giao đơn hàng ${_formatOrderId(orderId)} cho khách hàng $customerName tại $customerAddress lúc ${_formatDateTime(deliveredAt)}',
+      type: 'order_delivered',
+      createdAt: DateTime.now(),
+      data: {
+        'orderId': orderId,
+        'customerName': customerName,
+        'customerAddress': customerAddress,
+        'employeeName': employeeName,
+        'deliveredAt': deliveredAt.toIso8601String(),
+      },
+    );
+
+    await addNotification(notification);
+  }
+
+  /// Create a notification for order paid
+  Future<void> createOrderPaidNotification({
+    required String orderId,
+    required String customerName,
+    required double totalPrice,
+    bool isDemo = false,
+    BuildContext? context,
+    String? currentUserRole, // Add user role parameter
+  }) async {
+    if (isDemo) {
+      // Demo mode: only create local notification
+      const uuid = Uuid();
+      final notification = models.Notification(
+        id: uuid.v4(),
+        title: _getLocalizedText(
+            context, (l) => l.orderPaidTitle, 'Đơn hàng đã thanh toán'),
+        message: _getLocalizedText(
+            context,
+            (l) =>
+                l.orderPaidMessage(customerName, _formatCurrency(totalPrice)),
+            'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}'),
         type: 'order_paid',
         createdAt: DateTime.now(),
         data: {
@@ -703,8 +892,9 @@ class NotificationService {
     }
 
     // Real mode: send via API first, then create local notification
-    // Only send notification to shop owner if employee processed the payment
-    if (_apiClient != null && currentUserRole == 'employee') {
+    // Only send notification to shop owner if employee or delivery person processed the payment
+    if (_apiClient != null &&
+        (currentUserRole == 'employee' || currentUserRole == 'delivery')) {
       try {
         final prefs = await SharedPreferences.getInstance();
         final shopName = prefs.getString('shop_email') ??
@@ -714,9 +904,13 @@ class NotificationService {
         if (shopName != null && shopName.isNotEmpty) {
           await _apiClient!.sendNotification(
             shopName: shopName,
-            title: 'Đơn hàng đã thanh toán',
-            message:
-                'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}',
+            title: _getLocalizedText(
+                context, (l) => l.orderPaidTitle, 'Đơn hàng đã thanh toán'),
+            message: _getLocalizedText(
+                context,
+                (l) => l.orderPaidMessage(
+                    customerName, _formatCurrency(totalPrice)),
+                'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}'),
             type: 'order_paid',
             orderId: orderId,
             customerName: customerName,
@@ -737,9 +931,12 @@ class NotificationService {
     const uuid = Uuid();
     final notification = models.Notification(
       id: uuid.v4(),
-      title: 'Đơn hàng đã thanh toán',
-      message:
-          'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}',
+      title: _getLocalizedText(
+          context, (l) => l.orderPaidTitle, 'Đơn hàng đã thanh toán'),
+      message: _getLocalizedText(
+          context,
+          (l) => l.orderPaidMessage(customerName, _formatCurrency(totalPrice)),
+          'Đơn hàng cho khách hàng $customerName đã được thanh toán ${_formatCurrency(totalPrice)}'),
       type: 'order_paid',
       createdAt: DateTime.now(),
       data: {
@@ -773,6 +970,9 @@ class NotificationService {
       case 'order_paid':
         messageType = MessageType.success;
         break;
+      case 'order_delivered':
+        messageType = MessageType.success;
+        break;
       default:
         messageType = MessageType.info;
     }
@@ -792,6 +992,31 @@ class NotificationService {
             .toStringAsFixed(0)
             .replaceAllMapped(formatter, (Match m) => '${m[1]},') +
         ' VNĐ';
+  }
+
+  /// Format datetime for display
+  static String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Format order ID to first 8 characters in uppercase
+  static String _formatOrderId(String orderId) {
+    return orderId.length > 8
+        ? orderId.substring(0, 8).toUpperCase()
+        : orderId.toUpperCase();
+  }
+
+  /// Get localized text with fallback
+  static String _getLocalizedText(BuildContext? context,
+      String Function(AppLocalizations) getter, String fallback) {
+    if (context == null) return fallback;
+    try {
+      final localizations = AppLocalizations.of(context);
+      if (localizations == null) return fallback;
+      return getter(localizations);
+    } catch (e) {
+      return fallback;
+    }
   }
 
   /// Start polling for real-time updates

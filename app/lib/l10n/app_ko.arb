@@ -1613,6 +1613,104 @@
   "@newNotificationsWillAppearHere": {
     "description": "Empty state description for notifications"
   },
+  "orderDeliveredTitle": "주문 배송 완료",
+  "@orderDeliveredTitle": {
+    "description": "Title for order delivered notification"
+  },
+  "orderDeliveredMessage": "직원 {employeeName}이(가) 주문 {orderId}를 고객 {customerName}에게 {customerAddress}에서 {deliveredAt}에 배송했습니다",
+  "@orderDeliveredMessage": {
+    "description": "Message for order delivered notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "orderId": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerAddress": {
+        "type": "String"
+      },
+      "deliveredAt": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCreatedTitle": "새 주문",
+  "@orderCreatedTitle": {
+    "description": "Title for order created notification"
+  },
+  "orderCreatedMessage": "직원 {employeeName}이(가) 고객 {customerName} ({customerPhone})을(를) 위한 주문을 총액 {totalPrice}로 생성했습니다",
+  "@orderCreatedMessage": {
+    "description": "Message for order created notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderUpdatedTitle": "주문 업데이트됨",
+  "@orderUpdatedTitle": {
+    "description": "Title for order updated notification"
+  },
+  "orderUpdatedMessage": "직원 {employeeName}이(가) 고객 {customerName}의 주문을 업데이트했습니다",
+  "@orderUpdatedMessage": {
+    "description": "Message for order updated notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingCreatedTitle": "새 예약 주문",
+  "@bookingCreatedTitle": {
+    "description": "Title for booking created notification"
+  },
+  "bookingCreatedMessage": "고객 {customerName} ({customerPhone})이(가) 총액 {totalPrice}로 예약 주문을 생성했습니다",
+  "@bookingCreatedMessage": {
+    "description": "Message for booking created notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPaidTitle": "주문 결제됨",
+  "@orderPaidTitle": {
+    "description": "Title for order paid notification"
+  },
+  "orderPaidMessage": "고객 {customerName}의 주문이 {totalPrice}로 결제되었습니다",
+  "@orderPaidMessage": {
+    "description": "Message for order paid notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
   "deleteAction": "삭제",
   "@deleteAction": {
     "description": "Delete action in popup menu"

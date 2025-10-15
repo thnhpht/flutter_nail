@@ -1393,6 +1393,49 @@ class AppLocalizationsKo extends AppLocalizations {
   String get newNotificationsWillAppearHere => '새로운 알림이 여기에 나타납니다';
 
   @override
+  String get orderDeliveredTitle => '주문 배송 완료';
+
+  @override
+  String orderDeliveredMessage(String employeeName, String orderId,
+      String customerName, String customerAddress, String deliveredAt) {
+    return '직원 $employeeName이(가) 주문 $orderId를 고객 $customerName에게 $customerAddress에서 $deliveredAt에 배송했습니다';
+  }
+
+  @override
+  String get orderCreatedTitle => '새 주문';
+
+  @override
+  String orderCreatedMessage(String employeeName, String customerName,
+      String customerPhone, String totalPrice) {
+    return '직원 $employeeName이(가) 고객 $customerName ($customerPhone)을(를) 위한 주문을 총액 $totalPrice로 생성했습니다';
+  }
+
+  @override
+  String get orderUpdatedTitle => '주문 업데이트됨';
+
+  @override
+  String orderUpdatedMessage(String employeeName, String customerName) {
+    return '직원 $employeeName이(가) 고객 $customerName의 주문을 업데이트했습니다';
+  }
+
+  @override
+  String get bookingCreatedTitle => '새 예약 주문';
+
+  @override
+  String bookingCreatedMessage(
+      String customerName, String customerPhone, String totalPrice) {
+    return '고객 $customerName ($customerPhone)이(가) 총액 $totalPrice로 예약 주문을 생성했습니다';
+  }
+
+  @override
+  String get orderPaidTitle => '주문 결제됨';
+
+  @override
+  String orderPaidMessage(String customerName, String totalPrice) {
+    return '고객 $customerName의 주문이 $totalPrice로 결제되었습니다';
+  }
+
+  @override
   String get deleteAction => '삭제';
 
   @override
@@ -2230,7 +2273,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
 
   @override
-  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+  String get waitingForDeliveryOrders => 'Đang chờ đơn giao hàng';
 
   @override
   String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
@@ -2246,4 +2289,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get deliveredDescription => 'Đơn hàng đã giao thành công';
+
+  @override
+  String get deliveryPhoto => 'Ảnh giao hàng';
+
+  @override
+  String get deliveryPhotoDescription => 'Ảnh chụp khi giao hàng';
+
+  @override
+  String get imageDisplayError => 'Lỗi hiển thị ảnh';
 }

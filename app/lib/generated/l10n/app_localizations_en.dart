@@ -1418,6 +1418,49 @@ class AppLocalizationsEn extends AppLocalizations {
       'New notifications will appear here';
 
   @override
+  String get orderDeliveredTitle => 'Order Delivered';
+
+  @override
+  String orderDeliveredMessage(String employeeName, String orderId,
+      String customerName, String customerAddress, String deliveredAt) {
+    return 'Employee $employeeName has delivered order $orderId to customer $customerName at $customerAddress at $deliveredAt';
+  }
+
+  @override
+  String get orderCreatedTitle => 'New Order';
+
+  @override
+  String orderCreatedMessage(String employeeName, String customerName,
+      String customerPhone, String totalPrice) {
+    return 'Employee $employeeName has created an order for customer $customerName ($customerPhone) with total amount $totalPrice';
+  }
+
+  @override
+  String get orderUpdatedTitle => 'Order Updated';
+
+  @override
+  String orderUpdatedMessage(String employeeName, String customerName) {
+    return 'Employee $employeeName has updated the order for customer $customerName';
+  }
+
+  @override
+  String get bookingCreatedTitle => 'New Booking Order';
+
+  @override
+  String bookingCreatedMessage(
+      String customerName, String customerPhone, String totalPrice) {
+    return 'Customer $customerName ($customerPhone) has created a booking order with total amount $totalPrice';
+  }
+
+  @override
+  String get orderPaidTitle => 'Order Paid';
+
+  @override
+  String orderPaidMessage(String customerName, String totalPrice) {
+    return 'Order for customer $customerName has been paid $totalPrice';
+  }
+
+  @override
   String get deleteAction => 'Delete';
 
   @override
@@ -2293,4 +2336,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deliveredDescription => 'Order has been delivered successfully';
+
+  @override
+  String get deliveryPhoto => 'Delivery Photo';
+
+  @override
+  String get deliveryPhotoDescription =>
+      'Photo taken when delivering the order';
+
+  @override
+  String get imageDisplayError => 'Image display error';
 }

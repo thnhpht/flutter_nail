@@ -1389,6 +1389,49 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newNotificationsWillAppearHere => '新通知将在此处显示';
 
   @override
+  String get orderDeliveredTitle => '订单已送达';
+
+  @override
+  String orderDeliveredMessage(String employeeName, String orderId,
+      String customerName, String customerAddress, String deliveredAt) {
+    return '员工 $employeeName 已将订单 $orderId 送达客户 $customerName，地址：$customerAddress，时间：$deliveredAt';
+  }
+
+  @override
+  String get orderCreatedTitle => '新订单';
+
+  @override
+  String orderCreatedMessage(String employeeName, String customerName,
+      String customerPhone, String totalPrice) {
+    return '员工 $employeeName 为客户 $customerName ($customerPhone) 创建了订单，总金额 $totalPrice';
+  }
+
+  @override
+  String get orderUpdatedTitle => '订单已更新';
+
+  @override
+  String orderUpdatedMessage(String employeeName, String customerName) {
+    return '员工 $employeeName 已更新客户 $customerName 的订单';
+  }
+
+  @override
+  String get bookingCreatedTitle => '新预订订单';
+
+  @override
+  String bookingCreatedMessage(
+      String customerName, String customerPhone, String totalPrice) {
+    return '客户 $customerName ($customerPhone) 创建了预订订单，总金额 $totalPrice';
+  }
+
+  @override
+  String get orderPaidTitle => '订单已支付';
+
+  @override
+  String orderPaidMessage(String customerName, String totalPrice) {
+    return '客户 $customerName 的订单已支付 $totalPrice';
+  }
+
+  @override
   String get deleteAction => '删除';
 
   @override
@@ -2219,7 +2262,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
 
   @override
-  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+  String get waitingForDeliveryOrders => 'Đang chờ đơn giao hàng';
 
   @override
   String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
@@ -2235,4 +2278,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deliveredDescription => 'Đơn hàng đã giao thành công';
+
+  @override
+  String get deliveryPhoto => 'Ảnh giao hàng';
+
+  @override
+  String get deliveryPhotoDescription => 'Ảnh chụp khi giao hàng';
+
+  @override
+  String get imageDisplayError => 'Lỗi hiển thị ảnh';
 }

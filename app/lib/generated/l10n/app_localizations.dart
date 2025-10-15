@@ -2682,6 +2682,69 @@ abstract class AppLocalizations {
   /// **'Các thông báo mới sẽ xuất hiện ở đây'**
   String get newNotificationsWillAppearHere;
 
+  /// Title for order delivered notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng đã được giao'**
+  String get orderDeliveredTitle;
+
+  /// Message for order delivered notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên {employeeName} đã giao đơn hàng {orderId} cho khách hàng {customerName} tại {customerAddress} lúc {deliveredAt}'**
+  String orderDeliveredMessage(String employeeName, String orderId,
+      String customerName, String customerAddress, String deliveredAt);
+
+  /// Title for order created notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng mới'**
+  String get orderCreatedTitle;
+
+  /// Message for order created notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên {employeeName} đã tạo đơn cho khách hàng {customerName} ({customerPhone}) với tổng tiền {totalPrice}'**
+  String orderCreatedMessage(String employeeName, String customerName,
+      String customerPhone, String totalPrice);
+
+  /// Title for order updated notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng được cập nhật'**
+  String get orderUpdatedTitle;
+
+  /// Message for order updated notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân viên {employeeName} đã cập nhật đơn cho khách hàng {customerName}'**
+  String orderUpdatedMessage(String employeeName, String customerName);
+
+  /// Title for booking created notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn đặt hàng mới'**
+  String get bookingCreatedTitle;
+
+  /// Message for booking created notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Khách hàng {customerName} ({customerPhone}) đã tạo đơn đặt hàng với tổng tiền {totalPrice}'**
+  String bookingCreatedMessage(
+      String customerName, String customerPhone, String totalPrice);
+
+  /// Title for order paid notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng đã thanh toán'**
+  String get orderPaidTitle;
+
+  /// Message for order paid notification
+  ///
+  /// In vi, this message translates to:
+  /// **'Đơn hàng cho khách hàng {customerName} đã được thanh toán {totalPrice}'**
+  String orderPaidMessage(String customerName, String totalPrice);
+
   /// Delete action in popup menu
   ///
   /// In vi, this message translates to:
@@ -4161,7 +4224,7 @@ abstract class AppLocalizations {
   /// Delivery orders list title
   ///
   /// In vi, this message translates to:
-  /// **'Đơn hàng giao hàng'**
+  /// **'Đơn giao hàng'**
   String get deliveryOrders;
 
   /// Mark order as delivered button
@@ -4239,7 +4302,7 @@ abstract class AppLocalizations {
   /// Waiting for delivery orders message
   ///
   /// In vi, this message translates to:
-  /// **'Đang chờ đơn hàng giao hàng'**
+  /// **'Đang chờ đơn giao hàng'**
   String get waitingForDeliveryOrders;
 
   /// Select delivery status label
@@ -4271,6 +4334,24 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đơn hàng đã giao thành công'**
   String get deliveredDescription;
+
+  /// Delivery photo
+  ///
+  /// In vi, this message translates to:
+  /// **'Ảnh giao hàng'**
+  String get deliveryPhoto;
+
+  /// Delivery photo description
+  ///
+  /// In vi, this message translates to:
+  /// **'Ảnh chụp khi giao hàng'**
+  String get deliveryPhotoDescription;
+
+  /// Image display error
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi hiển thị ảnh'**
+  String get imageDisplayError;
 }
 
 class _AppLocalizationsDelegate

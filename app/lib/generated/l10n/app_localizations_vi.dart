@@ -1427,6 +1427,49 @@ class AppLocalizationsVi extends AppLocalizations {
       'Các thông báo mới sẽ xuất hiện ở đây';
 
   @override
+  String get orderDeliveredTitle => 'Đơn hàng đã được giao';
+
+  @override
+  String orderDeliveredMessage(String employeeName, String orderId,
+      String customerName, String customerAddress, String deliveredAt) {
+    return 'Nhân viên $employeeName đã giao đơn hàng $orderId cho khách hàng $customerName tại $customerAddress lúc $deliveredAt';
+  }
+
+  @override
+  String get orderCreatedTitle => 'Đơn hàng mới';
+
+  @override
+  String orderCreatedMessage(String employeeName, String customerName,
+      String customerPhone, String totalPrice) {
+    return 'Nhân viên $employeeName đã tạo đơn cho khách hàng $customerName ($customerPhone) với tổng tiền $totalPrice';
+  }
+
+  @override
+  String get orderUpdatedTitle => 'Đơn hàng được cập nhật';
+
+  @override
+  String orderUpdatedMessage(String employeeName, String customerName) {
+    return 'Nhân viên $employeeName đã cập nhật đơn cho khách hàng $customerName';
+  }
+
+  @override
+  String get bookingCreatedTitle => 'Đơn đặt hàng mới';
+
+  @override
+  String bookingCreatedMessage(
+      String customerName, String customerPhone, String totalPrice) {
+    return 'Khách hàng $customerName ($customerPhone) đã tạo đơn đặt hàng với tổng tiền $totalPrice';
+  }
+
+  @override
+  String get orderPaidTitle => 'Đơn hàng đã thanh toán';
+
+  @override
+  String orderPaidMessage(String customerName, String totalPrice) {
+    return 'Đơn hàng cho khách hàng $customerName đã được thanh toán $totalPrice';
+  }
+
+  @override
   String get deleteAction => 'Xóa';
 
   @override
@@ -2245,7 +2288,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deliveryManagement => 'Quản lý giao hàng';
 
   @override
-  String get deliveryOrders => 'Đơn hàng giao hàng';
+  String get deliveryOrders => 'Đơn giao hàng';
 
   @override
   String get markAsDelivered => 'Đánh dấu đã giao';
@@ -2289,7 +2332,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noDeliveryOrdersYet => 'Chưa có đơn giao hàng nào';
 
   @override
-  String get waitingForDeliveryOrders => 'Đang chờ đơn hàng giao hàng';
+  String get waitingForDeliveryOrders => 'Đang chờ đơn giao hàng';
 
   @override
   String get selectDeliveryStatus => 'Chọn trạng thái giao hàng';
@@ -2305,4 +2348,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get deliveredDescription => 'Đơn hàng đã giao thành công';
+
+  @override
+  String get deliveryPhoto => 'Ảnh giao hàng';
+
+  @override
+  String get deliveryPhotoDescription => 'Ảnh chụp khi giao hàng';
+
+  @override
+  String get imageDisplayError => 'Lỗi hiển thị ảnh';
 }

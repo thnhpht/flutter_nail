@@ -930,6 +930,32 @@ class ApiClient {
     return responseData['logoUrl'] as String;
   }
 
+  // Upload delivery image
+  Future<String> uploadDeliveryImage(
+      List<int> imageBytes, String fileName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jwtToken = prefs.getString('jwt_token') ?? '';
+
+    var request =
+        http.MultipartRequest('POST', _u('/orders/upload-delivery-image'));
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+    });
+
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ));
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    _check(response);
+
+    final responseData = jsonDecode(response.body);
+    return responseData['imageUrl'] as String;
+  }
+
   void _check(http.Response r,
       {bool expect201 = false, bool expect204 = false}) {
     final ok = expect201

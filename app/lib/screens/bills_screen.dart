@@ -8,6 +8,7 @@ import '../config/salon_config.dart';
 import 'dart:convert'; // Added for jsonDecode
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BillsScreen extends StatefulWidget {
   const BillsScreen(
@@ -651,8 +652,51 @@ class _BillsScreenState extends State<BillsScreen> {
     );
   }
 
+  Future<String?> _takeDeliveryPhoto() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 90,
+      );
+
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+
+        // Upload image to server
+        final imageUrl = await widget.api.uploadDeliveryImage(
+            bytes, 'delivery_${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+        return imageUrl;
+      }
+
+      return null;
+    } catch (e) {
+      if (mounted) {
+        AppWidgets.showFlushbar(context, l10n.cannotSelectImage,
+            type: MessageType.error);
+      }
+      return null;
+    }
+  }
+
   Future<void> _updateDeliveryStatus(Order order, String newStatus) async {
     try {
+      String? imageDelivered;
+
+      // If updating to "delivered", require taking a photo
+      if (newStatus == 'delivered') {
+        imageDelivered = await _takeDeliveryPhoto();
+        if (imageDelivered == null) {
+          // User cancelled photo taking, don't update status
+          return;
+        }
+      }
+
       // Create updated order with new delivery status
       final updatedOrder = Order(
         id: order.id,
@@ -674,10 +718,14 @@ class _BillsScreenState extends State<BillsScreen> {
         isBooking: order.isBooking,
         deliveryMethod: order.deliveryMethod,
         deliveryStatus: newStatus,
+        imageDelivered: imageDelivered,
       );
 
       // Update the order via API
       await widget.api.updateOrder(updatedOrder);
+
+      // Notification is automatically created by backend when delivery status is updated to "delivered"
+      // No need to send notification from client side
 
       // Refresh the data
       await _loadData();

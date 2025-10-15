@@ -2514,6 +2514,104 @@
   "@newNotificationsWillAppearHere": {
     "description": "Empty state description for notifications"
   },
+  "orderDeliveredTitle": "Đơn hàng đã được giao",
+  "@orderDeliveredTitle": {
+    "description": "Title for order delivered notification"
+  },
+  "orderDeliveredMessage": "Nhân viên {employeeName} đã giao đơn hàng {orderId} cho khách hàng {customerName} tại {customerAddress} lúc {deliveredAt}",
+  "@orderDeliveredMessage": {
+    "description": "Message for order delivered notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "orderId": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerAddress": {
+        "type": "String"
+      },
+      "deliveredAt": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCreatedTitle": "Đơn hàng mới",
+  "@orderCreatedTitle": {
+    "description": "Title for order created notification"
+  },
+  "orderCreatedMessage": "Nhân viên {employeeName} đã tạo đơn cho khách hàng {customerName} ({customerPhone}) với tổng tiền {totalPrice}",
+  "@orderCreatedMessage": {
+    "description": "Message for order created notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderUpdatedTitle": "Đơn hàng được cập nhật",
+  "@orderUpdatedTitle": {
+    "description": "Title for order updated notification"
+  },
+  "orderUpdatedMessage": "Nhân viên {employeeName} đã cập nhật đơn cho khách hàng {customerName}",
+  "@orderUpdatedMessage": {
+    "description": "Message for order updated notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingCreatedTitle": "Đơn đặt hàng mới",
+  "@bookingCreatedTitle": {
+    "description": "Title for booking created notification"
+  },
+  "bookingCreatedMessage": "Khách hàng {customerName} ({customerPhone}) đã tạo đơn đặt hàng với tổng tiền {totalPrice}",
+  "@bookingCreatedMessage": {
+    "description": "Message for booking created notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPaidTitle": "Đơn hàng đã thanh toán",
+  "@orderPaidTitle": {
+    "description": "Title for order paid notification"
+  },
+  "orderPaidMessage": "Đơn hàng cho khách hàng {customerName} đã được thanh toán {totalPrice}",
+  "@orderPaidMessage": {
+    "description": "Message for order paid notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
   "deleteAction": "Xóa",
   "@deleteAction": {
     "description": "Delete action in popup menu"
@@ -3725,7 +3823,7 @@
   "@deliveryManagement": {
     "description": "Delivery management screen title"
   },
-  "deliveryOrders": "Đơn hàng giao hàng",
+  "deliveryOrders": "Đơn giao hàng",
   "@deliveryOrders": {
     "description": "Delivery orders list title"
   },
@@ -3777,7 +3875,7 @@
   "@noDeliveryOrdersYet": {
     "description": "No delivery orders yet"
   },
-  "waitingForDeliveryOrders": "Đang chờ đơn hàng giao hàng",
+  "waitingForDeliveryOrders": "Đang chờ đơn giao hàng",
   "@waitingForDeliveryOrders": {
     "description": "Waiting for delivery orders message"
   },
@@ -3800,5 +3898,17 @@
   "deliveredDescription": "Đơn hàng đã giao thành công",
   "@deliveredDescription": {
     "description": "Delivered description"
+  },
+  "deliveryPhoto": "Ảnh giao hàng",
+  "@deliveryPhoto": {
+    "description": "Delivery photo"
+  },
+  "deliveryPhotoDescription": "Ảnh chụp khi giao hàng",
+  "@deliveryPhotoDescription": {
+    "description": "Delivery photo description"
+  },
+  "imageDisplayError": "Lỗi hiển thị ảnh",
+  "@imageDisplayError": {
+    "description": "Image display error"
   }
 }

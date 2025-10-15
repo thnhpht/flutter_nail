@@ -83,6 +83,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         return Icons.edit;
       case 'order_paid':
         return Icons.payment;
+      case 'order_delivered':
+        return Icons.local_shipping;
       default:
         return Icons.notifications;
     }
@@ -98,6 +100,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         return Colors.blue;
       case 'order_paid':
         return Colors.orange;
+      case 'order_delivered':
+        return Colors.teal;
       default:
         return Colors.grey;
     }

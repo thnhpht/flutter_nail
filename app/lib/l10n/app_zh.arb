@@ -1613,6 +1613,104 @@
   "@newNotificationsWillAppearHere": {
     "description": "Empty state description for notifications"
   },
+  "orderDeliveredTitle": "订单已送达",
+  "@orderDeliveredTitle": {
+    "description": "Title for order delivered notification"
+  },
+  "orderDeliveredMessage": "员工 {employeeName} 已将订单 {orderId} 送达客户 {customerName}，地址：{customerAddress}，时间：{deliveredAt}",
+  "@orderDeliveredMessage": {
+    "description": "Message for order delivered notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "orderId": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerAddress": {
+        "type": "String"
+      },
+      "deliveredAt": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCreatedTitle": "新订单",
+  "@orderCreatedTitle": {
+    "description": "Title for order created notification"
+  },
+  "orderCreatedMessage": "员工 {employeeName} 为客户 {customerName} ({customerPhone}) 创建了订单，总金额 {totalPrice}",
+  "@orderCreatedMessage": {
+    "description": "Message for order created notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderUpdatedTitle": "订单已更新",
+  "@orderUpdatedTitle": {
+    "description": "Title for order updated notification"
+  },
+  "orderUpdatedMessage": "员工 {employeeName} 已更新客户 {customerName} 的订单",
+  "@orderUpdatedMessage": {
+    "description": "Message for order updated notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingCreatedTitle": "新预订订单",
+  "@bookingCreatedTitle": {
+    "description": "Title for booking created notification"
+  },
+  "bookingCreatedMessage": "客户 {customerName} ({customerPhone}) 创建了预订订单，总金额 {totalPrice}",
+  "@bookingCreatedMessage": {
+    "description": "Message for booking created notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPaidTitle": "订单已支付",
+  "@orderPaidTitle": {
+    "description": "Title for order paid notification"
+  },
+  "orderPaidMessage": "客户 {customerName} 的订单已支付 {totalPrice}",
+  "@orderPaidMessage": {
+    "description": "Message for order paid notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
   "deleteAction": "删除",
   "@deleteAction": {
     "description": "Delete action in popup menu"

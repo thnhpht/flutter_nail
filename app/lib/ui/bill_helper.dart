@@ -804,6 +804,85 @@ class BillHelper {
 
         const SizedBox(height: AppTheme.spacingM),
 
+        // Delivery Image section - only show if order is delivered and has image
+        if (order.deliveryStatus == 'delivered' &&
+            order.imageDelivered != null &&
+            order.imageDelivered!.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingM),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_shipping,
+                      color: AppTheme.primaryStart,
+                      size: 20,
+                    ),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      AppLocalizations.of(context)!.deliveryPhoto,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppTheme.spacingM),
+                Center(
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                      child: Image.memory(
+                        base64Decode(
+                            order.imageDelivered!.startsWith('data:image/')
+                                ? order.imageDelivered!.split(',')[1]
+                                : order.imageDelivered!),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.imageDisplayError,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red[600],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppTheme.spacingS),
+                Text(
+                  AppLocalizations.of(context)!.deliveryPhotoDescription,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+
+        const SizedBox(height: AppTheme.spacingM),
+
         // Footer
         Container(
           width: double.infinity, // Thêm dòng này

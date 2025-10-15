@@ -290,6 +290,7 @@ class Order {
   final bool isBooking; // true if created from booking, false if from order
   final String deliveryMethod; // "pickup" or "delivery"
   final String deliveryStatus; // "pending", "delivered", "cancelled"
+  final String? imageDelivered; // Image taken when order is delivered
 
   Order({
     required this.id,
@@ -311,6 +312,7 @@ class Order {
     this.isBooking = false, // Mặc định là order (false)
     this.deliveryMethod = 'pickup', // Mặc định là lấy tại chỗ
     this.deliveryStatus = '', // Mặc định là rỗng, chỉ set khi cần
+    this.imageDelivered, // Ảnh giao hàng
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -401,6 +403,7 @@ class Order {
       isBooking: json['isBooking'] as bool? ?? false,
       deliveryMethod: json['deliveryMethod'] as String? ?? 'pickup',
       deliveryStatus: json['deliveryStatus'] as String? ?? '',
+      imageDelivered: json['imageDelivered'] as String?,
     );
   }
 
@@ -425,6 +428,7 @@ class Order {
         'isBooking': isBooking,
         'deliveryMethod': deliveryMethod,
         'deliveryStatus': deliveryStatus,
+        'imageDelivered': imageDelivered,
       };
 }
 

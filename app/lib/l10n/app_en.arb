@@ -1583,6 +1583,104 @@
   "@newNotificationsWillAppearHere": {
     "description": "Empty state description for notifications"
   },
+  "orderDeliveredTitle": "Order Delivered",
+  "@orderDeliveredTitle": {
+    "description": "Title for order delivered notification"
+  },
+  "orderDeliveredMessage": "Employee {employeeName} has delivered order {orderId} to customer {customerName} at {customerAddress} at {deliveredAt}",
+  "@orderDeliveredMessage": {
+    "description": "Message for order delivered notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "orderId": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerAddress": {
+        "type": "String"
+      },
+      "deliveredAt": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCreatedTitle": "New Order",
+  "@orderCreatedTitle": {
+    "description": "Title for order created notification"
+  },
+  "orderCreatedMessage": "Employee {employeeName} has created an order for customer {customerName} ({customerPhone}) with total amount {totalPrice}",
+  "@orderCreatedMessage": {
+    "description": "Message for order created notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderUpdatedTitle": "Order Updated",
+  "@orderUpdatedTitle": {
+    "description": "Title for order updated notification"
+  },
+  "orderUpdatedMessage": "Employee {employeeName} has updated the order for customer {customerName}",
+  "@orderUpdatedMessage": {
+    "description": "Message for order updated notification",
+    "placeholders": {
+      "employeeName": {
+        "type": "String"
+      },
+      "customerName": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingCreatedTitle": "New Booking Order",
+  "@bookingCreatedTitle": {
+    "description": "Title for booking created notification"
+  },
+  "bookingCreatedMessage": "Customer {customerName} ({customerPhone}) has created a booking order with total amount {totalPrice}",
+  "@bookingCreatedMessage": {
+    "description": "Message for booking created notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "customerPhone": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPaidTitle": "Order Paid",
+  "@orderPaidTitle": {
+    "description": "Title for order paid notification"
+  },
+  "orderPaidMessage": "Order for customer {customerName} has been paid {totalPrice}",
+  "@orderPaidMessage": {
+    "description": "Message for order paid notification",
+    "placeholders": {
+      "customerName": {
+        "type": "String"
+      },
+      "totalPrice": {
+        "type": "String"
+      }
+    }
+  },
   "deleteAction": "Delete",
   "@deleteAction": {
     "description": "Delete action in popup menu"
@@ -3017,5 +3115,17 @@
   "deliveredDescription": "Order has been delivered successfully",
   "@deliveredDescription": {
     "description": "Delivered description"
+  },
+  "deliveryPhoto": "Delivery Photo",
+  "@deliveryPhoto": {
+    "description": "Delivery photo"
+  },
+  "deliveryPhotoDescription": "Photo taken when delivering the order",
+  "@deliveryPhotoDescription": {
+    "description": "Delivery photo description"
+  },
+  "imageDisplayError": "Image display error",
+  "@imageDisplayError": {
+    "description": "Image display error"
   }
 }

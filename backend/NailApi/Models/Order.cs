@@ -29,5 +29,6 @@ namespace NailApi.Models
         public bool IsBooking { get; set; } = false; // true if created from booking, false if from order
         public string DeliveryMethod { get; set; } = "pickup"; // "pickup" or "delivery"
         public string DeliveryStatus { get; set; } = ""; // "pending" or "delivered" or empty for non-delivery orders
+        public string? ImageDelivered { get; set; } // Image taken when order is delivered
     }
 }
