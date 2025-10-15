@@ -346,11 +346,13 @@ class BillHelper {
               ] else
                 _buildInfoRowWithWrap(
                     context,
-                    AppLocalizations.of(context)!.servingStaff,
+                    order.deliveryMethod == 'delivery'
+                        ? AppLocalizations.of(context)!.deliveryStaff
+                        : AppLocalizations.of(context)!.servingStaff,
                     order.employeeNames.join(', ')),
 
-              // Show delivery status for booking orders with delivery method
-              if (order.isBooking && order.deliveryMethod == 'delivery')
+              // Show delivery status for orders with delivery method
+              if (order.deliveryMethod == 'delivery')
                 _buildInfoRowWithWrap(
                     context,
                     AppLocalizations.of(context)!.deliveryStatus,

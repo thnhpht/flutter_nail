@@ -51,6 +51,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   bool _isPaid = false;
   String? _currentUserRole;
   String? _currentEmployeeId;
+  String _deliveryOption = 'pickup'; // 'pickup' or 'delivery'
 
   @override
   void initState() {
@@ -97,6 +98,9 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _tipController.text = widget.order.tip.toStringAsFixed(0);
     _taxController.text = widget.order.taxPercent.toStringAsFixed(0);
     _isPaid = widget.order.isPaid;
+    _deliveryOption = widget.order.deliveryMethod.isNotEmpty
+        ? widget.order.deliveryMethod
+        : 'pickup';
 
     _discountPercent = widget.order.discountPercent;
     _tip = widget.order.tip;
@@ -210,13 +214,14 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
       final allEmployees = await widget.api.getEmployees();
       List<Employee> employees;
 
-      // Nếu đang chỉnh sửa đơn booking, chỉ hiển thị nhân viên giao hàng
-      if (widget.order.isBooking) {
+      // Filter employees based on delivery option
+      if (_deliveryOption == 'delivery') {
+        // Load delivery employees for home delivery
         employees = allEmployees
             .where((employee) => employee.employeeType == 'delivery')
             .toList();
       } else {
-        // Đối với đơn thường, chỉ hiển thị nhân viên phục vụ
+        // Load service employees for pickup
         employees = allEmployees
             .where((employee) => employee.employeeType == 'service')
             .toList();
@@ -576,6 +581,16 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     });
   }
 
+  void _onDeliveryOptionChanged(String value) {
+    setState(() {
+      _deliveryOption = value;
+      // Clear selected employees when changing delivery option
+      _selectedEmployees.clear();
+    });
+    // Reload employees based on new delivery option
+    _loadEmployees();
+  }
+
   bool _canUpdateOrder() {
     // Check if order is from today
     final today = DateTime.now();
@@ -607,7 +622,28 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
           type: MessageType.warning);
       return;
     }
-    // Employee selection is now optional
+
+    // Validate delivery requirements
+    if (_deliveryOption == 'delivery') {
+      // For delivery, require full customer information
+      if (_customerNameController.text.trim().isEmpty ||
+          _customerPhoneController.text.trim().isEmpty ||
+          widget.order.customerAddress == null ||
+          widget.order.customerAddress!.isEmpty) {
+        AppWidgets.showFlushbar(context,
+            'Vui lòng nhập đầy đủ thông tin khách hàng (tên, số điện thoại, địa chỉ) để giao hàng tại nhà',
+            type: MessageType.warning);
+        return;
+      }
+
+      // For delivery, require at least one delivery employee
+      if (_selectedEmployees.isEmpty) {
+        AppWidgets.showFlushbar(
+            context, 'Vui lòng chọn ít nhất một nhân viên giao hàng',
+            type: MessageType.warning);
+        return;
+      }
+    }
 
     setState(() {
       _isLoading = true;
@@ -646,10 +682,10 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         createdAt: widget.order.createdAt, // Keep original creation date
         isPaid: _isPaid,
         isBooking: widget.order.isBooking, // Keep original booking status
-        deliveryMethod:
-            widget.order.deliveryMethod, // Keep original delivery method
-        deliveryStatus:
-            widget.order.deliveryStatus, // Keep original delivery status
+        deliveryMethod: _deliveryOption, // Use selected delivery method
+        deliveryStatus: _deliveryOption == 'delivery'
+            ? 'pending'
+            : '', // Set delivery status based on delivery method
       );
 
       // Validate order data
@@ -819,6 +855,40 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                               }
                               return null;
                             },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Delivery Option Section
+                    _buildSectionCard(
+                      title: l10n.deliveryOption,
+                      icon: Icons.local_shipping,
+                      child: Column(
+                        children: [
+                          RadioListTile<String>(
+                            title: Text(l10n.pickupAtSalon),
+                            value: 'pickup',
+                            groupValue: _deliveryOption,
+                            onChanged: (value) {
+                              if (value != null) {
+                                _onDeliveryOptionChanged(value);
+                              }
+                            },
+                            activeColor: const Color(0xFF667eea),
+                          ),
+                          RadioListTile<String>(
+                            title: Text(l10n.homeDelivery),
+                            value: 'delivery',
+                            groupValue: _deliveryOption,
+                            onChanged: (value) {
+                              if (value != null) {
+                                _onDeliveryOptionChanged(value);
+                              }
+                            },
+                            activeColor: const Color(0xFF667eea),
                           ),
                         ],
                       ),

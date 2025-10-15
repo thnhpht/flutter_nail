@@ -55,6 +55,7 @@ class _OrderScreenState extends State<OrderScreen> {
   List<Customer> _allCustomers = [];
   List<Customer> _filteredCustomers = [];
   bool _showCustomerDropdown = false;
+  String _deliveryOption = 'pickup'; // 'pickup' or 'delivery'
 
   @override
   void initState() {
@@ -172,31 +173,38 @@ class _OrderScreenState extends State<OrderScreen> {
     try {
       final allEmployees = await widget.api.getEmployees();
       setState(() {
-        // Chỉ hiển thị nhân viên phục vụ khi tạo đơn mới
-        final serviceEmployees = allEmployees
-            .where((employee) => employee.employeeType == 'service')
-            .toList();
+        // Filter employees based on delivery option
+        List<Employee> filteredEmployees;
+        if (_deliveryOption == 'delivery') {
+          // Load delivery employees for home delivery
+          filteredEmployees = allEmployees
+              .where((employee) => employee.employeeType == 'delivery')
+              .toList();
+        } else {
+          // Load service employees for pickup
+          filteredEmployees = allEmployees
+              .where((employee) => employee.employeeType == 'service')
+              .toList();
+        }
 
         // Sort employees alphabetically by name
-        serviceEmployees.sort(
+        filteredEmployees.sort(
             (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-        _employees = serviceEmployees;
+        _employees = filteredEmployees;
 
         // Tự động chọn nhân viên đăng nhập nếu là employee
         if (_currentUserRole == 'employee' &&
             _currentEmployeeId != null &&
-            serviceEmployees.isNotEmpty) {
+            filteredEmployees.isNotEmpty) {
           try {
-            final currentEmployee = serviceEmployees.firstWhere(
+            final currentEmployee = filteredEmployees.firstWhere(
               (employee) => employee.id == _currentEmployeeId,
             );
             _selectedEmployees = [currentEmployee];
           } catch (e) {
-            // Nếu không tìm thấy nhân viên hiện tại trong danh sách service employees,
-            // chọn nhân viên đầu tiên nếu có
-            if (serviceEmployees.isNotEmpty) {
-              _selectedEmployees = [serviceEmployees.first];
-            }
+            // Nếu không tìm thấy nhân viên hiện tại trong danh sách,
+            // để danh sách rỗng
+            _selectedEmployees = [];
           }
         }
       });
@@ -596,6 +604,16 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
+  void _onDeliveryOptionChanged(String value) {
+    setState(() {
+      _deliveryOption = value;
+      // Clear selected employees when changing delivery option
+      _selectedEmployees.clear();
+    });
+    // Reload employees based on new delivery option
+    _loadEmployees();
+  }
+
   void _selectCustomer(Customer customer) {
     setState(() {
       _customerPhoneController.text = customer.phone;
@@ -632,7 +650,27 @@ class _OrderScreenState extends State<OrderScreen> {
           type: MessageType.warning);
       return;
     }
-    // Employee selection is now optional
+
+    // Validate delivery requirements
+    if (_deliveryOption == 'delivery') {
+      // For delivery, require full customer information
+      if (_customerNameController.text.trim().isEmpty ||
+          _customerPhoneController.text.trim().isEmpty ||
+          _customerAddressController.text.trim().isEmpty) {
+        AppWidgets.showFlushbar(context,
+            'Vui lòng nhập đầy đủ thông tin khách hàng (tên, số điện thoại, địa chỉ) để giao hàng tại nhà',
+            type: MessageType.warning);
+        return;
+      }
+
+      // For delivery, require at least one delivery employee
+      if (_selectedEmployees.isEmpty) {
+        AppWidgets.showFlushbar(
+            context, 'Vui lòng chọn ít nhất một nhân viên giao hàng',
+            type: MessageType.warning);
+        return;
+      }
+    }
 
     // Validate order ID if provided
     final orderId = _orderIdController.text.trim();
@@ -689,6 +727,8 @@ class _OrderScreenState extends State<OrderScreen> {
           shippingFee: _shippingFee,
           createdAt: DateTime.now(),
           isPaid: false, // Mặc định chưa thanh toán
+          deliveryMethod: _deliveryOption,
+          deliveryStatus: _deliveryOption == 'delivery' ? 'pending' : '',
         );
 
         // Validate order data
@@ -961,6 +1001,40 @@ class _OrderScreenState extends State<OrderScreen> {
                               // Address is optional, no validation needed
                               return null;
                             },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Delivery Option Section
+                    _buildSectionCard(
+                      title: l10n.deliveryOption,
+                      icon: Icons.local_shipping,
+                      child: Column(
+                        children: [
+                          RadioListTile<String>(
+                            title: Text(l10n.pickupAtSalon),
+                            value: 'pickup',
+                            groupValue: _deliveryOption,
+                            onChanged: (value) {
+                              if (value != null) {
+                                _onDeliveryOptionChanged(value);
+                              }
+                            },
+                            activeColor: const Color(0xFF667eea),
+                          ),
+                          RadioListTile<String>(
+                            title: Text(l10n.homeDelivery),
+                            value: 'delivery',
+                            groupValue: _deliveryOption,
+                            onChanged: (value) {
+                              if (value != null) {
+                                _onDeliveryOptionChanged(value);
+                              }
+                            },
+                            activeColor: const Color(0xFF667eea),
                           ),
                         ],
                       ),

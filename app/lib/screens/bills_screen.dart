@@ -1793,9 +1793,7 @@ class _BillsScreenState extends State<BillsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      order.isBooking
-                          ? Icons.shopping_bag_outlined
-                          : Icons.person_outline,
+                      Icons.shopping_bag_outlined,
                       size: 16,
                       color: Colors.grey[600],
                     ),
@@ -1806,21 +1804,18 @@ class _BillsScreenState extends State<BillsScreen> {
                         children: [
                           Text(
                             order.isBooking
-                                ? (order.deliveryMethod == 'pickup'
-                                    ? AppLocalizations.of(context)!
-                                        .pickupAtStore
+                                ? '${AppLocalizations.of(context)!.booking} - ${order.deliveryMethod == 'pickup' ? AppLocalizations.of(context)!.pickupAtStore : AppLocalizations.of(context)!.homeDelivery}'
+                                : (order.deliveryMethod == 'delivery'
+                                    ? AppLocalizations.of(context)!.homeDelivery
                                     : AppLocalizations.of(context)!
-                                        .homeDelivery)
-                                : order.employeeNames.join(', '),
+                                        .pickupAtStore),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
                             ),
                           ),
-                          // Show delivery staff for booking orders with delivery method
-                          if (order.isBooking &&
-                              order.deliveryMethod == 'delivery' &&
-                              order.employeeNames.isNotEmpty) ...[
+                          // Show staff for orders
+                          if (order.employeeNames.isNotEmpty) ...[
                             const SizedBox(height: 2),
                             Row(
                               children: [
@@ -1831,7 +1826,9 @@ class _BillsScreenState extends State<BillsScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '${AppLocalizations.of(context)!.deliveryStaff}: ${order.employeeNames.join(', ')}',
+                                  order.deliveryMethod == 'delivery'
+                                      ? '${AppLocalizations.of(context)!.deliveryStaff}: ${order.employeeNames.join(', ')}'
+                                      : '${AppLocalizations.of(context)!.servingStaff}: ${order.employeeNames.join(', ')}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[500],
@@ -1841,9 +1838,8 @@ class _BillsScreenState extends State<BillsScreen> {
                               ],
                             ),
                           ],
-                          // Show delivery status for booking orders with delivery method
-                          if (order.isBooking &&
-                              order.deliveryMethod == 'delivery') ...[
+                          // Show delivery status for orders with delivery method
+                          if (order.deliveryMethod == 'delivery') ...[
                             const SizedBox(height: 2),
                             Row(
                               children: [
