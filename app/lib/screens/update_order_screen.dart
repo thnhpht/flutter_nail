@@ -34,6 +34,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   final _discountController = TextEditingController();
   final _tipController = TextEditingController();
   final _taxController = TextEditingController();
+  final _shippingFeeController = TextEditingController();
 
   List<Category> _categories = [];
   List<Service> _services = [];
@@ -45,6 +46,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
   double _discountPercent = 0.0;
   double _tip = 0.0;
   double _taxPercent = 0.0;
+  double _shippingFee = 0.0;
   double _finalTotalPrice = 0.0;
   bool _isLoading = false;
   bool _showEmployeeDropdown = false;
@@ -62,6 +64,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _employeePhoneController.addListener(_onEmployeePhoneChanged);
     _tipController.addListener(_onTipChanged);
     _taxController.addListener(_onTaxChanged);
+    _shippingFeeController.addListener(_onShippingFeeChanged);
   }
 
   Future<void> _initializeData() async {
@@ -97,6 +100,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _discountController.text = widget.order.discountPercent.toStringAsFixed(0);
     _tipController.text = widget.order.tip.toStringAsFixed(0);
     _taxController.text = widget.order.taxPercent.toStringAsFixed(0);
+    _shippingFeeController.text = widget.order.shippingFee.toStringAsFixed(0);
     _isPaid = widget.order.isPaid;
     _deliveryOption = widget.order.deliveryMethod.isNotEmpty
         ? widget.order.deliveryMethod
@@ -105,6 +109,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _discountPercent = widget.order.discountPercent;
     _tip = widget.order.tip;
     _taxPercent = widget.order.taxPercent;
+    _shippingFee = widget.order.shippingFee;
 
     // Initialize selected employees (optional)
     if (_employees.isNotEmpty) {
@@ -165,6 +170,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _employeePhoneController.removeListener(_onEmployeePhoneChanged);
     _tipController.removeListener(_onTipChanged);
     _taxController.removeListener(_onTaxChanged);
+    _shippingFeeController.removeListener(_onShippingFeeChanged);
     _customerPhoneController.dispose();
     _customerNameController.dispose();
     _employeePhoneController.dispose();
@@ -172,6 +178,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     _discountController.dispose();
     _tipController.dispose();
     _taxController.dispose();
+    _shippingFeeController.dispose();
     super.dispose();
   }
 
@@ -242,6 +249,40 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         if (_categories.isNotEmpty && _services.isNotEmpty) {
           _initializeFormData();
         }
+      });
+      AppWidgets.showFlushbar(context,
+          AppLocalizations.of(context)!.errorLoadingEmployees(e.toString()),
+          type: MessageType.error);
+    }
+  }
+
+  Future<void> _loadEmployeesForDeliveryOption() async {
+    try {
+      final allEmployees = await widget.api.getEmployees();
+      List<Employee> employees;
+
+      // Filter employees based on delivery option
+      if (_deliveryOption == 'delivery') {
+        // Load delivery employees for home delivery
+        employees = allEmployees
+            .where((employee) => employee.employeeType == 'delivery')
+            .toList();
+      } else {
+        // Load service employees for pickup
+        employees = allEmployees
+            .where((employee) => employee.employeeType == 'service')
+            .toList();
+      }
+
+      setState(() {
+        _employees = employees;
+        // Don't reinitialize form data to avoid resetting delivery option
+        _ensureEmployeeSelected(); // Ensure current employee is selected
+      });
+    } catch (e) {
+      // If employees fail to load, don't reinitialize form data
+      setState(() {
+        _employees = [];
       });
       AppWidgets.showFlushbar(context,
           AppLocalizations.of(context)!.errorLoadingEmployees(e.toString()),
@@ -532,7 +573,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         (sum, serviceWithQuantity) => sum + serviceWithQuantity.totalPrice);
     final subtotalAfterDiscount = _totalPrice * (1 - _discountPercent / 100);
     final taxAmount = subtotalAfterDiscount * (_taxPercent / 100);
-    _finalTotalPrice = subtotalAfterDiscount + _tip + taxAmount;
+    _finalTotalPrice = subtotalAfterDiscount + _tip + taxAmount + _shippingFee;
   }
 
   void _onDiscountChanged(String value) {
@@ -581,14 +622,27 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
     });
   }
 
+  void _onShippingFeeChanged() {
+    final value = _shippingFeeController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _shippingFee = 0.0;
+      } else {
+        final shippingFee = double.tryParse(value) ?? 0.0;
+        _shippingFee = shippingFee.clamp(0.0, double.infinity);
+      }
+      _calculateTotal();
+    });
+  }
+
   void _onDeliveryOptionChanged(String value) {
     setState(() {
       _deliveryOption = value;
       // Clear selected employees when changing delivery option
       _selectedEmployees.clear();
     });
-    // Reload employees based on new delivery option
-    _loadEmployees();
+    // Reload employees based on new delivery option without reinitializing form data
+    _loadEmployeesForDeliveryOption();
   }
 
   bool _canUpdateOrder() {
@@ -678,7 +732,7 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
         discountPercent: _discountPercent,
         tip: _tip,
         taxPercent: _taxPercent,
-        shippingFee: widget.order.shippingFee, // Keep original shipping fee
+        shippingFee: _shippingFee, // Use updated shipping fee
         createdAt: widget.order.createdAt, // Keep original creation date
         isPaid: _isPaid,
         isBooking: widget.order.isBooking, // Keep original booking status
@@ -1329,6 +1383,79 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
 
                     const SizedBox(height: 16),
 
+                    // Shipping Fee Section
+                    _buildSectionCard(
+                      title: l10n.shippingFee,
+                      icon: Icons.local_shipping,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _shippingFeeController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.vnd,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey[300]!),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF667eea), width: 2),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[50],
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                              ),
+                              onChanged: (value) => _onShippingFeeChanged(),
+                              validator: (value) {
+                                if (value != null && value.isNotEmpty) {
+                                  final shippingFee = double.tryParse(value);
+                                  if (shippingFee == null || shippingFee < 0) {
+                                    return l10n.shippingFeeMustBeGreaterThan0;
+                                  }
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              l10n.shippingFeeAmount(
+                                  _formatPrice(_shippingFee)),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
                     // Payment Status Section
                     _buildSectionCard(
                       title: l10n.paymentStatus,
@@ -1497,6 +1624,30 @@ class _UpdateOrderScreenState extends State<UpdateOrderScreen> {
                                 ),
                                 Text(
                                   '+${_formatPrice((_totalPrice * (1 - _discountPercent / 100)) * _taxPercent / 100)} ${l10n.vnd}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          if (_shippingFee > 0) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l10n.shippingFeeLabel,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  '+${_formatPrice(_shippingFee)} ${l10n.vnd}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
