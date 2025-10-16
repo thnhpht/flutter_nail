@@ -3006,5 +3006,125 @@
   "errorUpdatingDeliveryStatus": "更新配送状态时出错",
   "@errorUpdatingDeliveryStatus": {
     "description": "Error message when updating delivery status fails"
+  },
+  "qrCodeGeneratorTitle": "创建预订二维码",
+  "@qrCodeGeneratorTitle": {
+    "description": "QR Code Generator title"
+  },
+  "qrCodeGeneratorSubtitle": "客户扫描二维码即可直接访问商店的预订菜单",
+  "@qrCodeGeneratorSubtitle": {
+    "description": "QR Code Generator subtitle"
+  },
+  "qrCodeType": "二维码类型",
+  "@qrCodeType": {
+    "description": "QR Code type label"
+  },
+  "qrCodeWeb": "网页二维码",
+  "@qrCodeWeb": {
+    "description": "QR Web option"
+  },
+  "qrCodeWebSubtitle": "在浏览器中打开 - 无需安装应用",
+  "@qrCodeWebSubtitle": {
+    "description": "QR Web subtitle"
+  },
+  "qrCodeApp": "应用二维码",
+  "@qrCodeApp": {
+    "description": "QR App option"
+  },
+  "qrCodeAppSubtitle": "直接打开应用 - 需要安装应用",
+  "@qrCodeAppSubtitle": {
+    "description": "QR App subtitle"
+  },
+  "shopNameField": "商店名称",
+  "@shopNameField": {
+    "description": "Shop name field label"
+  },
+  "generateQrCodeButton": "生成二维码",
+  "@generateQrCodeButton": {
+    "description": "Generate QR Code button"
+  },
+  "shopNotExists": "商店 \"{shopName}\" 不存在于系统中",
+  "@shopNotExists": {
+    "description": "Shop not exists error",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopConfirmed": "商店 \"{shopName}\" 已确认",
+  "@shopConfirmed": {
+    "description": "Shop confirmed message",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopLabel": "商店: {shopName}",
+  "@shopLabel": {
+    "description": "Shop label",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "download": "下载",
+  "@download": {
+    "description": "Download button"
+  },
+  "downloadSuccessful": "QR码下载成功",
+  "@downloadSuccessful": {
+    "description": "Download successful message"
+  },
+  "share": "分享",
+  "@share": {
+    "description": "Share button"
+  },
+  "qrCodeLinkDialogTitle": "二维码链接",
+  "@qrCodeLinkDialogTitle": {
+    "description": "QR Code Link dialog title"
+  },
+  "onWebYouCan": "在网页上，您可以：",
+  "@onWebYouCan": {
+    "description": "On web you can"
+  },
+  "takeScreenshot": "1. 截屏保存二维码",
+  "@takeScreenshot": {
+    "description": "Take screenshot instruction"
+  },
+  "orCopyLink": "2. 或复制以下链接：",
+  "@orCopyLink": {
+    "description": "Or copy link instruction"
+  },
+  "noteOnMobile": "注意：在手机上，您可以直接分享二维码。",
+  "@noteOnMobile": {
+    "description": "Note on mobile"
+  },
+  "close": "关闭",
+  "@close": {
+    "description": "Close button"
+  },
+  "instructions": "使用说明",
+  "@instructions": {
+    "description": "Instructions title"
+  },
+  "qrWebInstructions": "1. 打印或分享此二维码\n2. 客户用手机相机扫描代码\n3. 自动打开网页浏览器\n4. 无需应用，直接在网页上下单",
+  "@qrWebInstructions": {
+    "description": "QR Web instructions"
+  },
+  "qrAppInstructions": "1. 打印或分享此二维码\n2. 客户用相机扫描代码\n3. 打开 FShop 应用（必须已安装）\n4. 直接访问商店的预订菜单",
+  "@qrAppInstructions": {
+    "description": "QR App instructions"
+  },
+  "errorSharingQrCode": "分享二维码时出错: {error}",
+  "@errorSharingQrCode": {
+    "description": "Error sharing QR code",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

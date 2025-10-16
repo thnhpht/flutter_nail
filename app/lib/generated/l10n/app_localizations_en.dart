@@ -2346,4 +2346,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get imageDisplayError => 'Image display error';
+
+  @override
+  String get qrCodeGeneratorTitle => 'Create Booking QR Code';
+
+  @override
+  String get qrCodeGeneratorSubtitle =>
+      'Customers scan QR code to access shop\'s booking menu directly';
+
+  @override
+  String get qrCodeType => 'QR Code Type';
+
+  @override
+  String get qrCodeWeb => 'QR Web';
+
+  @override
+  String get qrCodeWebSubtitle => 'Opens in browser - No app required';
+
+  @override
+  String get qrCodeApp => 'QR App';
+
+  @override
+  String get qrCodeAppSubtitle => 'Opens app directly - App must be installed';
+
+  @override
+  String get shopNameField => 'Shop Name';
+
+  @override
+  String get generateQrCodeButton => 'Generate QR Code';
+
+  @override
+  String shopNotExists(String shopName) {
+    return 'Shop \"$shopName\" does not exist in the system';
+  }
+
+  @override
+  String shopConfirmed(String shopName) {
+    return 'Shop \"$shopName\" confirmed';
+  }
+
+  @override
+  String shopLabel(String shopName) {
+    return 'Shop: $shopName';
+  }
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get downloadSuccessful => 'QR code downloaded successfully';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get qrCodeLinkDialogTitle => 'QR Code Link';
+
+  @override
+  String get onWebYouCan => 'On web, you can:';
+
+  @override
+  String get takeScreenshot => '1. Take screenshot of QR code to save';
+
+  @override
+  String get orCopyLink => '2. Or copy the link below:';
+
+  @override
+  String get noteOnMobile => 'Note: On mobile, you can share QR code directly.';
+
+  @override
+  String get instructions => 'Instructions';
+
+  @override
+  String get qrWebInstructions =>
+      '1. Print or share this QR code\n2. Customer scans code with phone camera\n3. Automatically opens web browser\n4. No app needed, order directly on web';
+
+  @override
+  String get qrAppInstructions =>
+      '1. Print or share this QR code\n2. Customer scans code with camera\n3. Opens FShop app (must be installed)\n4. Direct access to shop\'s booking menu';
+
+  @override
+  String errorSharingQrCode(String error) {
+    return 'Error sharing QR code: $error';
+  }
 }

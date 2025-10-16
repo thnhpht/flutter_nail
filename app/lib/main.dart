@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:app_links/app_links.dart';
 import 'api_client.dart';
 import 'config/api_config.dart';
 import 'models.dart';
@@ -21,6 +24,7 @@ import 'screens/inventory_reports_screen.dart';
 import 'screens/profit_reports_screen.dart';
 import 'screens/salon_info_screen.dart';
 import 'screens/update_order_screen.dart';
+import 'screens/qr_generator_screen.dart';
 import 'ui/navigation_drawer.dart';
 import 'ui/design_system.dart';
 import 'ui/notification_button.dart';
@@ -42,7 +46,8 @@ enum _HomeView {
   inventoryReports,
   profitReports,
   salonInfo,
-  updateOrder
+  updateOrder,
+  qrGenerator
 }
 
 void main() {
@@ -97,6 +102,10 @@ class _NailAppState extends State<NailApp> {
   DateTime? _lastRefreshTime;
   static const Duration _refreshDebounceTime = Duration(seconds: 2);
 
+  // Deep link handling
+  late final AppLinks _appLinks = AppLinks();
+  StreamSubscription? _deepLinkSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +126,9 @@ class _NailAppState extends State<NailApp> {
 
     // Listen for language changes
     _languageService.addListener(_onLanguageChanged);
+
+    // Initialize deep link handling
+    _initDeepLinkHandler();
   }
 
   Future<void> _checkLoginStatus() async {
@@ -431,12 +443,133 @@ class _NailAppState extends State<NailApp> {
     });
   }
 
+  /// Initialize deep link handler for QR code scanning
+  Future<void> _initDeepLinkHandler() async {
+    // Check if running on web with hash route
+    if (kIsWeb) {
+      // For web, we need to check the URL fragment/hash
+      _handleWebRoute();
+    } else {
+      // Handle initial deep link when app is opened from QR code
+      try {
+        final initialLink = await _appLinks.getInitialLink();
+        if (initialLink != null) {
+          _handleDeepLink(initialLink);
+        }
+      } catch (e) {
+        print('Error getting initial deep link: $e');
+      }
+
+      // Listen for deep links while app is running
+      _deepLinkSubscription = _appLinks.uriLinkStream.listen(
+        (Uri uri) {
+          _handleDeepLink(uri);
+        },
+        onError: (err) {
+          print('Deep link error: $err');
+        },
+      );
+    }
+  }
+
+  /// Handle web route from URL hash
+  /// Expected format: https://yourdomain.com/#/booking?salon=bephuongtubi@
+  void _handleWebRoute() {
+    // For web, parse the hash fragment
+    final currentUrl = Uri.base;
+    final fragment = currentUrl.fragment; // Gets everything after #
+
+    print('Web route fragment: $fragment');
+
+    // Parse fragment as route
+    if (fragment.startsWith('/booking')) {
+      // Extract salon parameter
+      final uri = Uri.parse('dummy://host$fragment'); // Dummy scheme to parse
+      final salonName = uri.queryParameters['salon'];
+
+      if (salonName != null && salonName.isNotEmpty) {
+        _handleBookingRoute(salonName);
+      }
+    }
+  }
+
+  /// Handle booking route
+  Future<void> _handleBookingRoute(String salonName) async {
+    try {
+      // Check if salon exists
+      final exists = await api.checkSalonExists(salonName);
+
+      if (exists) {
+        // Save booking user info
+        await api.saveBookingUserInfo(salonName);
+
+        // Update state to show booking screen
+        setState(() {
+          _isLoggedIn = true;
+          _userRole = 'booking';
+        });
+
+        // Load salon info for booking user
+        _loadSalonInfoForBooking();
+
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Chào mừng đến với $salonName'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      } else {
+        // Salon not found
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Shop "$salonName" không tồn tại'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('Error handling booking route: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi khi truy cập shop: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Handle deep link from QR code
+  /// Expected format: fshop://booking?salon=bephuongtubi@
+  Future<void> _handleDeepLink(Uri uri) async {
+    print('Handling deep link: $uri');
+
+    // Check if this is a booking deep link
+    if (uri.scheme == 'fshop' && uri.host == 'booking') {
+      final salonName = uri.queryParameters['salon'];
+
+      if (salonName != null && salonName.isNotEmpty) {
+        await _handleBookingRoute(salonName);
+      }
+    }
+  }
+
   @override
   void dispose() {
     _notificationService.newNotificationNotifier
         .removeListener(_onNewNotification);
     _languageService.removeListener(_onLanguageChanged);
     _audioService.dispose();
+    _deepLinkSubscription?.cancel();
     super.dispose();
   }
 
@@ -730,6 +863,8 @@ class _NailAppState extends State<NailApp> {
           return 11; // Twelfth item in shop owner nav drawer
         case _HomeView.salonInfo:
           return 8; // Ninth item in shop owner nav drawer
+        case _HomeView.qrGenerator:
+          return 12; // QR generator item in shop owner nav drawer
         case _HomeView.updateOrder:
           return -1; // No selection for update order screen
       }
@@ -799,6 +934,9 @@ class _NailAppState extends State<NailApp> {
             break;
           case 11:
             _view = _HomeView.profitReports;
+            break;
+          case 12:
+            _view = _HomeView.qrGenerator;
             break;
           default:
             _view = _HomeView.welcome;
@@ -953,6 +1091,8 @@ class _NailAppState extends State<NailApp> {
         case _HomeView.salonInfo:
           return SalonInfoScreen(
               api: api, onSalonInfoUpdated: _refreshSalonInfo);
+        case _HomeView.qrGenerator:
+          return QRGeneratorScreen(api: api);
         case _HomeView.updateOrder:
           if (_orderToUpdate != null) {
             return UpdateOrderScreen(

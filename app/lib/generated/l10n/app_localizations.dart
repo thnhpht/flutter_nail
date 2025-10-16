@@ -2298,7 +2298,7 @@ abstract class AppLocalizations {
   /// **'Chọn nhanh'**
   String get quickSelect;
 
-  /// Close button text
+  /// Close button
   ///
   /// In vi, this message translates to:
   /// **'Đóng'**
@@ -4352,6 +4352,150 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Lỗi hiển thị ảnh'**
   String get imageDisplayError;
+
+  /// QR Code Generator title
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạo QR Code Đặt Hàng'**
+  String get qrCodeGeneratorTitle;
+
+  /// QR Code Generator subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Khách hàng quét mã QR để truy cập trực tiếp vào menu đặt hàng của shop'**
+  String get qrCodeGeneratorSubtitle;
+
+  /// QR Code type label
+  ///
+  /// In vi, this message translates to:
+  /// **'Loại QR Code'**
+  String get qrCodeType;
+
+  /// QR Web option
+  ///
+  /// In vi, this message translates to:
+  /// **'QR Web'**
+  String get qrCodeWeb;
+
+  /// QR Web subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở trên trình duyệt - Không cần cài app'**
+  String get qrCodeWebSubtitle;
+
+  /// QR App option
+  ///
+  /// In vi, this message translates to:
+  /// **'QR App'**
+  String get qrCodeApp;
+
+  /// QR App subtitle
+  ///
+  /// In vi, this message translates to:
+  /// **'Mở app trực tiếp - Yêu cầu đã cài app'**
+  String get qrCodeAppSubtitle;
+
+  /// Shop name field label
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên Shop'**
+  String get shopNameField;
+
+  /// Generate QR Code button
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạo QR Code'**
+  String get generateQrCodeButton;
+
+  /// Shop not exists error
+  ///
+  /// In vi, this message translates to:
+  /// **'Shop \"{shopName}\" không tồn tại trong hệ thống'**
+  String shopNotExists(String shopName);
+
+  /// Shop confirmed message
+  ///
+  /// In vi, this message translates to:
+  /// **'Shop \"{shopName}\" đã được xác nhận'**
+  String shopConfirmed(String shopName);
+
+  /// Shop label
+  ///
+  /// In vi, this message translates to:
+  /// **'Shop: {shopName}'**
+  String shopLabel(String shopName);
+
+  /// Download button
+  ///
+  /// In vi, this message translates to:
+  /// **'Tải xuống'**
+  String get download;
+
+  /// Download successful message
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã tải xuống QR code thành công'**
+  String get downloadSuccessful;
+
+  /// Share button
+  ///
+  /// In vi, this message translates to:
+  /// **'Chia sẻ'**
+  String get share;
+
+  /// QR Code Link dialog title
+  ///
+  /// In vi, this message translates to:
+  /// **'QR Code Link'**
+  String get qrCodeLinkDialogTitle;
+
+  /// On web you can
+  ///
+  /// In vi, this message translates to:
+  /// **'Trên web, bạn có thể:'**
+  String get onWebYouCan;
+
+  /// Take screenshot instruction
+  ///
+  /// In vi, this message translates to:
+  /// **'1. Chụp màn hình QR code để lưu'**
+  String get takeScreenshot;
+
+  /// Or copy link instruction
+  ///
+  /// In vi, this message translates to:
+  /// **'2. Hoặc copy link bên dưới:'**
+  String get orCopyLink;
+
+  /// Note on mobile
+  ///
+  /// In vi, this message translates to:
+  /// **'Lưu ý: Trên điện thoại, bạn có thể chia sẻ QR code trực tiếp.'**
+  String get noteOnMobile;
+
+  /// Instructions title
+  ///
+  /// In vi, this message translates to:
+  /// **'Hướng dẫn sử dụng'**
+  String get instructions;
+
+  /// QR Web instructions
+  ///
+  /// In vi, this message translates to:
+  /// **'1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera điện thoại\n3. Tự động mở trình duyệt web\n4. Không cần cài app, đặt hàng trực tiếp trên web'**
+  String get qrWebInstructions;
+
+  /// QR App instructions
+  ///
+  /// In vi, this message translates to:
+  /// **'1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera\n3. Mở app FShop (cần cài đặt trước)\n4. Vào thẳng menu đặt hàng của shop'**
+  String get qrAppInstructions;
+
+  /// Error sharing QR code
+  ///
+  /// In vi, this message translates to:
+  /// **'Lỗi khi chia sẻ QR code: {error}'**
+  String errorSharingQrCode(String error);
 }
 
 class _AppLocalizationsDelegate

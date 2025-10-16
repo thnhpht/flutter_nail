@@ -3127,5 +3127,125 @@
   "imageDisplayError": "Image display error",
   "@imageDisplayError": {
     "description": "Image display error"
+  },
+  "qrCodeGeneratorTitle": "Create Booking QR Code",
+  "@qrCodeGeneratorTitle": {
+    "description": "QR Code Generator title"
+  },
+  "qrCodeGeneratorSubtitle": "Customers scan QR code to access shop's booking menu directly",
+  "@qrCodeGeneratorSubtitle": {
+    "description": "QR Code Generator subtitle"
+  },
+  "qrCodeType": "QR Code Type",
+  "@qrCodeType": {
+    "description": "QR Code type label"
+  },
+  "qrCodeWeb": "QR Web",
+  "@qrCodeWeb": {
+    "description": "QR Web option"
+  },
+  "qrCodeWebSubtitle": "Opens in browser - No app required",
+  "@qrCodeWebSubtitle": {
+    "description": "QR Web subtitle"
+  },
+  "qrCodeApp": "QR App",
+  "@qrCodeApp": {
+    "description": "QR App option"
+  },
+  "qrCodeAppSubtitle": "Opens app directly - App must be installed",
+  "@qrCodeAppSubtitle": {
+    "description": "QR App subtitle"
+  },
+  "shopNameField": "Shop Name",
+  "@shopNameField": {
+    "description": "Shop name field label"
+  },
+  "generateQrCodeButton": "Generate QR Code",
+  "@generateQrCodeButton": {
+    "description": "Generate QR Code button"
+  },
+  "shopNotExists": "Shop \"{shopName}\" does not exist in the system",
+  "@shopNotExists": {
+    "description": "Shop not exists error",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopConfirmed": "Shop \"{shopName}\" confirmed",
+  "@shopConfirmed": {
+    "description": "Shop confirmed message",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopLabel": "Shop: {shopName}",
+  "@shopLabel": {
+    "description": "Shop label",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "download": "Download",
+  "@download": {
+    "description": "Download button"
+  },
+  "downloadSuccessful": "QR code downloaded successfully",
+  "@downloadSuccessful": {
+    "description": "Download successful message"
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Share button"
+  },
+  "qrCodeLinkDialogTitle": "QR Code Link",
+  "@qrCodeLinkDialogTitle": {
+    "description": "QR Code Link dialog title"
+  },
+  "onWebYouCan": "On web, you can:",
+  "@onWebYouCan": {
+    "description": "On web you can"
+  },
+  "takeScreenshot": "1. Take screenshot of QR code to save",
+  "@takeScreenshot": {
+    "description": "Take screenshot instruction"
+  },
+  "orCopyLink": "2. Or copy the link below:",
+  "@orCopyLink": {
+    "description": "Or copy link instruction"
+  },
+  "noteOnMobile": "Note: On mobile, you can share QR code directly.",
+  "@noteOnMobile": {
+    "description": "Note on mobile"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+  "instructions": "Instructions",
+  "@instructions": {
+    "description": "Instructions title"
+  },
+  "qrWebInstructions": "1. Print or share this QR code\n2. Customer scans code with phone camera\n3. Automatically opens web browser\n4. No app needed, order directly on web",
+  "@qrWebInstructions": {
+    "description": "QR Web instructions"
+  },
+  "qrAppInstructions": "1. Print or share this QR code\n2. Customer scans code with camera\n3. Opens FShop app (must be installed)\n4. Direct access to shop's booking menu",
+  "@qrAppInstructions": {
+    "description": "QR App instructions"
+  },
+  "errorSharingQrCode": "Error sharing QR code: {error}",
+  "@errorSharingQrCode": {
+    "description": "Error sharing QR code",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

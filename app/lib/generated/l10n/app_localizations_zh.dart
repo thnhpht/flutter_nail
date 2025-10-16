@@ -2287,4 +2287,86 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get imageDisplayError => 'Lỗi hiển thị ảnh';
+
+  @override
+  String get qrCodeGeneratorTitle => '创建预订二维码';
+
+  @override
+  String get qrCodeGeneratorSubtitle => '客户扫描二维码即可直接访问商店的预订菜单';
+
+  @override
+  String get qrCodeType => '二维码类型';
+
+  @override
+  String get qrCodeWeb => '网页二维码';
+
+  @override
+  String get qrCodeWebSubtitle => '在浏览器中打开 - 无需安装应用';
+
+  @override
+  String get qrCodeApp => '应用二维码';
+
+  @override
+  String get qrCodeAppSubtitle => '直接打开应用 - 需要安装应用';
+
+  @override
+  String get shopNameField => '商店名称';
+
+  @override
+  String get generateQrCodeButton => '生成二维码';
+
+  @override
+  String shopNotExists(String shopName) {
+    return '商店 \"$shopName\" 不存在于系统中';
+  }
+
+  @override
+  String shopConfirmed(String shopName) {
+    return '商店 \"$shopName\" 已确认';
+  }
+
+  @override
+  String shopLabel(String shopName) {
+    return '商店: $shopName';
+  }
+
+  @override
+  String get download => '下载';
+
+  @override
+  String get downloadSuccessful => 'QR码下载成功';
+
+  @override
+  String get share => '分享';
+
+  @override
+  String get qrCodeLinkDialogTitle => '二维码链接';
+
+  @override
+  String get onWebYouCan => '在网页上，您可以：';
+
+  @override
+  String get takeScreenshot => '1. 截屏保存二维码';
+
+  @override
+  String get orCopyLink => '2. 或复制以下链接：';
+
+  @override
+  String get noteOnMobile => '注意：在手机上，您可以直接分享二维码。';
+
+  @override
+  String get instructions => '使用说明';
+
+  @override
+  String get qrWebInstructions =>
+      '1. 打印或分享此二维码\n2. 客户用手机相机扫描代码\n3. 自动打开网页浏览器\n4. 无需应用，直接在网页上下单';
+
+  @override
+  String get qrAppInstructions =>
+      '1. 打印或分享此二维码\n2. 客户用相机扫描代码\n3. 打开 FShop 应用（必须已安装）\n4. 直接访问商店的预订菜单';
+
+  @override
+  String errorSharingQrCode(String error) {
+    return '分享二维码时出错: $error';
+  }
 }

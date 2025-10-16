@@ -2298,4 +2298,87 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get imageDisplayError => 'Lỗi hiển thị ảnh';
+
+  @override
+  String get qrCodeGeneratorTitle => '예약 QR 코드 만들기';
+
+  @override
+  String get qrCodeGeneratorSubtitle =>
+      '고객이 QR 코드를 스캔하여 매장의 예약 메뉴에 직접 액세스할 수 있습니다';
+
+  @override
+  String get qrCodeType => 'QR 코드 유형';
+
+  @override
+  String get qrCodeWeb => '웹 QR';
+
+  @override
+  String get qrCodeWebSubtitle => '브라우저에서 열림 - 앱 설치 불필요';
+
+  @override
+  String get qrCodeApp => '앱 QR';
+
+  @override
+  String get qrCodeAppSubtitle => '앱에서 직접 열림 - 앱 설치 필요';
+
+  @override
+  String get shopNameField => '매장 이름';
+
+  @override
+  String get generateQrCodeButton => 'QR 코드 생성';
+
+  @override
+  String shopNotExists(String shopName) {
+    return '\"$shopName\" 매장이 시스템에 존재하지 않습니다';
+  }
+
+  @override
+  String shopConfirmed(String shopName) {
+    return '\"$shopName\" 매장이 확인되었습니다';
+  }
+
+  @override
+  String shopLabel(String shopName) {
+    return '매장: $shopName';
+  }
+
+  @override
+  String get download => '다운로드';
+
+  @override
+  String get downloadSuccessful => 'QR 코드가 성공적으로 다운로드되었습니다';
+
+  @override
+  String get share => '공유';
+
+  @override
+  String get qrCodeLinkDialogTitle => 'QR 코드 링크';
+
+  @override
+  String get onWebYouCan => '웹에서 다음을 수행할 수 있습니다:';
+
+  @override
+  String get takeScreenshot => '1. QR 코드를 스크린샷하여 저장';
+
+  @override
+  String get orCopyLink => '2. 또는 아래 링크를 복사:';
+
+  @override
+  String get noteOnMobile => '참고: 모바일에서는 QR 코드를 직접 공유할 수 있습니다.';
+
+  @override
+  String get instructions => '사용 방법';
+
+  @override
+  String get qrWebInstructions =>
+      '1. 이 QR 코드를 인쇄하거나 공유하세요\n2. 고객이 휴대폰 카메라로 코드를 스캔합니다\n3. 웹 브라우저가 자동으로 열립니다\n4. 앱 없이 웹에서 직접 주문';
+
+  @override
+  String get qrAppInstructions =>
+      '1. 이 QR 코드를 인쇄하거나 공유하세요\n2. 고객이 카메라로 코드를 스캔합니다\n3. FShop 앱이 열립니다 (설치 필요)\n4. 매장 예약 메뉴로 직접 이동';
+
+  @override
+  String errorSharingQrCode(String error) {
+    return 'QR 코드 공유 오류: $error';
+  }
 }

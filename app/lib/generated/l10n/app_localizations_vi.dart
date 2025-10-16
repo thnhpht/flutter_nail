@@ -2357,4 +2357,88 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get imageDisplayError => 'Lỗi hiển thị ảnh';
+
+  @override
+  String get qrCodeGeneratorTitle => 'Tạo QR Code Đặt Hàng';
+
+  @override
+  String get qrCodeGeneratorSubtitle =>
+      'Khách hàng quét mã QR để truy cập trực tiếp vào menu đặt hàng của shop';
+
+  @override
+  String get qrCodeType => 'Loại QR Code';
+
+  @override
+  String get qrCodeWeb => 'QR Web';
+
+  @override
+  String get qrCodeWebSubtitle => 'Mở trên trình duyệt - Không cần cài app';
+
+  @override
+  String get qrCodeApp => 'QR App';
+
+  @override
+  String get qrCodeAppSubtitle => 'Mở app trực tiếp - Yêu cầu đã cài app';
+
+  @override
+  String get shopNameField => 'Tên Shop';
+
+  @override
+  String get generateQrCodeButton => 'Tạo QR Code';
+
+  @override
+  String shopNotExists(String shopName) {
+    return 'Shop \"$shopName\" không tồn tại trong hệ thống';
+  }
+
+  @override
+  String shopConfirmed(String shopName) {
+    return 'Shop \"$shopName\" đã được xác nhận';
+  }
+
+  @override
+  String shopLabel(String shopName) {
+    return 'Shop: $shopName';
+  }
+
+  @override
+  String get download => 'Tải xuống';
+
+  @override
+  String get downloadSuccessful => 'Đã tải xuống QR code thành công';
+
+  @override
+  String get share => 'Chia sẻ';
+
+  @override
+  String get qrCodeLinkDialogTitle => 'QR Code Link';
+
+  @override
+  String get onWebYouCan => 'Trên web, bạn có thể:';
+
+  @override
+  String get takeScreenshot => '1. Chụp màn hình QR code để lưu';
+
+  @override
+  String get orCopyLink => '2. Hoặc copy link bên dưới:';
+
+  @override
+  String get noteOnMobile =>
+      'Lưu ý: Trên điện thoại, bạn có thể chia sẻ QR code trực tiếp.';
+
+  @override
+  String get instructions => 'Hướng dẫn sử dụng';
+
+  @override
+  String get qrWebInstructions =>
+      '1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera điện thoại\n3. Tự động mở trình duyệt web\n4. Không cần cài app, đặt hàng trực tiếp trên web';
+
+  @override
+  String get qrAppInstructions =>
+      '1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera\n3. Mở app FShop (cần cài đặt trước)\n4. Vào thẳng menu đặt hàng của shop';
+
+  @override
+  String errorSharingQrCode(String error) {
+    return 'Lỗi khi chia sẻ QR code: $error';
+  }
 }

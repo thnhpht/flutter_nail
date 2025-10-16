@@ -158,6 +158,12 @@ class AppNavigationDrawer extends StatelessWidget {
           index: 8,
           isSelected: selectedIndex == 8,
         ),
+        _buildNavItem(
+          icon: Icons.qr_code_2,
+          title: 'QR Code Booking',
+          index: 12,
+          isSelected: selectedIndex == 12,
+        ),
 
         // Menu section
         _buildSectionHeader(l10n.menu),

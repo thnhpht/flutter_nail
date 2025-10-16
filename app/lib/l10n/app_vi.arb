@@ -3910,5 +3910,125 @@
   "imageDisplayError": "Lỗi hiển thị ảnh",
   "@imageDisplayError": {
     "description": "Image display error"
+  },
+  "qrCodeGeneratorTitle": "Tạo QR Code Đặt Hàng",
+  "@qrCodeGeneratorTitle": {
+    "description": "QR Code Generator title"
+  },
+  "qrCodeGeneratorSubtitle": "Khách hàng quét mã QR để truy cập trực tiếp vào menu đặt hàng của shop",
+  "@qrCodeGeneratorSubtitle": {
+    "description": "QR Code Generator subtitle"
+  },
+  "qrCodeType": "Loại QR Code",
+  "@qrCodeType": {
+    "description": "QR Code type label"
+  },
+  "qrCodeWeb": "QR Web",
+  "@qrCodeWeb": {
+    "description": "QR Web option"
+  },
+  "qrCodeWebSubtitle": "Mở trên trình duyệt - Không cần cài app",
+  "@qrCodeWebSubtitle": {
+    "description": "QR Web subtitle"
+  },
+  "qrCodeApp": "QR App",
+  "@qrCodeApp": {
+    "description": "QR App option"
+  },
+  "qrCodeAppSubtitle": "Mở app trực tiếp - Yêu cầu đã cài app",
+  "@qrCodeAppSubtitle": {
+    "description": "QR App subtitle"
+  },
+  "shopNameField": "Tên Shop",
+  "@shopNameField": {
+    "description": "Shop name field label"
+  },
+  "generateQrCodeButton": "Tạo QR Code",
+  "@generateQrCodeButton": {
+    "description": "Generate QR Code button"
+  },
+  "shopNotExists": "Shop \"{shopName}\" không tồn tại trong hệ thống",
+  "@shopNotExists": {
+    "description": "Shop not exists error",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopConfirmed": "Shop \"{shopName}\" đã được xác nhận",
+  "@shopConfirmed": {
+    "description": "Shop confirmed message",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopLabel": "Shop: {shopName}",
+  "@shopLabel": {
+    "description": "Shop label",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "download": "Tải xuống",
+  "@download": {
+    "description": "Download button"
+  },
+  "downloadSuccessful": "Đã tải xuống QR code thành công",
+  "@downloadSuccessful": {
+    "description": "Download successful message"
+  },
+  "share": "Chia sẻ",
+  "@share": {
+    "description": "Share button"
+  },
+  "qrCodeLinkDialogTitle": "QR Code Link",
+  "@qrCodeLinkDialogTitle": {
+    "description": "QR Code Link dialog title"
+  },
+  "onWebYouCan": "Trên web, bạn có thể:",
+  "@onWebYouCan": {
+    "description": "On web you can"
+  },
+  "takeScreenshot": "1. Chụp màn hình QR code để lưu",
+  "@takeScreenshot": {
+    "description": "Take screenshot instruction"
+  },
+  "orCopyLink": "2. Hoặc copy link bên dưới:",
+  "@orCopyLink": {
+    "description": "Or copy link instruction"
+  },
+  "noteOnMobile": "Lưu ý: Trên điện thoại, bạn có thể chia sẻ QR code trực tiếp.",
+  "@noteOnMobile": {
+    "description": "Note on mobile"
+  },
+  "close": "Đóng",
+  "@close": {
+    "description": "Close button"
+  },
+  "instructions": "Hướng dẫn sử dụng",
+  "@instructions": {
+    "description": "Instructions title"
+  },
+  "qrWebInstructions": "1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera điện thoại\n3. Tự động mở trình duyệt web\n4. Không cần cài app, đặt hàng trực tiếp trên web",
+  "@qrWebInstructions": {
+    "description": "QR Web instructions"
+  },
+  "qrAppInstructions": "1. In hoặc chia sẻ QR code này\n2. Khách hàng quét mã bằng camera\n3. Mở app FShop (cần cài đặt trước)\n4. Vào thẳng menu đặt hàng của shop",
+  "@qrAppInstructions": {
+    "description": "QR App instructions"
+  },
+  "errorSharingQrCode": "Lỗi khi chia sẻ QR code: {error}",
+  "@errorSharingQrCode": {
+    "description": "Error sharing QR code",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

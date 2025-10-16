@@ -3006,5 +3006,125 @@
   "errorUpdatingDeliveryStatus": "배송 상태 업데이트 중 오류가 발생했습니다",
   "@errorUpdatingDeliveryStatus": {
     "description": "Error message when updating delivery status fails"
+  },
+  "qrCodeGeneratorTitle": "예약 QR 코드 만들기",
+  "@qrCodeGeneratorTitle": {
+    "description": "QR Code Generator title"
+  },
+  "qrCodeGeneratorSubtitle": "고객이 QR 코드를 스캔하여 매장의 예약 메뉴에 직접 액세스할 수 있습니다",
+  "@qrCodeGeneratorSubtitle": {
+    "description": "QR Code Generator subtitle"
+  },
+  "qrCodeType": "QR 코드 유형",
+  "@qrCodeType": {
+    "description": "QR Code type label"
+  },
+  "qrCodeWeb": "웹 QR",
+  "@qrCodeWeb": {
+    "description": "QR Web option"
+  },
+  "qrCodeWebSubtitle": "브라우저에서 열림 - 앱 설치 불필요",
+  "@qrCodeWebSubtitle": {
+    "description": "QR Web subtitle"
+  },
+  "qrCodeApp": "앱 QR",
+  "@qrCodeApp": {
+    "description": "QR App option"
+  },
+  "qrCodeAppSubtitle": "앱에서 직접 열림 - 앱 설치 필요",
+  "@qrCodeAppSubtitle": {
+    "description": "QR App subtitle"
+  },
+  "shopNameField": "매장 이름",
+  "@shopNameField": {
+    "description": "Shop name field label"
+  },
+  "generateQrCodeButton": "QR 코드 생성",
+  "@generateQrCodeButton": {
+    "description": "Generate QR Code button"
+  },
+  "shopNotExists": "\"{shopName}\" 매장이 시스템에 존재하지 않습니다",
+  "@shopNotExists": {
+    "description": "Shop not exists error",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopConfirmed": "\"{shopName}\" 매장이 확인되었습니다",
+  "@shopConfirmed": {
+    "description": "Shop confirmed message",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "shopLabel": "매장: {shopName}",
+  "@shopLabel": {
+    "description": "Shop label",
+    "placeholders": {
+      "shopName": {
+        "type": "String"
+      }
+    }
+  },
+  "download": "다운로드",
+  "@download": {
+    "description": "Download button"
+  },
+  "downloadSuccessful": "QR 코드가 성공적으로 다운로드되었습니다",
+  "@downloadSuccessful": {
+    "description": "Download successful message"
+  },
+  "share": "공유",
+  "@share": {
+    "description": "Share button"
+  },
+  "qrCodeLinkDialogTitle": "QR 코드 링크",
+  "@qrCodeLinkDialogTitle": {
+    "description": "QR Code Link dialog title"
+  },
+  "onWebYouCan": "웹에서 다음을 수행할 수 있습니다:",
+  "@onWebYouCan": {
+    "description": "On web you can"
+  },
+  "takeScreenshot": "1. QR 코드를 스크린샷하여 저장",
+  "@takeScreenshot": {
+    "description": "Take screenshot instruction"
+  },
+  "orCopyLink": "2. 또는 아래 링크를 복사:",
+  "@orCopyLink": {
+    "description": "Or copy link instruction"
+  },
+  "noteOnMobile": "참고: 모바일에서는 QR 코드를 직접 공유할 수 있습니다.",
+  "@noteOnMobile": {
+    "description": "Note on mobile"
+  },
+  "close": "닫기",
+  "@close": {
+    "description": "Close button"
+  },
+  "instructions": "사용 방법",
+  "@instructions": {
+    "description": "Instructions title"
+  },
+  "qrWebInstructions": "1. 이 QR 코드를 인쇄하거나 공유하세요\n2. 고객이 휴대폰 카메라로 코드를 스캔합니다\n3. 웹 브라우저가 자동으로 열립니다\n4. 앱 없이 웹에서 직접 주문",
+  "@qrWebInstructions": {
+    "description": "QR Web instructions"
+  },
+  "qrAppInstructions": "1. 이 QR 코드를 인쇄하거나 공유하세요\n2. 고객이 카메라로 코드를 스캔합니다\n3. FShop 앱이 열립니다 (설치 필요)\n4. 매장 예약 메뉴로 직접 이동",
+  "@qrAppInstructions": {
+    "description": "QR App instructions"
+  },
+  "errorSharingQrCode": "QR 코드 공유 오류: {error}",
+  "@errorSharingQrCode": {
+    "description": "Error sharing QR code",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }
