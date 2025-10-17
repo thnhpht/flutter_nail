@@ -2355,90 +2355,92 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           // Bottom row: Quantity controls and total price
           Row(
             children: [
-              // Quantity label
-              Text(
-                'Số lượng',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.w500,
-                ),
+              // Quantity label and controls
+              Row(
+                children: [
+                  Text(
+                    'Số lượng',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Quantity controls
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Decrease button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: serviceWithQuantity.quantity > 1
+                                ? AppTheme.primaryStart.withValues(alpha: 0.1)
+                                : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: IconButton(
+                            onPressed: serviceWithQuantity.quantity > 1
+                                ? () => _decreaseServiceQuantity(
+                                    serviceWithQuantity)
+                                : null,
+                            icon: const Icon(Icons.remove),
+                            color: serviceWithQuantity.quantity > 1
+                                ? AppTheme.primaryStart
+                                : Colors.grey[400],
+                            iconSize: 18,
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                          ),
+                        ),
+
+                        // Quantity display
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            '${serviceWithQuantity.quantity}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        // Increase button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryStart.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: IconButton(
+                            onPressed: () =>
+                                _increaseServiceQuantity(serviceWithQuantity),
+                            icon: const Icon(Icons.add),
+                            color: AppTheme.primaryStart,
+                            iconSize: 18,
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
 
               const Spacer(),
-
-              // Quantity controls
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(color: Colors.grey[200]!),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Decrease button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: serviceWithQuantity.quantity > 1
-                            ? AppTheme.primaryStart.withValues(alpha: 0.1)
-                            : Colors.grey[100],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: IconButton(
-                        onPressed: serviceWithQuantity.quantity > 1
-                            ? () =>
-                                _decreaseServiceQuantity(serviceWithQuantity)
-                            : null,
-                        icon: const Icon(Icons.remove),
-                        color: serviceWithQuantity.quantity > 1
-                            ? AppTheme.primaryStart
-                            : Colors.grey[400],
-                        iconSize: 18,
-                        padding: const EdgeInsets.all(8),
-                        constraints: const BoxConstraints(
-                          minWidth: 36,
-                          minHeight: 36,
-                        ),
-                      ),
-                    ),
-
-                    // Quantity display
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        '${serviceWithQuantity.quantity}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    // Increase button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryStart.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: IconButton(
-                        onPressed: () =>
-                            _increaseServiceQuantity(serviceWithQuantity),
-                        icon: const Icon(Icons.add),
-                        color: AppTheme.primaryStart,
-                        iconSize: 18,
-                        padding: const EdgeInsets.all(8),
-                        constraints: const BoxConstraints(
-                          minWidth: 36,
-                          minHeight: 36,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 16),
 
               // Total price for this service
               Column(

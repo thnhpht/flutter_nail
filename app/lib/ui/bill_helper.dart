@@ -191,10 +191,13 @@ class BillHelper {
         (salonPhone.isNotEmpty) ? salonPhone : SalonConfig.salonPhone;
     return Column(
       children: [
-        // Salon Info
+        // Salon Info - Enhanced mobile layout
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(AppTheme.spacingM),
+          padding: const EdgeInsets.symmetric(
+            vertical: AppTheme.spacingL, // Tăng padding dọc
+            horizontal: AppTheme.spacingM,
+          ),
           decoration: BoxDecoration(
             color: AppTheme.surfaceAlt,
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
@@ -205,25 +208,25 @@ class BillHelper {
               Text(
                 displaySalonName,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18, // Giảm từ 20 xuống 18 cho mobile
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6), // Tăng khoảng cách
               Text(
                 displaySalonAddress,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13, // Giảm từ 14 xuống 13
                   color: Colors.grey[600],
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6), // Tăng khoảng cách
               Text(
                 _formatPhoneNumber(displaySalonPhone),
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13, // Giảm từ 14 xuống 13
                   color: Colors.grey[600],
                 ),
                 textAlign: TextAlign.center,
@@ -372,9 +375,12 @@ class BillHelper {
           ),
           child: Column(
             children: [
-              // Header
+              // Header - Enhanced for mobile
               Container(
-                padding: const EdgeInsets.all(AppTheme.spacingM),
+                padding: const EdgeInsets.symmetric(
+                  vertical: AppTheme.spacingL, // Tăng padding dọc
+                  horizontal: AppTheme.spacingM,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.surfaceAlt,
                   borderRadius: const BorderRadius.only(
@@ -396,7 +402,7 @@ class BillHelper {
                               Text(
                                 AppLocalizations.of(context)!.serviceDetails,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -411,7 +417,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.serviceName,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -422,7 +428,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.quantity,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -434,7 +440,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.unit,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -446,7 +452,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.unitPrice,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -458,7 +464,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.totalAmount,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -482,7 +488,7 @@ class BillHelper {
                               Text(
                                 AppLocalizations.of(context)!.serviceDetails,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -497,7 +503,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.serviceName,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -508,7 +514,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.unit,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -520,7 +526,7 @@ class BillHelper {
                                 child: Text(
                                   AppLocalizations.of(context)!.unitPrice,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey[600],
                                   ),
@@ -533,7 +539,7 @@ class BillHelper {
                       ),
               ),
 
-              // Services List
+              // Services List - Enhanced mobile layout
               if (servicesWithQuantity != null &&
                   servicesWithQuantity.isNotEmpty)
                 ...servicesWithQuantity
@@ -550,9 +556,12 @@ class BillHelper {
 
         const SizedBox(height: AppTheme.spacingM),
 
-        // Total
+        // Total - Enhanced mobile layout
         Container(
-          padding: const EdgeInsets.all(AppTheme.spacingL),
+          padding: const EdgeInsets.symmetric(
+            vertical: AppTheme.spacingL,
+            horizontal: AppTheme.spacingXL, // Tăng padding ngang
+          ),
           decoration: BoxDecoration(
             gradient: AppTheme.primaryGradient,
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
@@ -566,7 +575,7 @@ class BillHelper {
                   Text(
                     AppLocalizations.of(context)!.subtotal,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13, // Giảm font size
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -574,7 +583,7 @@ class BillHelper {
                   Text(
                     _formatPrice(_getOriginalTotal(order)),
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 13, // Giảm font size
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -695,7 +704,7 @@ class BillHelper {
                   Text(
                     AppLocalizations.of(context)!.totalPayment,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15, // Giảm font size cho mobile
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -703,7 +712,7 @@ class BillHelper {
                   Text(
                     _formatPrice(order.totalPrice),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 15, // Giảm font size cho mobile
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -980,20 +989,25 @@ class BillHelper {
 
   static Widget _buildServiceItem(Service service) {
     return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingM),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppTheme.spacingL, // Tăng padding dọc
+        horizontal: AppTheme.spacingM,
+      ),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.grey[200]!),
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
+            flex: 4, // Tăng flex cho tên dịch vụ để có nhiều không gian hơn
             child: Text(
               service.name,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13, // Giảm font size để vừa với không gian nhỏ hơn
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -1001,9 +1015,10 @@ class BillHelper {
             flex: 1,
             child: Text(
               service.unit ?? '-',
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 12, // Giảm font size
                 fontWeight: FontWeight.w500,
+                color: Colors.grey[600],
               ),
               textAlign: TextAlign.center,
             ),
@@ -1013,8 +1028,8 @@ class BillHelper {
             child: Text(
               _formatPrice(service.price),
               style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontSize: 13, // Giảm font size
+                fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.right,
             ),
@@ -1027,20 +1042,25 @@ class BillHelper {
   static Widget _buildServiceWithQuantityItem(
       ServiceWithQuantity serviceWithQuantity) {
     return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingM),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppTheme.spacingL, // Tăng padding dọc để rộng rãi hơn
+        horizontal: AppTheme.spacingM,
+      ),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.grey[200]!),
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
+            flex: 3, // Tăng flex cho tên dịch vụ để có nhiều không gian hơn
             child: Text(
               serviceWithQuantity.service.name,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13, // Giảm font size để vừa với không gian nhỏ hơn
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -1048,8 +1068,8 @@ class BillHelper {
             flex: 1,
             child: Text(
               '${serviceWithQuantity.quantity}',
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 12, // Giảm font size
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
@@ -1059,8 +1079,8 @@ class BillHelper {
             flex: 1,
             child: Text(
               serviceWithQuantity.service.unit ?? '-',
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 12, // Giảm font size
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
@@ -1071,7 +1091,7 @@ class BillHelper {
             child: Text(
               _formatPrice(serviceWithQuantity.service.price),
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13, // Giảm font size
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.right,
@@ -1081,8 +1101,8 @@ class BillHelper {
             flex: 2,
             child: Text(
               _formatPrice(serviceWithQuantity.totalPrice),
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 13, // Giảm font size
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.right,

@@ -130,7 +130,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
         // For web deployment, use your actual domain
         // Example: https://yourdomain.com/#/booking?salon=bephuongtubi@
         final webDomain =
-            'https://fshop.logisticssoftware.vn'; // Change this to your domain
+            'https://fshop.sellers.vn'; // Change this to your domain
         url = '$webDomain/#/booking?salon=${Uri.encodeComponent(salonName)}';
       }
 

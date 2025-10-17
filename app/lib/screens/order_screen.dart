@@ -483,13 +483,6 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
-  void _removeSelectedCategory(Category category) {
-    setState(() {
-      _selectedCategories.remove(category);
-      _calculateTotal();
-    });
-  }
-
   void _removeSelectedService(ServiceWithQuantity serviceWithQuantity) {
     setState(() {
       _selectedServices.remove(serviceWithQuantity);
@@ -1149,23 +1142,6 @@ class _OrderScreenState extends State<OrderScreen> {
                       icon: Icons.category,
                       child: Column(
                         children: [
-                          // Selected Categories Chips
-                          if (_selectedCategories.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: _selectedCategories.map((category) {
-                                return _buildChip(
-                                  label: category.name,
-                                  onDeleted: () =>
-                                      _removeSelectedCategory(category),
-                                  color: const Color(0xFF7386dd),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
                           // Categories Carousel
                           SizedBox(
                             height: 120,
@@ -1196,27 +1172,6 @@ class _OrderScreenState extends State<OrderScreen> {
                       icon: Icons.shopping_cart,
                       child: Column(
                         children: [
-                          // Selected Services Chips
-                          if (_selectedServices.isNotEmpty) ...[
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children:
-                                  _selectedServices.map((serviceWithQuantity) {
-                                return _buildServiceChipWithQuantity(
-                                  serviceWithQuantity: serviceWithQuantity,
-                                  onDeleted: () => _removeSelectedService(
-                                      serviceWithQuantity),
-                                  onIncrease: () => _increaseServiceQuantity(
-                                      serviceWithQuantity),
-                                  onDecrease: () => _decreaseServiceQuantity(
-                                      serviceWithQuantity),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
                           // Services Grid - chỉ hiển thị khi đã chọn category
                           if (_selectedCategories.isNotEmpty) ...[
                             _buildCompactServicesGrid(),
@@ -1248,6 +1203,48 @@ class _OrderScreenState extends State<OrderScreen> {
                         ],
                       ),
                     ),
+
+                    const SizedBox(height: 16),
+
+                    // Selected Services Details Section
+                    if (_selectedServices.isNotEmpty)
+                      _buildSectionCard(
+                        title: l10n.servicesSelected(_selectedServices.length),
+                        icon: Icons.shopping_cart,
+                        child: Column(
+                          children: [
+                            // Services list
+                            ...(_selectedServices.map((serviceWithQuantity) =>
+                                _buildSelectedServiceItem(
+                                    serviceWithQuantity))),
+
+                            const SizedBox(height: 12),
+                            const Divider(),
+                            const SizedBox(height: 8),
+                            // Total price
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l10n.subtotal,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${_formatPrice(_totalPrice)}₫',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF667eea),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
 
                     const SizedBox(height: 16),
 
@@ -1846,130 +1843,6 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
-  Widget _buildServiceChipWithQuantity({
-    required ServiceWithQuantity serviceWithQuantity,
-    required VoidCallback onDeleted,
-    required VoidCallback onIncrease,
-    required VoidCallback onDecrease,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF764ba2), Color(0xFF667eea)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF764ba2).withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Service name
-          Flexible(
-            child: Text(
-              serviceWithQuantity.service.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Quantity controls
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Decrease button
-                GestureDetector(
-                  onTap: onDecrease,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: serviceWithQuantity.quantity > 1
-                          ? Colors.white.withValues(alpha: 0.3)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.remove,
-                      color: serviceWithQuantity.quantity > 1
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.5),
-                      size: 16,
-                    ),
-                  ),
-                ),
-                // Quantity display
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    '${serviceWithQuantity.quantity}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                // Increase button
-                GestureDetector(
-                  onTap: onIncrease,
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Delete button
-          GestureDetector(
-            onTap: onDeleted,
-            child: Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDropdownEmployeeItem({
     required String title,
     String? subtitle,
@@ -2511,6 +2384,232 @@ class _OrderScreenState extends State<OrderScreen> {
         Icons.shopping_cart,
         size: 20,
         color: Colors.grey[400],
+      ),
+    );
+  }
+
+  Widget _buildSelectedServiceItem(ServiceWithQuantity serviceWithQuantity) {
+    final category = _categories.firstWhere(
+      (cat) => cat.id == serviceWithQuantity.service.categoryId,
+      orElse: () => Category(id: '', name: ''),
+    );
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Top row: Image, Info, Remove button
+          Row(
+            children: [
+              // Service image
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: serviceWithQuantity.service.image != null &&
+                        serviceWithQuantity.service.image!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: _buildImageWidget(
+                            serviceWithQuantity.service.image!),
+                      )
+                    : Icon(
+                        Icons.shopping_cart,
+                        color: Colors.grey[400],
+                        size: 28,
+                      ),
+              ),
+              const SizedBox(width: 16),
+
+              // Service info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      serviceWithQuantity.service.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      category.name,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${_formatPrice(serviceWithQuantity.service.price)}₫',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: const Color(0xFF667eea),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Remove button
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  onPressed: () => _removeSelectedService(serviceWithQuantity),
+                  icon: const Icon(Icons.delete_outline),
+                  color: Colors.red,
+                  iconSize: 20,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Bottom row: Quantity controls and total price
+          Row(
+            children: [
+              // Quantity label and controls
+              Row(
+                children: [
+                  Text(
+                    'Số lượng',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Quantity controls
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Decrease button
+                        Container(
+                          decoration: BoxDecoration(
+                            color: serviceWithQuantity.quantity > 1
+                                ? const Color(0xFF667eea).withValues(alpha: 0.1)
+                                : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: IconButton(
+                            onPressed: serviceWithQuantity.quantity > 1
+                                ? () => _decreaseServiceQuantity(
+                                    serviceWithQuantity)
+                                : null,
+                            icon: const Icon(Icons.remove),
+                            color: serviceWithQuantity.quantity > 1
+                                ? const Color(0xFF667eea)
+                                : Colors.grey[400],
+                            iconSize: 18,
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                          ),
+                        ),
+
+                        // Quantity display
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            '${serviceWithQuantity.quantity}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        // Increase button
+                        Container(
+                          decoration: BoxDecoration(
+                            color:
+                                const Color(0xFF667eea).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: IconButton(
+                            onPressed: () =>
+                                _increaseServiceQuantity(serviceWithQuantity),
+                            icon: const Icon(Icons.add),
+                            color: const Color(0xFF667eea),
+                            iconSize: 18,
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const Spacer(),
+
+              // Total price for this service
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Tổng',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    '${_formatPrice(serviceWithQuantity.totalPrice)}₫',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF667eea),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

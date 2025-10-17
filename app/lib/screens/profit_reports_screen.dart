@@ -22,10 +22,18 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
 
-  // Thống kê lợi nhuận
+  // Thống kê lợi nhuận toàn bộ (không xét thời gian)
+  double _totalImportedAmountAll = 0.0;
+  double _totalSoldAmountAll = 0.0;
+  double _profitAll = 0.0;
+
+  // Thống kê lợi nhuận theo thời gian được chọn
   double _totalImportedAmount = 0.0;
   double _totalSoldAmount = 0.0;
   double _profit = 0.0;
+
+  // Chi tiết theo ngày (khi chọn khoảng thời gian > 1 ngày)
+  List<Map<String, dynamic>> _dailyBreakdown = [];
 
   @override
   void initState() {
@@ -72,42 +80,22 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   }
 
   void _calculateProfitStatistics() {
-    // Tính tổng tiền nhập (chi phí - dựa trên ServiceDetails.importPrice)
-    _totalImportedAmount = 0.0;
+    // Tính tổng tiền nhập và bán toàn bộ (không xét thời gian)
+    _totalImportedAmountAll = 0.0;
+    _totalSoldAmountAll = 0.0;
 
+    // Tính tổng tiền nhập toàn bộ
     for (final serviceDetail in _serviceDetails) {
-      // Áp dụng lọc theo thời gian nếu có
-      if (_selectedDateRange != null) {
-        final importDate = serviceDetail.importDate;
-        if (importDate.isBefore(_selectedDateRange!.start) ||
-            importDate.isAfter(
-                _selectedDateRange!.end.add(const Duration(days: 1)))) {
-          continue;
-        }
-      }
-      // Tổng chi phí nhập = giá nhập * số lượng
-      _totalImportedAmount +=
+      _totalImportedAmountAll +=
           (serviceDetail.importPrice * serviceDetail.quantity);
     }
 
-    // Tính tổng tiền bán (dựa trên orders)
-    _totalSoldAmount = 0.0;
-    // Map nhanh từ serviceId -> price để tính dòng chi tiết
+    // Tính tổng tiền bán toàn bộ
     final Map<String, double> servicePriceById = {
       for (final s in _services) s.id: s.price
     };
 
     for (final order in _orders) {
-      if (_selectedDateRange != null) {
-        final orderDate = order.createdAt;
-        if (orderDate.isBefore(_selectedDateRange!.start) ||
-            orderDate.isAfter(
-                _selectedDateRange!.end.add(const Duration(days: 1)))) {
-          continue;
-        }
-      }
-
-      // Chỉ tính tổng theo chi tiết: đơn giá dịch vụ * số lượng
       double orderLineTotal = 0.0;
       final int lineCount = order.serviceIds.length;
       for (int i = 0; i < lineCount; i++) {
@@ -118,12 +106,213 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
         final double unitPrice = servicePriceById[serviceId] ?? 0.0;
         orderLineTotal += unitPrice * quantity;
       }
+      _totalSoldAmountAll += orderLineTotal;
+    }
+
+    // Tính lợi nhuận toàn bộ
+    _profitAll = _totalSoldAmountAll - _totalImportedAmountAll;
+
+    // Tính tổng tiền nhập theo thời gian được chọn
+    // Dựa trên số lượng thực tế đã bán được trong khoảng thời gian
+    _totalImportedAmount = 0.0;
+    _totalSoldAmount = 0.0;
+
+    // Tạo map để theo dõi số lượng đã bán của từng service
+    final Map<String, int> soldQuantityByService = {};
+
+    // Tính tổng tiền bán và thu thập số lượng bán theo thời gian
+    for (final order in _orders) {
+      if (_selectedDateRange != null) {
+        final orderDate = order.createdAt;
+        if (orderDate.isBefore(_selectedDateRange!.start) ||
+            orderDate.isAfter(
+                _selectedDateRange!.end.add(const Duration(days: 1)))) {
+          continue;
+        }
+      }
+
+      // Tính tổng tiền bán và thu thập số lượng bán
+      double orderLineTotal = 0.0;
+      final int lineCount = order.serviceIds.length;
+      for (int i = 0; i < lineCount; i++) {
+        final String serviceId = order.serviceIds[i];
+        final int quantity = (i < order.serviceQuantities.length)
+            ? order.serviceQuantities[i]
+            : 1;
+        final double unitPrice = servicePriceById[serviceId] ?? 0.0;
+        orderLineTotal += unitPrice * quantity;
+
+        // Thu thập số lượng bán cho từng service
+        soldQuantityByService[serviceId] =
+            (soldQuantityByService[serviceId] ?? 0) + quantity;
+      }
 
       _totalSoldAmount += orderLineTotal;
     }
 
-    // Tính lợi nhuận
+    // Tính tổng tiền nhập dựa trên số lượng thực tế đã bán
+    // Sử dụng cùng logic với _calculateDailyBreakdown()
+    final Map<String, Map<DateTime, double>> importPricesByServiceAndDate = {};
+
+    // Thu thập giá nhập theo ngày cho từng service
+    // Lưu ý: Không lọc theo thời gian để có thể tìm giá nhập cuối cùng trước đó
+    for (final serviceDetail in _serviceDetails) {
+      final serviceId = serviceDetail.serviceId;
+      final importDate = DateTime(serviceDetail.importDate.year,
+          serviceDetail.importDate.month, serviceDetail.importDate.day);
+
+      if (!importPricesByServiceAndDate.containsKey(serviceId)) {
+        importPricesByServiceAndDate[serviceId] = {};
+      }
+      importPricesByServiceAndDate[serviceId]![importDate] =
+          serviceDetail.importPrice;
+    }
+
+    // Tính chi tiết theo ngày trước (nếu khoảng thời gian > 1 ngày)
+    _calculateDailyBreakdown();
+
+    // Tính tổng tiền nhập từ daily breakdown để đảm bảo tính chính xác
+    _totalImportedAmount = 0.0;
+    if (_dailyBreakdown.isNotEmpty) {
+      // Nếu có chi tiết theo ngày, tính tổng từ đó
+      for (final dayData in _dailyBreakdown) {
+        _totalImportedAmount += (dayData['importedAmount'] as double);
+      }
+    } else {
+      // Nếu không có chi tiết theo ngày (khoảng thời gian <= 1 ngày), tính trực tiếp
+      // Sử dụng logic tương tự _calculateDailyBreakdown() nhưng cho 1 ngày
+      final targetDay = _selectedDateRange?.start ?? DateTime.now();
+
+      for (final serviceId in soldQuantityByService.keys) {
+        final soldQuantity = soldQuantityByService[serviceId]!;
+
+        // Tìm giá nhập cho service này trong ngày này hoặc ngày gần nhất trước đó
+        double? importPrice = _findLatestImportPrice(
+            serviceId, targetDay, importPricesByServiceAndDate);
+
+        if (importPrice != null && soldQuantity > 0) {
+          _totalImportedAmount += (importPrice * soldQuantity);
+        }
+      }
+    }
+
+    // Tính lợi nhuận theo thời gian
     _profit = _totalSoldAmount - _totalImportedAmount;
+  }
+
+  void _calculateDailyBreakdown() {
+    _dailyBreakdown.clear();
+
+    if (_selectedDateRange == null) return;
+
+    final startDate = _selectedDateRange!.start;
+    final endDate = _selectedDateRange!.end;
+    final daysDifference = endDate.difference(startDate).inDays;
+
+    // Chỉ tính chi tiết khi khoảng thời gian > 1 ngày
+    if (daysDifference <= 1) return;
+
+    // Map nhanh từ serviceId -> price để tính dòng chi tiết
+    final Map<String, double> servicePriceById = {
+      for (final s in _services) s.id: s.price
+    };
+
+    // Tạo danh sách các ngày trong khoảng thời gian
+    final List<DateTime> daysInRange = [];
+    for (int i = 0; i <= daysDifference; i++) {
+      daysInRange
+          .add(DateTime(startDate.year, startDate.month, startDate.day + i));
+    }
+
+    // Tạo map để lưu giá nhập theo service và ngày
+    final Map<String, Map<DateTime, double>> importPricesByServiceAndDate = {};
+
+    // Thu thập giá nhập theo ngày cho từng service
+    // Lưu ý: Không lọc theo thời gian để có thể tìm giá nhập cuối cùng trước đó
+    for (final serviceDetail in _serviceDetails) {
+      final serviceId = serviceDetail.serviceId;
+      final importDate = DateTime(serviceDetail.importDate.year,
+          serviceDetail.importDate.month, serviceDetail.importDate.day);
+
+      if (!importPricesByServiceAndDate.containsKey(serviceId)) {
+        importPricesByServiceAndDate[serviceId] = {};
+      }
+      importPricesByServiceAndDate[serviceId]![importDate] =
+          serviceDetail.importPrice;
+    }
+
+    // Tính toán cho từng ngày
+    for (final day in daysInRange) {
+      double dayImportedAmount = 0.0;
+      double daySoldAmount = 0.0;
+
+      // Thu thập số lượng bán trong ngày này
+      final Map<String, int> soldQuantityByService = {};
+
+      for (final order in _orders) {
+        final orderDate = DateTime(
+            order.createdAt.year, order.createdAt.month, order.createdAt.day);
+        if (orderDate.isAtSameMomentAs(day)) {
+          final int lineCount = order.serviceIds.length;
+          for (int i = 0; i < lineCount; i++) {
+            final String serviceId = order.serviceIds[i];
+            final int quantity = (i < order.serviceQuantities.length)
+                ? order.serviceQuantities[i]
+                : 1;
+
+            soldQuantityByService[serviceId] =
+                (soldQuantityByService[serviceId] ?? 0) + quantity;
+
+            // Tính tổng tiền bán
+            final double unitPrice = servicePriceById[serviceId] ?? 0.0;
+            daySoldAmount += unitPrice * quantity;
+          }
+        }
+      }
+
+      // Tính tổng tiền nhập cho ngày này
+      for (final serviceId in soldQuantityByService.keys) {
+        final soldQuantity = soldQuantityByService[serviceId]!;
+
+        // Tìm giá nhập cho service này trong ngày này hoặc ngày gần nhất trước đó
+        double? importPrice = _findLatestImportPrice(
+            serviceId, day, importPricesByServiceAndDate);
+
+        if (importPrice != null) {
+          dayImportedAmount += importPrice * soldQuantity;
+        }
+      }
+
+      final dayProfit = daySoldAmount - dayImportedAmount;
+
+      _dailyBreakdown.add({
+        'date': day,
+        'importedAmount': dayImportedAmount,
+        'soldAmount': daySoldAmount,
+        'profit': dayProfit,
+      });
+    }
+  }
+
+  double? _findLatestImportPrice(String serviceId, DateTime targetDate,
+      Map<String, Map<DateTime, double>> importPricesByServiceAndDate) {
+    if (!importPricesByServiceAndDate.containsKey(serviceId)) {
+      return null;
+    }
+
+    final serviceImportPrices = importPricesByServiceAndDate[serviceId]!;
+
+    // Tìm giá nhập gần nhất (trong hoặc trước targetDate)
+    DateTime? latestDate;
+    for (final date in serviceImportPrices.keys) {
+      if (date.isBefore(targetDate) || date.isAtSameMomentAs(targetDate)) {
+        if (latestDate == null || date.isAfter(latestDate)) {
+          latestDate = date;
+        }
+      }
+    }
+
+    return latestDate != null ? serviceImportPrices[latestDate] : null;
   }
 
   Future<void> _showDateFilterDialog() async {
@@ -762,7 +951,17 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
                       ),
                     )
                   else
-                    _buildProfitSummaryCards(l10n),
+                    Column(
+                      children: [
+                        _buildProfitSummaryCards(l10n),
+
+                        // Hiển thị chi tiết từng ngày nếu có
+                        if (_dailyBreakdown.isNotEmpty) ...[
+                          const SizedBox(height: AppTheme.spacingXL),
+                          _buildDailyBreakdown(l10n),
+                        ],
+                      ],
+                    ),
 
                   const SizedBox(height: AppTheme.spacingXL),
 
@@ -783,36 +982,146 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _buildProfitCard(
-                  title: l10n.totalImportedAmount,
-                  value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                      .format(_totalImportedAmount),
-                  icon: Icons.input,
-                  color: Colors.red,
+          // Tổng toàn bộ (không xét thời gian)
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingM),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+              border: Border.all(color: Colors.grey[300]!, width: 1),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.all_inclusive,
+                        color: Colors.grey[600], size: 20),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      'Tổng toàn bộ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: AppTheme.spacingM),
-              Expanded(
-                child: _buildProfitCard(
-                  title: l10n.totalSoldAmount,
-                  value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                      .format(_totalSoldAmount),
-                  icon: Icons.sell,
-                  color: Colors.blue,
+                const SizedBox(height: AppTheme.spacingM),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildProfitCard(
+                        title: 'Tổng nhập (toàn bộ)',
+                        value:
+                            NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                                .format(_totalImportedAmountAll),
+                        icon: Icons.input,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Expanded(
+                      child: _buildProfitCard(
+                        title: 'Tổng bán (toàn bộ)',
+                        value:
+                            NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                                .format(_totalSoldAmountAll),
+                        icon: Icons.sell,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: AppTheme.spacingS),
+                _buildProfitCard(
+                  title: 'Lợi nhuận (toàn bộ)',
+                  value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                      .format(_profitAll),
+                  icon: Icons.trending_up,
+                  color: _profitAll >= 0 ? Colors.green : Colors.red,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: AppTheme.spacingM),
-          _buildProfitCard(
-            title: l10n.profit,
-            value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                .format(_profit),
-            icon: Icons.trending_up,
-            color: _profit >= 0 ? Colors.green : Colors.red,
+
+          const SizedBox(height: AppTheme.spacingL),
+
+          // Tổng theo thời gian được chọn
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingM),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.primaryStart.withValues(alpha: 0.05),
+                  AppTheme.primaryEnd.withValues(alpha: 0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+              border: Border.all(
+                color: AppTheme.primaryStart.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.schedule,
+                        color: AppTheme.primaryStart, size: 20),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Text(
+                      _selectedDateRange != null
+                          ? 'Tổng theo thời gian (${_formatDateRange()})'
+                          : 'Tổng theo thời gian (hôm nay)',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryStart,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppTheme.spacingM),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildProfitCard(
+                        title: l10n.totalImportedAmount,
+                        value:
+                            NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                                .format(_totalImportedAmount),
+                        icon: Icons.input,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(width: AppTheme.spacingS),
+                    Expanded(
+                      child: _buildProfitCard(
+                        title: l10n.totalSoldAmount,
+                        value:
+                            NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                                .format(_totalSoldAmount),
+                        icon: Icons.sell,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppTheme.spacingS),
+                _buildProfitCard(
+                  title: l10n.profit,
+                  value: NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                      .format(_profit),
+                  icon: Icons.trending_up,
+                  color: _profit >= 0 ? Colors.green : Colors.red,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -907,6 +1216,7 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   }
 
   Widget _buildSimpleBarChart(AppLocalizations l10n) {
+    // Sử dụng dữ liệu theo thời gian được chọn cho biểu đồ
     final combined = _totalImportedAmount + _totalSoldAmount;
     final importedFraction =
         combined > 0 ? (_totalImportedAmount / combined) : 0.0;
@@ -1068,7 +1378,7 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
               ),
               const SizedBox(width: AppTheme.spacingS),
               Text(
-                l10n.profitAnalysis,
+                'Phân tích theo thời gian',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1080,11 +1390,276 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
           const SizedBox(height: AppTheme.spacingS),
           Text(
             _profit >= 0
-                ? 'Cửa hàng đang có lãi ${NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_profit)}'
-                : 'Cửa hàng đang lỗ ${NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_profit.abs())}',
+                ? 'Trong ${_selectedDateRange != null ? _formatDateRange() : 'hôm nay'}, cửa hàng có lãi ${NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_profit)}'
+                : 'Trong ${_selectedDateRange != null ? _formatDateRange() : 'hôm nay'}, cửa hàng lỗ ${NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(_profit.abs())}',
             style: TextStyle(
               fontSize: 12,
               color: _profit >= 0 ? Colors.green[600] : Colors.red[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDailyBreakdown(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(AppTheme.spacingL),
+      decoration: AppTheme.cardDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_view_day,
+                color: AppTheme.primaryStart,
+                size: 24,
+              ),
+              const SizedBox(width: AppTheme.spacingS),
+              Text(
+                'Chi tiết theo ngày',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppTheme.spacingL),
+
+          // Header của bảng
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTheme.spacingM,
+              vertical: AppTheme.spacingS,
+            ),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryStart.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Ngày',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryStart,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Tổng nhập',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryStart,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Tổng bán',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryStart,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Lợi nhuận',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryStart,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: AppTheme.spacingS),
+
+          // Dữ liệu từng ngày
+          ..._dailyBreakdown.map((dayData) => _buildDailyRow(dayData)),
+
+          const SizedBox(height: AppTheme.spacingM),
+
+          // Tổng kết
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingM),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+              border: Border.all(color: Colors.grey[300]!, width: 1),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'TỔNG CỘNG',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                        .format(_totalImportedAmount),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red[700],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                        .format(_totalSoldAmount),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[700],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                        .format(_profit),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: _profit >= 0 ? Colors.green[700] : Colors.red[700],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDailyRow(Map<String, dynamic> dayData) {
+    final DateTime date = dayData['date'];
+    final double importedAmount = dayData['importedAmount'];
+    final double soldAmount = dayData['soldAmount'];
+    final double profit = dayData['profit'];
+
+    final dateFormat = DateFormat('dd/MM/yyyy');
+    final isToday = date.isAtSameMomentAs(DateTime.now());
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTheme.spacingM,
+        vertical: AppTheme.spacingS,
+      ),
+      decoration: BoxDecoration(
+        color: isToday ? AppTheme.primaryStart.withValues(alpha: 0.05) : null,
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        border: isToday
+            ? Border.all(color: AppTheme.primaryStart.withValues(alpha: 0.3))
+            : null,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                Text(
+                  dateFormat.format(date),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                    color:
+                        isToday ? AppTheme.primaryStart : AppTheme.textPrimary,
+                  ),
+                ),
+                if (isToday) ...[
+                  const SizedBox(width: 4),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryStart,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Hôm nay',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                  .format(importedAmount),
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.red[600],
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                  .format(soldAmount),
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.blue[600],
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                  .format(profit),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: profit >= 0 ? Colors.green[600] : Colors.red[600],
+              ),
+              textAlign: TextAlign.right,
             ),
           ),
         ],
