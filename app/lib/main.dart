@@ -715,70 +715,80 @@ class _NailAppState extends State<NailApp> {
                   const Spacer(),
 
                   // Logo/Title - Moved to the right
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {
-                        setState(() {
-                          _view = _HomeView.welcome;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        child: _isLoadingSalonInfo && !_hasLoadedSalonInfo
-                            ? SizedBox(
-                                width: AppTheme.isMobile(context) ? 150 : 200,
-                                height: 20,
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor:
-                                          const AlwaysStoppedAnimation<Color>(
-                                              Colors.white),
+                  Flexible(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          setState(() {
+                            _view = _HomeView.welcome;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: _isLoadingSalonInfo && !_hasLoadedSalonInfo
+                              ? SizedBox(
+                                  width: AppTheme.isMobile(context) ? 150 : 200,
+                                  height: 20,
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
                                     ),
                                   ),
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _salonInfo?.salonName.isNotEmpty == true
+                                          ? _salonInfo!.salonName
+                                          : 'Shop',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            AppTheme.getResponsiveFontSize(
+                                          context,
+                                          mobile: 20,
+                                          tablet: 24,
+                                          desktop: 28,
+                                        ),
+                                        letterSpacing: 0.5,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.right,
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      _getWelcomeText(context),
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize:
+                                            AppTheme.getResponsiveFontSize(
+                                          context,
+                                          mobile: 12,
+                                          tablet: 14,
+                                          desktop: 16,
+                                        ),
+                                        letterSpacing: 0.3,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    _salonInfo?.salonName.isNotEmpty == true
-                                        ? _salonInfo!.salonName
-                                        : 'Shop',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: AppTheme.getResponsiveFontSize(
-                                        context,
-                                        mobile: 24,
-                                        tablet: 28,
-                                        desktop: 32,
-                                      ),
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    _getWelcomeText(context),
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: AppTheme.getResponsiveFontSize(
-                                        context,
-                                        mobile: 12,
-                                        tablet: 14,
-                                        desktop: 16,
-                                      ),
-                                      letterSpacing: 0.3,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        ),
                       ),
                     ),
                   ),

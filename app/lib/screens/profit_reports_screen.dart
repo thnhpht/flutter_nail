@@ -18,6 +18,7 @@ class ProfitReportsScreen extends StatefulWidget {
 class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   List<ServiceDetails> _serviceDetails = [];
   List<Order> _orders = [];
+  List<Service> _services = [];
   bool _isLoading = true;
   DateTimeRange? _selectedDateRange;
 
@@ -29,10 +30,11 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   @override
   void initState() {
     super.initState();
-    // Mặc định chọn hôm nay
+    // Mặc định chọn hôm nay (bắt đầu từ 00:00 để bao phủ cả ngày)
+    final now = DateTime.now();
     _selectedDateRange = DateTimeRange(
-      start: DateTime.now(),
-      end: DateTime.now(),
+      start: DateTime(now.year, now.month, now.day),
+      end: DateTime(now.year, now.month, now.day),
     );
     _loadData();
   }
@@ -49,10 +51,12 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
     try {
       final orders = await widget.api.getOrders();
       final serviceDetails = await widget.api.getServiceDetails();
+      final services = await widget.api.getServices();
 
       setState(() {
         _orders = orders;
         _serviceDetails = serviceDetails;
+        _services = services;
         _isLoading = false;
       });
 
@@ -81,11 +85,18 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
           continue;
         }
       }
-      _totalImportedAmount += serviceDetail.importPrice;
+      // Tổng chi phí nhập = giá nhập * số lượng
+      _totalImportedAmount +=
+          (serviceDetail.importPrice * serviceDetail.quantity);
     }
 
     // Tính tổng tiền bán (dựa trên orders)
     _totalSoldAmount = 0.0;
+    // Map nhanh từ serviceId -> price để tính dòng chi tiết
+    final Map<String, double> servicePriceById = {
+      for (final s in _services) s.id: s.price
+    };
+
     for (final order in _orders) {
       if (_selectedDateRange != null) {
         final orderDate = order.createdAt;
@@ -95,7 +106,20 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
           continue;
         }
       }
-      _totalSoldAmount += order.totalPrice;
+
+      // Chỉ tính tổng theo chi tiết: đơn giá dịch vụ * số lượng
+      double orderLineTotal = 0.0;
+      final int lineCount = order.serviceIds.length;
+      for (int i = 0; i < lineCount; i++) {
+        final String serviceId = order.serviceIds[i];
+        final int quantity = (i < order.serviceQuantities.length)
+            ? order.serviceQuantities[i]
+            : 1;
+        final double unitPrice = servicePriceById[serviceId] ?? 0.0;
+        orderLineTotal += unitPrice * quantity;
+      }
+
+      _totalSoldAmount += orderLineTotal;
     }
 
     // Tính lợi nhuận
@@ -883,123 +907,135 @@ class _ProfitReportsScreenState extends State<ProfitReportsScreen> {
   }
 
   Widget _buildSimpleBarChart(AppLocalizations l10n) {
-    final maxValue = [_totalImportedAmount, _totalSoldAmount]
-        .reduce((a, b) => a > b ? a : b);
-    final importedPercentage =
-        maxValue > 0 ? (_totalImportedAmount / maxValue) : 0.0;
-    final soldPercentage = maxValue > 0 ? (_totalSoldAmount / maxValue) : 0.0;
+    final combined = _totalImportedAmount + _totalSoldAmount;
+    final importedFraction =
+        combined > 0 ? (_totalImportedAmount / combined) : 0.0;
+    final soldFraction = combined > 0 ? (_totalSoldAmount / combined) : 0.0;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Imported Amount Bar
-        Row(
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                l10n.totalImportedAmount,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary,
-                ),
-              ),
-            ),
-            const SizedBox(width: AppTheme.spacingS),
-            Expanded(
-              child: Container(
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: importedPercentage > 0.01
-                    ? FractionallySizedBox(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: importedPercentage,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '',
-                            style: TextStyle(
-                              fontSize: 8,
-                              color: Colors.red[700],
-                              fontWeight: FontWeight.w500,
+        // Single combined stacked bar
+        Container(
+          height: 24,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: combined > 0
+                ? Row(
+                    children: [
+                      if (importedFraction > 0)
+                        Expanded(
+                          flex:
+                              (importedFraction * 1000).round().clamp(1, 1000),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.red[400]!,
+                                  Colors.red[600]!,
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-              ),
-            ),
-            const SizedBox(width: AppTheme.spacingS),
-            Text(
-              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                  .format(_totalImportedAmount),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-          ],
+                      if (soldFraction > 0)
+                        Expanded(
+                          flex: (soldFraction * 1000).round().clamp(1, 1000),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue[300]!,
+                                  Colors.blue[500]!,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  )
+                : Container(
+                    color: Colors.grey[100],
+                  ),
+          ),
         ),
 
-        const SizedBox(height: AppTheme.spacingM),
+        const SizedBox(height: AppTheme.spacingS),
 
-        // Sold Amount Bar
-        Row(
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                l10n.totalSoldAmount,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary,
-                ),
+        // Legend with amounts (responsive, avoids overflow)
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              _buildLegendItem(
+                color: Colors.red[500]!,
+                label: '${l10n.totalImportedAmount}: ',
+                amount: _totalImportedAmount,
+                percent: importedFraction,
               ),
-            ),
-            const SizedBox(width: AppTheme.spacingS),
-            Expanded(
-              child: Container(
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: FractionallySizedBox(
-                  alignment: Alignment.centerLeft,
-                  widthFactor: soldPercentage,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
+              _buildLegendItem(
+                color: Colors.blue[500]!,
+                label: '${l10n.totalSoldAmount}: ',
+                amount: _totalSoldAmount,
+                percent: soldFraction,
               ),
-            ),
-            const SizedBox(width: AppTheme.spacingS),
-            Text(
-              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                  .format(_totalSoldAmount),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-          ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem({
+    required Color color,
+    required String label,
+    required double amount,
+    required double percent,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppTheme.textSecondary,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(amount),
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '(${(percent * 100).toStringAsFixed(1)}%)',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
         ),
       ],
     );

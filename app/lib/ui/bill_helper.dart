@@ -1166,23 +1166,24 @@ class BillHelper {
 
   static double _getOriginalTotal(Order order) {
     // Tính thành tiền gốc từ tổng thanh toán, giảm giá, tip, phí ship và thuế
-    // totalPrice = (originalTotal * (1 - discountPercent/100) + tip + shippingFee) * (1 + taxPercent/100)
-    // originalTotal = ((totalPrice / (1 + taxPercent/100)) - tip - shippingFee) / (1 - discountPercent/100)
+    // Công thức: totalPrice = subtotalAfterDiscount * (1 + taxPercent/100) + tip + shippingFee
+    // Trong đó: subtotalAfterDiscount = originalTotal * (1 - discountPercent/100)
+    //
+    // Giải ngược:
+    // subtotalAfterDiscount = (totalPrice - tip - shippingFee) / (1 + taxPercent/100)
+    // originalTotal = subtotalAfterDiscount / (1 - discountPercent/100)
     final subtotalAfterDiscount =
-        (order.totalPrice / (1 + order.taxPercent / 100)) -
-            order.tip -
-            order.shippingFee;
+        (order.totalPrice - order.tip - order.shippingFee) /
+            (1 + order.taxPercent / 100);
     return subtotalAfterDiscount / (1 - order.discountPercent / 100);
   }
 
   static double _getTaxAmount(Order order) {
-    // Tính số tiền thuế
-    // taxAmount = (originalTotal * (1 - discountPercent/100) + tip + shippingFee) * taxPercent/100
+    // Tính số tiền thuế - chỉ tính trên thành tiền sau giảm giá
+    // taxAmount = (originalTotal * (1 - discountPercent/100)) * taxPercent/100
     final subtotalAfterDiscount =
         _getOriginalTotal(order) * (1 - order.discountPercent / 100);
-    return (subtotalAfterDiscount + order.tip + order.shippingFee) *
-        order.taxPercent /
-        100;
+    return subtotalAfterDiscount * order.taxPercent / 100;
   }
 
   static String _formatPhoneNumber(String phoneNumber) {
