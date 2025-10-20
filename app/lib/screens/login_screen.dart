@@ -37,6 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
       'role_selection'; // 'role_selection', 'email', 'login', 'create_account', 'employee_login', 'booking_connection'
   String _selectedRole = 'shop_owner'; // 'shop_owner', 'employee', or 'booking'
 
+  // Password visibility states
+  bool _isPasswordVisible = false;
+  bool _isEmployeePasswordVisible = false;
+  bool _isDeliveryPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -876,7 +881,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller: _employeePasswordController,
-                              obscureText: true,
+                              obscureText: !_isEmployeePasswordVisible,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: l10n.employeePassword,
@@ -884,6 +889,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.lock,
                                     color: Colors.white70),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isEmployeePasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.white70,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isEmployeePasswordVisible =
+                                          !_isEmployeePasswordVisible;
+                                    });
+                                  },
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide:
@@ -981,7 +1000,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller: _employeePasswordController,
-                              obscureText: true,
+                              obscureText: !_isDeliveryPasswordVisible,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                 labelText: l10n.employeePassword,
@@ -989,6 +1008,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                     const TextStyle(color: Colors.white70),
                                 prefixIcon: const Icon(Icons.lock,
                                     color: Colors.white70),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isDeliveryPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.white70,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isDeliveryPasswordVisible =
+                                          !_isDeliveryPasswordVisible;
+                                    });
+                                  },
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide:
@@ -1164,7 +1197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 16),
                                 TextFormField(
                                   controller: _passwordLoginController,
-                                  obscureText: true,
+                                  obscureText: !_isPasswordVisible,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     labelText: l10n.password,
@@ -1172,6 +1205,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                         const TextStyle(color: Colors.white70),
                                     prefixIcon: const Icon(Icons.key,
                                         color: Colors.white70),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Colors.white70,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isPasswordVisible =
+                                              !_isPasswordVisible;
+                                        });
+                                      },
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       borderSide: const BorderSide(
