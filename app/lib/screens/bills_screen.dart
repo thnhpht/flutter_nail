@@ -106,10 +106,9 @@ class _BillsScreenState extends State<BillsScreen> {
     }
 
     // Lọc theo delivery orders nếu là delivery employee
-    if (_currentUserRole == 'delivery') {
+    if (_currentUserRole == 'delivery' && _currentEmployeeId != null) {
       filtered = filtered.where((order) {
-        return order.isBooking == true &&
-            order.deliveryMethod == 'delivery' &&
+        return order.deliveryMethod == 'delivery' &&
             order.employeeIds.contains(_currentEmployeeId!);
       }).toList();
     }

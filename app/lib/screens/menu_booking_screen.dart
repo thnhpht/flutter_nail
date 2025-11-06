@@ -1756,7 +1756,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         child: Center(
           child: Container(
             margin: const EdgeInsets.all(20),
-            constraints: const BoxConstraints(maxHeight: 600),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -1768,14 +1770,21 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                 ),
               ],
             ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header - Fixed at top
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey[200]!,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
@@ -1812,257 +1821,323 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                ),
 
-                  // Customer Information Section
-                  _buildSectionCard(
-                    title: AppLocalizations.of(context)!.bookingCustomerInfo,
-                    icon: Icons.person,
+                // Scrollable Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Phone input with dropdown
-                        Column(
-                          children: [
-                            TextField(
-                              controller: _customerPhoneController,
-                              keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
-                                labelText:
-                                    AppLocalizations.of(context)!.phoneNumber,
-                                prefixIcon: const Icon(Icons.phone),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                      color: AppTheme.primaryStart, width: 2),
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                              ),
-                            ),
-                            // Customer dropdown when typing phone
-                            if (_showCustomerDropdown) ...[
-                              const SizedBox(height: 8),
-                              Material(
-                                elevation: 8,
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  constraints:
-                                      const BoxConstraints(maxHeight: 200),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: AppTheme.primaryStart
-                                            .withValues(alpha: 0.3)),
-                                    borderRadius: BorderRadius.circular(12),
+                        // Customer Information Section
+                        _buildSectionCard(
+                          title: AppLocalizations.of(context)!.bookingCustomerInfo,
+                          icon: Icons.person,
+                          child: Column(
+                            children: [
+                              // Phone input with dropdown
+                              Column(
+                                children: [
+                                  TextField(
+                                    controller: _customerPhoneController,
+                                    keyboardType: TextInputType.phone,
+                                    decoration: InputDecoration(
+                                      labelText:
+                                          AppLocalizations.of(context)!.phoneNumber,
+                                      prefixIcon: const Icon(Icons.phone),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey[300]!),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: AppTheme.primaryStart, width: 2),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                    ),
                                   ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Header
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
+                                  // Customer dropdown when typing phone
+                                  if (_showCustomerDropdown) ...[
+                                    const SizedBox(height: 8),
+                                    Material(
+                                      elevation: 8,
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
+                                        constraints:
+                                            const BoxConstraints(maxHeight: 200),
                                         decoration: BoxDecoration(
-                                          color: AppTheme.primaryStart
-                                              .withValues(alpha: 0.1),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(12),
-                                            topRight: Radius.circular(12),
-                                          ),
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: AppTheme.primaryStart
+                                                  .withValues(alpha: 0.3)),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
-                                        child: Row(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.people,
-                                                color: AppTheme.primaryStart,
-                                                size: 16),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              'Khách hàng tìm thấy (${_filteredCustomers.length})',
-                                              style: TextStyle(
-                                                color: AppTheme.primaryStart,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
+                                            // Header
+                                            Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: AppTheme.primaryStart
+                                                    .withValues(alpha: 0.1),
+                                                borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(12),
+                                                  topRight: Radius.circular(12),
+                                                ),
                                               ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.people,
+                                                      color: AppTheme.primaryStart,
+                                                      size: 16),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    'Khách hàng tìm thấy (${_filteredCustomers.length})',
+                                                    style: TextStyle(
+                                                      color: AppTheme.primaryStart,
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            // Customer list
+                                            Flexible(
+                                              child: _filteredCustomers.isEmpty
+                                                  ? Container(
+                                                      padding:
+                                                          const EdgeInsets.all(16),
+                                                      child: Text(
+                                                        'Không tìm thấy khách hàng',
+                                                        style: TextStyle(
+                                                          color: Colors.grey[600],
+                                                          fontSize: 14,
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                    )
+                                                  : ListView.builder(
+                                                      shrinkWrap: true,
+                                                      padding: EdgeInsets.zero,
+                                                      itemCount:
+                                                          _filteredCustomers.length,
+                                                      itemBuilder: (context, index) {
+                                                        final customer =
+                                                            _filteredCustomers[index];
+                                                        return _buildDropdownCustomerItem(
+                                                          customerName: customer.name,
+                                                          customerPhone:
+                                                              customer.phone,
+                                                          onTap: () =>
+                                                              _selectCustomer(
+                                                                  customer),
+                                                        );
+                                                      },
+                                                    ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      // Customer list
-                                      Flexible(
-                                        child: _filteredCustomers.isEmpty
-                                            ? Container(
-                                                padding:
-                                                    const EdgeInsets.all(16),
-                                                child: Text(
-                                                  'Không tìm thấy khách hàng',
-                                                  style: TextStyle(
-                                                    color: Colors.grey[600],
-                                                    fontSize: 14,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              )
-                                            : ListView.builder(
-                                                shrinkWrap: true,
-                                                padding: EdgeInsets.zero,
-                                                itemCount:
-                                                    _filteredCustomers.length,
-                                                itemBuilder: (context, index) {
-                                                  final customer =
-                                                      _filteredCustomers[index];
-                                                  return _buildDropdownCustomerItem(
-                                                    customerName: customer.name,
-                                                    customerPhone:
-                                                        customer.phone,
-                                                    onTap: () =>
-                                                        _selectCustomer(
-                                                            customer),
-                                                  );
-                                                },
-                                              ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                controller: _customerNameController,
+                                label: AppLocalizations.of(context)!.customerName,
+                                prefixIcon: Icons.person_outline,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                controller: _customerAddressController,
+                                label: AppLocalizations.of(context)!.address,
+                                prefixIcon: Icons.location_on_outlined,
                               ),
                             ],
-                          ],
+                          ),
                         ),
+
                         const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _customerNameController,
-                          label: AppLocalizations.of(context)!.customerName,
-                          prefixIcon: Icons.person_outline,
+
+                        // Selected Services Section
+                        _buildSectionCard(
+                          title: AppLocalizations.of(context)!
+                              .servicesSelected(_selectedServices.length),
+                          icon: Icons.shopping_cart,
+                          child: Column(
+                            children: [
+                              // Services list
+                              ...(_selectedServices.map((serviceWithQuantity) =>
+                                  _buildBookingServiceItem(serviceWithQuantity))),
+                            ],
+                          ),
                         ),
+
                         const SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _customerAddressController,
-                          label: AppLocalizations.of(context)!.address,
-                          prefixIcon: Icons.location_on_outlined,
+
+                        // Delivery Option Section
+                        _buildSectionCard(
+                          title: AppLocalizations.of(context)!.deliveryOption,
+                          icon: Icons.local_shipping,
+                          child: Column(
+                            children: [
+                              RadioListTile<String>(
+                                title:
+                                    Text(AppLocalizations.of(context)!.pickupAtSalon),
+                                value: 'pickup',
+                                groupValue: _deliveryOption,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _deliveryOption = value!;
+                                    // Clear customer info when switching to pickup
+                                    _customerNameController.clear();
+                                    _customerPhoneController.clear();
+                                    _customerAddressController.clear();
+                                  });
+                                },
+                                activeColor: AppTheme.primaryStart,
+                              ),
+                              RadioListTile<String>(
+                                title:
+                                    Text(AppLocalizations.of(context)!.homeDelivery),
+                                value: 'delivery',
+                                groupValue: _deliveryOption,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _deliveryOption = value!;
+                                  });
+                                },
+                                activeColor: AppTheme.primaryStart,
+                              ),
+                            ],
+                          ),
                         ),
+
+                        // Extra padding at bottom for better scrolling
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
+                ),
 
-                  const SizedBox(height: 16),
-
-                  // Selected Services Section
-                  _buildSectionCard(
-                    title: AppLocalizations.of(context)!
-                        .servicesSelected(_selectedServices.length),
-                    icon: Icons.shopping_cart,
-                    child: Column(
-                      children: [
-                        // Services list
-                        ...(_selectedServices.map((serviceWithQuantity) =>
-                            _buildBookingServiceItem(serviceWithQuantity))),
-
-                        if (_selectedServices.isNotEmpty) ...[
-                          const SizedBox(height: 12),
-                          const Divider(),
-                          const SizedBox(height: 8),
-                          // Total price
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!.total,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                // Sticky Bottom Bar with Total Price and Action Buttons
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.grey[200]!,
+                        width: 1,
+                      ),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Total Price Summary
+                          if (_selectedServices.isNotEmpty)
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppTheme.primaryStart.withValues(alpha: 0.05),
+                                    AppTheme.primaryEnd.withValues(alpha: 0.05),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: AppTheme.primaryStart.withValues(alpha: 0.2),
                                 ),
                               ),
-                              Text(
-                                '${_formatPrice(_totalPrice)}₫',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.primaryStart,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.shopping_cart,
+                                        color: AppTheme.primaryStart,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        AppLocalizations.of(context)!.total,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    '${_formatPrice(_totalPrice)}₫',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.primaryStart,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          if (_selectedServices.isNotEmpty)
+                            const SizedBox(height: 16),
+
+                          // Action Buttons
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildSecondaryButton(
+                                  onPressed: _hideBookingForm,
+                                  label: AppLocalizations.of(context)!.cancel,
+                                  icon: Icons.close,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                flex: 2,
+                                child: _buildPrimaryButton(
+                                  onPressed: _isCreatingBooking ? null : _createBooking,
+                                  isLoading: _isCreatingBooking,
+                                  label: AppLocalizations.of(context)!.bookingButton,
+                                  icon: Icons.check,
                                 ),
                               ),
                             ],
                           ),
                         ],
-                      ],
+                      ),
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // Delivery Option Section
-                  _buildSectionCard(
-                    title: AppLocalizations.of(context)!.deliveryOption,
-                    icon: Icons.local_shipping,
-                    child: Column(
-                      children: [
-                        RadioListTile<String>(
-                          title:
-                              Text(AppLocalizations.of(context)!.pickupAtSalon),
-                          value: 'pickup',
-                          groupValue: _deliveryOption,
-                          onChanged: (value) {
-                            setState(() {
-                              _deliveryOption = value!;
-                              // Clear customer info when switching to pickup
-                              _customerNameController.clear();
-                              _customerPhoneController.clear();
-                              _customerAddressController.clear();
-                            });
-                          },
-                          activeColor: AppTheme.primaryStart,
-                        ),
-                        RadioListTile<String>(
-                          title:
-                              Text(AppLocalizations.of(context)!.homeDelivery),
-                          value: 'delivery',
-                          groupValue: _deliveryOption,
-                          onChanged: (value) {
-                            setState(() {
-                              _deliveryOption = value!;
-                            });
-                          },
-                          activeColor: AppTheme.primaryStart,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Action Buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildSecondaryButton(
-                          onPressed: _hideBookingForm,
-                          label: AppLocalizations.of(context)!.cancel,
-                          icon: Icons.close,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildPrimaryButton(
-                          onPressed: _isCreatingBooking ? null : _createBooking,
-                          isLoading: _isCreatingBooking,
-                          label: AppLocalizations.of(context)!.bookingButton,
-                          icon: Icons.check,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

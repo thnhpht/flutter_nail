@@ -91,32 +91,40 @@ namespace NailApi.Controllers
                 dbContext.Orders.Add(input);
                 await dbContext.SaveChangesAsync();
 
-                // Create notification for order created by employee
-                var notificationId = Guid.NewGuid().ToString();
-                var employeeName = User.FindFirst("employee_name")?.Value ?? User.FindFirst(ClaimTypes.Name)?.Value;
-                var notificationData = JsonSerializer.Serialize(new
+                // Only create notification if order was created by employee or delivery person, not by shop owner
+                var userRole = User.FindFirst("user_role")?.Value;
+                if (userRole == "employee" || userRole == "delivery")
                 {
-                    orderId = input.Id,
-                    customerName = input.CustomerName,
-                    customerPhone = input.CustomerPhone,
-                    employeeName = employeeName,
-                    totalPrice = input.TotalPrice
-                });
+                    var notificationId = Guid.NewGuid().ToString();
+                    var employeeName = User.FindFirst("employee_name")?.Value ?? User.FindFirst(ClaimTypes.Name)?.Value;
+                    var notificationData = JsonSerializer.Serialize(new
+                    {
+                        orderId = input.Id,
+                        customerName = input.CustomerName,
+                        customerPhone = input.CustomerPhone,
+                        employeeName = employeeName,
+                        totalPrice = input.TotalPrice
+                    });
 
-                var notification = new Notification
+                    var notification = new Notification
+                    {
+                        Id = notificationId,
+                        Title = "Đơn hàng mới",
+                        Message = $"Nhân viên {employeeName} đã tạo đơn mới #{FormatOrderId(input.Id)} cho khách hàng {input.CustomerName} ({input.CustomerPhone}) với tổng tiền {input.TotalPrice:N0} VNĐ",
+                        Type = "order_created",
+                        CreatedAt = DateTime.Now,
+                        IsRead = false,
+                        Data = notificationData
+                    };
+
+                    dbContext.Notifications.Add(notification);
+                    await dbContext.SaveChangesAsync();
+                    Console.WriteLine($"Order notification created with ID: {notificationId}");
+                }
+                else
                 {
-                    Id = notificationId,
-                    Title = "Đơn hàng mới",
-                    Message = $"Nhân viên {employeeName} đã tạo đơn mới #{FormatOrderId(input.Id)} cho khách hàng {input.CustomerName} ({input.CustomerPhone}) với tổng tiền {input.TotalPrice:N0} VNĐ",
-                    Type = "order_created",
-                    CreatedAt = DateTime.Now,
-                    IsRead = false,
-                    Data = notificationData
-                };
-
-                dbContext.Notifications.Add(notification);
-                await dbContext.SaveChangesAsync();
-                Console.WriteLine($"Order notification created with ID: {notificationId}");
+                    Console.WriteLine($"No notification created for shop owner order: {input.Id}");
+                }
 
                 return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
             }

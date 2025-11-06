@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   ApiClient({required this.baseUrl});
-  final String baseUrl; // e.g. http://localhost:5088/api
+  final String baseUrl; // e.g. http://localhost:5068/api
 
   // HTTP client với timeout configuration
   final http.Client _client = http.Client();

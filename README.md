@@ -57,19 +57,19 @@ flutter pub run flutter_launcher_icons:main
 
 ```bash
 # Web
-flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:5088/api
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:5068/api
 
 # iOS Simulator
-flutter run -d ios --dart-define=API_BASE_URL=http://127.0.0.1:5088/api
+flutter run -d ios --dart-define=API_BASE_URL=http://127.0.0.1:5068/api
 
 # Android Emulator
-flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5088/api
+flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:5068/api
 
 # Windows
-flutter run -d windows --dart-define=API_BASE_URL=http://localhost:5088/api
+flutter run -d windows --dart-define=API_BASE_URL=http://localhost:5068/api
 
 # macOS
-flutter run -d macos --dart-define=API_BASE_URL=http://localhost:5088/api
+flutter run -d macos --dart-define=API_BASE_URL=http://localhost:5068/api
 ```
 
 ## Kiến trúc hệ thống
